@@ -26,7 +26,7 @@ Au premier lancement, l’enfant choisit sa classe (CE2 ou CM1). Chaque classe g
 | Jungle des Créatures | Droite graduée | Graduations de 100 à 10 000, dixièmes et centièmes |
 | Marché du Port | Monnaie et euros | Prix à virgule, rendu sur 50 €, quantités |
 | Cuisine du Navire | Fractions | Fraction d’une quantité, fractions décimales, sommes |
-| Île de l’Horloge | Heures et durées | Lecture à la minute, conversions, durées (en attente de ses illustrations) |
+| Île de l’Horloge | Heures et durées | Lecture à la minute, conversions, durées |
 
 ### Mer des Lettres (français)
 

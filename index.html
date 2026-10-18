@@ -248,29 +248,30 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .pm{display:flex;gap:4px;width:100%}
 .pm button{flex:1;height:38px;border-radius:10px;font:800 22px var(--f-d);background:linear-gradient(#fbf3df,#ecdcb6);box-shadow:0 3px 0 #a98a52;color:var(--ink)}
 .pm button.plus{background:linear-gradient(#f7dc93,#c9973f);box-shadow:0 3px 0 var(--brass-lo)}
-.blk{display:block;border-radius:2px;box-shadow:inset -2px -2px 0 rgba(0,0,0,.25),inset 2px 2px 0 rgba(255,255,255,.45)}
-.b-m{width:24px;height:24px;background:linear-gradient(135deg,#ffe28a,#d9a12a)}
-.b-c{width:20px;height:20px;background:linear-gradient(135deg,#9ff0e9,#3fa8a2)}
-.b-d{width:6px;height:26px;background:linear-gradient(90deg,#7fe0a0,#2f9a5a)}
-.b-u{width:8px;height:8px;background:linear-gradient(135deg,#c9c9d2,#8a8a96)}
+.blk{display:block;background:center/contain no-repeat}
+.b-m{width:26px;height:26px;background-image:url(assets/block-1000.webp)}
+.b-c{width:24px;height:24px;background-image:url(assets/block-100.webp)}
+.b-d{width:22px;height:22px;background-image:url(assets/block-10.webp)}
+.b-u{width:13px;height:13px;background-image:url(assets/block-1.webp)}
 /* monnaie */
 .tray{min-height:56px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-content:center;border:2px dashed rgba(138,98,36,.5);border-radius:14px;padding:6px;margin-top:8px}
 .tray:empty::before{content:"Touche les pièces et les billets pour payer";color:var(--ink-2);font-size:13px;font-weight:600}
 .purse-g{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
-.coin,.bill{display:inline-grid;place-items:center;font-weight:800;line-height:1;box-shadow:0 3px 0 rgba(0,0,0,.35),inset 0 0 0 2px rgba(0,0,0,.18);color:#2a1a07}
-.coin{width:50px;height:50px;border-radius:50%;font-size:14px}
-.coin.cu{background:radial-gradient(circle at 35% 30%,#f0a070,#b0582a);color:#fff}
-.coin.au{background:radial-gradient(circle at 35% 30%,#fff0b0,#d9a12a)}
-.coin.bi{background:radial-gradient(circle,#ffe08a 0 50%,#c9ccd3 52%,#9a9ea8)}
+.coin,.bill{display:inline-grid;place-items:center;font-weight:800;line-height:1;color:#2a1a07;background:center/100% 100% no-repeat;filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))}
+.coin{width:50px;height:50px;border-radius:50%;font-size:14px;text-shadow:0 1px 0 rgba(255,240,200,.6)}
+.coin.cu{background-image:url(assets/coin-copper.webp);color:#fff8ec;text-shadow:0 1px 2px rgba(60,20,0,.8)}
+.coin.au{background-image:url(assets/coin-gold.webp)}
+.coin.bi{background-image:url(assets/coin-bimetal.webp)}
 .bill{width:62px;height:40px;border-radius:6px;font-size:15px}
-.bill.b50{background:linear-gradient(135deg,#f3d0a0,#d99a50)}.fbar .cells i.sep{border-right-width:6px}
-.bill.b5{background:linear-gradient(135deg,#d6e6d0,#9fbf98)}.bill.b10{background:linear-gradient(135deg,#f6c6b8,#e08a74)}.bill.b20{background:linear-gradient(135deg,#c8d9f6,#86a8e0)}
+.bill.b50{background-image:url(assets/bill-red.webp);filter:hue-rotate(32deg) saturate(1.3) drop-shadow(0 3px 2px rgba(0,0,0,.4))}.fbar .cells i.sep{border-right-width:6px}
+.bill.b5{background-image:url(assets/bill-green.webp)}.bill.b10{background-image:url(assets/bill-red.webp)}.bill.b20{background-image:url(assets/bill-blue.webp)}
 .tray .coin{width:36px;height:36px;font-size:11px}.tray .bill{width:46px;height:30px;font-size:12px}
 .pricetag{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-d);font-weight:800;font-size:34px;color:var(--ink)}
 /* parts */
 .pizza{width:min(170px,46vw);height:auto;touch-action:manipulation}
-.slice{fill:rgba(244,232,204,.15);stroke:#2a1c12;stroke-width:2.5;cursor:pointer}
-.slice.on{fill:rgba(184,56,42,.62)}
+.slice{fill:rgba(255,255,255,0);stroke:#2a1c12;stroke-width:2.5;cursor:pointer}
+.slice.on{fill:rgba(184,56,42,.6)}
+.pizza.cake{width:min(130px,36vw)}.pizza.cake .slice{cursor:default;stroke:rgba(42,28,18,.8)}
 .fbars{display:flex;flex-direction:column;gap:10px;margin:6px 0}
 .fbar{display:flex;align-items:center;gap:10px}
 .fbar .cells{flex:1;display:flex;height:28px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--ink);background:#fff8e8}
@@ -310,6 +311,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .chest.open .glow{opacity:1}
 .chest .tap{position:absolute;bottom:-6px;font:700 13px var(--f-u);color:var(--brass-hi);letter-spacing:.1em;text-transform:uppercase;animation:blink 1.4s ease-in-out infinite}
 @keyframes blink{50%{opacity:.4}}
+.chest img.bravo{width:96px;left:-62px;bottom:-4px;z-index:2;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:shipr 2.6s ease-in-out infinite}
 .coinfly{position:absolute;width:30px;z-index:50;pointer-events:none}
 .rewards{position:relative;width:calc(100% - 32px);border-radius:22px;padding:4px 14px;flex:1 1 auto;min-height:0;overflow-y:auto;margin-bottom:12px}
 .rw{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid rgba(138,98,36,.22);animation:rise2 .4s ease-out backwards}
@@ -535,8 +537,9 @@ textarea.fld{min-height:76px}
 .paint.cant{opacity:.6}
 .ifx{position:absolute;pointer-events:none;z-index:6}
 .ifx.ball{width:46px;height:46px;left:18%;bottom:18%;animation:ballfly .9s cubic-bezier(.25,.6,.4,1) forwards}
-@keyframes ballfly{0%{transform:translate(0,0) rotate(0) scale(1)}100%{transform:translate(230%,-260%) rotate(540deg) scale(.55);opacity:.2}}
-.ifx.cube{width:26px;height:26px;border-radius:4px;top:-30px;box-shadow:inset -3px -3px 0 rgba(0,0,0,.25),inset 3px 3px 0 rgba(255,255,255,.45);animation:cubedrop .9s cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes ballfly{0%{transform:translate(0,0) rotate(0) scale(1)}100%{transform:translate(min(52vw,260px),-150%) rotate(540deg) scale(.6);opacity:.4}}
+.g-scene .goal{position:absolute;right:3%;bottom:24%;width:min(44%,240px);z-index:3;filter:drop-shadow(0 10px 8px rgba(0,0,0,.35))}
+.ifx.cube{width:34px;height:34px;top:-30px;animation:cubedrop .9s cubic-bezier(.3,1.5,.5,1) forwards}
 @keyframes cubedrop{0%{transform:translateY(0)}70%{opacity:1}100%{transform:translateY(var(--dy));opacity:0}}
 .ifx.frog{width:110px;left:50%;bottom:22%;animation:frogpop 1.1s ease-out forwards}
 @keyframes frogpop{0%{transform:translate(-50%,40%) scale(.4);opacity:0}35%{transform:translate(-50%,-55%) scale(1);opacity:1}70%{transform:translate(-50%,-45%) scale(1)}100%{transform:translate(-50%,30%) scale(.6);opacity:0}}
@@ -634,7 +637,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '0.8 bêta · octobre 2026';
+const VERSION = '0.9 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -759,7 +762,7 @@ const ISLES = [
   { id: 'jungle', sea: 'm', cm1: 'Droite graduée et décimaux', hero: 'hero-jungle', boss: { img: 'boss-serpent', n: 'Le Serpent Mesureur' }, chestCrew: 'croco', art: 'la Jungle des Créatures', n: 'Jungle des Créatures', notion: 'Droite graduée', img: 'isle-jungle', lag: 'lagoon-oval', x: 72, y: 790, gen: genChasse, ep: 'Œil-de-Lynx', unlock: 3, sfx: ['ATTRAPÉ !', 'TROUVÉ !'] },
   { id: 'marche', sea: 'm', cm1: 'Monnaie et prix', hero: 'hero-marche', boss: { img: 'boss-marchand', n: 'Le Marchand Fantôme' }, chestCrew: 'calmar', art: 'le Marché du Port', n: 'Marché du Port', notion: 'Monnaie et euros', img: 'isle-marche', lag: 'lagoon-round', x: 28, y: 570, gen: genMarche, ep: 'Main-d’Or', unlock: 6, sfx: ['VENDU !', 'PILE LE COMPTE !'] },
   { id: 'cuisine', sea: 'm', cm1: 'Fractions et fractions décimales', hero: 'hero-cuisine', boss: { img: 'boss-chef', n: 'Le Chef Pieuvre' }, chestCrew: 'poisson', art: 'la Cuisine du Navire', n: 'Cuisine du Navire', notion: 'Fractions', img: 'isle-cuisine', lag: 'lagoon-rocks', x: 72, y: 350, gen: genCuisine, ep: 'Fine Lame', unlock: 9, sfx: ['MIAM !', 'PARFAIT, CHEF !'] },
-  { id: 'horloge', sea: 'm', cm1: 'Heures et durées', soon: true, hero: 'hero-horloge', boss: { img: 'boss-horloge', n: 'Le Maître des Heures' }, chestCrew: null, art: 'l’Île de l’Horloge', n: 'Île de l’Horloge', notion: 'Heures et durées', img: 'isle-horloge', lag: 'lagoon-oval', x: 28, y: 150, gen: genHorloge, ep: 'Maître du Temps', unlock: 12, sfx: ['TIC-TAC !', 'PILE À L’HEURE !'] },
+  { id: 'horloge', sea: 'm', cm1: 'Heures et durées', hero: 'hero-horloge', boss: { img: 'boss-horloge', n: 'Le Maître des Heures' }, chestCrew: null, art: 'l’Île de l’Horloge', n: 'Île de l’Horloge', notion: 'Heures et durées', img: 'isle-horloge', lag: 'lagoon-oval', x: 28, y: 150, gen: genHorloge, ep: 'Maître du Temps', unlock: 12, sfx: ['TIC-TAC !', 'PILE À L’HEURE !'] },
   // Mer des Lettres (lot 5 d'illustrations reçu le 18 octobre 2026)
   { id: 'lecture', sea: 'f', hero: 'hero-lecture', boss: { img: 'boss-lecture', n: 'La Sirène des Contes' }, chestCrew: null, art: 'la Grotte aux Histoires', n: 'Grotte aux Histoires', notion: 'Lecture et compréhension', img: 'isle-lecture', lag: 'lagoon-round', x: 28, y: 1450, gen: genLecture, ep: 'Grand Liseur', unlock: 0, sfx: ['BIEN LU !', 'QUEL LECTEUR !'] },
   { id: 'conjug', sea: 'f', hero: 'hero-conjug', boss: { img: 'boss-conjug', n: 'Le Forgeron des Temps' }, chestCrew: null, art: 'la Forge des Verbes', n: 'Forge des Verbes', notion: 'Conjugaison', img: 'isle-conjug', lag: 'lagoon-oval', x: 72, y: 1230, gen: genConjug, ep: 'Maître des Verbes', unlock: 0, sfx: ['BIEN FORGÉ !', 'VERBE PARFAIT !'] },
@@ -1850,7 +1853,8 @@ function sceneHTML() {
     <div class="hpbox glass"><div style="display:flex;justify-content:space-between"><span class="smallcaps" style="color:#ffd9a0;letter-spacing:.12em">${i.boss.n}</span><span style="font:600 12px var(--f-u);color:var(--mist)" id="hpt">${R.hp} %</span></div><div class="bar"><i id="hp" style="width:${R.hp}%"></i></div></div>
     ${powersHTML()}</div>`;
   return `<div class="g-scene" id="scene"><img class="bg" src="${IMG('bg-sea-golden')}" alt="">
-    <img src="${IMG(i.img)}" alt="" onerror="this.remove()" style="position:absolute;left:50%;top:52%;width:min(62%,300px);transform:translate(-50%,-50%);filter:drop-shadow(0 14px 12px rgba(0,0,0,.4));animation:bob 3.4s ease-in-out infinite">
+    <img src="${IMG(i.img)}" alt="" onerror="this.remove()" style="position:absolute;left:${i.id === 'stade' ? 30 : 50}%;top:52%;width:min(${i.id === 'stade' ? 48 : 62}%,300px);transform:translate(-50%,-50%);filter:drop-shadow(0 14px 12px rgba(0,0,0,.4));animation:bob 3.4s ease-in-out infinite">
+    ${i.id === 'stade' ? `<img class="goal" src="${IMG('foot-goal')}" alt="">` : ''}
     <div class="waves"></div>${powersHTML()}</div>`;
 }
 function powersHTML() {
@@ -1873,10 +1877,10 @@ function lineSVG(q, mark, arrow) {
   if (mark != null) s += `<image href="${IMG('crew-perroquet')}" x="${x(mark) - 20}" y="0" width="40" height="40"/>`;
   return `<svg class="line-svg" id="line" viewBox="0 0 340 96" role="img" aria-label="Droite graduée">${s}</svg>`;
 }
-function pizzaSVG(parts, sel) { const cx = 100, cy = 100, r = 84; let s = '';
+function pizzaSVG(parts, sel, food = 'food-pizza', play = true) { const cx = 100, cy = 100, r = 93; let s = '';
   for (let k = 0; k < parts; k++) { const a0 = -Math.PI / 2 + k * 2 * Math.PI / parts, a1 = a0 + 2 * Math.PI / parts, p = a => `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`;
-    s += `<path data-a="slice" data-i="${k}" class="slice${sel.has(k) ? ' on' : ''}" d="M${cx},${cy} L${p(a0)} A${r},${r} 0 0 1 ${p(a1)} Z"/>`; }
-  return `<svg class="pizza" viewBox="0 0 200 200" role="img" aria-label="Pizza en ${parts} parts"><defs><radialGradient id="crust"><stop offset=".8" stop-color="#f6c66a"/><stop offset="1" stop-color="#b8762c"/></radialGradient></defs><circle cx="100" cy="100" r="96" fill="url(#crust)" stroke="#2a1c12" stroke-width="3"/><circle cx="100" cy="100" r="84" fill="#e8b04a"/><g fill="#c0392b" opacity=".85"><circle cx="70" cy="70" r="9"/><circle cx="128" cy="78" r="8"/><circle cx="96" cy="120" r="9"/><circle cx="140" cy="128" r="7"/><circle cx="62" cy="128" r="7"/></g>${s}</svg>`; }
+    s += `<path ${play ? `data-a="slice" data-i="${k}" ` : ''}class="slice${sel.has(k) ? ' on' : ''}" d="M${cx},${cy} L${p(a0)} A${r},${r} 0 0 1 ${p(a1)} Z"/>`; }
+  return `<svg class="pizza${play ? '' : ' cake'}" viewBox="0 0 200 200" role="img" aria-label="${food === 'food-pizza' ? 'Pizza' : 'Gâteau'} en ${parts} parts"><image href="${IMG(food)}" x="0" y="0" width="200" height="200"/>${s}</svg>`; }
 const barHTML = (n, d) => `<div class="fbar"><span class="lab">${frac(n, d)}</span><span class="cells">${range(1, d * Math.max(1, Math.ceil(n / d))).map(k => `<i class="${k <= n ? 'on' : ''}${k % d === 0 && k < n ? ' sep' : ''}"></i>`).join('')}</span></div>`;
 
 function inputHTML(q) {
@@ -1904,7 +1908,7 @@ function qcardHTML(q) {
   if (q.kind === 'money') { const tr = R.tray || []; body = `${q.price ? `<div style="text-align:center"><span class="pricetag">${q.price}</span></div>` : ''}<div class="tray">${tr.map((c, k) => `<button class="${c >= 500 ? `bill b${c / 100}` : `coin ${c >= 100 ? 'bi' : c >= 10 ? 'au' : 'cu'}`}" data-a="untray" data-i="${k}" aria-label="Reprendre">${coinLabel(c)}</button>`).join('')}</div>`; }
   if (q.kind === 'pizza') body = `<div style="text-align:center">${pizzaSVG(q.parts, R.sel || (R.sel = new Set()))}</div>`;
   if (q.kind === 'compare') body = `<div class="fbars">${q.fr.map(([n, d]) => barHTML(n, d)).join('')}</div>`;
-  if (q.cake) body = `<div class="fbars">${barHTML(q.cake, q.cake)}</div>`;
+  if (q.cake) body = `<div style="text-align:center">${pizzaSVG(q.cake, new Set(), 'food-cake', false)}</div>`;
   if (q.clock) body = clockSVG(q.clock.h, q.clock.m);
   if (q.kind === 'words') { const sel = R.wsel || (R.wsel = new Set()); body = `<div class="wchips${q.chips.some(c => c.includes(' ')) ? ' grp' : ''}">${q.chips.map((c, k) => `<button data-a="wchip" data-i="${k}" aria-pressed="${sel.has(k)}">${esc(c)}</button>`).join('')}</div>`; }
   const rev = q.rev ? '<span class="revb">Revanche\u00a0!</span>' : '';
@@ -1927,7 +1931,7 @@ function startTuto(key) {
   const steps = TUTO[key]; if (!steps || !R) return; coach = { key, k: 0 };
   const el = document.createElement('div'); el.className = 'coach'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Comment jouer');
   el.innerHTML = `<div class="ring"></div><svg class="hand" viewBox="0 0 48 48" aria-hidden="true"><path d="M18 6a4 4 0 0 1 4 4v14l2-.3V8a4 4 0 0 1 8 0v16l2 .2V12a4 4 0 0 1 8 0v18c0 9-6 16-15 16-6 0-10-3-13-8L8 30a3.5 3.5 0 0 1 5.5-4.3L14 26V10a4 4 0 0 1 4-4Z" fill="#fff3d0" stroke="#2a1c12" stroke-width="2.5" stroke-linejoin="round"/></svg>
-    <div class="bub paper"><img src="${IMG('crew-perroquet')}" alt=""><div class="tx"><b>Comment jouer</b><p></p><div class="row"><span class="dots">${steps.map(() => '<i></i>').join('')}</span><button data-a="coachnext"></button></div></div></div>`;
+    <div class="bub paper"><img src="${IMG('guide-capitaine')}" alt=""><div class="tx"><b>Comment jouer</b><p></p><div class="row"><span class="dots">${steps.map(() => '<i></i>').join('')}</span><button data-a="coachnext"></button></div></div></div>`;
   $('.screen.game').appendChild(el); coachStep();
 }
 function coachStep() {
@@ -1997,7 +2001,7 @@ function answer(ok, givenText, btn) {
     if (S.fastStreak >= 5) grantEp('Calcul-Éclair');
     const gain = 4 * R.d + (fast ? (has('requin') ? 8 : 4) : 0) + Math.min(R.combo, has('phoque') ? 8 : 5);
     R.gold += gain; S.gold += gain;
-    if (R.q.rev) { P().rev = P().rev.filter(x => x.q.log !== R.q.log || x.g !== R.i.id); S.gold += 5; R.gold += 5; setTimeout(() => pop('crew-perroquet', 'Revanche réussie · +5'), 650); }
+    if (R.q.rev) { P().rev = P().rev.filter(x => x.q.log !== R.q.log || x.g !== R.i.id); S.gold += 5; R.gold += 5; setTimeout(() => pop('guide-perroquet-bravo', 'Revanche réussie · +5'), 650); }
     if (fast && ms >= 6000) pop('crew-tortue', 'La Tortue t’offre l’éclair');
     else if (fast && has('requin') && !R.popped.requin) pop('crew-requin', 'Éclair doublé par le Requin', 'requin');
     if (has('phoque') && R.combo === 6) pop('crew-phoque', 'Le Phoque booste ton combo', 'phoque');
@@ -2012,7 +2016,7 @@ function answer(ok, givenText, btn) {
     if (R.i.id === 'canons') missFx();
     setTimeout(() => {
       const sh = document.createElement('div'); sh.className = 'sheet-err paper'; sh.setAttribute('role', 'alertdialog');
-      sh.innerHTML = `<div class="who"><img src="${IMG('crew-perroquet')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.explain}</p><button class="brass-btn" data-a="next">J’ai compris</button>`;
+      sh.innerHTML = `<div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.explain}</p><button class="brass-btn" data-a="next">J’ai compris</button>`;
       app.firstElementChild.appendChild(sh); $('[data-a="next"]', sh).focus();
     }, R.i.id === 'canons' ? 700 : 350);
   }
@@ -2027,8 +2031,8 @@ function shoot(hit) {
 }
 function isleFx(id) {
   const sc = (isleById(id).sea === 'f' && $('.screen.game.tall')) || $('#scene'); if (!sc) return; const H = sc.clientHeight; const add = (html, ms = 1500) => { const t = document.createElement('div'); t.innerHTML = html; const e = t.firstElementChild; sc.appendChild(e); setTimeout(() => e.remove(), ms); return e; };
-  if (id === 'stade') add(`<svg class="ifx ball" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#fff" stroke="#2a1c12" stroke-width="2"/><path d="M20 11l7 5-3 8h-8l-3-8z" fill="#2a1c12"/><path d="M20 2v9M27 16l9-3M24 24l5 9M16 24l-5 9M13 16l-9-3" stroke="#2a1c12" stroke-width="1.6"/></svg>`);
-  else if (id === 'mine') ['#ffe28a,#d9a12a', '#9ff0e9,#3fa8a2', '#7fe0a0,#2f9a5a'].forEach((g, k) => setTimeout(() => { const e = add(`<div class="ifx cube" style="left:${42 + k * 6}%;background:linear-gradient(135deg,${g})"></div>`); e.style.setProperty('--dy', (H * .5 - k * 22) + 'px'); }, k * 140));
+  if (id === 'stade') add(`<img class="ifx ball" src="${IMG('foot-ball')}" alt="">`);
+  else if (id === 'mine') ['block-1000', 'block-100', 'block-10'].forEach((g, k) => setTimeout(() => { const e = add(`<img class="ifx cube" src="${IMG(g)}" alt="" style="left:${40 + k * 7}%">`); e.style.setProperty('--dy', (H * .5 - k * 22) + 'px'); }, k * 140));
   else if (id === 'jungle') add(`<img class="ifx frog" src="${IMG('crew-grenouille')}" alt="">`);
   else if (id === 'marche') range(0, 7).forEach(k => setTimeout(() => { const e = add(`<img class="ifx coin" src="${IMG('coin-doublon')}" alt="" style="left:${8 + k * 12}%">`); e.style.setProperty('--dy', (H * .75) + 'px'); }, k * 70));
   else if (id === 'cuisine') [0, 1, 2].forEach(k => setTimeout(() => add(`<img class="ifx steam" src="${IMG('fx-smoke')}" alt="" style="margin-left:${(k - 1) * 40}px">`), k * 180));
@@ -2102,7 +2106,7 @@ function renderResult(win, stars, rewards, tideNext) {
   app.innerHTML = `<div class="screen result"><div class="rays"></div>
     <div class="head"><div class="smallcaps" style="color:#ffd9a0">${R.i.n} · niveau ${R.node}</div><div class="disp" style="margin-top:6px">${title}</div>
       <div class="stars">${starSvg(42, stars >= 1)}${starSvg(56, stars >= 2)}${starSvg(42, stars >= 3)}</div></div>
-    <div class="chest ${win ? 'shake' : ''}" id="chest" ${win ? 'data-a="openchest" role="button" tabindex="0" aria-label="Ouvrir le coffre"' : ''}><div class="glow"></div><img class="closed" src="${IMG('chest-closed')}" alt=""><img class="opened" src="${IMG('chest-open')}" alt="" style="opacity:0">${win ? '<span class="tap">Touche le coffre</span>' : ''}</div>
+    <div class="chest ${win ? 'shake' : ''}" id="chest" ${win ? 'data-a="openchest" role="button" tabindex="0" aria-label="Ouvrir le coffre"' : ''}><div class="glow"></div>${win ? `<img class="bravo" src="${IMG('guide-perroquet-bravo')}" alt="">` : ''}<img class="closed" src="${IMG('chest-closed')}" alt=""><img class="opened" src="${IMG('chest-open')}" alt="" style="opacity:0">${win ? '<span class="tap">Touche le coffre</span>' : ''}</div>
     <div class="rewards paper" id="rewards" ${win ? 'hidden' : ''}>${rewards.map((r, k) => `<div class="rw" style="animation-delay:${k * .12}s"><div class="ic"><img src="${IMG(r.img)}" alt=""></div><div><b>${r.b}</b><span>${r.s}</span></div><span class="tagr">${r.tag}</span></div>`).join('')}</div>
     <div class="btns">${primary}<button class="ghost-btn" data-a="home">Carte</button></div></div>`;
   if (!win) { $('#chest').style.opacity = .35; }
@@ -2247,7 +2251,7 @@ function restoreFrom(code) {
 /* ================= Onboarding ================= */
 function onboarding() {
   const m = document.createElement('div'); m.className = 'modal'; const ask = !S.grade; let gr = S.grade;
-  m.innerHTML = `<form class="box paper" id="ob" autocomplete="off"><img src="${IMG('capt-a')}" alt="" style="width:${ask ? 120 : 150}px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
+  m.innerHTML = `<form class="box paper" id="ob" autocomplete="off"><img src="${IMG('guide-capitaine')}" alt="Le Capitaine Barbe-Grise" style="width:${ask ? 130 : 160}px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
     <div class="disp" style="font-size:28px">Bienvenue à bord !</div><p style="margin:0;color:var(--ink-2)">Le Capitaine Barbe-Grise et son perroquet Pi vont t’accompagner d’île en île. Comment s’appelle le capitaine ?</p>
     <label for="nm" class="smallcaps" style="color:var(--ink-2)">Ton nom de pirate</label><input id="nm" maxlength="14" placeholder="Ex. : Léo" value="${esc(S.name)}">
     ${ask ? `<div class="smallcaps" style="color:var(--ink-2)">Ta classe</div><div class="grades" role="group" aria-label="Ta classe">${Object.entries(GRADES).map(([k, g]) => `<button type="button" data-g="${k}" aria-pressed="false"><b>${g.n}</b><span>${g.age}</span></button>`).join('')}</div>` : ''}
@@ -2352,14 +2356,14 @@ window.addEventListener('pagehide', save);
 window.addEventListener('resize', () => { if (!R && tab === 'map' && !$('.parents') && !$('.modal')) renderMap(); });
 
 /* Préchargement des images clés */
-['bg-sea-golden', 'ship-player-1', 'ship-player-2', 'ship-player-3', 'ship-requin', 'ship-requin-hit', 'bg-port-dusk', 'fg-waves', 'fx-explosion', 'fx-smoke', 'fx-splash', 'chest-closed', 'chest-open', 'coin-doublon', 'crew-perroquet', 'hero-canons'].forEach(n => { const i = new Image(); i.src = IMG(n); });
+['bg-sea-golden', 'ship-player-1', 'ship-player-2', 'ship-player-3', 'ship-requin', 'ship-requin-hit', 'bg-port-dusk', 'fg-waves', 'fx-explosion', 'fx-smoke', 'fx-splash', 'chest-closed', 'chest-open', 'coin-doublon', 'crew-perroquet', 'hero-canons', 'guide-perroquet-hmm', 'guide-perroquet-bravo', 'coin-copper', 'coin-gold', 'coin-bimetal', 'bill-green', 'bill-red', 'bill-blue', 'block-1000', 'block-100', 'block-10', 'block-1', 'food-pizza', 'food-cake', 'foot-ball', 'foot-goal'].forEach(n => { const i = new Image(); i.src = IMG(n); });
 
 function titleScreen() {
   app.innerHTML = `<div class="screen title" data-a="start" role="button" tabindex="0" aria-label="Toucher pour embarquer"><img class="bg" src="${IMG('bg-sea-golden')}" alt="">
     <div class="tlogo"><div class="smallcaps">Une aventure de pirates</div><div class="disp">Chiffres<br>à l’abordage !</div></div>
     <img class="tship" src="${IMG(shipImg())}" alt="" style="${shipFx()}">
     <div class="tgo"><span>Touche pour embarquer</span><div class="tload" aria-hidden="true"><i id="tload"></i></div></div><div class="vers2">v${VERSION.split(' ')[0]}</div></div>`;
-  const list = ['tex-ocean', 'lagoon-round', 'lagoon-oval', 'lagoon-rocks', 'fx-fog-a', 'ship-player-top', 'capt-a', 'coin-doublon', 'tex-parchment', ...ISLES.filter(i => !i.soon).map(i => i.img), 'crew-perroquet'];
+  const list = ['tex-ocean', 'lagoon-round', 'lagoon-oval', 'lagoon-rocks', 'fx-fog-a', 'ship-player-top', 'capt-a', 'coin-doublon', 'tex-parchment', 'guide-capitaine', ...ISLES.filter(i => !i.soon).map(i => i.img), 'crew-perroquet'];
   let done = 0; list.forEach(n => { const im = new Image(); im.onload = im.onerror = () => { done++; const b = $('#tload'); if (b) b.style.width = Math.round(done / list.length * 100) + '%'; }; im.src = IMG(n); });
   ac();
 }
