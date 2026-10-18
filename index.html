@@ -650,6 +650,7 @@ textarea.fld{min-height:76px}
 .burst .w{font-size:clamp(30px,10vw,58px);white-space:normal;max-width:92vw;line-height:1.02}
 .isle.soon .lag{opacity:.45}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.gradeb{flex:none;padding:1px 6px;border-radius:6px;background:var(--brass-hi);color:#2a1a07;font:800 10.5px/1.4 var(--f-u);letter-spacing:.06em}
 /* Police pirate (vieux livre de bord) pour les titres et les noms ; les chiffres des calculs, les touches et les réponses gardent Fraunces et Lexend, plus lisibles */
 .disp,.tlogo .disp,.isle .lbl b,.lair .lbl,.tide h2,.rlab b,.burst .w,.sheet-err h3,.tabpage h1,.crew-card b,.poster .t1,.poster .nm,.trophy .tt b,.yh,.yard h2,.hud .nm,.shipcap .disp{font-family:var(--f-p);font-weight:400;font-variation-settings:normal;font-synthesis:none;letter-spacing:.01em}
 .tlogo .disp{font-size:clamp(46px,13vw,74px);line-height:.98}
@@ -737,7 +738,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.1 bêta · octobre 2026';
+const VERSION = '1.1.1 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -1845,7 +1846,7 @@ function toast(msg) { const t = document.createElement('div'); t.className = 'to
 function hudHTML() {
   const ri = rankIdx(S.gold), next = RANKS[ri + 1], pct = next ? (S.gold - RANKS[ri][0]) / (next[0] - RANKS[ri][0]) * 100 : 100;
   return `<div class="hud glass"><div class="medal${ADMIN ? ' adm' : ''}"><img src="${IMG(capt())}" alt="">${ADMIN ? '<span class="admb">Admin</span>' : ''}</div>
-    <div style="min-width:0"><div class="nm">${esc(S.name || 'Capitaine')}</div><div class="rk">${RANKS[ri][1]} <span class="xp"><i style="width:${pct}%"></i></span></div></div>
+    <div style="min-width:0"><div class="nm">${esc(S.name || 'Capitaine')}</div><div class="rk"><span class="gradeb" title="Programme suivi">${GRADES[GR()].n}</span>${RANKS[ri][1]} <span class="xp"><i style="width:${pct}%"></i></span></div></div>
     <div class="purse"><img src="${IMG('coin-doublon')}" alt=""><b class="num">${fmt(wallet())}</b></div>
     <button class="cog" id="cog" aria-label="Réglages parents : maintenir 2 secondes">${ico('iCog')}<i></i></button></div>`;
 }
@@ -1939,7 +1940,7 @@ function renderIsle(id) {
   const path = range(1, NODES).map(k => `${k > 1 ? 'L' : 'M'}${xs(k)},${ys(k)}`).join(' ');
   const hero = `<img class="bg" src="${IMG(i.hero)}" alt="">`;
   app.innerHTML = `<div class="screen"><div class="hero">${hero}
-      <div class="tt"><div class="smallcaps" style="color:#ffd9a0">${i.notion}</div><div class="disp">${i.n}</div></div></div>
+      <div class="tt"><div class="smallcaps" style="color:#ffd9a0"><span class="gradeb" style="margin-right:6px;vertical-align:1px">${GRADES[GR()].n}</span>${i.notion}</div><div class="disp">${i.n}</div></div></div>
     <div class="topbar"><button class="round glass" data-a="home" aria-label="Retour à la carte">${ico('iBack')}</button><span class="chip glass" style="height:40px;border-radius:20px;color:#ffe2a6">${s.node > CHEST ? 'Coffre ouvert' : 'Coffre au niveau 5'}</span></div>
     <div class="sheet paper">${trophyHTML(i, s)}<div class="stats" hidden>
         <div class="stat"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="rgba(138,98,36,.2)" stroke-width="6"/><circle cx="29" cy="29" r="24" fill="none" stroke="url(#gBrass)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(acc / 100 * 150.8).toFixed(1)} 150.8" transform="rotate(-90 29 29)"/><text x="29" y="34.5" text-anchor="middle" font-family="Fraunces,serif" font-weight="800" font-size="15" fill="#2a1c12">${acc}%</text></svg><span>Réussite</span></div>
@@ -2239,7 +2240,7 @@ function renderResult(win, stars, rewards, tideNext) {
     : tideNext ? `<button class="brass-btn" data-a="tidenext">Escale suivante <small>· ${tideNext.notion}</small></button>`
     : win ? `<button class="brass-btn" data-a="play" data-i="${R.i.id}" data-n="${Math.min(IS(R.i.id).node, NODES)}">Niveau suivant</button>` : `<button class="brass-btn" data-a="play" data-i="${R.i.id}" data-n="${R.node}">Réessayer</button>`;
   app.innerHTML = `<div class="screen result${win ? ' closed' : ''}"><div class="rays"></div>
-    <div class="head"><div class="smallcaps" style="color:#ffd9a0">${R.i.n} · niveau ${R.node}</div><div class="disp" style="margin-top:6px">${title}</div>
+    <div class="head"><div class="smallcaps" style="color:#ffd9a0">${R.i.n} · niveau ${R.node} · ${GRADES[GR()].n}</div><div class="disp" style="margin-top:6px">${title}</div>
       <div class="stars">${starSvg(42, stars >= 1)}${starSvg(56, stars >= 2)}${starSvg(42, stars >= 3)}${win ? [[-8, 10, 0], [92, 0, .5], [30, -30, .9], [70, 70, 1.3]].map(([x, y, d]) => `<img class="spk" src="${IMG('fx-sparkle')}" alt="" style="left:${x}%;top:${y}%;animation-delay:${d}s">`).join('') : ''}</div></div>
     <div class="chest ${win ? 'shake' : ''}" id="chest" ${win ? 'data-a="openchest" role="button" tabindex="0" aria-label="Ouvrir le coffre"' : ''}><div class="glow"></div>${win ? `<img class="bravo" src="${IMG('guide-perroquet-bravo')}" alt="">${capt() === 'capt-a' ? `<img class="victor" src="${IMG('capt-victory')}" alt="">` : ''}` : ''}<img class="closed" src="${IMG('chest-closed')}" alt=""><img class="opened" src="${IMG('chest-open')}" alt="" style="opacity:0">${win ? '<span class="tap">Touche le coffre</span>' : ''}</div>
     <div class="rewards paper" id="rewards" ${win ? 'hidden' : ''}>${rewards.map((r, k) => `<div class="rw" style="animation-delay:${k * .12}s"><div class="ic"><img src="${IMG(r.img)}" alt=""></div><div><b>${r.b}</b><span>${r.s}</span></div><span class="tagr">${r.tag}</span></div>`).join('')}</div>
