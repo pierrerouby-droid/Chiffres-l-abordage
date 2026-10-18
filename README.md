@@ -1,6 +1,6 @@
 # Chiffres à l’abordage !
 
-Un jeu de mathématiques pour les enfants de CE2, pensé pour l’iPhone et l’iPad. L’enfant navigue d’île en île avec le Capitaine Barbe-Grise et son perroquet Pi. Chaque île travaille une notion du programme de CE2 (BO n° 41 du 31 octobre 2024), et la difficulté s’adapte toute seule à son niveau.
+Un jeu de mathématiques et de français pour les enfants de CE2 et de CM1, pensé pour l’iPhone et l’iPad. L’enfant navigue d’île en île avec le Capitaine Barbe-Grise et son perroquet Pi. Chaque île travaille une notion du programme de sa classe (CE2 : BO n° 41 du 31 octobre 2024 ; CM1 : programmes du cycle 3 applicables à la rentrée 2025), et la difficulté s’adapte toute seule à son niveau.
 
 Aucune publicité, aucun achat, aucun compte. La progression reste sur l’appareil.
 
@@ -14,15 +14,31 @@ Ce dépôt est le site complet : la page `index.html` à la racine se lance tell
 
 ## Les îles
 
-| Île | Notion |
-|---|---|
-| Île des Canons | Tables de multiplication |
-| Stade des Vagues | Calcul mental |
-| Mine aux Blocs | Nombres jusqu’à 10 000 |
-| Jungle des Créatures | Droite graduée |
-| Marché du Port | Monnaie et euros |
-| Cuisine du Navire | Fractions |
-| Île de l’Horloge | Heures et durées (prête, en attente de ses illustrations) |
+Au premier lancement, l’enfant choisit sa classe (CE2 ou CM1). Chaque classe garde sa propre progression ; les parents peuvent changer de classe dans l’espace parents.
+
+### Mer des Chiffres (mathématiques)
+
+| Île | CE2 | CM1 |
+|---|---|---|
+| Île des Canons | Tables de multiplication | Tables, multiples, divisions avec reste, 2 chiffres × 1 chiffre |
+| Stade des Vagues | Calcul mental | × et ÷ par 10, 100, 1 000, compléments à 1 000, décimaux |
+| Mine aux Blocs | Nombres jusqu’à 10 000 | Nombres jusqu’à 999 999, dixièmes et centièmes |
+| Jungle des Créatures | Droite graduée | Graduations de 100 à 10 000, dixièmes et centièmes |
+| Marché du Port | Monnaie et euros | Prix à virgule, rendu sur 50 €, quantités |
+| Cuisine du Navire | Fractions | Fraction d’une quantité, fractions décimales, sommes |
+| Île de l’Horloge | Heures et durées | Lecture à la minute, conversions, durées (en attente de ses illustrations) |
+
+### Mer des Lettres (français), en attente des illustrations
+
+| Île | CE2 | CM1 |
+|---|---|---|
+| Grotte aux Histoires | Textes courts : informations explicites, inférences, reprises, vocabulaire | Textes plus longs, documentaires, contes, légendes |
+| Forge des Verbes | Présent, futur, imparfait, passé composé des verbes du programme | 2e groupe, verbes en -ger, -cer, -eler, -eter, -yer, accord avec être |
+| Récif des Phrases | Types de phrases, verbe, noms, déterminants, adjectifs, sujet, négation | Nature et fonction, compléments du verbe et de phrase, nom noyau |
+| Pont des Accords | Pluriels, accords dans le groupe nominal, sujet-verbe, a/à, et/est, son/sont | Pluriels irréguliers, féminins, sujet éloigné, participe passé avec être, on/ont, ces/ses, ou/où |
+| Baie des Mots | Ordre alphabétique, familles, préfixes et suffixes, synonymes, sens figuré | Radical, niveaux de langue, polysémie, mots génériques, homonymes |
+
+Ces îles sont programmées et testées. Elles restent « Bientôt » sur la carte jusqu’à l’arrivée de leurs 15 illustrations (lot 5 de `design/bible-des-assets.html`).
 
 ## Organisation du dépôt
 

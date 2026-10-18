@@ -94,7 +94,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
       <p class="lead">Tout ce qu’il faut générer pour construire l’appli, avec un prompt prêt à copier pour chaque élément. Les textes, chiffres, boutons et animations restent en code : je m’en occupe.</p>
     </div>
     <div class="meter" aria-live="polite">
-      <div><b id="m-p1">0 / 0</b> <span>du lot 3</span></div>
+      <div><b id="m-p1">0 / 0</b> <span>du lot 5 (Mer des Lettres)</span></div>
       <div class="bar"><i id="m-bar"></i></div>
       <div class="sub"><span id="m-all">0 / 0 au total</span><span>coche au fur et à mesure</span></div>
     </div>
@@ -104,7 +104,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
     <h2>Mode d’emploi</h2>
     <div class="steps">
       <div class="step"><span class="n">1</span><p><b>Une seule conversation</b> dans ton générateur. Colle le bloc de style, puis joins les références indiquées sur chaque fiche (« Joindre : … ») : <code>hero-canons</code> pour les décors, <code>boss-kraken</code> et <code>crew-perroquet</code> pour les personnages, <code>ship-player-3</code> pour les navires.</p></div>
-      <div class="step"><span class="n">2</span><p><b>Lots 1 et 2 reçus et intégrés</b> (55 images). Place au <b>lot 3</b> : le portrait du Capitaine Barbe-Grise, les 3 images de la nouvelle Île de l’Horloge (déjà jouable dès qu’elles arrivent) et 17 objets pour les mini-jeux, dans l’ordre de la liste. Chaque fiche indique quelle image validée joindre comme référence.</p></div>
+      <div class="step"><span class="n">2</span><p><b>Lots 1 et 2 reçus et intégrés</b> (55 images). Place au <b>lot 5</b> : les 15 images de la Mer des Lettres (pour chacune des 5 îles de français : l’île, son décor et son boss), dans l’ordre de la liste. Chaque île sort du brouillard dès que ses trois images arrivent. Le <b>lot 3</b> (Horloge et objets des mini-jeux) reste à faire ensuite. Chaque fiche indique quelle image validée joindre comme référence.</p></div>
       <div class="step"><span class="n">3</span><p><b>Copie le prompt de chaque fiche</b> : il contient déjà le style, le sujet, le fond et le format. Commence par les fiches <b>Indispensable</b>.</p></div>
       <div class="step"><span class="n">4</span><p><b>Fond transparent</b> : demande un PNG transparent. Si l’outil ne sait pas, il doit mettre un fond magenta uni <code>#FF00FF</code>, je le découpe moi-même.</p></div>
       <div class="step"><span class="n">5</span><p><b>Nomme chaque fichier</b> avec son identifiant (<code>isle-canons.png</code>), en plus grande taille possible. Je redimensionne et je compresse.</p></div>
@@ -316,6 +316,22 @@ const A = [
   { id: 'loop-ocean', c: 'video', p: 3, bg: 'video', r: '1:1', n: 'Boucle océan', u: 'Remplace la texture d’océan animée en code.', s: 'Top-down ocean water with the same look as bg-ocean-a, gentle waves and moving light caustics.' },
   { id: 'loop-sky', c: 'video', p: 3, bg: 'video', r: '3:2', n: 'Boucle ciel doré', u: 'Fond des combats.', s: 'The golden-hour sea scene of bg-sea-golden with clouds drifting slowly and the sun reflection shimmering.' },
   { id: 'loop-fog', c: 'video', p: 3, bg: 'video', r: '3:2', n: 'Boucle brouillard', u: 'Brouillard de la carte.', s: 'White sea fog drifting slowly from left to right over a pure black background.' },
+  // Mer des Lettres (îles de français) : elles restent « Bientôt » dans le jeu tant que ces images ne sont pas arrivées
+  { id: 'isle-lecture', c: 'map', p: 1, bg: 'alpha', r: '1:1', n: 'Grotte aux Histoires', u: 'Mer des Lettres. Lecture et compréhension.', s: `${ISLE} a rocky cliff with a large sea cave whose entrance is framed by stacks of giant old books and rolled scrolls, warm lantern light glowing inside the cave, palm trees on top. Books have plain covers, no letters.` },
+  { id: 'isle-conjug', c: 'map', p: 1, bg: 'alpha', r: '1:1', n: 'Forge des Verbes', u: 'Mer des Lettres. Conjugaison.', s: `${ISLE} a small open-air blacksmith forge with a glowing furnace and an anvil, a tall stone chimney with sparks, a giant brass hourglass and a sundial next to the forge, palm trees.` },
+  { id: 'isle-gram', c: 'map', p: 1, bg: 'alpha', r: '1:1', n: 'Récif des Phrases', u: 'Mer des Lettres. Grammaire.', s: `${ISLE} coral-covered rocks forming a natural stone arch, a line of blank colorful wooden tiles hanging from a rope across the arch like flags, small tide pools, palm trees. Tiles are blank, no letters.` },
+  { id: 'isle-accords', c: 'map', p: 1, bg: 'alpha', r: '1:1', n: 'Pont des Accords', u: 'Mer des Lettres. Accords et homophones.', s: `${ISLE} two small rocky islets joined by a sturdy wooden rope bridge with a little stone gatehouse in the middle, lanterns along the bridge, palm trees on both islets.` },
+  { id: 'isle-vocab', c: 'map', p: 1, bg: 'alpha', r: '1:1', n: 'Baie des Mots', u: 'Mer des Lettres. Vocabulaire.', s: `${ISLE} a cozy little bay with a whale-shaped rock, a driftwood library hut with open shelves full of books, hanging paper lanterns, palm trees. Books have plain covers, no letters.` },
+  { id: 'hero-lecture', c: 'scene', p: 1, bg: 'scene', r: '3:2', n: 'En-tête Grotte aux Histoires', u: 'Haut de l’écran de l’île et fond du combat de boss.', s: 'A big sea cave on a tropical island at sunset seen from the water, piles of giant old books and scrolls at its entrance, warm lantern glow inside, palm trees above. Keep the lower third darker and calm for a title overlay.' },
+  { id: 'hero-conjug', c: 'scene', p: 1, bg: 'scene', r: '3:2', n: 'En-tête Forge des Verbes', u: 'Haut de l’écran de l’île et fond du combat de boss.', s: 'A blacksmith forge on a tropical island at sunset seen from the sea, glowing furnace, sparks rising from the chimney, a giant brass hourglass beside the anvil, palm trees. Keep the lower third darker and calm for a title overlay.' },
+  { id: 'hero-gram', c: 'scene', p: 1, bg: 'scene', r: '3:2', n: 'En-tête Récif des Phrases', u: 'Haut de l’écran de l’île et fond du combat de boss.', s: 'A coral reef island at sunset seen from the sea, a natural rock arch with blank colorful wooden tiles hanging on a rope like flags, tide pools glowing. No letters anywhere. Keep the lower third darker and calm for a title overlay.' },
+  { id: 'hero-accords', c: 'scene', p: 1, bg: 'scene', r: '3:2', n: 'En-tête Pont des Accords', u: 'Haut de l’écran de l’île et fond du combat de boss.', s: 'A long wooden rope bridge between two rocky islets at sunset seen from the sea, a small stone gatehouse in the middle, lanterns lit along the bridge. Keep the lower third darker and calm for a title overlay.' },
+  { id: 'hero-vocab', c: 'scene', p: 1, bg: 'scene', r: '3:2', n: 'En-tête Baie des Mots', u: 'Haut de l’écran de l’île et fond du combat de boss.', s: 'A calm bay at sunset seen from the water, a driftwood library hut with shelves of books, paper lanterns, a whale-shaped rock in the shallows. No letters anywhere. Keep the lower third darker and calm for a title overlay.' },
+  { id: 'boss-lecture', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'La Sirène des Contes', u: 'Boss de la Grotte aux Histoires (lecture).', s: 'A playful mermaid storyteller sitting on a rock, holding a giant open storybook with blank pages, teal tail, pirate bandana, mischievous smile. Kid-friendly and fully clothed, theatrical, not scary.' },
+  { id: 'boss-conjug', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'Le Forgeron des Temps', u: 'Boss de la Forge des Verbes (conjugaison).', s: 'A sturdy walrus blacksmith with a leather apron and a big hammer, a small brass hourglass hanging from his belt, a few sparks around him. Grumpy but funny, kid-friendly.' },
+  { id: 'boss-gram', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'La Murène des Phrases', u: 'Boss du Récif des Phrases (grammaire).', s: 'A long cheeky moray eel wearing round reading glasses and a tiny pirate hat, coiled around a stack of blank wooden tiles. Theatrical and funny, not scary. No letters.' },
+  { id: 'boss-accords', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'Le Troll du Pont', u: 'Boss du Pont des Accords (accords).', s: 'A chubby mossy stone troll with a pirate hat, holding a big brass balance scale with one pan in each hand, standing as if guarding a bridge. Grumpy but funny, kid-friendly.' },
+  { id: 'boss-vocab', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'La Baleine Dictionnaire', u: 'Boss de la Baie des Mots (vocabulaire).', s: 'A huge friendly whale wearing small round spectacles, a giant closed book with a plain leather cover strapped on her back like a saddle, a cheerful water spout. Kid-friendly. No letters.' },
 ];
 
 const PRIO = { 1: 'Indispensable', 2: 'Important', 3: 'Plus tard' };
@@ -323,12 +339,14 @@ const RECU = new Set(['app-icon','tex-parchment','tex-wood','tex-ocean','bg-ocea
 const LOTS = {
   2: { t: 'Lot 2 · reçu et intégré', d: 'Ce qui change le plus l’appli actuelle : un décor et un boss pour chaque île, le navire qui grandit, le Requin Noir qui coule, les équipiers à collectionner et l’écran de fin de session.',
        ids: ['hero-stade','hero-mine','hero-jungle','hero-marche','hero-cuisine','boss-crabe','boss-golem','boss-serpent','boss-marchand','boss-chef','ship-player-1','ship-player-2','ship-requin-hit','crew-poisson','crew-phoque','crew-grenouille','crew-pieuvre','crew-requin','crew-croco','bg-port-dusk'] },
-  3: { t: 'Lot 3 · à faire maintenant : les objets des mini-jeux', d: 'Pour remplacer les éléments encore dessinés en code dans les tirs au but, la mine, le marché et la cuisine, plus deux expressions du perroquet guide.',
+  3: { t: 'Lot 3 · les objets des mini-jeux et l’Horloge', d: 'Pour remplacer les éléments encore dessinés en code dans les tirs au but, la mine, le marché et la cuisine, plus deux expressions du perroquet guide.',
        ids: ['guide-capitaine', 'isle-horloge', 'hero-horloge', 'boss-horloge', 'foot-ball','foot-goal','block-1000','block-100','block-10','block-1','coin-copper','coin-gold','coin-bimetal','bill-green','bill-red','bill-blue','food-pizza','food-cake','jungle-frame','guide-perroquet-bravo','guide-perroquet-hmm'] },
+  5: { t: 'Lot 5 · Mer des Lettres', d: 'Les cinq îles de français (lecture, conjugaison, grammaire, accords, vocabulaire) sont programmées pour le CE2 et le CM1. Chaque île attend trois images : l’île sur la carte, son décor et son boss. Dès qu’elles arrivent, l’île sort du brouillard.',
+       ids: ['isle-lecture', 'hero-lecture', 'boss-lecture', 'isle-conjug', 'hero-conjug', 'boss-conjug', 'isle-gram', 'hero-gram', 'boss-gram', 'isle-accords', 'hero-accords', 'boss-accords', 'isle-vocab', 'hero-vocab', 'boss-vocab'] },
   4: { t: 'Lot 4 · personnalisation et finitions', d: 'Choix du capitaine, améliorations du navire, nouvelles îles de la carte, tempête des boss et petits effets.',
        ids: ['capt-b','capt-c','capt-d','capt-victory','fig-dragon','fig-sirene','cannon-gold','flag-blank','ship-meduse','bg-storm','bg-title','isle-port','isle-kraken','fx-fog-b','deco-compass','coin-pile','wax-seal','cannonball','fx-sparkle','fx-coins'] },
 };
-const lotOf = id => { for (const k of [2, 3, 4]) if (LOTS[k].ids.includes(id)) return k; return 0; };
+const lotOf = id => { for (const k of [2, 3, 4, 5]) if (LOTS[k].ids.includes(id)) return k; return 0; };
 const REFS = a => {
   if (a.id.startsWith('hero-')) return ['hero-canons'];
   if (a.id.startsWith('boss-')) return ['boss-kraken', 'crew-perroquet'];
@@ -343,8 +361,8 @@ const KEY = 'archipel-assets-done';
 let done = new Set();
 try { done = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch (e) {} };
-let view = 'lot3', fC = 'all';
-try { view = localStorage.getItem('archipel-assets-view2') || 'lot3'; } catch (e) {}
+let view = 'lot5', fC = 'all';
+try { view = localStorage.getItem('archipel-assets-view3') || 'lot5'; } catch (e) {}
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const full = a => { const r = REFS(a).filter(x => RECU.has(x) && x !== a.id); return [STYLE, r.length ? `REFERENCE: match the attached reference image${r.length > 1 ? 's' : ''} (${r.join(', ')}) exactly in rendering style, lighting, level of detail and scale.` : '', `SUBJECT: ${a.s}`, BG[a.bg], RATIO[a.r]].filter(Boolean).join('\n\n'); };
@@ -363,7 +381,7 @@ function copy(text, btn, label) {
 }
 document.getElementById('copy-style').addEventListener('click', e => copy(STYLE, e.currentTarget, 'Copier le bloc de style'));
 
-const VIEWS = [['lot3', 'Lot 3 · maintenant'], ['lot2', 'Lot 2'], ['lot4', 'Lot 4'], ['later', 'Plus tard'], ['recu', 'Reçus'], ['all', 'Tout']];
+const VIEWS = [['lot5', 'Lot 5 · Mer des Lettres'], ['lot3', 'Lot 3'], ['lot2', 'Lot 2'], ['lot4', 'Lot 4'], ['later', 'Plus tard'], ['recu', 'Reçus'], ['all', 'Tout']];
 const inView = a => view === 'all' ? true : view === 'recu' ? RECU.has(a.id) : view === 'later' ? !RECU.has(a.id) && !lotOf(a.id) : lotOf(a.id) === +view.slice(3);
 function chips() {
   document.getElementById('f-prio').innerHTML = VIEWS.map(([v, l]) => `<button class="chip" type="button" data-v="${v}" aria-pressed="${view === v}">${l} · ${A.filter(a => { const o = view; view = v; const r = inView(a); view = o; return r; }).length}</button>`).join('');
@@ -400,14 +418,14 @@ function render() {
   meter();
 }
 function meter() {
-  const L = LOTS[3].ids, d2 = L.filter(id => done.has(id)).length;
+  const L = LOTS[5].ids, d2 = L.filter(id => done.has(id)).length;
   document.getElementById('m-p1').textContent = `${d2} / ${L.length}`;
   document.getElementById('m-bar').style.width = `${d2 / L.length * 100}%`;
   document.getElementById('m-all').textContent = `${RECU.size} reçus · ${A.filter(a => !RECU.has(a.id)).length} à faire`;
 }
 document.addEventListener('click', e => {
   const v = e.target.closest('[data-v]'), c = e.target.closest('[data-c]'), cp = e.target.closest('[data-copy]');
-  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view2', view); } catch (er) {} chips(); render(); }
+  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view3', view); } catch (er) {} chips(); render(); }
   else if (c) { fC = c.dataset.c; chips(); render(); }
   else if (cp) { const a = A.find(x => x.id === cp.dataset.copy); copy(full(a), cp, 'Copier le prompt'); }
 });
