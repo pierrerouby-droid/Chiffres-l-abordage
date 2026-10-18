@@ -47,6 +47,7 @@ Un bouton en haut de la carte passe de la Mer des Chiffres à la Mer des Lettres
 - `src/app.html` : la source du jeu (HTML, CSS et JavaScript dans un seul fichier).
 - `tools/build.sh` : construit `index.html` à partir de `src/app.html` (`sh tools/build.sh`).
 - `tools/mk_sw.py` : régénère la liste des fichiers mis en cache hors connexion (`python3 tools/mk_sw.py <version>`).
+- `assets/fonts/` : les trois polices (Fraunces, IM Fell English SC, Lexend), hébergées avec le jeu pour marcher hors connexion sans appel à un service tiers ; licences SIL OFL jointes.
 - `design/` : liste des visuels à générer, liste des voix et bruitages, planches de direction artistique.
 
 ## Crédits
