@@ -538,6 +538,9 @@ textarea.fld{min-height:76px}
 .ifx{position:absolute;pointer-events:none;z-index:6}
 .ifx.ball{width:46px;height:46px;left:18%;bottom:18%;animation:ballfly .9s cubic-bezier(.25,.6,.4,1) forwards}
 @keyframes ballfly{0%{transform:translate(0,0) rotate(0) scale(1)}100%{transform:translate(min(52vw,260px),-150%) rotate(540deg) scale(.6);opacity:.4}}
+.g-scene .jframe{position:absolute;left:-4%;top:-4%;width:108%;height:108%;object-fit:cover;object-position:50% 100%;z-index:5;pointer-events:none;transform-origin:50% 100%;animation:sway 6s ease-in-out infinite}
+@keyframes sway{50%{transform:scale(1.015) rotate(.4deg)}}
+@media (prefers-reduced-motion:reduce){.g-scene .jframe{animation:none}}
 .g-scene .goal{position:absolute;right:3%;bottom:24%;width:min(44%,240px);z-index:3;filter:drop-shadow(0 10px 8px rgba(0,0,0,.35))}
 .ifx.cube{width:34px;height:34px;top:-30px;animation:cubedrop .9s cubic-bezier(.3,1.5,.5,1) forwards}
 @keyframes cubedrop{0%{transform:translateY(0)}70%{opacity:1}100%{transform:translateY(var(--dy));opacity:0}}
@@ -1854,7 +1857,7 @@ function sceneHTML() {
     ${powersHTML()}</div>`;
   return `<div class="g-scene" id="scene"><img class="bg" src="${IMG('bg-sea-golden')}" alt="">
     <img src="${IMG(i.img)}" alt="" onerror="this.remove()" style="position:absolute;left:${i.id === 'stade' ? 30 : 50}%;top:52%;width:min(${i.id === 'stade' ? 48 : 62}%,300px);transform:translate(-50%,-50%);filter:drop-shadow(0 14px 12px rgba(0,0,0,.4));animation:bob 3.4s ease-in-out infinite">
-    ${i.id === 'stade' ? `<img class="goal" src="${IMG('foot-goal')}" alt="">` : ''}
+    ${i.id === 'stade' ? `<img class="goal" src="${IMG('foot-goal')}" alt="">` : ''}${i.id === 'jungle' ? `<img class="jframe" src="${IMG('jungle-frame')}" alt="">` : ''}
     <div class="waves"></div>${powersHTML()}</div>`;
 }
 function powersHTML() {
@@ -2356,7 +2359,7 @@ window.addEventListener('pagehide', save);
 window.addEventListener('resize', () => { if (!R && tab === 'map' && !$('.parents') && !$('.modal')) renderMap(); });
 
 /* Préchargement des images clés */
-['bg-sea-golden', 'ship-player-1', 'ship-player-2', 'ship-player-3', 'ship-requin', 'ship-requin-hit', 'bg-port-dusk', 'fg-waves', 'fx-explosion', 'fx-smoke', 'fx-splash', 'chest-closed', 'chest-open', 'coin-doublon', 'crew-perroquet', 'hero-canons', 'guide-perroquet-hmm', 'guide-perroquet-bravo', 'coin-copper', 'coin-gold', 'coin-bimetal', 'bill-green', 'bill-red', 'bill-blue', 'block-1000', 'block-100', 'block-10', 'block-1', 'food-pizza', 'food-cake', 'foot-ball', 'foot-goal'].forEach(n => { const i = new Image(); i.src = IMG(n); });
+['bg-sea-golden', 'ship-player-1', 'ship-player-2', 'ship-player-3', 'ship-requin', 'ship-requin-hit', 'bg-port-dusk', 'fg-waves', 'fx-explosion', 'fx-smoke', 'fx-splash', 'chest-closed', 'chest-open', 'coin-doublon', 'crew-perroquet', 'hero-canons', 'guide-perroquet-hmm', 'guide-perroquet-bravo', 'coin-copper', 'coin-gold', 'coin-bimetal', 'bill-green', 'bill-red', 'bill-blue', 'block-1000', 'block-100', 'block-10', 'block-1', 'food-pizza', 'food-cake', 'foot-ball', 'foot-goal', 'jungle-frame'].forEach(n => { const i = new Image(); i.src = IMG(n); });
 
 function titleScreen() {
   app.innerHTML = `<div class="screen title" data-a="start" role="button" tabindex="0" aria-label="Toucher pour embarquer"><img class="bg" src="${IMG('bg-sea-golden')}" alt="">
