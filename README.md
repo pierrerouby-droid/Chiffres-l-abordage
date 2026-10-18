@@ -28,7 +28,7 @@ Au premier lancement, l’enfant choisit sa classe (CE2 ou CM1). Chaque classe g
 | Cuisine du Navire | Fractions | Fraction d’une quantité, fractions décimales, sommes |
 | Île de l’Horloge | Heures et durées | Lecture à la minute, conversions, durées (en attente de ses illustrations) |
 
-### Mer des Lettres (français), en attente des illustrations
+### Mer des Lettres (français)
 
 | Île | CE2 | CM1 |
 |---|---|---|
@@ -38,7 +38,7 @@ Au premier lancement, l’enfant choisit sa classe (CE2 ou CM1). Chaque classe g
 | Pont des Accords | Pluriels, accords dans le groupe nominal, sujet-verbe, a/à, et/est, son/sont | Pluriels irréguliers, féminins, sujet éloigné, participe passé avec être, on/ont, ces/ses, ou/où |
 | Baie des Mots | Ordre alphabétique, familles, préfixes et suffixes, synonymes, sens figuré | Radical, niveaux de langue, polysémie, mots génériques, homonymes |
 
-Ces îles sont programmées et testées. Elles restent « Bientôt » sur la carte jusqu’à l’arrivée de leurs 15 illustrations (lot 5 de `design/bible-des-assets.html`).
+Un bouton en haut de la carte passe de la Mer des Chiffres à la Mer des Lettres. Dès qu’une île de français est ouverte, la marée du jour propose deux escales de maths et une de français.
 
 ## Organisation du dépôt
 

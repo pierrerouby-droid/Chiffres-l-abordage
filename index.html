@@ -230,7 +230,8 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .game.tall>.burst{top:40%}.game.tall>.ifx.let{top:45%;z-index:21}
 .game.tall .powers{flex-direction:row;top:calc(var(--st) + 58px)}
 .game.tall .pw span{display:none}.game.tall .pw{padding:0 3px}
-.game.tall .hpbox{top:calc(var(--st) + 58px);width:150px;padding:5px 10px 7px}
+.game.tall .hpbox{top:calc(var(--st) + 58px);width:min(220px,58%);padding:5px 10px 7px}
+.hpbox .smallcaps{font-size:11.5px;letter-spacing:.06em!important;line-height:1.2}
 .ifx.let{top:62%;font:900 46px var(--f-d);color:#fff3d0;text-shadow:0 3px 0 #8a6224,0 6px 14px rgba(0,0,0,.45);animation:letfly 1.1s ease-out forwards}
 @keyframes letfly{0%{transform:translateY(0) scale(.4) rotate(-10deg);opacity:0}25%{opacity:1}100%{transform:translateY(-120px) scale(1.15) rotate(12deg);opacity:0}}
 .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;margin:0 .08em}
@@ -633,7 +634,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '0.7 bêta · octobre 2026';
+const VERSION = '0.8 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -759,12 +760,12 @@ const ISLES = [
   { id: 'marche', sea: 'm', cm1: 'Monnaie et prix', hero: 'hero-marche', boss: { img: 'boss-marchand', n: 'Le Marchand Fantôme' }, chestCrew: 'calmar', art: 'le Marché du Port', n: 'Marché du Port', notion: 'Monnaie et euros', img: 'isle-marche', lag: 'lagoon-round', x: 28, y: 570, gen: genMarche, ep: 'Main-d’Or', unlock: 6, sfx: ['VENDU !', 'PILE LE COMPTE !'] },
   { id: 'cuisine', sea: 'm', cm1: 'Fractions et fractions décimales', hero: 'hero-cuisine', boss: { img: 'boss-chef', n: 'Le Chef Pieuvre' }, chestCrew: 'poisson', art: 'la Cuisine du Navire', n: 'Cuisine du Navire', notion: 'Fractions', img: 'isle-cuisine', lag: 'lagoon-rocks', x: 72, y: 350, gen: genCuisine, ep: 'Fine Lame', unlock: 9, sfx: ['MIAM !', 'PARFAIT, CHEF !'] },
   { id: 'horloge', sea: 'm', cm1: 'Heures et durées', soon: true, hero: 'hero-horloge', boss: { img: 'boss-horloge', n: 'Le Maître des Heures' }, chestCrew: null, art: 'l’Île de l’Horloge', n: 'Île de l’Horloge', notion: 'Heures et durées', img: 'isle-horloge', lag: 'lagoon-oval', x: 28, y: 150, gen: genHorloge, ep: 'Maître du Temps', unlock: 12, sfx: ['TIC-TAC !', 'PILE À L’HEURE !'] },
-  // Mer des Lettres : « Bientôt » tant que leurs illustrations (île, décor, boss) ne sont pas arrivées
-  { id: 'lecture', sea: 'f', soon: true, hero: 'hero-lecture', boss: { img: 'boss-lecture', n: 'La Sirène des Contes' }, chestCrew: null, art: 'la Grotte aux Histoires', n: 'Grotte aux Histoires', notion: 'Lecture et compréhension', img: 'isle-lecture', lag: 'lagoon-round', x: 28, y: 1450, gen: genLecture, ep: 'Grand Liseur', unlock: 0, sfx: ['BIEN LU !', 'QUEL LECTEUR !'] },
-  { id: 'conjug', sea: 'f', soon: true, hero: 'hero-conjug', boss: { img: 'boss-conjug', n: 'Le Forgeron des Temps' }, chestCrew: null, art: 'la Forge des Verbes', n: 'Forge des Verbes', notion: 'Conjugaison', img: 'isle-conjug', lag: 'lagoon-oval', x: 72, y: 1230, gen: genConjug, ep: 'Maître des Verbes', unlock: 0, sfx: ['BIEN FORGÉ !', 'VERBE PARFAIT !'] },
-  { id: 'gram', sea: 'f', soon: true, hero: 'hero-gram', boss: { img: 'boss-gram', n: 'La Murène des Phrases' }, chestCrew: null, art: 'le Récif des Phrases', n: 'Récif des Phrases', notion: 'Grammaire', img: 'isle-gram', lag: 'lagoon-rocks', x: 28, y: 1010, gen: genGram, ep: 'Chef de Phrase', unlock: 2, sfx: ['BIEN VU !', 'PHRASE DOMPTÉE !'] },
-  { id: 'accords', sea: 'f', soon: true, hero: 'hero-accords', boss: { img: 'boss-accords', n: 'Le Troll du Pont' }, chestCrew: null, art: 'le Pont des Accords', n: 'Pont des Accords', notion: 'Accords et homophones', img: 'isle-accords', lag: 'lagoon-oval', x: 72, y: 790, gen: genAccords, ep: 'Gardien des Accords', unlock: 5, sfx: ['ACCORDÉ !', 'BIEN ACCORDÉ !'] },
-  { id: 'vocab', sea: 'f', soon: true, hero: 'hero-vocab', boss: { img: 'boss-vocab', n: 'La Baleine Dictionnaire' }, chestCrew: null, art: 'la Baie des Mots', n: 'Baie des Mots', notion: 'Vocabulaire', img: 'isle-vocab', lag: 'lagoon-round', x: 28, y: 570, gen: genVocab, ep: 'Mille-Mots', unlock: 8, sfx: ['QUEL MOT !', 'BIEN TROUVÉ !'] },
+  // Mer des Lettres (lot 5 d'illustrations reçu le 18 octobre 2026)
+  { id: 'lecture', sea: 'f', hero: 'hero-lecture', boss: { img: 'boss-lecture', n: 'La Sirène des Contes' }, chestCrew: null, art: 'la Grotte aux Histoires', n: 'Grotte aux Histoires', notion: 'Lecture et compréhension', img: 'isle-lecture', lag: 'lagoon-round', x: 28, y: 1450, gen: genLecture, ep: 'Grand Liseur', unlock: 0, sfx: ['BIEN LU !', 'QUEL LECTEUR !'] },
+  { id: 'conjug', sea: 'f', hero: 'hero-conjug', boss: { img: 'boss-conjug', n: 'Le Forgeron des Temps' }, chestCrew: null, art: 'la Forge des Verbes', n: 'Forge des Verbes', notion: 'Conjugaison', img: 'isle-conjug', lag: 'lagoon-oval', x: 72, y: 1230, gen: genConjug, ep: 'Maître des Verbes', unlock: 0, sfx: ['BIEN FORGÉ !', 'VERBE PARFAIT !'] },
+  { id: 'gram', sea: 'f', hero: 'hero-gram', boss: { img: 'boss-gram', n: 'La Murène des Phrases' }, chestCrew: null, art: 'le Récif des Phrases', n: 'Récif des Phrases', notion: 'Grammaire', img: 'isle-gram', lag: 'lagoon-rocks', x: 28, y: 1010, gen: genGram, ep: 'Chef de Phrase', unlock: 2, sfx: ['BIEN VU !', 'PHRASE DOMPTÉE !'] },
+  { id: 'accords', sea: 'f', hero: 'hero-accords', boss: { img: 'boss-accords', n: 'Le Troll du Pont' }, chestCrew: null, art: 'le Pont des Accords', n: 'Pont des Accords', notion: 'Accords et homophones', img: 'isle-accords', lag: 'lagoon-oval', x: 72, y: 790, gen: genAccords, ep: 'Gardien des Accords', unlock: 5, sfx: ['ACCORDÉ !', 'BIEN ACCORDÉ !'] },
+  { id: 'vocab', sea: 'f', hero: 'hero-vocab', boss: { img: 'boss-vocab', n: 'La Baleine Dictionnaire' }, chestCrew: null, art: 'la Baie des Mots', n: 'Baie des Mots', notion: 'Vocabulaire', img: 'isle-vocab', lag: 'lagoon-round', x: 28, y: 570, gen: genVocab, ep: 'Mille-Mots', unlock: 8, sfx: ['QUEL MOT !', 'BIEN TROUVÉ !'] },
 ];
 ISLES.forEach(i => { i.ce2 = i.notion; });
 const SEAS = { m: { n: 'Mer des Chiffres', s: 'Maths', ic: '123' }, f: { n: 'Mer des Lettres', s: 'Français', ic: 'Abc' } };
@@ -1781,7 +1782,7 @@ function tideHTML(t) {
 function trophyHTML(i, s) {
   const total = Object.values(s.stars).reduce((a, b) => a + b, 0), max = (NODES - 1) * 3;
   let ic, top, title;
-  if (s.node <= CHEST) { const left = CHEST - s.node; ic = `<div class="ti"><img src="${IMG('chest-closed')}" alt=""></div>`; top = left ? `Prochain trésor · encore ${left} niveau${left > 1 ? 'x' : ''}` : 'Prochain trésor · c’est maintenant\u00a0!'; title = has(i.chestCrew) ? 'Le coffre de l’île' : 'Un coffre et un nouvel équipier'; }
+  if (s.node <= CHEST) { const left = CHEST - s.node; ic = `<div class="ti"><img src="${IMG('chest-closed')}" alt=""></div>`; top = left ? `Prochain trésor · encore ${left} niveau${left > 1 ? 'x' : ''}` : 'Prochain trésor · c’est maintenant\u00a0!'; title = !i.chestCrew || has(i.chestCrew) ? 'Le coffre de l’île' : 'Un coffre et un nouvel équipier'; }
   else if (s.node <= BOSS) { const left = BOSS - s.node; ic = `<div class="ti boss"><img src="${IMG(i.boss.img)}" alt=""></div>`; top = left ? `Prochain défi · encore ${left} niveau${left > 1 ? 'x' : ''}` : 'Prochain défi · c’est maintenant\u00a0!'; title = i.boss.n; }
   else { ic = `<div class="ti"><img src="${IMG(i.img)}" alt=""></div>`; top = 'Île conquise\u00a0!'; title = 'Rejoue pour gagner toutes les étoiles'; }
   return `<div class="trophy">${ic}<div class="tt"><span>${top}</span><b>${title}</b></div><div class="st"><i>★</i> ${total}<small>sur ${max}</small></div></div>`;
@@ -1860,7 +1861,7 @@ function powersHTML() {
   return `<div class="powers">${p.join('')}</div>`;
 }
 const keypadHTML = () => `<div class="keypad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-a="key" data-k="${n}">${n}</button>`).join('')}<button class="key dk" data-a="key" data-k="del" aria-label="Effacer">${ico('iDel')}</button><button class="key" data-a="key" data-k="0">0</button><button class="key fire" data-a="key" data-k="ok" aria-label="Valider">${ico('iCannon')}Feu !</button></div>`;
-const choicesHTML = q => `<div class="choices${q.choices.some(c => String(c.html).replace(/<[^>]+>/g, '').length > 8) ? ' txt' : q.choices.length === 2 ? ' two' : ''}">${q.choices.map((c, k) => `<button class="choice" data-a="choice" data-i="${k}">${c.html}</button>`).join('')}</div>`;
+const choicesHTML = q => `<div class="choices${q.choices.some(c => String(c.html).replace(/<[^>]+>/g, '').length > 7) ? ' txt' : q.choices.length === 2 ? ' two' : ''}">${q.choices.map((c, k) => `<button class="choice" data-a="choice" data-i="${k}">${c.html}</button>`).join('')}</div>`;
 const pileHTML = (k, n) => Array.from({ length: Math.min(n, 19) }, () => `<i class="blk ${['b-m', 'b-c', 'b-d', 'b-u'][k]}"></i>`).join('');
 const COLS = ['Milliers', 'Centaines', 'Dizaines', 'Unités'];
 function lineSVG(q, mark, arrow) {
