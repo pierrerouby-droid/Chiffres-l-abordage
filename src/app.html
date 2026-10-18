@@ -1,7 +1,7 @@
 <title>Chiffres à l'abordage !</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=Lexend:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,600..900,100&family=IM+Fell+English+SC&family=Lexend:wght@400;500;600;700;800&display=swap">
 <style>
 /* Appli plein écran (max 560 px) : chaque écran est une couche absolue. Monde peint (images générées) + deux matières d'interface : verre sombre pour naviguer, parchemin pour lire et jouer. Laiton = action principale, cire = feu et erreurs. Un seul thème, nuit marine. */
 :root{
@@ -9,7 +9,7 @@
   --parch:#f4e8cc; --parch-2:#e9d6ad; --ink:#2a1c12; --ink-2:#6b5440;
   --brass:#c9973f; --brass-hi:#f3d58c; --brass-lo:#6e4c18; --wax:#b8382a; --wax-hi:#e0644f; --kelp:#5cbf86;
   --glass:rgba(8,26,36,.62); --glass-line:rgba(243,213,140,.26);
-  --f-d:'Fraunces',Georgia,'Times New Roman',serif; --f-u:'Lexend',system-ui,-apple-system,sans-serif;
+  --f-d:'Fraunces',Georgia,'Times New Roman',serif; --f-p:'IM Fell English SC',Georgia,'Times New Roman',serif; --f-u:'Lexend',system-ui,-apple-system,sans-serif;
   --st:env(safe-area-inset-top,0px); --sbm:env(safe-area-inset-bottom,0px);
   color-scheme:dark;
 }
@@ -177,7 +177,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .pw img{width:36px;height:36px;border-radius:50%;background:#0f3446;box-shadow:0 0 0 1.5px var(--brass);object-fit:cover}
 .pw small{display:none}
 .pw[disabled]{opacity:.4;pointer-events:none}
-.g-bottom{position:relative;flex:none;padding:0 12px calc(var(--sbm) + 30px);background:linear-gradient(180deg,rgba(11,34,48,0),var(--abyss) 26px);margin-top:-26px;z-index:9}
+.g-bottom{position:relative;flex:none;padding:0 12px calc(var(--sbm) + 12vh);background:linear-gradient(180deg,rgba(11,34,48,0),var(--abyss) 26px);margin-top:-26px;z-index:9}
 .qcard{border-radius:22px;padding:12px 14px 14px;margin-bottom:10px;position:relative}
 .qcard .ask{font-size:14.5px;font-weight:600;color:var(--ink-2);text-align:center;line-height:1.3;text-wrap:balance}
 .qcard .prompt{font-family:var(--f-d);font-weight:800;font-size:clamp(34px,10.5vw,52px);line-height:1.08;text-align:center;font-variant-numeric:tabular-nums;color:var(--ink);text-wrap:balance}
@@ -636,6 +636,10 @@ textarea.fld{min-height:76px}
 .burst .w{font-size:clamp(30px,10vw,58px);white-space:normal;max-width:92vw;line-height:1.02}
 .isle.soon .lag{opacity:.45}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* Police pirate (vieux livre de bord) pour les titres et les noms ; les chiffres des calculs, les touches et les réponses gardent Fraunces et Lexend, plus lisibles */
+.disp,.tlogo .disp,.isle .lbl b,.lair .lbl,.tide h2,.rlab b,.burst .w,.sheet-err h3,.tabpage h1,.crew-card b,.poster .t1,.poster .nm,.trophy .tt b,.yh,.yard h2,.hud .nm,.shipcap .disp{font-family:var(--f-p);font-weight:400;font-variation-settings:normal;font-synthesis:none;letter-spacing:.01em}
+.tlogo .disp{font-size:clamp(46px,13vw,74px);line-height:.98}
+.result .head .disp{font-size:33px}.tide h2{font-size:24px}.isle .lbl b{font-size:18px}.hud .nm{font-size:19px}
 </style>
 
 <div id="app" aria-live="polite"></div>
@@ -719,7 +723,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.0 bêta · octobre 2026';
+const VERSION = '1.1 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
