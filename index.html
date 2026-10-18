@@ -259,8 +259,11 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .b-u{width:13px;height:13px;background-image:url(assets/block-1.webp)}
 /* monnaie */
 .tray{min-height:56px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-content:center;border:2px dashed rgba(138,98,36,.5);border-radius:14px;padding:6px;margin-top:8px}
-.tray:empty::before{content:"Touche les pièces et les billets pour payer";color:var(--ink-2);font-size:13px;font-weight:600}
+.tray:empty::before{content:"Touche les pièces et les billets : autant de fois qu’il faut";color:var(--ink-2);font-size:13px;font-weight:600}
 .purse-g{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.purse-g .coin,.purse-g .bill{position:relative}
+.purse-g .nb{position:absolute;right:-7px;top:-7px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;display:grid;place-items:center;font:800 12px var(--f-u);font-style:normal;color:#fff;background:#b8382a;box-shadow:0 0 0 2px #fbf3df;text-shadow:none}
+.purse-note{margin:6px 0 2px;text-align:center;font-size:13.5px;color:var(--mist)}
 .coin,.bill{display:inline-grid;place-items:center;font-weight:800;line-height:1;color:#2a1a07;background:center/100% 100% no-repeat;filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))}
 .coin{width:50px;height:50px;border-radius:50%;font-size:14px;text-shadow:0 1px 0 rgba(255,240,200,.6)}
 .coin.cu{background-image:url(assets/coin-copper.webp);color:#fff8ec;text-shadow:0 1px 2px rgba(60,20,0,.8)}
@@ -758,6 +761,7 @@ const range = (a, b, s = 1) => { const r = []; for (let x = a; x <= b; x += s) r
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const fmtE = c => c % 100 === 0 ? `${fmt(c / 100)} €` : `${fmt(Math.floor(c / 100))},${String(c % 100).padStart(2, '0')} €`;
+const fmtC = c => c < 100 ? `${c} c` : fmtE(c);
 const coinLabel = c => c < 100 ? `${c} c` : `${c / 100} €`;
 const frac = (n, d) => `<span class="frac"><b>${n}</b><b>${d}</b></span>`;
 const pl = (k, w) => `${fmt(k)} ${w}${k > 1 ? 's' : ''}`;
@@ -808,7 +812,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.2 bêta · octobre 2026';
+const VERSION = '1.2.1 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -1050,9 +1054,9 @@ function ce2Marche(l) {
   let target, ask, price, explain, log;
   if (l <= 3) { target = l === 1 ? rnd(2, 19) * 100 : l === 2 ? rnd(1, 9) * 100 + rnd(1, 9) * 10 : rnd(105, 999); ask = `Le cuistot achète ${pick(ITEMS)}. Paye la somme exacte :`; price = fmtE(target); log = `payer ${fmtE(target)}`; explain = `Il fallait ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
   else if (l === 4) { const paid = pick([500, 1000]), p = rnd(paid === 500 ? 105 : 510, paid - 5); target = paid - p; ask = `Un client achète ${pick(ITEMS)} à ${fmtE(p)} et paye avec ${fmtE(paid)}. Rends-lui la monnaie :`; price = ''; log = `rendre sur ${fmtE(paid)} pour ${fmtE(p)}`;
-    const up = Math.ceil(p / 100) * 100; explain = (up > p ? `De ${fmtE(p)} à ${fmtE(up)}, il manque ${fmtE(up - p)}. ` : '') + (paid > up ? `De ${fmtE(up)} à ${fmtE(paid)}, il manque ${fmtE(paid - up)}. ` : '') + `On rend ${fmtE(target)}.`; }
+    const up = Math.ceil(p / 100) * 100; explain = (up > p ? `De ${fmtE(p)} à ${fmtE(up)}, il manque ${fmtC(up - p)}. ` : '') + (paid > up ? `De ${fmtE(up)} à ${fmtE(paid)}, il manque ${fmtC(paid - up)}. ` : '') + `On rend ${fmtC(target)}, par exemple : ${greedy(target)}.`; }
   else { const a = rnd(105, 899), b = rnd(105, 899); target = a + b; const [i1, i2] = shuffle(ITEMS); ask = `Le cuistot achète ${i1} à ${fmtE(a)} et ${i2} à ${fmtE(b)}. Paye le total exact :`; price = ''; log = `payer ${fmtE(a)} + ${fmtE(b)}`; explain = `${fmtE(a)} + ${fmtE(b)} = ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
-  return { kind: 'money', denoms, target, showTotal: l <= 2, ask, price, answer: target, answerText: fmtE(target), explain, hint: /paye avec/.test(ask) ? 'Pour rendre la monnaie, pars du prix et complète jusqu’à la somme donnée : ce que tu ajoutes, c’est la monnaie.' : 'Commence par le plus gros billet ou la plus grosse pièce possible.', log };
+  return { kind: 'money', denoms, target, showTotal: l <= 3, ask, price, answer: target, answerText: fmtE(target), explain, hint: /paye avec/.test(ask) ? 'Pour rendre la monnaie, pars du prix et complète jusqu’à la somme donnée : ce que tu ajoutes, c’est la monnaie.' : 'Commence par le plus gros billet ou la plus grosse pièce possible.', log };
 }
 const hm = (h, m) => m ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`;
 const dur = n => n < 60 ? `${n} min` : n % 60 ? `${Math.floor(n / 60)} h ${String(n % 60).padStart(2, '0')}` : `${n / 60} h`;
@@ -1199,7 +1203,7 @@ function cm1Marche(l) {
   let target, ask, price = '', explain, log;
   if (l === 1) { target = rnd(1005, 3999); ask = `Le cuistot achète ${pick(ITEMS)}. Paye la somme exacte :`; price = fmtE(target); log = `payer ${fmtE(target)}`; explain = `Il fallait ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
   else if (l === 2 || l === 5) { const paid = l === 2 ? pick([1000, 2000]) : 5000, p = rnd(paid / 2, paid - 5); target = paid - p; ask = `Un client achète ${pick(ITEMS)} à ${fmtE(p)} et paye avec ${fmtE(paid)}. Rends-lui la monnaie :`; log = `rendre sur ${fmtE(paid)} pour ${fmtE(p)}`;
-    const up = Math.ceil(p / 100) * 100; explain = (up > p ? `De ${fmtE(p)} à ${fmtE(up)}, il manque ${fmtE(up - p)}. ` : '') + (paid > up ? `De ${fmtE(up)} à ${fmtE(paid)}, il manque ${fmtE(paid - up)}. ` : '') + `On rend ${fmtE(target)}.`; }
+    const up = Math.ceil(p / 100) * 100; explain = (up > p ? `De ${fmtE(p)} à ${fmtE(up)}, il manque ${fmtC(up - p)}. ` : '') + (paid > up ? `De ${fmtE(up)} à ${fmtE(paid)}, il manque ${fmtC(paid - up)}. ` : '') + `On rend ${fmtC(target)}, par exemple : ${greedy(target)}.`; }
   else if (l === 3) { const a = rnd(105, 1999), b = rnd(105, 1999); target = a + b; const [i1, i2] = shuffle(ITEMS); ask = `Le cuistot achète ${i1} à ${fmtE(a)} et ${i2} à ${fmtE(b)}. Paye le total exact :`; log = `payer ${fmtE(a)} + ${fmtE(b)}`; explain = `${fmtE(a)} + ${fmtE(b)} = ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
   else { const k = rnd(2, 4), p = rnd(21, 198) * 5, it = pick([['cordes', 'corde'], ['drapeaux', 'drapeau'], ['tonneaux', 'tonneau'], ['boussoles', 'boussole'], ['lanternes', 'lanterne']]); target = k * p; ask = `Le cuistot achète ${k} ${it[0]} à ${fmtE(p)} pièce. Paye le total exact :`; log = `payer ${k} × ${fmtE(p)}`; explain = `${k} × ${fmtE(p)} = ${fmtE(target)} (${Array(k).fill(fmtE(p)).join(' + ')}). Par exemple : ${greedy(target)}.`; }
   return { kind: 'money', denoms, target, showTotal: l === 1, ask, price, answer: target, answerText: fmtE(target), explain, hint: /paye avec/.test(ask) ? 'Pour rendre la monnaie, pars du prix et complète jusqu’à la somme donnée : ce que tu ajoutes, c’est la monnaie.' : 'Commence par le plus gros billet ou la plus grosse pièce possible.', log };
@@ -2119,9 +2123,11 @@ function inputHTML(q) {
         <button class="brass-btn" data-a="validate">Valider${q.showTotal ? ` <small>· tes blocs font ${fmt(v)}</small>` : ''}</button>`; }
     case 'line': return `<button class="brass-btn" data-a="validate" ${R.pick == null ? 'disabled' : ''}>Valider</button>`;
     case 'money': { const tr = R.tray || (R.tray = []), sum = tr.reduce((a, b) => a + b, 0);
-      const piece = (c, attrs) => `<button class="${c >= 500 ? `bill b${c / 100}` : `coin ${c >= 100 ? 'bi' : c >= 10 ? 'au' : 'cu'}`}" ${attrs}>${coinLabel(c)}</button>`;
-      return `<div class="purse-g">${q.denoms.map(c => piece(c, `data-a="pay" data-c="${c}" aria-label="Poser ${coinLabel(c)}"`)).join('')}</div>
-        <button class="brass-btn valid" data-a="validate" ${tr.length ? '' : 'disabled'}>Payer${q.showTotal ? ` <small>· ${fmtE(sum)}</small>` : ''}</button>`; }
+      const piece = (c, attrs, n) => `<button class="${c >= 500 ? `bill b${c / 100}` : `coin ${c >= 100 ? 'bi' : c >= 10 ? 'au' : 'cu'}`}" ${attrs}>${coinLabel(c)}${n ? `<i class="nb">×${n}</i>` : ''}</button>`;
+      const give = /monnaie/.test(q.ask);
+      return `<div class="purse-g">${q.denoms.map(c => piece(c, `data-a="pay" data-c="${c}" aria-label="Poser ${coinLabel(c)}"`, tr.filter(x => x === c).length)).join('')}</div>
+        <p class="purse-note">Chaque pièce et chaque billet peut servir plusieurs fois.</p>
+        <button class="brass-btn valid" data-a="validate" ${tr.length ? '' : 'disabled'}>${give ? 'Rendre' : 'Payer'}${q.showTotal ? ` <small>· ${fmtE(sum)}</small>` : ''}</button>`; }
     case 'pizza': return `<button class="brass-btn" data-a="validate" ${R.sel && R.sel.size ? '' : 'disabled'}>Servir !</button>`;
   }
 }
@@ -2132,6 +2138,7 @@ const sayBtn = (what = 'q') => canSay() ? `<button class="say" data-a="say" data
 function speakable(html) {
   const t = document.createElement('div'); t.innerHTML = String(html).replace(/<span class="frac"><b>(\d+)<\/b><b>(\d+)<\/b><\/span>/g, ' $1 sur $2 ').replace(/<span class="slot">[^<]*<\/span>/g, ' … ');
   return t.textContent.replace(/×/g, ' fois ').replace(/÷/g, ' divisé par ').replace(/(\d)\s*[−-]\s*(\d)/g, '$1 moins $2').replace(/=\s*\?/g, ' égale combien ?').replace(/=/g, ' égale ').replace(/\+/g, ' plus ')
+    .replace(/(\d+),(\d{2}) €/g, (_, e, c) => `${e} euro${e > 1 ? 's' : ''} ${+c}`).replace(/(\d+) €/g, (_, e) => `${e} euro${e > 1 ? 's' : ''}`).replace(/(\d+) c\b/g, (_, c) => `${c} centime${c > 1 ? 's' : ''}`)
     .replace(/(\d+) h (\d+)/g, '$1 heures $2').replace(/(\d+) h\b/g, '$1 heures').replace(/(\d+) min\b/g, '$1 minutes').replace(/…|___|\?\s*\?/g, ' … ').replace(/\s+/g, ' ').trim();
 }
 function say(text) {
@@ -2159,7 +2166,7 @@ const TUTO = {
   choices: [['.qcard', 'Lis bien la question.'], ['.choices', 'Touche la bonne réponse parmi les trois.']],
   mine: [['.qcard', 'Construis ce nombre avec des blocs.'], ['.mcol .cnt', 'Touche une case pour choisir combien de milliers, de centaines, de dizaines ou d’unités.'], ['.mcol .pm', 'Tu peux aussi ajouter ou enlever un bloc avec + et −.'], ['[data-a="validate"]', 'Quand ton nombre est prêt, touche Valider.']],
   line: [['#line', 'Une créature se cache sur la ligne. Touche la graduation qui correspond au nombre.'], ['[data-a="validate"]', 'Puis touche Valider.']],
-  money: [['.qcard', 'Il faut payer exactement le prix demandé.'], ['.purse-g', 'Touche les billets et les pièces pour les poser dans le plateau.'], ['.tray', 'Tu t’es trompé ? Touche une pièce du plateau pour la reprendre.'], ['[data-a="validate"]', 'Quand le compte est bon, touche Payer.']],
+  money: [['.qcard', 'Il faut payer exactement le prix demandé.'], ['.purse-g', 'Touche les billets et les pièces pour les poser dans le plateau. Tu peux toucher plusieurs fois la même pièce.'], ['.tray', 'Tu t’es trompé ? Touche une pièce du plateau pour la reprendre.'], ['[data-a="validate"]', 'Quand le compte est bon, touche Payer.']],
   pizza: [['.pizza', 'Touche les parts pour les colorier.'], ['[data-a="validate"]', 'Quand tu as colorié la bonne fraction, touche Servir.']],
   words: [['.qcard .ask', 'Lis bien la consigne : un seul mot, ou tous les mots qui conviennent ?'], ['.wchips', 'Touche les mots pour les choisir. Touche encore un mot pour l’enlever.'], ['[data-a="validate"]', 'Puis touche Valider.']],
   read: [['.rtext', 'Lis le texte. S’il est long, fais-le glisser avec ton doigt.'], ['.ask.rq', 'Puis lis la question.'], ['.choices', 'Touche la bonne réponse. Tu peux relire le texte avant de répondre.']],
@@ -2262,7 +2269,7 @@ function answer(ok, givenText, btn) {
     if (R.i.id === 'canons') missFx();
     setTimeout(() => {
       const sh = document.createElement('div'); sh.className = 'sheet-err';
-      sh.innerHTML = `<div class="errcard paper" role="alertdialog" aria-modal="true"><div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.explain}</p><div class="errbtns">${sayBtn('e')}<button class="brass-btn" data-a="next">J’ai compris</button></div></div>`;
+      sh.innerHTML = `<div class="errcard paper" role="alertdialog" aria-modal="true"><div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.kind === 'money' && R.tray ? (() => { const s = R.tray.reduce((a, b) => a + b, 0), d = R.q.target - s; return `<b>Tu as donné ${fmtE(s)} : ${d > 0 ? `il manque ${fmtC(d)}` : `c’est ${fmtC(-d)} de trop`}.</b><br>`; })() : ''}${R.q.explain}</p><div class="errbtns">${sayBtn('e')}<button class="brass-btn" data-a="next">J’ai compris</button></div></div>`;
       app.firstElementChild.appendChild(sh); $('[data-a="next"]', sh).focus();
     }, R.i.id === 'canons' ? 700 : 350);
   }
@@ -2582,13 +2589,13 @@ app.addEventListener('click', e => {
     case 'digpick': R.dig = +el.dataset.k; SND.tap(); refreshBottom(); break;
     case 'digset': R.counts[R.dig] = +el.dataset.d; R.dig = null; SND.tap(); refreshBottom(); break;
     case 'blk': { const k = +el.dataset.k; R.counts[k] = Math.max(0, Math.min(19, R.counts[k] + +el.dataset.d)); SND.tap(); refreshBottom(); break; }
-    case 'pay': if (R.tray.length < 20) { R.tray.push(+el.dataset.c); SND.coin(); refreshBottom(); } break;
+    case 'pay': if (R.tray.length < 30) { R.tray.push(+el.dataset.c); SND.coin(); refreshBottom(); } else toast('Le plateau est plein : reprends des pièces en les touchant dans le plateau.'); break;
     case 'untray': R.tray.splice(+el.dataset.i, 1); SND.tap(); refreshBottom(); break;
     case 'wchip': { if (!R || R.locked) break; const k = +el.dataset.i; if (!R.q.multi) { const had = R.wsel.has(k); R.wsel.clear(); if (!had) R.wsel.add(k); } else R.wsel.has(k) ? R.wsel.delete(k) : R.wsel.add(k); SND.tap(); refreshBottom(); break; }
     case 'slice': { const k = +el.dataset.i; R.sel.has(k) ? R.sel.delete(k) : R.sel.add(k); SND.tap(); refreshBottom(); break; }
     case 'validate': { if (!R || R.locked) break; const [ok, g] = check(); answer(ok, g); break; }
     case 'say': { if (!R || !R.q) break; const q = R.q; SND.tap();
-      say(el.dataset.w === 'e' ? `La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' ? '' : q.prompt || ''}`)); break; }
+      say(el.dataset.w === 'e' ? `La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' ? '' : q.prompt || ''} ${q.price || ''}`)); break; }
     case 'next': if (window.speechSynthesis) speechSynthesis.cancel(); if (R) { $$('.sheet-err').forEach(x => x.remove()); R.k++; nextQ(); } break;
     case 'power': { const p = el.dataset.p; if (!R || R.locked || R.used[p]) break; R.used[p] = true; SND.tap();
       if (p === 'perroquet') { const sc = $('#scene'); const h = document.createElement('div'); h.className = 'pi-tip paper'; h.setAttribute('role', 'note'); h.innerHTML = `<img src="${IMG('crew-perroquet')}" alt=""><div><b>Pi :</b> ${R.q.hint}</div><button class="x" data-a="tipclose" aria-label="Fermer l’indice">${ico('iClose')}</button>`; sc && sc.appendChild(h); el.disabled = true; voice('indice'); }
