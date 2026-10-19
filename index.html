@@ -955,7 +955,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.8.2 bêta · octobre 2026';
+const VERSION = '1.8.3 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 // Appli installée sur l'écran d'accueil d'un iPhone (viewport-fit=cover) : la zone « plein écran » de Safari s'arrête
@@ -1021,9 +1021,13 @@ function musFetch(n) {
 }
 function playBuf(name, b = 'sfx', vol = 1) { if (!S.sound || !BUF[name]) return null; const B = bus(); if (!B) return null; const src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; src.buffer = BUF[name]; src.connect(g); g.connect(B[b]); src.start(); return src; }
 const sfx = (n, vol) => { const opts = ['', '-1', '-2', '-3'].map(v => `sfx-${n}${v}`).filter(x => BUF[x]); return opts.length ? !!playBuf(pick(opts), 'sfx', vol) : false; };
+// Réactions enregistrées à part : elles rejoignent les séries de bonnes réponses et les victoires.
+// Celle du footballeur (vo-bravo-1) seulement au Stade des Vagues, où l'on tire des penalties.
+const VO_EXTRA = { combo: ['vo-bravo-2', 'vo-bravo-3'], victoire: ['vo-bravo-2', 'vo-bravo-3'] };
+const voExtra = ev => !VO_EXTRA[ev] ? [] : [...VO_EXTRA[ev], ...(R && R.i && R.q && QI().id === 'stade' ? ['vo-bravo-1'] : [])];
 function voice(ev, force) {
   if (!S.sound || !S.voice) return false; const now = performance.now(); if (!force && now - lastVo < 3000) return false;
-  const opts = range(1, VO[ev] || 0).map(j => `vo-${ev}-${j}`).filter(x => BUF[x]); if (!opts.length) return false;
+  const opts = [...range(1, VO[ev] || 0).map(j => `vo-${ev}-${j}`), ...voExtra(ev)].filter(x => BUF[x]); if (!opts.length) return false;
   lastVo = now; return say(pick(opts));
 }
 // Écran titre : le nom de l'appli d'abord (si la réplique existe), puis la présentation ou l'accueil
@@ -3897,7 +3901,7 @@ renderMap = after(renderMap, 'map'); renderIsle = after(renderIsle, 'isle'); ren
 renderJournal = after(renderJournal, 'crew'); renderCrew = after(renderCrew, 'crew'); renderPrime = after(renderPrime, 'prime'); renderGame = after(renderGame, 'game'); titleScreen = after(titleScreen, 'title');
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 if (location.hash === '#direct') { show('map'); if (!S.intro) onboarding(); } else titleScreen();
-window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge }, words, ISLES, setGrade, check, labN };
+window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, voice, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge }, words, ISLES, setGrade, check, labN };
 })();
 </script>
 
