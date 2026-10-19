@@ -94,7 +94,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
       <p class="lead">Tout ce qu’il faut générer pour construire l’appli, avec un prompt prêt à copier pour chaque élément. Les textes, chiffres, boutons et animations restent en code : je m’en occupe.</p>
     </div>
     <div class="meter" aria-live="polite">
-      <div><b id="m-p1">0 / 0</b> <span>du lot 4</span></div>
+      <div><b id="m-p1">0 / 0</b> <span>du lot 6</span></div>
       <div class="bar"><i id="m-bar"></i></div>
       <div class="sub"><span id="m-all">0 / 0 au total</span><span>coche au fur et à mesure</span></div>
     </div>
@@ -104,7 +104,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
     <h2>Mode d’emploi</h2>
     <div class="steps">
       <div class="step"><span class="n">1</span><p><b>Une seule conversation</b> dans ton générateur. Colle le bloc de style, puis joins les références indiquées sur chaque fiche (« Joindre : … ») : <code>hero-canons</code> pour les décors, <code>boss-kraken</code> et <code>crew-perroquet</code> pour les personnages, <code>ship-player-3</code> pour les navires.</p></div>
-      <div class="step"><span class="n">2</span><p><b>Lots 1 et 2 reçus et intégrés</b> (55 images). <b>Lots 3, 4 et 5 reçus et intégrés</b> : tous les lots prévus sont dans le jeu (version 1.0). Restent seulement les images « Plus tard », pour de futures idées. Chaque fiche indique quelle image validée joindre comme référence.</p></div>
+      <div class="step"><span class="n">2</span><p><b>Lots 1 à 5 reçus et intégrés.</b> <b>Lot 6 à générer</b> (8 images) : l’histoire de l’archipel du journal (5 scènes), la carte au trésor et deux nouvelles poses de Pi. Chaque fiche indique quelles images validées joindre comme références.</p></div>
       <div class="step"><span class="n">3</span><p><b>Copie le prompt de chaque fiche</b> : il contient déjà le style, le sujet, le fond et le format. Commence par les fiches <b>Indispensable</b>.</p></div>
       <div class="step"><span class="n">4</span><p><b>Fond transparent</b> : demande un PNG transparent. Si l’outil ne sait pas, il doit mettre un fond magenta uni <code>#FF00FF</code>, je le découpe moi-même.</p></div>
       <div class="step"><span class="n">5</span><p><b>Nomme chaque fichier</b> avec son identifiant (<code>isle-canons.png</code>), en plus grande taille possible. Je redimensionne et je compresse.</p></div>
@@ -168,7 +168,8 @@ const BG = {
   video: `FORMAT: short seamless video loop of 5 to 6 seconds, the last frame matches the first exactly, slow and calm motion.`,
 };
 const BGLABEL = { alpha: 'Détouré PNG', scene: 'Scène pleine', tile: 'Texture raccordable', video: 'Boucle vidéo' };
-const RATIO = { '1:1': 'ASPECT RATIO: square 1:1.', '2:3': 'ASPECT RATIO: portrait 2:3.', '3:2': 'ASPECT RATIO: landscape 3:2.' };
+const RATIO = { '1:1': 'ASPECT RATIO: square 1:1.', '2:3': 'ASPECT RATIO: portrait 2:3.', '3:2': 'ASPECT RATIO: landscape 3:2.', '4:3': 'ASPECT RATIO: landscape 4:3.' };
+const STORY = `Storybook illustration for a chapter of the game's story, same painterly rendering and golden light as the references. Keep the main action in the center: the edges may be cropped. Characters must match the attached references exactly (shapes, colors, outfits).`;
 const ISLE = `Small tropical island seen from above at a three-quarter isometric angle (about 45 degrees, the same angle as the reference island isle-canons). The island ends at its golden sandy beach and shoreline rocks: NO surrounding sea, no turquoise water ring, no base or platform, nothing beyond the beach (the ocean is added separately). On the island:`;
 const CREW = `Creature mascot for a pirate crew, matching the reference parrot (crew-perroquet) in rendering: same level of detail, same soft golden lighting, same proportions with a big head and big expressive eyes. Cute but cool, chunky readable silhouette, full body, three-quarter view:`;
 const ISO = `Isometric view, same angle and same lighting as the other blocks of the set,`;
@@ -182,6 +183,7 @@ const CATS = [
   ['loot', 'Butin et objets', 'Coffres, doublons, avis de recherche vierge. Aucun texte dessus : je l’ajoute en code.'],
   ['games', 'Mini-jeux', 'Objets propres à chaque jeu. Pièces et billets vierges : j’écris les valeurs moi-même.'],
   ['fx', 'Effets', 'Images fixes que j’anime en code (échelle, rotation, fondu, particules).'],
+  ['story', 'Histoire', 'Illustrations de l’histoire de l’archipel, dans le journal : une scène pour les chapitres clés et la carte au trésor à reconstituer. Personnages repris des images déjà validées.'],
   ['video', 'Boucles vidéo', 'Optionnel, seulement si ton outil sait faire de la vidéo. Sinon je les anime en code.'],
 ];
 
@@ -331,12 +333,23 @@ const A = [
   { id: 'boss-conjug', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'Le Forgeron des Temps', u: 'Boss de la Forge des Verbes (conjugaison).', s: 'A sturdy walrus blacksmith with a leather apron and a big hammer, a small brass hourglass hanging from his belt, a few sparks around him. Grumpy but funny, kid-friendly.' },
   { id: 'boss-gram', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'La Murène des Phrases', u: 'Boss du Récif des Phrases (grammaire).', s: 'A long cheeky moray eel wearing round reading glasses and a tiny pirate hat, coiled around a stack of blank wooden tiles. Theatrical and funny, not scary. No letters.' },
   { id: 'boss-accords', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'Le Troll du Pont', u: 'Boss du Pont des Accords (accords).', s: 'A chubby mossy stone troll with a pirate hat, holding a big brass balance scale with one pan in each hand, standing as if guarding a bridge. Grumpy but funny, kid-friendly.' },
+  // Lot 6 : histoire de l'archipel (journal), carte au trésor, poses de Pi
+  { id: 'saga-prologue', c: 'story', p: 1, bg: 'scene', r: '3:2', ref: ['boss-kraken', 'guide-capitaine', 'crew-perroquet'], n: 'Prologue : la carte déchirée', u: 'En tête du prologue, dans le journal.', s: `${STORY} Stormy night at a small pirate harbor: the giant purple kraken of the reference rises from the waves and tears a large parchment treasure map in two with its tentacles, a dozen torn map pieces flying away on the wind toward faint islands on the horizon. On the wooden dock, the old grey-bearded captain and his green-and-red parrot look up, surprised and determined, not afraid. Distant lightning and rain, warm lantern light on the dock. Dramatic but kid-friendly. The map shows only drawn islands and a dotted line, no writing.` },
+  { id: 'saga-croco', c: 'story', p: 2, bg: 'scene', r: '3:2', ref: ['crew-croco', 'hero-jungle'], n: 'Chapitre 4 : le crocodile qui compte', u: 'En tête du chapitre de la Jungle des Créatures.', s: `${STORY} A lush jungle with parrots and monkeys: the small smug crocodile with a monocle of the reference walks along a huge fallen tree trunk carved with evenly spaced notches like a ruler (notches only, no numbers), looking back with a friendly smile as if saying "follow me". At the end of the trunk, a wooden treasure chest half hidden under hanging lianas; a waterfall and a tall palm tree in the background, warm light through the leaves.` },
+  { id: 'saga-tarte', c: 'story', p: 2, bg: 'scene', r: '3:2', ref: ['boss-chef'], n: 'Chapitre 6 : la tarte du Chef Pieuvre', u: 'En tête du chapitre de la Cuisine du Navire.', s: `${STORY} A cozy ship galley with wooden beams: the octopus chef with a tall chef hat of the reference cuts a round fruit tart into four equal slices, his eight tentacles busy with knives, plates and spice jars; steam rising, warm lantern light; a small treasure chest between spice pots on a shelf. Funny and appetizing.` },
+  { id: 'saga-lunettes', c: 'story', p: 2, bg: 'scene', r: '3:2', ref: ['crew-perroquet', 'hero-lecture'], n: 'Chapitre 8 : les lunettes de Pi', u: 'En tête du chapitre de la Grotte aux Histoires.', s: `${STORY} Inside a sea cave full of giant old books and scrolls lit by lanterns: the green-and-red parrot of the reference squints comically at a giant open book with blank pages, leaning very close to it; behind him, a pair of small round glasses lies forgotten on a rock (funny detail). A torn piece of treasure map peeks out between the pages, showing a small mermaid drawn in blue ink. No letters anywhere.` },
+  { id: 'saga-final', c: 'story', p: 1, bg: 'scene', r: '3:2', ref: ['guide-capitaine', 'crew-perroquet', 'chest-open', 'boss-kraken'], n: 'Chapitre final : le trésor de l’archipel', u: 'En tête du dernier chapitre, quand les 12 morceaux sont réunis.', s: `${STORY} A hidden island beach at golden hour: a big red X painted on the sand, the open treasure chest of the reference overflowing with gold doubloons and glowing; the old grey-bearded captain and his parrot celebrate with arms and wings raised; the pirate ship anchored nearby. In the sea in the background, the purple kraken sulks with folded tentacles, comically grumpy. Joyful finale.` },
+  { id: 'tmap-full', c: 'story', p: 1, bg: 'scene', r: '4:3', ref: ['tex-parchment', 'deco-compass'], n: 'Carte au trésor complète', u: 'Carte au trésor du journal. Je cache en code les morceaux pas encore trouvés, et je replace les îles du code sur celles de l’image.', a: 'Le brouillard se lève sur chaque morceau gagné.', s: 'A complete antique treasure map on aged parchment, seen flat from above and filling the whole frame. A small archipelago of twelve little islands laid out roughly in a 4 by 3 grid, one island per cell, each with a tiny distinctive landmark: a stone fort with cannons, a small football stadium, a mine entrance with crystals, a jungle with a waterfall, striped market tents, a ship galley chimney, a clock tower, a sea cave with books, a forge with sparks, a coral arch, a rope bridge between two islets, a bay with a whale-shaped rock. A dotted red route links them and ends at a big red X near the bottom-right corner. A small engraved compass rose in the top-left corner. Thin torn lines divide the map into 12 roughly equal pieces following the 4 by 3 grid, as if the torn map had been glued back together. Hand-drawn ink and watercolor, no writing at all.' },
+  { id: 'guide-perroquet-montre', c: 'chars', p: 2, bg: 'alpha', r: '1:1', n: 'Perroquet : montre', u: 'Tutoriels : Pi montre où toucher.', s: 'The same parrot as crew-perroquet, pointing to the side with one wing like a friendly teacher showing something, beak slightly open as if explaining, cheerful and patient.' },
+  { id: 'guide-perroquet-lit', c: 'chars', p: 2, bg: 'alpha', r: '1:1', n: 'Perroquet : lit', u: 'Journal et histoire de l’archipel.', s: 'The same parrot as crew-perroquet, reading an unrolled parchment scroll held in both claws, focused and delighted. The scroll is blank, no letters.' },
   { id: 'boss-vocab', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'La Baleine Dictionnaire', u: 'Boss de la Baie des Mots (vocabulaire).', s: 'A huge friendly whale wearing small round spectacles, a giant closed book with a plain leather cover strapped on her back like a saddle, a cheerful water spout. Kid-friendly. No letters.' },
 ];
 
 const PRIO = { 1: 'Indispensable', 2: 'Important', 3: 'Plus tard' };
 const RECU = new Set(['app-icon','tex-parchment','tex-wood','tex-sea','bg-ocean-a','bg-ocean-b','fx-fog-a','lagoon-round','lagoon-oval','lagoon-rocks','isle-canons','isle-stade','isle-mine','isle-jungle','isle-marche','isle-cuisine','bg-sea-golden','fg-waves','hero-canons','ship-player-3','ship-player-top','ship-requin','capt-a','crew-perroquet','crew-tortue','crew-calmar','crew-crabe','boss-kraken','chest-closed','chest-open','coin-doublon','poster-blank','fx-explosion','fx-smoke','fx-splash','hero-stade','hero-mine','hero-jungle','hero-marche','hero-cuisine','boss-crabe','boss-golem','boss-serpent','boss-marchand','boss-chef','ship-player-1','ship-player-2','ship-requin-hit','crew-poisson','crew-phoque','crew-grenouille','crew-pieuvre','crew-requin','crew-croco','bg-port-dusk','isle-lecture','hero-lecture','boss-lecture','isle-conjug','hero-conjug','boss-conjug','isle-gram','hero-gram','boss-gram','isle-accords','hero-accords','boss-accords','isle-vocab','hero-vocab','boss-vocab','isle-horloge','hero-horloge','boss-horloge','guide-capitaine','foot-ball','foot-goal','block-1000','block-100','block-10','block-1','coin-copper','coin-gold','coin-bimetal','bill-green','bill-red','bill-blue','food-pizza','food-cake','guide-perroquet-bravo','guide-perroquet-hmm','jungle-frame','capt-b','capt-c','capt-d','capt-victory','fig-dragon','fig-sirene','cannon-gold','flag-blank','ship-meduse','bg-storm','bg-title','isle-port','isle-kraken','fx-fog-b','deco-compass','coin-pile','wax-seal','cannonball','fx-sparkle','fx-coins']);
 const LOTS = {
+  6: { t: 'Lot 6 · histoire et journal · à générer', d: 'Les images des nouveautés de la version 1.6 : cinq scènes de l’histoire de l’archipel (le début, la fin et trois chapitres drôles), la vraie carte au trésor à reconstituer, et deux poses de Pi pour les tutoriels et le journal. Commence par les fiches Indispensable.',
+       ids: ['saga-prologue', 'saga-final', 'tmap-full', 'saga-croco', 'saga-tarte', 'saga-lunettes', 'guide-perroquet-montre', 'guide-perroquet-lit'] },
   2: { t: 'Lot 2 · reçu et intégré', d: 'Ce qui change le plus l’appli actuelle : un décor et un boss pour chaque île, le navire qui grandit, le Requin Noir qui coule, les équipiers à collectionner et l’écran de fin de session.',
        ids: ['hero-stade','hero-mine','hero-jungle','hero-marche','hero-cuisine','boss-crabe','boss-golem','boss-serpent','boss-marchand','boss-chef','ship-player-1','ship-player-2','ship-requin-hit','crew-poisson','crew-phoque','crew-grenouille','crew-pieuvre','crew-requin','crew-croco','bg-port-dusk'] },
   3: { t: 'Lot 3 · reçu et intégré', d: 'Pour remplacer les éléments encore dessinés en code dans les tirs au but, la mine, le marché et la cuisine, plus deux expressions du perroquet guide.',
@@ -346,8 +359,9 @@ const LOTS = {
   4: { t: 'Lot 4 · reçu et intégré', d: 'Dans le jeu depuis la version 1.0 : choix du portrait, proues et canon doré, pavillon à décorer, port d’attache et repaire du Kraken, La Méduse, tempête des boss, écran titre et petits effets.',
        ids: ['capt-b','capt-c','capt-d','capt-victory','fig-dragon','fig-sirene','cannon-gold','flag-blank','ship-meduse','bg-storm','bg-title','isle-port','isle-kraken','fx-fog-b','deco-compass','coin-pile','wax-seal','cannonball','fx-sparkle','fx-coins'] },
 };
-const lotOf = id => { for (const k of [2, 3, 4, 5]) if (LOTS[k].ids.includes(id)) return k; return 0; };
+const lotOf = id => { for (const k of [2, 3, 4, 5, 6]) if (LOTS[k].ids.includes(id)) return k; return 0; };
 const REFS = a => {
+  if (a.ref) return a.ref;
   if (a.id.startsWith('hero-')) return ['hero-canons'];
   if (a.id.startsWith('boss-')) return ['boss-kraken', 'crew-perroquet'];
   if (a.id.startsWith('crew-') || a.id.startsWith('guide-') || a.id.startsWith('capt-')) return a.id.startsWith('capt-') && a.id !== 'capt-a' ? ['capt-a'] : ['crew-perroquet'];
@@ -361,8 +375,8 @@ const KEY = 'archipel-assets-done';
 let done = new Set();
 try { done = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch (e) {} };
-let view = 'recu', fC = 'all';
-try { view = localStorage.getItem('archipel-assets-view6') || 'recu'; } catch (e) {}
+let view = 'lot6', fC = 'all';
+try { view = localStorage.getItem('archipel-assets-view7') || 'lot6'; } catch (e) {}
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const full = a => { const r = REFS(a).filter(x => RECU.has(x) && x !== a.id); return [STYLE, r.length ? `REFERENCE: match the attached reference image${r.length > 1 ? 's' : ''} (${r.join(', ')}) exactly in rendering style, lighting, level of detail and scale.` : '', `SUBJECT: ${a.s}`, BG[a.bg], RATIO[a.r]].filter(Boolean).join('\n\n'); };
@@ -381,7 +395,7 @@ function copy(text, btn, label) {
 }
 document.getElementById('copy-style').addEventListener('click', e => copy(STYLE, e.currentTarget, 'Copier le bloc de style'));
 
-const VIEWS = [['recu', 'Reçus'], ['lot4', 'Lot 4'], ['lot3', 'Lot 3'], ['lot5', 'Lot 5'], ['lot2', 'Lot 2'], ['later', 'Plus tard'], ['all', 'Tout']];
+const VIEWS = [['lot6', 'Lot 6'], ['recu', 'Reçus'], ['lot4', 'Lot 4'], ['lot5', 'Lot 5'], ['lot3', 'Lot 3'], ['lot2', 'Lot 2'], ['later', 'Plus tard'], ['all', 'Tout']];
 const inView = a => view === 'all' ? true : view === 'recu' ? RECU.has(a.id) : view === 'later' ? !RECU.has(a.id) && !lotOf(a.id) : lotOf(a.id) === +view.slice(3);
 function chips() {
   document.getElementById('f-prio').innerHTML = VIEWS.map(([v, l]) => `<button class="chip" type="button" data-v="${v}" aria-pressed="${view === v}">${l} · ${A.filter(a => { const o = view; view = v; const r = inView(a); view = o; return r; }).length}</button>`).join('');
@@ -392,7 +406,7 @@ function card(a, n) {
   const got = RECU.has(a.id), r = REFS(a).filter(x => RECU.has(x) && x !== a.id);
   return `<article class="card${got || done.has(a.id) ? ' is-done' : ''}">
     <div class="card-top"><div style="min-width:0"><div class="id">${n ? n + '. ' : ''}${a.id}.png</div><h3>${esc(a.n)}</h3></div>${got ? '<span class="tag" style="background:rgba(92,191,134,.22);color:#a6e3bf">Reçu ✓</span>' : `<span class="tag p${a.p}">${PRIO[a.p]}</span>`}</div>
-    <div class="meta"><span class="tag">${BGLABEL[a.bg]}</span><span class="tag">${a.r === '1:1' ? 'Carré 1:1' : a.r === '2:3' ? 'Portrait 2:3' : 'Paysage 3:2'}</span>${r.length && !got ? `<span class="tag" style="background:rgba(243,213,140,.14);color:var(--brass-hi)">Joindre : ${r.join(' + ')}</span>` : ''}</div>
+    <div class="meta"><span class="tag">${BGLABEL[a.bg]}</span><span class="tag">${a.r === '1:1' ? 'Carré 1:1' : a.r === '2:3' ? 'Portrait 2:3' : 'Paysage ' + a.r}</span>${r.length && !got ? `<span class="tag" style="background:rgba(243,213,140,.14);color:var(--brass-hi);white-space:normal">Joindre : ${r.join(' + ')}</span>` : ''}</div>
     <p class="use">${esc(a.u)}</p>
     ${a.a ? `<p class="anim">${esc(a.a)}</p>` : ''}
     ${got ? '' : `<div class="subject">${esc(a.s)}</div>
@@ -418,14 +432,14 @@ function render() {
   meter();
 }
 function meter() {
-  const L = LOTS[4].ids, d2 = L.filter(id => RECU.has(id) || done.has(id)).length;
+  const L = LOTS[6].ids, d2 = L.filter(id => RECU.has(id) || done.has(id)).length;
   document.getElementById('m-p1').textContent = `${d2} / ${L.length}`;
   document.getElementById('m-bar').style.width = `${d2 / L.length * 100}%`;
   document.getElementById('m-all').textContent = `${RECU.size} reçus · ${A.filter(a => !RECU.has(a.id)).length} à faire`;
 }
 document.addEventListener('click', e => {
   const v = e.target.closest('[data-v]'), c = e.target.closest('[data-c]'), cp = e.target.closest('[data-copy]');
-  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view6', view); } catch (er) {} chips(); render(); }
+  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view7', view); } catch (er) {} chips(); render(); }
   else if (c) { fC = c.dataset.c; chips(); render(); }
   else if (cp) { const a = A.find(x => x.id === cp.dataset.copy); copy(full(a), cp, 'Copier le prompt'); }
 });

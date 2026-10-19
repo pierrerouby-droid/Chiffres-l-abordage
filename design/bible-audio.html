@@ -61,9 +61,15 @@ th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vert
 th{font:600 12px var(--f-u);letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
 td{color:var(--soft)}
 td code{font:500 13px var(--f-m);color:var(--brass-hi);white-space:nowrap}
+td .cp{margin-top:8px;min-height:36px}
 tr:last-child td{border-bottom:0}
 .steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--soft)}
 .steps code{font:500 13.5px var(--f-m);color:var(--brass-hi)}
+.tag6{display:inline-block;font:600 11px var(--f-u);letter-spacing:.04em;padding:2px 7px;border-radius:7px;background:var(--brass-hi);color:#3a2408;white-space:nowrap;vertical-align:middle}
+.tagl{display:inline-block;font:600 11px var(--f-u);padding:2px 7px;border-radius:7px;background:rgba(255,255,255,.07);color:var(--mist);white-space:nowrap;vertical-align:middle}
+.okr{color:#a6e3bf;font-size:13.5px;white-space:nowrap}
+.s.story{white-space:pre-line}
+.ev header h3 .tag6{margin-left:6px}
 .src{font-size:14px;color:var(--mist);display:flex;flex-direction:column;gap:6px}
 .src a{color:var(--brass-hi)}
 @media (max-width:560px){.set{grid-template-columns:minmax(0,1fr)}}
@@ -71,7 +77,7 @@ tr:last-child td{border-bottom:0}
 
 <div class="wrap">
   <header><div class="kick">Chiffres à l’abordage ! · production audio</div><h1>Voix, musiques et bruitages</h1></header>
-  <p class="lead"><b>Reçu et intégré :</b> les 73 répliques du Capitaine Barbe-Grise, dont les 8 de la Mer des Lettres (découpées et vérifiées une à une), et la musique de la carte (« Tavern »). Dès que tes autres fichiers portent les noms ci-dessous, je les dépose et ils jouent aux bons moments. Tant qu’un fichier manque, l’appli garde ses petits sons actuels.</p>
+  <p class="lead"><b>Reçu et intégré :</b> les 73 répliques du Capitaine Barbe-Grise et la musique de la carte (« Tavern »). <b>Lot 6 à produire :</b> les nouveautés de la version 1.6 (16 répliques et l’histoire racontée par le Capitaine), puis les 4 musiques et les 12 bruitages qui manquent encore. Tant qu’un fichier manque, l’appli garde ses petits sons actuels.</p>
 
   <section class="alert" aria-labelledby="t-al">
     <h2 id="t-al">À lire avant de générer la voix</h2>
@@ -80,6 +86,22 @@ tr:last-child td{border-bottom:0}
       <li>Les applis, produits ou expériences <b>destinés aux moins de 18 ans</b> sont interdits <b>sauf accord écrit</b> d’ElevenLabs, avec le consentement parental exigé par la loi.</li>
     </ul>
     <p>Je ne peux pas vérifier si des fichiers audio générés une fois puis intégrés à ton appli entrent dans ce cadre. Avant de diffuser la bêta à d’autres familles, le plus sûr est d’écrire au support d’ElevenLabs pour obtenir leur accord écrit. Pour un usage avec ton fils uniquement, la question se pose moins, mais je ne peux pas l’affirmer.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="t-l6">
+    <h2 id="t-l6">Lot 6 en un coup d’œil</h2>
+    <p class="sub">Dans l’ordre où je te conseille de les faire : ce qui s’entend le plus souvent d’abord. Les musiques et les dix premiers bruitages sont déjà prévus dans le code : ils jouent dès que je les ajoute. Les nouvelles répliques, l’histoire et les deux nouveaux bruitages demandent quelques lignes de code, que j’écris à la livraison.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Quoi</th><th>Fichiers</th><th>Où dans cette page</th><th>Dans l’appli</th></tr></thead>
+      <tbody>
+        <tr><td>Musiques des escales, des boss, du port et de la victoire</td><td>4</td><td>Partie 4</td><td>Déjà branchées</td></tr>
+        <tr><td>Bruitages des combats et des récompenses</td><td>10</td><td>Partie 5</td><td>Déjà branchés</td></tr>
+        <tr><td>Nouvelles répliques : test du capitaine, escale mélangée, boss qui vise ton point faible, quêtes, chapitres, journal, clavier de lettres</td><td>16</td><td>Partie 2</td><td>Je les branche à la livraison</td></tr>
+        <tr><td>L’histoire de l’archipel lue par le Capitaine (elle est lue aujourd’hui par la voix de synthèse de l’appareil)</td><td>14</td><td>Partie 3</td><td>Je les branche à la livraison</td></tr>
+        <tr><td>Deux nouveaux bruitages : morceau de carte, quête accomplie</td><td>2</td><td>Partie 5</td><td>Je les branche à la livraison</td></tr>
+        <tr><td>CP : les cinq sons isolés (ou, on, an, oi, ch)</td><td>5</td><td>Partie 6</td><td>Seulement si le test montre un problème</td></tr>
+      </tbody>
+    </table></div>
   </section>
 
   <section class="sec" aria-labelledby="t-v">
@@ -106,65 +128,111 @@ tr:last-child td{border-bottom:0}
     </div>
   </section>
 
-  <section class="sec" aria-labelledby="t-l">
-    <h2 id="t-l">2. Les 73 répliques</h2>
-    <p class="sub">Les indications entre crochets ([laughs], [whispers]…) sont à garder telles quelles : elles dirigent le jeu de la voix et ne sont pas prononcées. Si l’une d’elles est lue à voix haute, retire-la et régénère. Les répliques des tutoriels disent la même chose que le texte affiché à l’écran. Nomme chaque fichier exactement comme indiqué. Coche au fur et à mesure (mémorisé sur cet appareil).</p>
-    <div class="row"><button class="btn" type="button" id="copyall" style="background:linear-gradient(180deg,#f7dc93,#d9a74a)">Copier toutes les répliques</button><span class="st" id="copyall-st" role="status" style="color:var(--brass-hi)"></span><span class="sub" id="prog"></span></div>
-    <div id="lines"></div>
+  <section class="sec" aria-labelledby="t-l6v">
+    <h2 id="t-l6v">2. Lot 6 · les 16 nouvelles répliques</h2>
+    <p class="sub">Même voix, même modèle (Eleven v3) que les 73 premières. Les indications entre crochets ([laughs], [whispers]…) dirigent le jeu et ne sont pas prononcées : si l’une d’elles est lue à voix haute, retire-la et régénère. Les répliques du clavier de lettres disent la même chose que le texte affiché à l’écran. Nomme chaque fichier exactement comme indiqué. Coche au fur et à mesure (mémorisé sur cet appareil).</p>
+    <div class="row"><button class="btn" type="button" data-all="v6">Copier les 16 répliques</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="v6"></span></div>
+    <div id="lines6"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="t-saga">
+    <h2 id="t-saga">3. Lot 6 · l’histoire racontée par le Capitaine</h2>
+    <p class="sub">Les 14 chapitres du journal, un fichier par chapitre (35 à 45 secondes chacun). Quand le fichier existe, le bouton haut-parleur du chapitre joue la voix du Capitaine à la place de la voix de synthèse.</p>
+    <div class="paper">
+      <span class="lbl">Consignes de lecture</span>
+      <div class="set">
+        <div><b>Même voix</b>Celle du Capitaine Barbe-Grise, avec Eleven v3, comme les répliques.</div>
+        <div><b>Ton</b>Un conteur au coin du feu : plus lent que dans le jeu, chaleureux, avec une petite pause entre les paragraphes (les retours à la ligne suffisent).</div>
+        <div><b>Texte exact</b>C’est le texte affiché dans le journal : l’enfant peut suivre des yeux. N’ajoute rien, ne change rien, pas d’indication entre crochets.</div>
+        <div><b>Si la voix change en cours de lecture</b>Génère paragraphe par paragraphe (<code>vo-saga-canons-a.mp3</code>, <code>-b</code>, <code>-c</code>) : je les assemble.</div>
+      </div>
+    </div>
+    <div class="row"><button class="btn" type="button" data-all="saga">Copier les 14 chapitres</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="saga"></span></div>
+    <div id="saga"></div>
   </section>
 
   <section class="sec" aria-labelledby="t-m">
-    <h2 id="t-m">3. Musiques</h2>
-    <p class="sub">Des boucles qui se raccordent sans coupure, jouées en fond à volume bas. Aucune parole.</p>
+    <h2 id="t-m">4. Musiques</h2>
+    <p class="sub">Des boucles qui se raccordent sans coupure, jouées en fond à volume bas. Aucune parole. Aujourd’hui, faute de fichier, les escales et les boss se jouent sans musique. Le bouton « Prompt » copie une description en anglais pour un générateur de musique.</p>
     <div class="tbl"><table>
       <thead><tr><th>Fichier</th><th>Moment</th><th>Ambiance</th><th>Durée</th></tr></thead>
       <tbody>
-        <tr><td><code>mus-carte.mp3</code> ✓</td><td>Carte, équipage, avis de recherche, et le port en attendant sa musique</td><td>Aventure marine calme, curieuse, cordes et accordéon légers</td><td>Boucle 60 à 120 s</td></tr>
-        <tr><td><code>mus-escale.mp3</code></td><td>Pendant les mini-jeux</td><td>Rythmée mais discrète, ne doit pas gêner la concentration</td><td>Boucle 60 à 120 s</td></tr>
-        <tr><td><code>mus-boss.mp3</code></td><td>Combats de boss (niveau 10)</td><td>Tendue et épique, mais amusante, jamais effrayante</td><td>Boucle 45 à 90 s</td></tr>
-        <tr><td><code>mus-port.mp3</code></td><td>Retour au port (fin de session)</td><td>Douce, coucher de soleil, satisfaction</td><td>Boucle 30 à 60 s</td></tr>
-        <tr><td><code>mus-victoire.mp3</code></td><td>Escale gagnée</td><td>Petite fanfare triomphale de pirate</td><td>3 à 5 s, pas de boucle</td></tr>
+        <tr><td><code>mus-carte.mp3</code> <span class="okr">Reçu ✓</span></td><td>Carte, équipage, avis de recherche, et le port en attendant sa musique</td><td>Aventure marine calme, curieuse, cordes et accordéon légers</td><td>Boucle 60 à 120 s</td></tr>
+        <tr><td><code>mus-escale.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="mus-escale">Prompt</button></td><td>Pendant les mini-jeux</td><td>Rythmée mais discrète, ne doit pas gêner la concentration</td><td>Boucle 60 à 120 s</td></tr>
+        <tr><td><code>mus-boss.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="mus-boss">Prompt</button></td><td>Combats de boss (niveau 10)</td><td>Tendue et épique, mais amusante, jamais effrayante</td><td>Boucle 45 à 90 s</td></tr>
+        <tr><td><code>mus-port.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="mus-port">Prompt</button></td><td>Retour au port (fin de session)</td><td>Douce, coucher de soleil, satisfaction</td><td>Boucle 30 à 60 s</td></tr>
+        <tr><td><code>mus-victoire.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="mus-victoire">Prompt</button></td><td>Escale gagnée</td><td>Petite fanfare triomphale de pirate</td><td>3 à 5 s, pas de boucle</td></tr>
       </tbody>
     </table></div>
   </section>
 
   <section class="sec" aria-labelledby="t-s">
-    <h2 id="t-s">4. Bruitages</h2>
-    <p class="sub">Courts, nets, sans écho. Les bonnes réponses doivent être gratifiantes, les erreurs douces et jamais punitives.</p>
+    <h2 id="t-s">5. Bruitages</h2>
+    <p class="sub">Courts, nets, sans écho. Les bonnes réponses doivent être gratifiantes, les erreurs douces et jamais punitives. Aujourd’hui, les bruitages qui manquent sont remplacés par un bip de synthèse, ou rien du tout (coffre, île découverte, nouvel équipier). Le bouton « Prompt » copie une description en anglais pour un générateur de bruitages.</p>
     <div class="tbl"><table>
       <thead><tr><th>Fichier</th><th>Quand</th><th>Son attendu</th></tr></thead>
       <tbody>
-        <tr><td><code>sfx-tap.mp3</code></td><td>Chaque appui</td><td>Petit clic de bois, très court (0,1 s)</td></tr>
-        <tr><td><code>sfx-correct.mp3</code></td><td>Bonne réponse</td><td>Carillon joyeux montant (0,5 s)</td></tr>
-        <tr><td><code>sfx-wrong.mp3</code></td><td>Mauvaise réponse</td><td>« Bloup » doux et comique, pas de buzzer</td></tr>
-        <tr><td><code>sfx-cannon.mp3</code></td><td>Tir de canon</td><td>Coup de canon sourd, court</td></tr>
-        <tr><td><code>sfx-explosion.mp3</code></td><td>Boulet qui touche</td><td>Impact et éclats de bois, cartoon</td></tr>
-        <tr><td><code>sfx-splash.mp3</code></td><td>Boulet raté</td><td>Plouf dans l’eau</td></tr>
-        <tr><td><code>sfx-sink.mp3</code></td><td>Le navire ennemi coule</td><td>Craquements, glouglous, 1,5 à 2 s</td></tr>
-        <tr><td><code>sfx-boss-hit.mp3</code></td><td>Boss touché</td><td>Impact + petit cri comique de monstre</td></tr>
-        <tr><td><code>sfx-kick.mp3</code></td><td>Stade : bonne réponse</td><td>Frappe de ballon et filet qui tremble</td></tr>
-        <tr><td><code>sfx-block.mp3</code></td><td>Mine : bonne réponse</td><td>Blocs qui s’emboîtent</td></tr>
-        <tr><td><code>sfx-pop.mp3</code></td><td>Jungle : bonne réponse</td><td>« Pop » de créature qui sort des feuilles</td></tr>
-        <tr><td><code>sfx-cash.mp3</code></td><td>Marché : bonne réponse</td><td>Tiroir-caisse ancien</td></tr>
-        <tr><td><code>sfx-slice.mp3</code></td><td>Cuisine : bonne réponse</td><td>Coup de couteau sur planche + petit « miam »</td></tr>
-        <tr><td><code>sfx-coin.mp3</code></td><td>Pièce posée, doublon gagné</td><td>Tintement d’une pièce</td></tr>
-        <tr><td><code>sfx-coins.mp3</code></td><td>Coffre ouvert</td><td>Cascade de pièces (1 à 1,5 s)</td></tr>
-        <tr><td><code>sfx-chest-open.mp3</code></td><td>Coffre ouvert</td><td>Grincement de couvercle</td></tr>
-        <tr><td><code>sfx-fanfare.mp3</code></td><td>Bienvenue, récompense</td><td>Courte fanfare (si pas de mus-victoire)</td></tr>
-        <tr><td><code>sfx-unlock.mp3</code></td><td>Nouvelle île découverte</td><td>Brouillard qui se dissipe, carillon magique</td></tr>
-        <tr><td><code>sfx-tick.mp3</code></td><td>Horloge : bonne réponse</td><td>Tic-tac et petit carillon</td></tr>
-        <tr><td><code>sfx-crew-join.mp3</code></td><td>Nouvel équipier</td><td>Petit jingle d’accueil joyeux</td></tr>
+        <tr><td><code>sfx-tap.mp3</code> <span class="okr">Reçu ✓</span></td><td>Chaque appui</td><td>Petit clic de bois, très court (0,1 s)</td></tr>
+        <tr><td><code>sfx-correct.mp3</code> <span class="okr">Reçu ✓</span></td><td>Bonne réponse</td><td>Carillon joyeux montant (0,5 s)</td></tr>
+        <tr><td><code>sfx-wrong.mp3</code> <span class="okr">Reçu ✓</span></td><td>Mauvaise réponse</td><td>« Bloup » doux et comique, pas de buzzer</td></tr>
+        <tr><td><code>sfx-cannon.mp3</code> <span class="okr">Reçu ✓</span></td><td>Tir de canon</td><td>Coup de canon sourd, court</td></tr>
+        <tr><td><code>sfx-explosion.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-explosion">Prompt</button></td><td>Boulet qui touche</td><td>Impact et éclats de bois, cartoon</td></tr>
+        <tr><td><code>sfx-splash.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-splash">Prompt</button></td><td>Boulet raté</td><td>Plouf dans l’eau</td></tr>
+        <tr><td><code>sfx-sink.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-sink">Prompt</button></td><td>Le navire ennemi coule</td><td>Craquements, glouglous, 1,5 à 2 s</td></tr>
+        <tr><td><code>sfx-boss-hit.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-boss-hit">Prompt</button></td><td>Boss touché</td><td>Impact + petit cri comique de monstre</td></tr>
+        <tr><td><code>sfx-kick.mp3</code> <span class="tagl">Plus tard</span></td><td>Stade : bonne réponse</td><td>Frappe de ballon et filet qui tremble</td></tr>
+        <tr><td><code>sfx-block.mp3</code> <span class="tagl">Plus tard</span></td><td>Mine : bonne réponse</td><td>Blocs qui s’emboîtent</td></tr>
+        <tr><td><code>sfx-pop.mp3</code> <span class="tagl">Plus tard</span></td><td>Jungle : bonne réponse</td><td>« Pop » de créature qui sort des feuilles</td></tr>
+        <tr><td><code>sfx-cash.mp3</code> <span class="tagl">Plus tard</span></td><td>Marché : bonne réponse</td><td>Tiroir-caisse ancien</td></tr>
+        <tr><td><code>sfx-slice.mp3</code> <span class="tagl">Plus tard</span></td><td>Cuisine : bonne réponse</td><td>Coup de couteau sur planche + petit « miam »</td></tr>
+        <tr><td><code>sfx-coin.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-coin">Prompt</button></td><td>Pièce posée, doublon gagné</td><td>Tintement d’une pièce</td></tr>
+        <tr><td><code>sfx-coins.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-coins">Prompt</button></td><td>Coffre ouvert</td><td>Cascade de pièces (1 à 1,5 s)</td></tr>
+        <tr><td><code>sfx-chest-open.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-chest-open">Prompt</button></td><td>Coffre ouvert</td><td>Grincement de couvercle</td></tr>
+        <tr><td><code>sfx-fanfare.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-fanfare">Prompt</button></td><td>Bienvenue, récompense</td><td>Courte fanfare (si pas de mus-victoire)</td></tr>
+        <tr><td><code>sfx-unlock.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-unlock">Prompt</button></td><td>Nouvelle île découverte</td><td>Brouillard qui se dissipe, carillon magique</td></tr>
+        <tr><td><code>sfx-tick.mp3</code> <span class="tagl">Plus tard</span></td><td>Horloge : bonne réponse</td><td>Tic-tac et petit carillon</td></tr>
+        <tr><td><code>sfx-crew-join.mp3</code> <span class="tag6">Lot 6</span><br><button class="cp" type="button" data-p="sfx-crew-join">Prompt</button></td><td>Nouvel équipier</td><td>Petit jingle d’accueil joyeux</td></tr>
+        <tr><td><code>sfx-page.mp3</code> <span class="tag6">Lot 6 · nouveau</span><br><button class="cp" type="button" data-p="sfx-page">Prompt</button></td><td>Nouveau morceau de carte, ouverture d’un chapitre</td><td>Parchemin qui se déroule, petite étincelle magique (1 s)</td></tr>
+        <tr><td><code>sfx-quest.mp3</code> <span class="tag6">Lot 6 · nouveau</span><br><button class="cp" type="button" data-p="sfx-quest">Prompt</button></td><td>Quête de la semaine accomplie</td><td>Cloche de bord qui sonne deux coups, joyeuse (1 s)</td></tr>
       </tbody>
     </table></div>
   </section>
 
+  <section class="sec" aria-labelledby="t-cp">
+    <h2 id="t-cp">6. CP · les sons isolés, seulement si besoin</h2>
+    <p class="sub">Au CP, la Forge des Verbes demande « Quel mot s’écrit avec « ch » ? ». Le haut-parleur lit alors la question avec la voix de synthèse de l’appareil, qui peut épeler « c, h » ou « o, i » au lieu de dire le son. Je ne peux pas l’écouter sur un iPhone depuis ici : vérifie d’abord.</p>
+    <ol class="steps">
+      <li>Ouvre l’appli avec <code>?admin</code> à la fin de l’adresse, classe CP.</li>
+      <li>Mer des Lettres, Forge des Verbes, niveau 5. Joue jusqu’à une question « s’écrit avec « ch » » ou « « oi » ».</li>
+      <li>Touche le haut-parleur. Si tu entends le son (« ch » comme dans chat, « oi » comme dans roi), rien à faire. Si tu entends des lettres épelées, il faut ces cinq fichiers.</li>
+    </ol>
+    <div class="tbl"><table>
+      <thead><tr><th>Fichier</th><th>À dire</th></tr></thead>
+      <tbody>
+        <tr><td><code>son-ou.mp3</code></td><td>Le son tenu une seconde, puis « comme dans loup »</td></tr>
+        <tr><td><code>son-on.mp3</code></td><td>Le son tenu une seconde, puis « comme dans ballon »</td></tr>
+        <tr><td><code>son-an.mp3</code></td><td>Le son tenu une seconde, puis « comme dans maman »</td></tr>
+        <tr><td><code>son-oi.mp3</code></td><td>Le son « oi » une fois, puis « comme dans roi »</td></tr>
+        <tr><td><code>son-ch.mp3</code></td><td>« chhh » tenu une seconde, puis « comme dans chat »</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sub">Un générateur de voix rend mal un son seul. Le plus fiable : ta propre voix, enregistrée au calme avec le dictaphone du téléphone. Le format du dictaphone me va, je convertis.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="t-l">
+    <h2 id="t-l">7. Les 73 répliques reçues</h2>
+    <p class="sub">Déjà dans l’appli. Gardées ici pour référence, ou pour régénérer une réplique si besoin.</p>
+    <div class="row"><button class="btn" type="button" data-all="v">Copier les 73 répliques</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="v"></span></div>
+    <div id="lines"></div>
+  </section>
+
   <section class="sec" aria-labelledby="t-d">
-    <h2 id="t-d">5. Livraison</h2>
+    <h2 id="t-d">8. Livraison</h2>
     <ol class="steps">
       <li>Tous les fichiers en MP3, nommés exactement comme dans les tableaux (sans majuscule ni espace).</li>
       <li>Niveaux : pas de saturation (crêtes à −1 dB maximum). La voix doit ressortir nettement au-dessus de la musique ; je règle l’équilibre dans l’appli.</li>
-      <li>Dépose-les dans un sous-dossier <code>archipel-audio</code> du Drive partagé et préviens-moi.</li>
-      <li>Je vérifie chaque fichier, je génère la liste que l’appli lit, puis je les intègre et je teste.</li>
+      <li>Dépose-les dans un nouveau sous-dossier du Drive partagé (par exemple <code>archipel-audio-lot6</code>) et préviens-moi. Pas besoin d’attendre d’avoir tout : les musiques seules, c’est déjà une livraison.</li>
+      <li>Je vérifie chaque fichier, je génère la liste que l’appli lit, je branche les nouveaux moments dans le code, puis je teste.</li>
     </ol>
     <p class="sub">Dans l’espace parents, trois réglages séparés sont déjà en place : son général, musique, voix des personnages.</p>
   </section>
@@ -288,31 +356,77 @@ tr:last-child td{border-bottom:0}
       'Puis lis bien la question.',
       'Touche la bonne réponse. Tu peux relire le texte avant de répondre !']],
   ];
+  const EV6 = [
+    ['test', 'Test du capitaine', 'Quand la fenêtre du test s’ouvre, au premier passage sur la carte', [
+      'Avant de lever l’ancre, je veux voir ce que tu sais déjà faire ! Quelques questions sur chaque île, et tu commenceras au bon niveau.',
+      'Ohé, moussaillon ! Un petit test de capitaine ? Ça dure environ cinq minutes, et après, cap sur l’aventure !']],
+    ['test-fin', 'Fin du test', 'Écran « Test terminé ! »', [
+      'Test terminé ! [laughs] Je sais maintenant où te faire naviguer. Regarde ta carte !',
+      'Bien joué, moussaillon ! Chaque île t’attend maintenant au bon niveau.']],
+    ['melange', 'Escale mélangée', 'Au départ d’une escale mélangée', [
+      'Escale mélangée ! Chaque question vient d’une île différente : garde l’œil ouvert, moussaillon !',
+      '[laughs] Aujourd’hui, on mélange tout ! Prêt à tout réviser ?']],
+    ['boss-cible', 'Le boss vise ton point faible', 'Quand le boss pose une question sur une notion souvent ratée', [
+      '[whispers] Attention… ce boss vise ton point faible. Montre-lui que tu as progressé !',
+      'Ha ! Il croit que c’est ta faiblesse ? Prouve-lui le contraire, moussaillon !']],
+    ['quete', 'Quête accomplie', 'Une quête de la semaine est terminée', [
+      'Quête accomplie ! Les doublons sont pour toi, moussaillon !',
+      'Une quête de plus ! [laughs] Tu es un vrai chasseur de trésors !']],
+    ['chapitre', 'Nouveau chapitre', 'Un coffre d’île donne un morceau de la carte au trésor', [
+      '[gasps] Un morceau de la carte au trésor ! Va vite lire la suite dans ton journal !',
+      'Encore un morceau de carte ! Le trésor se rapproche, moussaillon…']],
+    ['journal', 'Page Journal', 'Première visite', [
+      'Voici ton journal de bord ! Tes quêtes de la semaine, l’histoire de l’archipel, et tout ce que tu sais faire.']],
+    ['tuto-type', 'Tutoriel · clavier de lettres', 'Verbes et pluriels à écrire (CE2 et CM1), une réplique par étape', [
+      'Lis bien la phrase : le mot à écrire va dans la case.',
+      'Écris le mot avec le clavier. Les lettres avec un accent sont sur la dernière ligne.',
+      'Puis touche Valider, moussaillon !']],
+  ];
+  const SAGA = [["prologue", "Prologue : La carte déchirée.", ["Une nuit de tempête, le Kraken sort des vagues près du port. C’est un énorme monstre des mers, très grognon. D’un coup de tentacule, il attrape la carte au trésor du capitaine Barbe-Grise !", "Crac ! Il la déchire en douze morceaux. Le vent les emporte vers douze îles de l’archipel.", "« Sans les douze morceaux, adieu le trésor ! » soupire le capitaine. Pi bat des ailes : « Alors en route, moussaillon ! Chaque île cache un coffre, et chaque coffre cache un morceau. »"]], ["canons", "Chapitre 1 : La rose des vents.", ["Sur l’Île des Canons, les vieux canons font encore boum ! Au fond du coffre, sous des boulets rouillés, tu trouves un morceau de carte.", "On y voit le port et une rose des vents : l’étoile qui montre le nord, le sud, l’est et l’ouest. « Bien visé ! » crie Pi.", "Au loin, une ombre glisse sous les vagues : c’est le Kraken des Tables. Pi gonfle ses plumes : « Pas de panique ! Avec de bons calculs, on n’a peur de personne. »"]], ["stade", "Chapitre 2 : Le ballon de cuir.", ["Au Stade des Vagues, les pirates jouent au football sur une plage de sable blanc. Le Crabe Gardien te lance un défi : chaque bon calcul est un but !", "Tu tires, tu marques ! Au bord du terrain, le coffre s’ouvre. Dedans, un morceau de carte est caché dans un vieux ballon de cuir.", "Il montre une île en forme de croissant de lune. Le Crabe Gardien claque des pinces : « Joli tir ! On se retrouve pour le grand match. »"]], ["mine", "Chapitre 3 : Les blocs qui brillent.", ["Dans la Mine aux Blocs, tout se compte par paquets de dix : dix unités font une dizaine, dix dizaines font une centaine. Les mineurs empilent des blocs de pierre précieuse.", "Derrière la plus grande pile, le Golem des Blocs fait la sieste. Chut ! Sur la pointe des pieds, tu ouvres le coffre.", "Dedans, un morceau de carte montre un chemin en pointillés qui zigzague entre les rochers."]], ["jungle", "Chapitre 4 : Le crocodile qui compte.", ["Dans la Jungle des Créatures, les perroquets crient et les singes rigolent. Sur un vieux tronc couvert de traits, un petit crocodile avance de graduation en graduation.", "« Un, deux, trois… Suis-moi ! » dit-il. Il te guide jusqu’au coffre, caché sous les lianes.", "Le morceau de carte montre une cascade et un grand palmier. Le petit crocodile sourit : « Je m’appelle Croco Comparo. Je peux venir avec toi ? »"]], ["marche", "Chapitre 5 : Le marchand transparent.", ["Au Marché du Port, un marchand tout transparent compte ses pièces. C’est le Marchand Fantôme ! Il rit : « Hou hou ! Sais-tu compter aussi bien que moi ? »", "Tu comptes les pièces et les billets. Tu paies le bon prix et tu rends la monnaie sans te tromper. Le fantôme applaudit : « Bravo ! Notre grand duel, ce sera pour plus tard. »", "Sous sa table, le coffre s’ouvre. Dans un petit sac de velours, tu trouves un morceau de carte avec un seul mot : « Nord »."]], ["cuisine", "Chapitre 6 : La tarte du Chef Pieuvre.", ["Dans la Cuisine du Navire, le Chef Pieuvre coupe une tarte en quatre parts égales. Avec ses huit bras, il va très vite !", "Il annonce : « Deux parts pour l’équipage, c’est la moitié. Une part pour le capitaine, c’est un quart. Et la dernière part pour moi : un autre quart ! »", "Dans le coffre, entre deux pots d’épices, tu trouves un morceau de carte. Il sent la cannelle et montre une baie tranquille."]], ["horloge", "Chapitre 7 : À l’heure pile.", ["Sur l’Île de l’Horloge, une immense tour sonne toutes les heures : dong, dong ! Le Maître des Heures sourit : « Ici, même les vagues arrivent à l’heure ! »", "À midi pile, les deux aiguilles se retrouvent sur le 12. Clic ! Le coffre s’ouvre tout seul.", "Le morceau de carte dit quand partir : « Pars quand la petite aiguille sera sur le 3 et la grande aiguille sur le 12. » C’est-à-dire à trois heures pile !"]], ["lecture", "Chapitre 8 : Les lunettes de Pi.", ["Dans la Grotte aux Histoires, les murs racontent des aventures de pirates. Pi a oublié ses lunettes : « Lis pour moi, s’il te plaît ! »", "Alors c’est toi qui lis, phrase après phrase. Pi écoute et cherche les indices avec toi. Entre les pages d’un vieux livre, voici un morceau de carte !", "On y voit une sirène dessinée à l’encre bleue. Au fond de la grotte, quelqu’un chante tout doucement… Qui est-ce ? Tu le sauras bientôt."]], ["conjug", "Chapitre 9 : Le marteau du forgeron.", ["À la Forge des Verbes, le Forgeron des Temps tape sur son enclume : cling, clang ! Sous son marteau, les mots changent de forme.", "Il chante : « Hier, je naviguais. Aujourd’hui, je navigue. Demain, je naviguerai ! » Un bon pirate sait parler du passé, du présent et du futur.", "Le morceau de carte sort tout chaud du coffre. Attention aux doigts ! Il montre un récif en forme de dents de requin."]], ["gram", "Chapitre 10 : Le Récif des Phrases.", ["Ici vit la Murène des Phrases. Elle adore les farces : elle mélange les mots, et les navires se perdent !", "Toi, tu trouves le verbe et tu ranges les mots. Une majuscule au début, un point à la fin : la phrase est parfaite ! Un passage s’ouvre. La murène ronchonne : « Bien joué… On se reverra ! »", "Le coffre t’attend sur le sable, au fond de l’eau claire. Dedans, un morceau de carte montre une route secrète à travers le récif."]], ["accords", "Chapitre 11 : Le troll grognon.", ["Au Pont des Accords, les mots doivent bien aller ensemble. Le Troll du Pont surveille tout, les bras croisés.", "Tu accordes chaque mot : « les vagues bleues, les voiles blanches ». Le troll grogne, mais il sourit un peu : « Pas mauvais… Pour traverser mon pont, reviens me défier plus tard ! »", "Sous une planche, tu trouves le coffre. Dedans, un morceau de carte montre une île cachée dans le brouillard."]], ["vocab", "Chapitre 12 : La baleine qui sait tout.", ["Dans la Baie des Mots vit la Baleine Dictionnaire. Elle connaît tous les mots du monde ! Elle te souffle des mots qui veulent dire la même chose, puis des contraires.", "« Énorme, gigantesque… comme moi ! » dit-elle en riant. Sur son dos, un coffre t’attend.", "Dedans, un morceau de carte avec une grande croix rouge ! Mais où se trouve cette croix ? Pour le savoir, il faudra réunir tous les morceaux."]], ["final", "Chapitre final : Le trésor de l’archipel.", ["Sur le pont du Fier Calcul, tu assembles les douze morceaux. La carte est complète ! Elle montre une île cachée derrière le brouillard. Cap sur l’île !", "Sous une grande croix rouge, tu creuses… Bong ! Voici le coffre du trésor : cinq cents doublons brillent au soleil. Au loin, le Kraken boude.", "Barbe-Grise sourit : « Bravo, capitaine ! Les nombres, les mots, les heures… Tout ce que tu as appris, c’est à toi pour toujours. » Pi ajoute : « Et les doublons aussi ! »"]]];
+  const PROMPTS = {
+    'mus-escale': 'Instrumental loop for a kids’ pirate learning game, played during short quiz mini-games. Light, bouncy and focused: pizzicato strings, soft marimba, light hand percussion and a gentle accordion motif. Medium tempo around 100 BPM, low intensity, no big drops, no vocals, so a child can concentrate. Seamless loop: the ending flows straight back into the beginning. 90 seconds.',
+    'mus-boss': 'Instrumental loop for a boss battle in a kids’ pirate game. Epic but playful, never scary: driving low strings, timpani, brass stabs, a cheeky tuba line and a lively fiddle. Tempo around 120 BPM, no vocals. Seamless loop: the ending flows straight back into the beginning. 60 seconds.',
+    'mus-port': 'Calm instrumental loop for sailing back into a pirate harbor at sunset in a kids’ game: gentle acoustic guitar, soft accordion and warm low strings. Slow tempo, peaceful and satisfied, a feeling of a day well spent. No vocals. Seamless loop. 45 seconds.',
+    'mus-victoire': 'Short triumphant pirate fanfare for a kids’ game victory screen: brass and snare drum flourish ending on a bright, cheerful major chord. 4 seconds, no vocals, clean ending with a short natural tail.',
+    'sfx-explosion': 'Cartoon cannonball hitting a wooden pirate ship: punchy thud with splintering wood, short and dry, no reverb. 0.6 seconds.',
+    'sfx-splash': 'Cannonball dropping into the sea: deep cartoon plop and a water splash, short and dry. 0.7 seconds.',
+    'sfx-sink': 'Cartoon pirate ship sinking: creaking wood, bubbles and gurgles, playful rather than dramatic. 2 seconds.',
+    'sfx-boss-hit': 'Comic sea monster getting hit: a soft impact followed by a short, funny, grumpy groan. Kid-friendly, not scary. 0.8 seconds.',
+    'sfx-coin': 'A single gold coin clinking, bright and clean. 0.3 seconds.',
+    'sfx-coins': 'A cascade of gold coins pouring onto a pile, cheerful and rich. 1.2 seconds.',
+    'sfx-chest-open': 'An old wooden treasure chest lid creaking open, ending with a small magical shimmer. 1 second.',
+    'sfx-fanfare': 'A very short pirate brass fanfare, three rising notes, cheerful. 1.5 seconds.',
+    'sfx-unlock': 'Sea fog clearing with a soft whoosh and a magical chime, a feeling of wonder and discovery. 1.5 seconds.',
+    'sfx-crew-join': 'A short joyful welcome jingle on fiddle and accordion, like a new friend joining the crew. 1.5 seconds.',
+    'sfx-page': 'An old parchment map unrolling: paper crinkle followed by a soft magical sparkle. 1 second.',
+    'sfx-quest': 'A ship’s brass bell ringing twice, bright and celebratory. 1 second.',
+  };
   const KEY = 'archipel-audio-done-v2';
   let done = {}; try { done = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const fmt = s => esc(s).replace(/\[([a-z ]+)\]/g, '<i>[$1]</i>');
-  const all = []; let html = '';
-  EV.forEach(([id, name, when, lines]) => {
-    html += `<section class="ev" aria-label="${esc(name)}"><header><h3>${esc(name)}</h3><span>${esc(when)}</span></header>`;
-    lines.forEach((t, k) => { const f = `vo-${id}-${k + 1}.mp3`; all.push([f, t]);
-      html += `<div class="line"><input type="checkbox" id="c-${id}-${k}" data-f="${f}" ${done[f] ? 'checked' : ''} aria-label="${f} fait"><label class="t" for="c-${id}-${k}"><div class="f">${f}</div><div class="s">${fmt(t)}</div></label><button class="cp" type="button" data-line="${all.length - 1}">Copier</button></div>`; });
-    html += '</section>';
-  });
-  document.getElementById('lines').innerHTML = html;
-  const prog = () => { document.getElementById('prog').textContent = `${Object.values(done).filter(Boolean).length} sur ${all.length} faites`; };
+  const all = [], sets = { v: [], v6: [], saga: [] };
+  const lineHTML = (f, t, set, cls = '') => { all.push([f, t]); sets[set].push(all.length - 1); const k = all.length - 1;
+    return `<div class="line"><input type="checkbox" id="c-${k}" data-f="${f}" data-set="${set}" ${done[f] ? 'checked' : ''} aria-label="${f} fait"><label class="t" for="c-${k}"><div class="f">${f}</div><div class="s${cls}">${fmt(t)}</div></label><button class="cp" type="button" data-line="${k}">Copier</button></div>`; };
+  const evHTML = (list, set, badge) => list.map(([id, name, when, lines]) => `<section class="ev" aria-label="${esc(name)}"><header><h3>${esc(name)}${badge ? ' <span class="tag6">Lot 6</span>' : ''}</h3><span>${esc(when)}</span></header>${lines.map((t, k) => lineHTML(`vo-${id}-${k + 1}.mp3`, t, set)).join('')}</section>`).join('');
+  document.getElementById('lines6').innerHTML = evHTML(EV6, 'v6', true);
+  document.getElementById('saga').innerHTML = `<section class="ev" aria-label="Chapitres">${SAGA.map(([id, title, x]) => lineHTML(`vo-saga-${id}.mp3`, `${title}\n\n${x.join('\n\n')}`, 'saga', ' story')).join('')}</section>`;
+  document.getElementById('lines').innerHTML = evHTML(EV, 'v', false);
+  const prog = () => document.querySelectorAll('[data-prog]').forEach(el => { const ids = sets[el.dataset.prog]; el.textContent = `${ids.filter(k => done[all[k][0]]).length} sur ${ids.length} faites`; });
   prog();
   const copy = (text, ok, fail) => { try { navigator.clipboard.writeText(text).then(ok, fail); } catch (e) { fail(); } };
   const selectNode = el => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+  const flash = (b, label) => { b.textContent = 'Copié'; b.classList.add('ok'); setTimeout(() => { b.textContent = label; b.classList.remove('ok'); }, 1500); };
   document.addEventListener('click', e => {
-    const b = e.target.closest('[data-copy]'), l = e.target.closest('[data-line]');
+    const b = e.target.closest('[data-copy]'), l = e.target.closest('[data-line]'), a = e.target.closest('[data-all]'), pr = e.target.closest('[data-p]');
     if (b) { const el = document.getElementById(b.dataset.copy), st = b.parentElement.querySelector('.st');
       copy(el.textContent, () => { st.textContent = 'Copié.'; }, () => { selectNode(el); st.textContent = 'Texte sélectionné : copie-le avec ⌘C ou Ctrl+C.'; }); }
     if (l) { const [f, t] = all[+l.dataset.line];
-      copy(t, () => { l.textContent = 'Copié'; l.classList.add('ok'); setTimeout(() => { l.textContent = 'Copier'; l.classList.remove('ok'); }, 1500); }, () => { selectNode(l.parentElement.querySelector('.s')); }); }
-    if (e.target.id === 'copyall') { const txt = all.map(([f, t]) => `${f}\n${t}`).join('\n\n'), st = document.getElementById('copyall-st');
-      copy(txt, () => { st.textContent = `Les ${all.length} répliques sont copiées.`; }, () => { st.textContent = 'Copie refusée par le navigateur : copie les répliques une par une.'; }); }
+      copy(t, () => flash(l, 'Copier'), () => { selectNode(l.parentElement.querySelector('.s')); }); }
+    if (pr) { copy(PROMPTS[pr.dataset.p], () => flash(pr, 'Prompt'), () => { pr.textContent = 'Copie refusée'; }); }
+    if (a) { const ids = sets[a.dataset.all], txt = ids.map(k => `${all[k][0]}\n${all[k][1]}`).join('\n\n'), st = a.parentElement.querySelector('.st');
+      copy(txt, () => { st.textContent = `${ids.length} textes copiés.`; }, () => { st.textContent = 'Copie refusée par le navigateur : copie-les un par un.'; }); }
   });
   document.addEventListener('change', e => { const f = e.target.dataset && e.target.dataset.f; if (!f) return; done[f] = e.target.checked; save(); prog(); });
 })();
