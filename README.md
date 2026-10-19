@@ -57,7 +57,10 @@ Un bouton en haut de la carte passe de la Mer des Chiffres à la Mer des Lettres
 
 - **Quêtes de la semaine** : trois quêtes du lundi au dimanche (dont une sur l’île la moins réussie), 60 doublons chacune et un coffre de 150 doublons pour les trois.
 - **L’histoire de l’archipel** : chaque coffre d’île débloque un chapitre et un morceau de la carte au trésor ; les douze morceaux mènent au chapitre final. Le haut-parleur lit les chapitres.
-- **Plan du navire** : coque (victoires), voiles, figures de proue, canon doré, fanaux et sillage d’écume (doublons). Le pourcentage de construction suit toute la saison.
+- **Plan du navire** : coque (victoires), voiles, cinq figures de proue, canons doré et d’argent, ancre, chaloupe et lanternes de couleur (doublons). Le pourcentage de construction suit toute la saison.
+- **Garde-robe du capitaine** (version 2.0) : le capitaine en pied s’habille avec cinq chapeaux, quatre accessoires et trois sabres ; sa tenue apparaît sur l’avis de recherche, le médaillon et l’onglet « Mon pirate ».
+- **Port d’attache** (version 2.0) : touche le port sur la carte ; six parcelles à construire avec sept bâtiments au choix (jardin, grand mât à ton pavillon, marché, taverne, phare, chantier, statue). Le phare s’allume sur la carte.
+- Les doublons n’achètent que des décorations : rien ne répond à la place de l’enfant.
 
 ## Organisation du dépôt
 

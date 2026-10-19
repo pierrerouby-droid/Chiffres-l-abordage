@@ -95,7 +95,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .mers{position:absolute;left:0;right:0;top:270px;text-align:center;font:700 13px var(--f-d);letter-spacing:.3em;color:#3c5960;text-transform:uppercase;pointer-events:none}
 .hud{position:absolute;left:12px;right:12px;top:calc(var(--st) + 10px);height:64px;border-radius:22px;display:flex;align-items:center;gap:10px;padding:0 9px;z-index:20}
 .medal{width:48px;height:48px;border-radius:50%;flex:none;overflow:hidden;background:#173f52;box-shadow:0 0 0 2px #0a2230,0 0 0 3.5px var(--brass)}
-.medal img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transform:scale(1.15)}
+.medal>img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transform:scale(1.15)}
 .hud .nm{font-family:var(--f-d);font-weight:800;font-size:17px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
 .hud .rk{font-size:12px;color:var(--mist);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;-webkit-mask:linear-gradient(90deg,#000 85%,transparent);mask:linear-gradient(90deg,#000 85%,transparent)}
 .xp{width:58px;height:5px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden}.xp i{display:block;height:100%;background:linear-gradient(90deg,var(--brass),var(--brass-hi))}
@@ -372,7 +372,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .poster .t2{position:absolute;left:14%;right:14%;top:18.5%;display:flex;align-items:center;gap:8px;color:var(--ink-2)}
 .poster .t2 i{flex:1;height:1px;background:currentColor}
 .poster .photo{position:absolute;left:17%;right:17%;top:23%;height:36%;overflow:hidden;border:2px solid #4b3422;background:linear-gradient(#e9b98a,#c97e52);box-shadow:inset 0 0 24px rgba(42,28,18,.4)}
-.poster .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 10%;filter:sepia(.25) saturate(1.05)}
+.poster .photo>img{width:100%;height:100%;object-fit:cover;object-position:50% 10%;filter:sepia(.25) saturate(1.05)}
 .poster .nm{position:absolute;left:0;right:0;top:61%;font-family:var(--f-d);font-weight:900;font-size:clamp(26px,8vw,34px);line-height:1}
 .poster .ep{position:absolute;left:0;right:0;top:68%;font-family:var(--f-d);font-style:italic;font-weight:600;font-size:15px;color:var(--ink-2)}
 .poster .bounty{position:absolute;left:16%;right:16%;top:73.5%;display:flex;justify-content:center;align-items:center;gap:8px;padding:5px 0;border-top:1.5px solid rgba(75,52,34,.6);border-bottom:1.5px solid rgba(75,52,34,.6)}
@@ -482,7 +482,7 @@ textarea.fld{min-height:76px}
 .shipcap .bar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:4px}
 .shipcap .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--brass),var(--brass-hi))}
 .showship{height:180px}
-.showship .sh{left:50%;right:auto;bottom:6px;width:min(78%,360px);transform:translateX(-50%)}
+.showship .sh{left:50%;right:auto;bottom:6px;width:min(78%,360px);translate:-50% 0;z-index:2}
 .showship::after{display:none}
 .poster .foot{font-size:13px;left:17%;right:17%}
 .poster .foot .rkt{font:700 13px var(--f-u);color:var(--ink)}
@@ -547,7 +547,7 @@ textarea.fld{min-height:76px}
 .g-scene .hero-bg{animation:kburns 20s ease-in-out infinite alternate;transform-origin:50% 35%}
 @keyframes kburns{to{transform:scale(1.07) translateX(-1.5%)}}
 @media (prefers-reduced-motion:reduce){.g-scene .hero-bg{animation:none}}
-.medal{position:relative}.medal.adm{overflow:visible}.medal.adm img{border-radius:50%;transform:none}
+.medal{position:relative}.medal.adm{overflow:visible}.medal.adm>img{border-radius:50%;transform:none}
 .medal .admb{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%)}
 .admb{display:inline-block;padding:1px 6px;border-radius:6px;background:var(--wax);color:#fff;font:800 10px var(--f-u);letter-spacing:.08em;text-transform:uppercase}
 .rnode.lock.adm{color:var(--ink-2);opacity:.8}
@@ -802,6 +802,60 @@ textarea.fld{min-height:76px}
 .sart .lamp.fanaux-emeraude{background:radial-gradient(circle,#efffef 0 22%,rgba(90,235,150,.85) 40%,rgba(40,200,120,0) 72%)}
 .sart .lamp.fanaux-lune{background:radial-gradient(circle,#ffffff 0 22%,rgba(170,210,255,.9) 40%,rgba(120,170,255,0) 72%)}
 @media (prefers-reduced-motion:reduce){.sart .lamp{animation:none}}
+/* ---------- 2.0 : capitaine habillable, ornements du navire, port d'attache ---------- */
+.capt{position:absolute;display:block;aspect-ratio:2/3}
+.capt img{position:absolute;display:block;max-width:none;pointer-events:none}
+.capt .cb{position:relative;left:0;top:0;width:100%}
+.capt.full{position:relative;width:100%}
+.cbust{position:absolute;inset:0;overflow:hidden;border-radius:inherit}
+.cbust .capt{left:50%;top:var(--py,58%);width:var(--z,165%);transform:translate(calc(-1 * var(--fx)),calc(-1 * var(--fy)))}
+.medal .cbust{border-radius:50%}
+.dock .di.cbust{position:relative;display:block;inset:auto;flex:none}
+.poster .photo .cbust{--z:114%;--py:52%;filter:sepia(.25) saturate(1.05)}
+.ward .wstage{position:relative;width:min(150px,42%);margin:46px auto 12px;filter:drop-shadow(0 10px 12px rgba(0,0,0,.45))}
+.ward .wstage::before{content:"";position:absolute;left:-30%;right:-30%;bottom:-6%;height:12%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.4),transparent)}
+.ward .wh{margin:14px 0 6px;font:700 13px var(--f-u);letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
+.wrow{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.wrow::-webkit-scrollbar{display:none}
+.wit{flex:none;width:96px;scroll-snap-align:start;border-radius:16px;padding:8px 6px 9px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--glass-line);color:var(--foam)}
+.wit>img{width:64px;height:56px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35))}
+.wit b{font:700 12.5px/1.15 var(--f-u);min-height:29px;display:flex;align-items:center}
+.wit span{font-size:13px;color:var(--mist);display:flex;align-items:center;gap:4px}
+.wit span img{width:16px;height:16px}
+.wit.on{background:rgba(243,213,140,.16);box-shadow:inset 0 0 0 2px var(--brass-hi)}.wit.on span{color:var(--brass-hi);font-weight:700}
+.wit.cant{opacity:.5}
+.sart{isolation:isolate}
+.sart .boat{position:absolute;width:30%;left:-24%;top:70%;z-index:-1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.sart .anc{position:absolute;width:12%;left:60%;top:66%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.sart[data-lv="1"] .anc{left:63%;top:66%}
+.sart[data-lv="2"] .anc{left:66%;top:64%}
+.harbor{background:#0f5a6e}
+.harbor .hbsea{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;object-position:50% 85%;filter:blur(20px);transform:scale(1.1)}
+.hbwrap{position:absolute;left:0;right:0;top:calc(var(--st) + 70px);bottom:calc(var(--sbm) + 168px);display:grid;place-items:center;overflow:hidden}
+.hbwrap{container-type:size}
+.hb{position:relative;width:min(100cqw,560px,91.4cqh);aspect-ratio:1024/1121;overflow:hidden;-webkit-mask:linear-gradient(transparent,#000 12%,#000 88%,transparent),linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-composite:source-in;mask:linear-gradient(transparent,#000 12%,#000 88%,transparent),linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-composite:intersect}
+.hbi{position:absolute;left:0;top:-6.85%;width:100%;height:137.02%;background:url(assets/port-base.webp) center/100% 100%}
+.plot{position:absolute;padding:0;background:none;border:0}
+.plot.built img{display:block;width:100%;filter:drop-shadow(0 6px 5px rgba(0,0,0,.35))}
+.plot.built.fresh{animation:bpop .7s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes bpop{from{opacity:0;scale:.4}to{opacity:1;scale:1}}
+.plot .bflag{position:absolute;left:47%;top:5%;width:24%;transform:skewY(8deg) rotate(4deg);opacity:.92}
+.plot.free{width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;z-index:2000;display:grid;place-items:center;background:rgba(255,248,225,.22);box-shadow:0 0 0 2px rgba(255,248,225,.85),0 0 16px rgba(255,220,140,.8);animation:plotp 2s ease-in-out infinite}
+.plot.free i{font:800 28px/1 var(--f-u);font-style:normal;color:#fffaf0;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+@keyframes plotp{50%{box-shadow:0 0 0 2px rgba(255,248,225,.85),0 0 26px rgba(255,220,140,1)}}
+.hbcap{position:absolute;left:12px;right:12px;bottom:calc(var(--sbm) + 102px);border-radius:20px;padding:10px 12px 10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:20}
+.hbcap .smallcaps{color:var(--mist)}.hbcap b{font:700 15px/1.25 var(--f-u);color:#fffaf0}
+.hbcap .ghost-btn{width:auto;margin:0;padding:10px 18px;flex:none}
+.bsheet .box{max-width:440px}
+.bgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.bopt{border-radius:16px;padding:8px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(75,52,34,.08);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.35);color:var(--ink)}
+.bopt img{width:78px;height:70px;object-fit:contain}
+.bopt b{font:700 14px/1.15 var(--f-u)}
+.bopt span{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:4px}.bopt span img{width:16px;height:16px}
+.bopt.on{box-shadow:inset 0 0 0 2.5px var(--brass);background:rgba(243,213,140,.25)}
+.bopt.cant{opacity:.5}
+.home-port.phare::after{content:"";position:absolute;left:58%;top:18%;width:70px;height:70px;margin:-35px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95) 0 10%,rgba(255,210,120,.5) 35%,transparent 70%);mix-blend-mode:screen;animation:lampf 2.2s ease-in-out infinite;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.plot.free,.home-port.phare::after,.plot.built.fresh{animation:none}}
 .why .diag{display:block;margin:0 0 8px;padding:8px 10px;border-radius:12px;background:rgba(184,56,42,.08);box-shadow:inset 3px 0 0 var(--wax-hi);color:var(--ink)}
 /* ---------- 1.5 : océan WebGL, îles sous l'orage, voiles flous, boutons, mouettes ---------- */
 .sea-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -946,7 +1000,7 @@ const decomp = n => { const [m, c, d, u] = digits(n); return `${pl(m, 'millier')
 const ADMIN = /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.hash.slice(1));
 const KEY = ADMIN ? 'archipel-nombres-admin' : 'archipel-nombres-v2';
 // La progression (îles, marée, revanches, erreurs, victoires par mer) est rangée par classe dans S.g ; le reste (nom, doublons, équipage, navire) est commun.
-const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false });
+const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false, ward: ['tricorne'], outfit: { h: 'tricorne' }, port: ['', '', '', '', '', ''], blds: [] });
 const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce1: { n: 'CE1', age: '7 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' } };
 const PDEF = () => ({ isl: {}, tide: null, rev: [], errors: [], wins: { m: 0, f: 0 } });
 function migrate(o) {
@@ -970,7 +1024,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.9.1 bêta · octobre 2026';
+const VERSION = '2.0 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 if (isIOS && standalone) document.documentElement.classList.add('ios-app');
@@ -982,6 +1036,9 @@ function copyText(text) {
 ['tuto', 'seenTab'].forEach(k => { if (!S[k] || typeof S[k] !== 'object') S[k] = {}; }); 
 if (!Array.isArray(S.paints)) S.paints = ['origine']; if (typeof S.spent !== 'number') S.spent = 0;
 if (!Array.isArray(S.gear)) S.gear = []; if (!['a', 'b', 'c', 'd'].includes(S.avatar)) S.avatar = 'a';
+if (!Array.isArray(S.ward)) S.ward = []; if (!S.ward.includes('tricorne')) S.ward.unshift('tricorne');
+if (!S.outfit || typeof S.outfit !== 'object') S.outfit = { h: 'tricorne' };
+if (!Array.isArray(S.port) || S.port.length !== 6) S.port = ['', '', '', '', '', '']; if (!Array.isArray(S.blds)) S.blds = [];
 const wallet = () => Math.max(0, S.gold - S.spent);
 const tomorrow = () => today(new Date(Date.now() + 864e5));
 const inDays = n => today(new Date(Date.now() + n * 864e5));
@@ -1121,22 +1178,61 @@ const PAINTS = [
 const shipFx = () => { const p = PAINTS.find(x => x[0] === S.paint); return p && p[3] !== 'none' ? `filter:${p[3]};` : ''; };
 const AVATARS = ['a', 'b', 'c', 'd'];
 const capt = () => 'capt-' + (AVATARS.includes(S.avatar) ? S.avatar : 'a');
-// [id, nom, prix, image (ou dessin en code), groupe] : un seul ornement actif par groupe (proue, fanaux), le canon se pose ou se retire
-const GEAR = [['dragon', 'Proue dragon', 600, 'fig-dragon', 'fig'], ['sirene', 'Proue sirène', 600, 'fig-sirene', 'fig'], ['canon', 'Canon doré', 1000, 'cannon-gold', 'canon'],
-  ['fanaux', 'Fanaux dorés', 350, null, 'lamp'], ['fanaux-emeraude', 'Fanaux émeraude', 500, null, 'lamp'], ['fanaux-lune', 'Fanaux de lune', 700, null, 'lamp']];
+// Capitaine habillable : un corps en pied par portrait, et des objets posés par-dessus.
+// Ancrages relevés sur chaque corps (px de l'image 1024 × 1536) : h = [centre de la tête, bas du chapeau, largeur de la tête], e = œil gauche,
+// m = main droite, c = ceinture, s = épaule gauche, f = centre du visage (cadrage des portraits)
+const BODY = {
+  a: { h: [540, 175, 420], e: [620, 272], m: [300, 920], c: [520, 752], s: [705, 525], f: [577, 262] },
+  b: { h: [537, 140, 420], e: [632, 238], m: [300, 882], c: [520, 702], s: [700, 495], f: [581, 222] },
+  c: { h: [531, 150, 410], e: [632, 244], m: [296, 882], c: [530, 716], s: [690, 540], f: [582, 230] },
+  d: { h: [552, 160, 420], e: [652, 256], m: [322, 892], c: [540, 730], s: [700, 560], f: [600, 240] } };
+// [id, nom, prix, place, image] : une seule chose par place (tête, œil, main, ceinture, épaule). Le tricorne est offert.
+const WARD = [['tricorne', 'Tricorne', 0, 'h', 'hat-tricorne'], ['bandana', 'Bandana', 250, 'h', 'hat-bandana'], ['bicorne', 'Bicorne d’amiral', 600, 'h', 'hat-bicorne'],
+  ['plume', 'Chapeau à plume', 1200, 'h', 'hat-plume'], ['couronne', 'Couronne de roi', 4000, 'h', 'hat-couronne'],
+  ['cacheoeil', 'Cache-œil', 200, 'e', 'acc-patch'], ['longuevue', 'Longue-vue', 350, 'm', 'acc-spyglass'], ['boussole', 'Boussole', 500, 'c', 'acc-compass'], ['singe', 'Singe d’épaule', 1500, 's', 'acc-monkey'],
+  ['sabre-bois', 'Sabre de bois', 300, 'm', 'wpn-wood'], ['sabre', 'Sabre d’abordage', 900, 'm', 'wpn-cutlass'], ['sabre-or', 'Sabre doré', 2500, 'm', 'wpn-gold']];
+const WGROUPS = [['Chapeaux', w => w[3] === 'h'], ['Accessoires', w => w[3] !== 'h' && !w[0].startsWith('sabre')], ['Armes', w => w[0].startsWith('sabre')]];
+// Pose de chaque image : [largeur, point d'accroche x, y (fractions de l'image), décalage x, y (px du corps), rotation]
+const WEAR = { 'hat-tricorne': [560, .55, .82, 0, 0, 0], 'hat-bandana': [540, .55, .5, 0, 30, 0], 'hat-bicorne': [580, .5, .85, 0, 14, 0], 'hat-plume': [600, .45, .85, 0, 0, 0], 'hat-couronne': [420, .5, .85, 0, 0, 0],
+  'acc-patch': [200, .55, .6, 0, 0, 0], 'acc-spyglass': [380, .86, .86, 0, 0, 18], 'acc-compass': [130, .5, .05, 0, 0, 0], 'acc-monkey': [240, .55, .93, 50, 28, 0],
+  'wpn-wood': [430, .87, .84, 0, 0, 18], 'wpn-cutlass': [430, .86, .85, 0, 0, 18], 'wpn-gold': [440, .88, .85, 0, 0, 18] };
+const WZ = { c: 1, m: 2, e: 3, h: 4, s: 5 };
+const worn = slot => { const id = S.outfit[slot]; return id && S.ward.includes(id) && WARD.some(w => w[0] === id && w[3] === slot) ? id : ''; };
+const f2 = v => +v.toFixed(2);
+function captHTML(cls = '') {
+  const k = AVATARS.includes(S.avatar) ? S.avatar : 'a', B = BODY[k];
+  const lay = WARD.filter(w => worn(w[3]) === w[0]).map(([id, n, pr, slot, img]) => { const [w, ax, ay, dx, dy, r] = WEAR[img], A = B[slot], sc = slot === 'h' ? B.h[2] / 420 : 1;
+    return `<img src="${IMG(img)}" alt="" style="left:${f2((A[0] + dx * sc) / 10.24)}%;top:${f2((A[1] + dy * sc) / 15.36)}%;width:${f2(w * sc / 10.24)}%;z-index:${WZ[slot]};transform-origin:${ax * 100}% ${ay * 100}%;transform:translate(${-ax * 100}%,${-ay * 100}%)${r ? ` rotate(${r}deg)` : ''}">`; }).join('');
+  return `<span class="capt ${cls}" style="--fx:${f2(B.f[0] / 10.24)}%;--fy:${f2(B.f[1] / 15.36)}%"><img class="cb" src="${IMG('capt-body-' + k)}" alt="">${lay}</span>`;
+}
+// Gros plan sur le visage (médaillon, onglet, avis de recherche)
+const captBust = (cls = '') => `<span class="cbust ${cls}" aria-hidden="true">${captHTML()}</span>`;
+// [id, nom, prix, image (ou dessin en code), groupe] : un seul ornement actif par groupe (proue, canon, ancre, chaloupe, lanternes)
+const GEAR = [['dragon', 'Proue dragon', 600, 'fig-dragon', 'fig'], ['sirene', 'Proue sirène', 600, 'fig-sirene', 'fig'], ['aigle', 'Proue aigle', 900, 'fig-aigle', 'fig'],
+  ['licorne', 'Proue licorne de mer', 1200, 'fig-licorne', 'fig'], ['kraken', 'Proue kraken', 1800, 'fig-kraken', 'fig'],
+  ['canon', 'Canon doré', 1000, 'cannon-gold', 'canon'], ['canon-argent', 'Canon d’argent', 700, 'cannon-silver', 'canon'], ['ancre', 'Ancre dorée', 800, 'anchor-gold', 'ancre'], ['chaloupe', 'Chaloupe', 1000, 'rowboat', 'chaloupe'],
+  ['fanaux', 'Lanternes dorées', 350, null, 'lamp'], ['fanaux-emeraude', 'Lanternes émeraude', 500, null, 'lamp'], ['fanaux-lune', 'Lanternes de lune', 700, null, 'lamp']];
 const gearGroup = id => (GEAR.find(g => g[0] === id) || [])[4];
 const GEARSVG = { fanaux: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="27" r="16" fill="rgba(255,196,90,.35)"/><path d="M17 15h14l-2 4H19z" fill="#8a6224"/><rect x="18" y="19" width="12" height="16" rx="3" fill="#ffd36b" stroke="#8a6224" stroke-width="2"/><path d="M24 22c3 3 3 6 0 9-3-3-3-6 0-9z" fill="#fff4cf"/><path d="M18 35h12M24 9v6" stroke="#8a6224" stroke-width="2.4" stroke-linecap="round"/></svg>' };
 GEARSVG['fanaux-emeraude'] = GEARSVG.fanaux.replace('rgba(255,196,90,.35)', 'rgba(90,230,150,.35)').replace('#ffd36b', '#7fe6a8').replace('#fff4cf', '#e6fff0');
 GEARSVG['fanaux-lune'] = GEARSVG.fanaux.replace('rgba(255,196,90,.35)', 'rgba(150,200,255,.38)').replace('#ffd36b', '#bfe0ff').replace('#fff4cf', '#ffffff');
-// Fanaux posés : l'identifiant de l'ornement, ou '' (anciennes sauvegardes : S.lamps était un booléen)
+// Lanternes et canon posés : l'identifiant de l'ornement, ou '' (anciennes sauvegardes : S.lamps et S.gcan étaient des booléens)
 const gearOn = (key, old, base) => { if (typeof S[key] !== 'string') S[key] = S[old] !== false && S.gear.includes(base) ? base : ''; return S.gear.includes(S[key]) ? S[key] : ''; };
 const lamps = () => gearOn('lampOn', 'lamps', 'fanaux');
-const goldCannon = () => S.gcan && S.gear.includes('canon');
-// Navire avec ses ornements : la proue se fixe à l'étrave, le canon doré sur le pont (positions réglées par taille de navire dans le CSS)
+const GSEL = { fig: 'fig', canon: 'canOn', lamp: 'lampOn', ancre: 'ancreOn', chaloupe: 'boatOn' };
+const gearSel = grp => grp === 'lamp' ? lamps() : grp === 'canon' ? gearOn('canOn', 'gcan', 'canon') : (S[GSEL[grp]] && S.gear.includes(S[GSEL[grp]]) && gearGroup(S[GSEL[grp]]) === grp ? S[GSEL[grp]] : '');
+const gearImg = id => (GEAR.find(g => g[0] === id) || [])[3];
+// Navire avec ses ornements : la proue se fixe à l'étrave, le canon sur le pont, l'ancre à l'avant, la chaloupe suit à la poupe (positions réglées par taille de navire dans le CSS)
 function shipArt(cls, extra = '') {
-  const fig = S.fig && S.gear.includes(S.fig) ? `<img class="figh f-${S.fig}" src="${IMG('fig-' + S.fig)}" alt="">` : '';
-  return `<div class="sart ${cls}" data-lv="${shipLv()}" ${extra}><img class="hull" src="${IMG(shipImg())}" alt="" style="${shipFx()}">${fig}${goldCannon() ? `<img class="gcan" src="${IMG('cannon-gold')}" alt="">` : ''}${lamps() ? `<i class="lamp st ${lamps()}"></i><i class="lamp bw ${lamps()}"></i>` : ''}</div>`;
+  const fig = gearSel('fig'), can = gearSel('canon');
+  return `<div class="sart ${cls}" data-lv="${shipLv()}" ${extra}>${gearSel('chaloupe') ? `<img class="boat" src="${IMG('rowboat')}" alt="">` : ''}<img class="hull" src="${IMG(shipImg())}" alt="" style="${shipFx()}">${fig ? `<img class="figh f-${fig}" src="${IMG(gearImg(fig))}" alt="">` : ''}${can ? `<img class="gcan" src="${IMG(gearImg(can))}" alt="">` : ''}${gearSel('ancre') ? `<img class="anc" src="${IMG('anchor-gold')}" alt="">` : ''}${lamps() ? `<i class="lamp st ${lamps()}"></i><i class="lamp bw ${lamps()}"></i>` : ''}</div>`;
 }
+// Port d'attache : six parcelles, sept bâtiments au choix [id, nom, prix, largeur (px de port-base, 1024 de large), point d'appui x, y dans l'image]
+const BLDS = [['jardin', 'Jardin tropical', 600, 250, .5, .7], ['drapeau', 'Grand mât à pavillon', 800, 320, .38, .8], ['marche', 'Marché aux épices', 1200, 255, .5, .74],
+  ['taverne', 'Taverne', 1500, 260, .5, .75], ['phare', 'Phare', 2000, 235, .5, .84], ['chantier', 'Chantier naval', 2500, 270, .5, .74], ['statue', 'Statue du capitaine', 5000, 235, .5, .82]];
+const PLOTS = [[432, 332], [695, 440], [800, 595], [790, 747], [475, 772], [260, 845]];
+const portOwned = () => S.blds;
+const portBuilt = () => S.port.filter(b => b && BLDS.some(x => x[0] === b)).length;
 const FLAGS = [['crane', 'Crâne'], ['ancre', 'Ancre'], ['etoile', 'Étoile'], ['coeur', 'Cœur'], ['eclair', 'Éclair'], ['couronne', 'Couronne'], ['lettre', 'Initiale']];
 function flagSym(id) {
   const b = '#f4ead2', d = '#1d1712';
@@ -1154,7 +1250,7 @@ const foe = () => FOES[R.node % 2];
 const EPITHETS = [ // [surnom, comment le gagner, île : masqué tant que l'île n'est pas jouable]
   ['Calcul-Éclair', '5 bonnes réponses de suite en moins de 5 s'], ['Canonnier d’Élite', '6 sur 6 à l’Île des Canons'], ['Tête Froide', '6 sur 6 au Stade des Vagues'],
   ['Bâtisseur', '6 sur 6 à la Mine aux Blocs'], ['Œil-de-Lynx', '6 sur 6 dans la Jungle'], ['Main-d’Or', '6 sur 6 au Marché du Port'], ['Fine Lame', '6 sur 6 à la Cuisine'], ['Vainqueur du Kraken', 'Bats le boss de l’Île des Canons'], ['Maître du Temps', '6 sur 6 à l’Île de l’Horloge', 'horloge'],
-  ['Chasseur de Trésor', 'Retrouve les douze morceaux de la carte'], ['Maître Charpentier', 'Termine le plan de ton navire'],
+  ['Chasseur de Trésor', 'Retrouve les douze morceaux de la carte'], ['Maître Charpentier', 'Termine le plan de ton navire'], ['Gouverneur du Port', 'Construis les six parcelles de ton port d’attache'],
   ['Grand Liseur', '6 sur 6 à la Grotte aux Histoires', 'lecture'], ['Maître des Verbes', '6 sur 6 à la Forge des Verbes', 'conjug'], ['Chef de Phrase', '6 sur 6 au Récif des Phrases', 'gram'], ['Gardien des Accords', '6 sur 6 au Pont des Accords', 'accords'], ['Mille-Mots', '6 sur 6 à la Baie des Mots', 'vocab'],
 ];
 const ISLES = [
@@ -2763,12 +2859,12 @@ function openSaga(id) {
 }
 
 /* ================= Plan du navire ================= */
-// Le navire se construit toute la saison : coque (victoires), voiles, figures de proue, canon doré, fanaux (doublons)
+// Le navire se construit toute la saison : coque (victoires), voiles, figures de proue, canons, ancre, chaloupe, lanternes (doublons)
 function shipPlan() {
   const nx = SHIPS[shipLv() + 1], parts = [
     ['Coque', shipLv() + 1, 3, nx ? `${SHIPS[shipLv()][2]} · ${nx[2]} à ${nx[0]} victoires` : 'galion, le plus grand navire'],
-    ['Voiles', S.paints.length, PAINTS.length, 'nouvelles couleurs'], ['Figures de proue', ['dragon', 'sirene'].filter(x => S.gear.includes(x)).length, 2, 'dragon, sirène'],
-    ['Canon doré', +S.gear.includes('canon'), 1, ''], ['Fanaux', GEAR.filter(g => g[4] === 'lamp' && S.gear.includes(g[0])).length, 3, 'dorés, émeraude, de lune']];
+    ['Voiles', S.paints.length, PAINTS.length, 'nouvelles couleurs'], ...[['Figures de proue', ['fig'], 'dragon, sirène, aigle, licorne, kraken'], ['Canons', ['canon'], 'doré, d’argent'],
+    ['Ancre et chaloupe', ['ancre', 'chaloupe'], ''], ['Lanternes', ['lamp'], 'dorées, émeraude, de lune']].map(([n, gs, d]) => { const all = GEAR.filter(g => gs.includes(g[4])); return [n, all.filter(g => S.gear.includes(g[0])).length, all.length, d]; })];
   const have = parts.reduce((a, x) => a + x[1], 0), tot = parts.reduce((a, x) => a + x[2], 0), pct = Math.round(have / tot * 100);
   return { pct, html: `<div class="plan glass"><div class="ph"><div class="ring" style="--p:${pct}"><b>${pct}%</b></div><div><span class="smallcaps">Plan du navire</span><b>${pct >= 100 ? 'Navire entièrement gréé !' : 'Ton navire se construit'}</b><small>${have} pièces sur ${tot}</small></div></div>
     ${parts.map(([n, h, t, d]) => `<div class="pp"><span>${n}${d ? `<small>${d}</small>` : ''}</span><i class="pb"><i style="width:${Math.round(h / t * 100)}%"></i></i><em>${h}/${t}</em></div>`).join('')}</div>` };
@@ -2801,14 +2897,14 @@ let tab = 'map', R = null, mapScroll = null;
 function toast(msg) { const t = document.createElement('div'); t.className = 'toast glass'; t.textContent = msg; app.appendChild(t); setTimeout(() => t.remove(), 3200); }
 function hudHTML() {
   const ri = rankIdx(S.gold), next = RANKS[ri + 1], pct = next ? (S.gold - RANKS[ri][0]) / (next[0] - RANKS[ri][0]) * 100 : 100;
-  return `<div class="hud glass"><div class="medal${ADMIN ? ' adm' : ''}"><img src="${IMG(capt())}" alt="">${ADMIN ? '<span class="admb">Admin</span>' : ''}</div>
+  return `<div class="hud glass"><div class="medal${ADMIN ? ' adm' : ''}">${captBust()}${ADMIN ? '<span class="admb">Admin</span>' : ''}</div>
     <div style="min-width:0"><div class="nm">${esc(S.name || 'Capitaine')}</div><div class="rk"><span class="gradeb" title="Programme suivi">${GRADES[GR()].n}</span>${RANKS[ri][1]} <span class="xp"><i style="width:${pct}%"></i></span></div></div>
     <div class="purse"><img src="${IMG('coin-doublon')}" alt=""><b class="num">${fmt(wallet())}</b></div>
     <button class="cog" id="cog" aria-label="Réglages parents : maintenir 2 secondes">${ico('iCog')}<i></i></button></div>`;
 }
 function dockHTML() {
-  const b = (t, img, l, cls = '') => `<button data-a="tab" data-t="${t}" ${tab === t ? 'aria-current="page"' : ''}><img class="di ${cls}" src="${IMG(img)}" alt="">${l}</button>`;
-  return `<nav class="dock glass" aria-label="Navigation">${b('map', 'isle-canons', 'Carte')}${b('journal', 'deco-compass', 'Journal', journalNew() ? 'new' : '')}${b('crew', 'crew-perroquet', 'Équipage')}${b('prime', capt(), 'Mon pirate')}</nav>`;
+  const b = (t, img, l, cls = '') => `<button data-a="tab" data-t="${t}" ${tab === t || (t === 'map' && tab === 'port') ? 'aria-current="page"' : ''}>${img ? `<img class="di ${cls}" src="${IMG(img)}" alt="">` : captBust('di')}${l}</button>`;
+  return `<nav class="dock glass" aria-label="Navigation">${b('map', 'isle-canons', 'Carte')}${b('journal', 'deco-compass', 'Journal', journalNew() ? 'new' : '')}${b('crew', 'crew-perroquet', 'Équipage')}${b('prime', '', 'Mon pirate')}</nav>`;
 }
 function bindCog() {
   const c = $('#cog'); if (!c) return; let tm, held = false;
@@ -2839,7 +2935,7 @@ function renderMap() {
       <div class="ocean"></div><div class="glints"></div>
       <svg class="route" viewBox="0 0 ${W} 2000" preserveAspectRatio="none"><path d="${path}" fill="none" stroke="#f4e8cc" stroke-opacity=".55" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/></svg>
       <img class="mapcomp" src="${IMG('deco-compass')}" alt="" style="left:${W * .2}px;top:1850px">
-      <button class="isle home-port" style="left:${px(PORT)}px;top:${PORT.y}px" data-a="portisle" aria-label="Port d’attache"><img class="land" src="${IMG('isle-port')}" alt=""><span class="lbl"><b>Port d’attache</b></span></button>
+      <button class="isle home-port${S.port.includes('phare') ? ' phare' : ''}" style="left:${px(PORT)}px;top:${PORT.y}px" data-a="portisle" aria-label="Port d’attache"><img class="land" src="${IMG('isle-port')}" alt=""><span class="lbl"><b>Port d’attache</b></span></button>
       <button class="lair${krak ? ' won' : ''}" style="left:${W * .76}px;top:96px" data-a="lair" aria-label="${krak ? 'Repaire du Kraken' : 'Une île cachée dans le brouillard'}"><img src="${IMG('isle-kraken')}" alt="">${krak ? '<span class="lbl"><b>Repaire du Kraken</b></span>' : ''}</button>
       <img class="fogpatch" src="${IMG('fx-fog-a')}" alt="" style="left:${W * .3}px;top:200px;width:420px"><img class="fogpatch fb" src="${IMG('fx-fog-b')}" alt="" style="left:${W * .75}px;top:${krak ? 40 : 120}px;width:${krak ? 300 : 440}px">
       <div class="mers" style="top:24px">Mers inexplorées</div>
@@ -3246,7 +3342,7 @@ function answer(ok, givenText, btn) {
 }
 function fx(cls, img, x, y, w) { const sc = $('#scene'); if (!sc) return; const e = document.createElement('img'); e.className = 'fx ' + cls; e.src = IMG(img); e.alt = ''; e.style.cssText = `left:${x}%;top:${y}%;width:${w}px`; sc.appendChild(e); setTimeout(() => e.remove(), 1700); }
 function shoot(hit) {
-  const sc = $('#scene'); if (!sc) return; const b = document.createElement('div'); b.className = 'ball' + (goldCannon() ? ' gold' : ''); sc.appendChild(b);
+  const sc = $('#scene'); if (!sc) return; const b = document.createElement('div'); b.className = 'ball' + (gearSel('canon') === 'canon' ? ' gold' : ''); sc.appendChild(b);
   const W = sc.clientWidth, H = sc.clientHeight, x0 = W * .36, y0 = H * .58, x1 = W * (hit ? .74 : .66), y1 = H * (hit ? .62 : .74), hb = $('.hpbox', sc), hbB = hb ? hb.getBoundingClientRect().bottom - sc.getBoundingClientRect().top : 0, top = Math.max(H * .1, Math.min(H * .3, y0 - hbB + 6));
   // Trajectoire en cloche calculée point par point : x avance régulièrement, y suit une parabole, le boulet tourne et rapetisse un peu en s'éloignant
   const pts = Array.from({ length: 25 }, (_, k) => { const t = k / 24, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t - 4 * top * t * (1 - t);
@@ -3406,8 +3502,8 @@ function yardHTML() {
     <div class="treasure glass"><img src="${IMG('coin-pile')}" alt=""><div><span class="smallcaps">Ton trésor</span><b class="num">${fmt(wallet())} doublons</b></div></div>
     <div class="paints">${PAINTS.map(([id, n, price, f]) => { const own = S.paints.includes(id), on = S.paint === id, can = own || wallet() >= price;
       return `<button class="paint${on ? ' on' : ''}${can ? '' : ' cant'}" data-a="paint" data-p="${id}"><img src="${IMG(shipImg())}" alt="" style="${f !== 'none' ? `filter:${f}` : ''}"><b>${n}</b><span>${on ? 'À bord' : own ? 'Choisir' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div>
-    <h3 class="yh">Ornements</h3><p class="sub" style="margin:0">Une figure de proue, un canon doré et des fanaux de plusieurs couleurs. Touche un ornement acheté pour le poser ou le retirer.</p>
-    <div class="paints gear">${GEAR.map(([id, n, price, img, grp]) => { const own = S.gear.includes(id), on = own && (grp === 'canon' ? S.gcan : grp === 'lamp' ? lamps() === id : S.fig === id), can = own || wallet() >= price;
+    <h3 class="yh">Ornements</h3><p class="sub" style="margin:0">Figures de proue, canons, ancre, chaloupe et lanternes de couleur. Touche un ornement acheté pour le poser ou le retirer.</p>
+    <div class="paints gear">${GEAR.map(([id, n, price, img, grp]) => { const own = S.gear.includes(id), on = own && gearSel(grp) === id, can = own || wallet() >= price;
       return `<button class="paint${on ? ' on' : ''}${can ? '' : ' cant'}" data-a="gear" data-g="${id}" aria-pressed="${on}">${img ? `<img src="${IMG(img)}" alt="">` : GEARSVG[id]}<b>${n}</b><span>${on ? 'À bord' : own ? 'Poser' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div></section>`;
 }
 function renderCrew() {
@@ -3423,14 +3519,21 @@ function renderCrew() {
     <div class="mystery">${range(1, 12 - CREW.length).map(() => '<div>?</div>').join('')}</div></div>${dockHTML()}</div>`;
   bindCog();
 }
+function wardHTML() {
+  return `<section class="mine glass ward" aria-label="Garde-robe"><div class="smallcaps">Ta garde-robe</div><div class="wstage">${captHTML('full')}</div>
+    <p class="sub" style="margin:0 0 4px">Touche un objet acheté pour le porter ou l’enlever. Une seule chose sur la tête et une seule dans la main.</p>
+    ${WGROUPS.map(([g, inG]) => `<h3 class="wh">${g}</h3><div class="wrow">${WARD.filter(inG).map(([id, n, price, slot, img]) => { const own = S.ward.includes(id), on = worn(slot) === id, can = own || wallet() >= price;
+      return `<button class="wit${on ? ' on' : ''}${can ? '' : ' cant'}" data-a="wear" data-w="${id}" aria-pressed="${on}"><img src="${IMG(img)}" alt=""><b>${n}</b><span>${on ? 'Porté' : own ? 'Porter' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div>`).join('')}</section>`;
+}
 function renderPrime() {
   const ri = rankIdx(S.gold), next = RANKS[ri + 1], pct = next ? (S.gold - RANKS[ri][0]) / (next[0] - RANKS[ri][0]) * 100 : 100;
   app.innerHTML = `<div class="screen wood">${hudHTML()}<div class="tabpage" style="padding-top:calc(var(--st) + 96px)">
     <div class="poster"><div class="t1">RECHERCHÉ</div><div class="t2"><i></i><span class="smallcaps">Capture vivant</span><i></i></div>
-      <div class="photo"><img src="${IMG(capt())}" alt="Portrait du capitaine"></div>
+      <div class="photo" role="img" aria-label="Portrait du capitaine">${captBust()}</div>
       <div class="nm">${esc((S.name || 'Capitaine').toUpperCase())}</div><div class="ep">${S.epithet ? `« ${esc(S.epithet)} »` : '&nbsp;'}</div>
       <div class="bounty"><img src="${IMG('coin-doublon')}" alt=""><b class="num">${fmt(S.gold)}</b></div>
       <div class="foot"><span class="rkt">${RANKS[ri][1]}</span><span class="waxs">N° ${String(S.rounds).padStart(4, '0')}</span></div></div>
+    ${wardHTML()}
     <section class="mine glass"><div class="smallcaps">Ton portrait</div>
       <div class="avs">${AVATARS.map(a => `<button data-a="avatar" data-v="${a}" aria-pressed="${capt() === 'capt-' + a}" aria-label="Portrait ${a.toUpperCase()}"><img src="${IMG('capt-' + a)}" alt=""></button>`).join('')}</div></section>
     <section class="mine glass"><div class="smallcaps">Ton pavillon</div>${flagHTML(S.flag, 'big')}
@@ -3443,7 +3546,28 @@ function renderPrime() {
   bindCog();
   $$('.eps svg').forEach(s => { s.style.width = '14px'; s.style.height = '14px'; s.style.verticalAlign = '-1px'; });
 }
-function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice({ crew: 'equipage', prime: 'pirate', journal: 'journal' }[t], true), 300); } ({ map: renderMap, journal: renderJournal, crew: renderCrew, prime: renderPrime })[t](); }
+// Port d'attache : l'île vue de près ; on touche une parcelle pour y construire, déplacer ou ranger un bâtiment
+function bldHTML(b, i, fresh) {
+  const B = BLDS.find(x => x[0] === b), [x, y] = PLOTS[i];
+  return `<button class="plot built${fresh ? ' fresh' : ''}" data-a="plot" data-p="${i}" style="left:${f2(x / 10.24)}%;top:${f2(y / 15.36)}%;width:${f2(B[3] / 10.24)}%;z-index:${y};transform:translate(${-B[4] * 100}%,${-B[5] * 100}%)" aria-label="${B[1]}"><img src="${IMG('bld-' + b)}" alt="">${b === 'drapeau' ? `<svg class="bflag" viewBox="0 0 100 100" aria-hidden="true">${flagSym(S.flag)}</svg>` : ''}</button>`;
+}
+function renderHarbor(fresh) {
+  const n = portBuilt();
+  app.innerHTML = `<div class="screen harbor"><img class="hbsea" src="${IMG('port-base')}" alt="">${hudHTML()}
+    <div class="hbwrap"><div class="hb"><div class="hbi">${S.port.map((b, i) => b && BLDS.some(x => x[0] === b) ? bldHTML(b, i, fresh === i) : `<button class="plot free" data-a="plot" data-p="${i}" style="left:${f2(PLOTS[i][0] / 10.24)}%;top:${f2(PLOTS[i][1] / 15.36)}%" aria-label="Parcelle libre ${i + 1} : construire"><i>+</i></button>`).join('')}</div></div></div>
+    <div class="hbcap glass"><div><div class="smallcaps">Ton port d’attache</div><b>${n === 6 ? 'Le plus beau port de l’archipel !' : n ? `${n} parcelle${n > 1 ? 's' : ''} construite${n > 1 ? 's' : ''} sur 6` : 'Touche une parcelle pour construire'}</b></div><button class="ghost-btn" data-a="home">Carte</button></div>${dockHTML()}</div>`;
+  bindCog();
+}
+function plotSheet(i) {
+  const cur = S.port[i], m = document.createElement('div'); m.className = 'modal bsheet';
+  m.innerHTML = `<div class="box paper" role="dialog" aria-label="Construire"><div class="disp" style="font-size:24px">${cur ? 'Changer de bâtiment' : 'Construire ici'}</div>
+    <p style="margin:0;color:var(--ink-2);font-size:15px">Ton trésor : <b style="color:var(--ink)">${fmt(wallet())} doublons</b>. Un bâtiment déjà construit peut changer de parcelle.</p>
+    <div class="bgrid">${BLDS.map(([id, n, price]) => { const own = portOwned().includes(id), at = S.port.indexOf(id), here = at === i, can = own || wallet() >= price;
+      return `<button class="bopt${here ? ' on' : ''}${can ? '' : ' cant'}" data-a="build" data-b="${id}" data-p="${i}" ${here ? 'disabled' : ''}><img src="${IMG('bld-' + id)}" alt=""><b>${n}</b><span>${here ? 'Ici' : at >= 0 ? 'Déplacer ici' : own ? 'Construire' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div>
+    ${cur ? `<button class="ghost-btn dark" data-a="unbuild" data-p="${i}">Ranger dans la réserve</button>` : ''}<button class="brass-btn" data-a="bclose">Fermer</button></div>`;
+  app.appendChild(m);
+}
+function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice({ crew: 'equipage', prime: 'pirate', journal: 'journal' }[t], true), 300); } ({ map: renderMap, journal: renderJournal, crew: renderCrew, prime: renderPrime, port: renderHarbor })[t](); }
 // Journal de bord : quêtes de la semaine, histoire de l'archipel, compétences
 const jHash = () => `${quests().wk}:${quests().list.filter(q => q.done).length}:${sagaCount()}`;
 const journalNew = () => { try { return P().jseen !== jHash(); } catch (e) { return false; } };
@@ -3593,12 +3717,24 @@ app.addEventListener('click', e => {
     case 'tuto': { if ($('.coach') || !R || R.locked) break; const key = TK[R.q.kind]; key && startTuto(key); break; }
     case 'gear': { const g = GEAR.find(x => x[0] === el.dataset.g); if (!g) break; const id = g[0];
       if (!S.gear.includes(id)) { if (wallet() < g[2]) { toast(`Il te manque ${fmt(g[2] - wallet())} doublons.`); break; }
-        S.spent += g[2]; S.gear.push(id); const grp = g[4]; if (grp === 'canon') S.gcan = true; else if (grp === 'lamp') S.lampOn = id; else S.fig = id; sfx('coins') || SND.coin(); voice('navire', true); toast(`${g[1]} : installé sur ton navire !`); checkShipwright(); }
-      else { SND.tap(); const grp = g[4]; if (grp === 'canon') S.gcan = !S.gcan; else if (grp === 'lamp') S.lampOn = lamps() === id ? '' : id; else S.fig = S.fig === id ? '' : id; }
+        S.spent += g[2]; S.gear.push(id); gearSel(g[4]); S[GSEL[g[4]]] = id; sfx('coins') || SND.coin(); voice('navire', true); toast(`${g[1]} : installé sur ton navire !`); checkShipwright(); }
+      else { SND.tap(); S[GSEL[g[4]]] = gearSel(g[4]) === id ? '' : id; }
       save(); const y = $('.tabpage').scrollTop; renderCrew(); $('.tabpage').scrollTop = y; break; }
+    case 'wear': { const w = WARD.find(x => x[0] === el.dataset.w); if (!w) break; const [id, n, price, slot] = w;
+      if (!S.ward.includes(id)) { if (wallet() < price) { toast(`Il te manque ${fmt(price - wallet())} doublons.`); break; }
+        S.spent += price; S.ward.push(id); S.outfit[slot] = id; sfx('coins') || SND.coin(); toast(`${n} : à toi, capitaine !`); }
+      else { SND.tap(); S.outfit[slot] = worn(slot) === id ? '' : id; }
+      save(); const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; break; }
     case 'avatar': if (!AVATARS.includes(el.dataset.v)) break; S.avatar = el.dataset.v; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
     case 'flag': if (!FLAGS.some(f => f[0] === el.dataset.f)) break; S.flag = el.dataset.f; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
-    case 'portisle': SND.tap(); toast('Ton port d’attache : tu y rentres à la fin de chaque marée.'); break;
+    case 'portisle': SND.tap(); show('port'); break;
+    case 'plot': { const i = +el.dataset.p; if (!(i >= 0 && i < 6) || $('.bsheet')) break; SND.tap(); plotSheet(i); break; }
+    case 'bclose': { const m = $('.bsheet'); m && m.remove(); break; }
+    case 'unbuild': { const i = +el.dataset.p; if (!(i >= 0 && i < 6)) break; S.port[i] = ''; save(); SND.tap(); renderHarbor(); break; }
+    case 'build': { const B = BLDS.find(x => x[0] === el.dataset.b), i = +el.dataset.p; if (!B || !(i >= 0 && i < 6)) break; const id = B[0];
+      if (!portOwned().includes(id)) { if (wallet() < B[2]) { toast(`Il te manque ${fmt(B[2] - wallet())} doublons.`); break; }
+        S.spent += B[2]; S.blds.push(id); sfx('coins') || SND.coin(); toast(`${B[1]} : construit !`); } else SND.tap();
+      S.port = S.port.map(b => b === id ? '' : b); S.port[i] = id; if (portBuilt() === 6) grantEp('Gouverneur du Port'); save(); renderHarbor(i); break; }
     case 'lair': SND.tap(); toast(IS('canons').node > BOSS ? 'Le repaire du Kraken. Tu l’as vaincu, capitaine !' : 'Une île mystérieuse se cache dans le brouillard… Bats le boss de l’Île des Canons pour la découvrir.'); break;
     case 'paint': { const pt = PAINTS.find(x => x[0] === el.dataset.p); if (!pt) break;
       if (S.paints.includes(pt[0])) { S.paint = pt[0]; SND.tap(); }
