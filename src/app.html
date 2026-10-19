@@ -382,7 +382,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .port .card{position:absolute;left:16px;right:16px;bottom:calc(var(--sbm) + 18px);border-radius:24px;padding:18px 16px 16px}
 .modal{position:absolute;inset:0;z-index:100;display:grid;place-items:safe center;overflow-y:auto;padding:max(16px,calc(var(--st) + 60px)) 16px 16px;background:rgba(6,20,28,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .modal .box{width:100%;max-width:400px;border-radius:26px;padding:20px 18px 18px;text-align:center;display:flex;flex-direction:column;gap:12px}
-.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.grades{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
 .grades button{min-height:64px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.45);color:var(--ink)}
 .grades b{font:800 24px/1 var(--f-d)}.grades span{font-size:14px;color:var(--ink-2)}
 .grades button[aria-pressed="true"]{background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 4px 0 var(--brass-lo)}
@@ -987,7 +987,7 @@ const ADMIN = /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.
 const KEY = ADMIN ? 'archipel-nombres-admin' : 'archipel-nombres-v2';
 // La progression (îles, marée, revanches, erreurs, victoires par mer) est rangée par classe dans S.g ; le reste (nom, doublons, équipage, navire) est commun.
 const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false, ward: ['tricorne'], outfit: { h: 'tricorne' }, port: ['', '', '', '', '', ''], blds: [] });
-const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce1: { n: 'CE1', age: '7 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' } };
+const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce1: { n: 'CE1', age: '7 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' }, cm2: { n: 'CM2', age: '10 ans' } };
 const PDEF = () => ({ isl: {}, tide: null, rev: [], errors: [], wins: { m: 0, f: 0 } });
 function migrate(o) {
   if (!o.g || typeof o.g !== 'object') o.g = {};
@@ -1010,7 +1010,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.0 bêta · octobre 2026';
+const VERSION = '2.1 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 if (isIOS && standalone) document.documentElement.classList.add('ios-app');
@@ -1259,7 +1259,9 @@ const CPN = { canons: 'Additions jusqu’à 20', stade: 'Calcul mental', mine: '
   lecture: 'Lire de petites phrases', conjug: 'Sons et syllabes', gram: 'Mots et phrases', accords: 'Le, la, un, une, des', vocab: 'Mots et catégories' };
 const CE1N = { canons: 'Additions et premières tables', stade: 'Calcul mental', mine: 'Nombres jusqu’à 1 000', jungle: 'Droite graduée jusqu’à 1 000', marche: 'Euros et centimes', cuisine: 'Fractions et problèmes', horloge: 'Heures, quarts d’heure et durées',
   lecture: 'Lecture et compréhension', conjug: 'Présent, futur, imparfait, passé composé', gram: 'Phrase, verbe et nom', accords: 'Pluriel, féminin et accords', vocab: 'Alphabet, familles, synonymes' };
-ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; });
+const CM2N = { canons: 'Multiples, diviseurs et calculs', stade: 'Calcul mental et décimaux', mine: 'Grands nombres et millièmes', jungle: 'Droite graduée et fractions', marche: 'Prix et proportionnalité', cuisine: 'Fractions', horloge: 'Heures, minutes, secondes',
+  lecture: 'Lecture et compréhension', conjug: 'Passé simple et plus-que-parfait', gram: 'Fonctions et phrase complexe', accords: 'Accords et participe passé', vocab: 'Dictionnaire, sens et formation des mots' };
+ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; i.cm2 = CM2N[i.id]; });
 const SEAS = { m: { n: 'Mer des Chiffres', s: 'Maths', ic: '123' }, f: { n: 'Mer des Lettres', s: 'Français', ic: 'Abc' } };
 function applyGrade() { ISLES.forEach(i => { i.notion = i[GR()] || i.ce2; }); }
 applyGrade();
@@ -1477,7 +1479,7 @@ function cpChasse(l) {
   const cfgs = [null, { s: 0, st: 1 }, { s: 10, st: 1 }, { s: rnd(2, 5) * 10, st: 1 }, { s: rnd(4, 9) * 10, st: 1 }];
   const cfg = l <= 4 ? cfgs[l] : { s: rnd(1, 9) * 10, st: 1 }, k = rnd(1, 9), v = cfg.s + k * cfg.st;
   const base = { start: cfg.s, step: cfg.st, k, mid: l <= 4, answer: v, answerText: fmt(v), explain: `Chaque trait avance de 1. On compte depuis ${cfg.s} : ${range(1, k).map(i => cfg.s + i).join(', ')}.`, hint: `Compte les traits un par un depuis ${cfg.s}.` };
-  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache à ce nombre. Touche son trait !', prompt: fmt(v), log: `placer ${v} (de ${cfg.s} en ${cfg.st})` };
+  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache sur le trait de ce nombre. Touche-le !', prompt: fmt(v), log: `placer ${v} (de ${cfg.s} en ${cfg.st})` };
   const wrong = shuffle([v + cfg.st, v - cfg.st, v + 2 * cfg.st]).filter(x => x >= cfg.s && x <= cfg.s + 10 * cfg.st && x !== v);
   return { ...base, kind: 'lineRead', ask: 'Quel nombre montre la flèche ?', prompt: '', log: `lire la flèche (de ${cfg.s} en ${cfg.st})`, choices: shuffle([v, ...wrong.slice(0, 2)]).map(x => ({ v: x, html: fmt(x) })), sayChoices: true };
 }
@@ -1719,7 +1721,7 @@ function ce1Chasse(l) {
   const cfgs = [null, { s: 0, st: 10 }, { s: rnd(1, 9) * 10, st: 1 }, { s: 0, st: 100 }, { s: rnd(1, 8) * 100, st: 10 }];
   const cfg = l <= 4 ? cfgs[l] : pick(cfgs.slice(2)), k = rnd(1, 9), v = cfg.s + k * cfg.st;
   const base = { start: cfg.s, step: cfg.st, k, mid: true, answer: v, answerText: fmt(v), explain: `Chaque trait avance de ${cfg.st}. On compte de ${cfg.st} en ${cfg.st} depuis ${fmt(cfg.s)} : ${range(1, k).map(i => fmt(cfg.s + i * cfg.st)).join(', ')}.`, hint: `Compte de ${cfg.st} en ${cfg.st} depuis ${fmt(cfg.s)}.` };
-  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache à ce nombre. Touche son trait !', prompt: fmt(v), log: `placer ${v} (de ${cfg.s} en ${cfg.st})` };
+  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache sur le trait de ce nombre. Touche-le !', prompt: fmt(v), log: `placer ${v} (de ${cfg.s} en ${cfg.st})` };
   const wrong = shuffle([v + cfg.st, v - cfg.st, v + 2 * cfg.st]).filter(x => x >= cfg.s && x <= cfg.s + 10 * cfg.st && x !== v);
   return { ...base, kind: 'lineRead', ask: 'Quel nombre montre la flèche ?', prompt: '', log: `lire la flèche (de ${cfg.s} en ${cfg.st})`, choices: shuffle([v, ...wrong.slice(0, 2)]).map(x => ({ v: x, html: fmt(x) })) };
 }
@@ -1834,8 +1836,8 @@ function ce1Gram(l) {
 // Pluriel en -s seulement (les pluriels en -x et -aux sont au programme du CE2)
 function ce1Plur() {
   const n = pick(GNN.filter(x => x[1] === x[0] + 's')), def = Math.random() < .5, sg = `${def ? (n[2] ? 'la' : 'le') : n[2] ? 'une' : 'un'} ${n[0]}`, D = def ? 'les' : 'des', ans = `${D} ${n[1]}`;
-  return { kind: 'choices', ask: 'Mets ce groupe au pluriel :', prompt: `${sg} → …`, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, `${D} ${n[0]}`, `${D} ${n[0]}nt`]).map(v => v === ans ? { v, html: v } : { v, html: v, why: /nt$/.test(v) ? 'Un nom ne prend jamais -nt au pluriel : c’est la marque des verbes (ils chantent).' : 'Il manque le s du pluriel : on ne l’entend pas, mais on l’écrit.' }), log: `pluriel de ${sg}`,
-    explain: `${sg} → ${ans}. Au pluriel, on ajoute un s au nom. On ne l’entend pas, mais on l’écrit. Un nom ne prend jamais -nt : c’est la marque des verbes (ils chantent).`, hint: `« ${D} » veut dire plusieurs : le nom prend un s.` };
+  return { kind: 'choices', ask: 'Mets ce groupe au pluriel :', prompt: `${sg} → …`, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, `${D} ${n[0]}`, `${D} ${n[0]}nt`]).map(v => v === ans ? { v, html: v } : { v, html: v, why: /nt$/.test(v) ? 'Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).' : 'Il manque le s du pluriel : on ne l’entend pas, mais on l’écrit.' }), log: `pluriel de ${sg}`,
+    explain: `${sg} → ${ans}. Au pluriel, on ajoute un s au nom. On ne l’entend pas, mais on l’écrit. Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).`, hint: `« ${D} » veut dire plusieurs : le nom prend un s.` };
 }
 function ce1Accords(l) {
   const r = Math.random();
@@ -1854,15 +1856,15 @@ function ce1Vocab(l) {
   return r < .25 ? qBank('fam2') : r < .5 ? qBank('syn2') : r < .7 ? qBank('pre2') : r < .85 ? qBank('fig2') : qAlpha(false);
 }
 
-function genCanon(l) { return CP() ? cpCanon(l) : CE1() ? ce1Canon(l) : CM1() ? cm1Canon(l) : ce2Canon(l); }
-function genFoot(l) { return CP() ? cpFoot(l) : CE1() ? ce1Foot(l) : CM1() ? cm1Foot(l) : ce2Foot(l); }
-function genMine(l) { return CP() ? cpMine(l) : CE1() ? ce1Mine(l) : CM1() ? cm1Mine(l) : ce2Mine(l); }
-function genChasse(l) { return CP() ? cpChasse(l) : CE1() ? ce1Chasse(l) : CM1() ? cm1Chasse(l) : ce2Chasse(l); }
-function genMarche(l) { return CP() ? cpMarche(l) : CE1() ? ce1Marche(l) : CM1() ? cm1Marche(l) : ce2Marche(l); }
-function genHorloge(l) { return CP() ? cpHorloge(l) : CE1() ? ce1Horloge(l) : CM1() ? cm1Horloge(l) : ce2Horloge(l); }
-function genCuisine(l) { return CP() ? cpCuisine(l) : CE1() ? ce1Cuisine(l) : CM1() ? cm1Cuisine(l) : ce2Cuisine(l); }
+function genCanon(l) { return CP() ? cpCanon(l) : CE1() ? ce1Canon(l) : CM1() ? cm1Canon(l) : CM2() ? cm2Canon(l) : ce2Canon(l); }
+function genFoot(l) { return CP() ? cpFoot(l) : CE1() ? ce1Foot(l) : CM1() ? cm1Foot(l) : CM2() ? cm2Foot(l) : ce2Foot(l); }
+function genMine(l) { return CP() ? cpMine(l) : CE1() ? ce1Mine(l) : CM1() ? cm1Mine(l) : CM2() ? cm2Mine(l) : ce2Mine(l); }
+function genChasse(l) { return CP() ? cpChasse(l) : CE1() ? ce1Chasse(l) : CM1() ? cm1Chasse(l) : CM2() ? cm2Chasse(l) : ce2Chasse(l); }
+function genMarche(l) { return CP() ? cpMarche(l) : CE1() ? ce1Marche(l) : CM1() ? cm1Marche(l) : CM2() ? cm2Marche(l) : ce2Marche(l); }
+function genHorloge(l) { return CP() ? cpHorloge(l) : CE1() ? ce1Horloge(l) : CM1() ? cm1Horloge(l) : CM2() ? cm2Horloge(l) : ce2Horloge(l); }
+function genCuisine(l) { return CP() ? cpCuisine(l) : CE1() ? ce1Cuisine(l) : CM1() ? cm1Cuisine(l) : CM2() ? cm2Cuisine(l) : ce2Cuisine(l); }
 // Décimaux : on calcule en centièmes entiers, on affiche avec une virgule (3.5 → « 3,5 »)
-const fmtD = (x, d = 2) => { const [a, b = ''] = (Math.round(x * 100) / 100).toFixed(d).split('.'); const t = b.replace(/0+$/, ''); return fmt(+a) + (t ? ',' + t : ''); };
+const fmtD = (x, d = 2) => { const [a, b = ''] = (Math.round(x * 10 ** d) / 10 ** d).toFixed(d).split('.'); const t = b.replace(/0+$/, ''); return fmt(+a) + (t ? ',' + t : ''); };
 function dch(ans, cands) { const a = typeof ans === 'number' ? fmtD(ans) : ans, out = [];
   for (const c of shuffle(cands)) { const t = typeof c === 'number' ? (c >= 0 ? fmtD(c) : null) : c; if (t && t !== a && !out.includes(t) && out.length < 2) out.push(t); }
   return shuffle([a, ...out]).map(v => ({ v, html: v })); }
@@ -1918,7 +1920,7 @@ function cm1Mine(l) {
       const ch = shuffle([ans, ...shuffle(others).slice(0, 2)]).map(v => ({ v, html: String(v) }));
       return { kind: 'choices', ask: `Quel est le chiffre des ${names[k]} ?`, prompt: fmt(n), promptClass: 'mid', answer: ans, answerText: String(ans), choices: ch, log: `chiffre des ${names[k]} de ${fmt(n)}`, explain: `Dans ${fmt(n)} : ${s.split('').map(nm1).join(', ')}. Le chiffre des ${names[k]} est ${ans}.`, hint: 'De droite à gauche : unités, dizaines, centaines, puis la même chose pour les mille.' }; }
     const u = pick([[100, 'centaines'], [1000, 'milliers'], [10, 'dizaines']]), ans = Math.floor(n / u[0]);
-    return { kind: 'choices', ask: `Combien de ${u[1]} en tout dans ce nombre ?`, prompt: fmt(n), promptClass: 'mid', answer: ans, answerText: fmt(ans), choices: opts(ans, [Math.floor(n / u[0]) % 10, Math.floor(n / u[0] / 10), Math.floor(n / u[0] * 10)]), log: `nombre de ${u[1]} dans ${fmt(n)}`, explain: `Le nombre de ${u[1]}, c’est tout ce qui est écrit à partir de la colonne des ${u[1]} vers la gauche : ${fmt(ans)}. (Le chiffre des ${u[1]}, lui, est seulement ${Math.floor(n / u[0]) % 10}.)`, hint: `On ne cherche pas un seul chiffre : cache les chiffres à droite des ${u[1]}.` }; }
+    return { kind: 'choices', ask: `Combien y a-t-il de ${u[1]} en tout dans ce nombre ?`, prompt: fmt(n), promptClass: 'mid', answer: ans, answerText: fmt(ans), choices: opts(ans, [Math.floor(n / u[0]) % 10, Math.floor(n / u[0] / 10), Math.floor(n / u[0] * 10)]), log: `nombre de ${u[1]} dans ${fmt(n)}`, explain: `Le nombre de ${u[1]}, c’est tout ce qui est écrit à partir de la colonne des ${u[1]} vers la gauche : ${fmt(ans)}. (Le chiffre des ${u[1]}, lui, est seulement ${Math.floor(n / u[0]) % 10}.)`, hint: `On ne cherche pas un seul chiffre : cache les chiffres à droite des ${u[1]}.` }; }
   if (l === 4) { let ds; do { ds = range(1, 6).map(() => Math.random() < .35 ? 0 : rnd(1, 9)); } while (!ds[0] || ds.filter(x => !x).length < 1);
     const vals = [100000, 10000, 1000, 100, 10, 1], n = ds.reduce((a, d, k) => a + d * vals[k], 0);
     const txt = ds.map((d, k) => d ? (k === 5 ? `${d}` : `(${d} × ${fmt(vals[k])})`) : '').filter(Boolean).join(' + ');
@@ -1932,13 +1934,13 @@ function cm1Mine(l) {
   const d1 = rnd(2, 8), x = Math.random() < .5 ? [`${a},${d1}`, `${a},${d1 - 1}${rnd(5, 9)}`, `${a},0${rnd(5, 9)}`] : [`${a},${d1}`, `${a},${d1 + 1}${rnd(1, 9)}`, `${a},${d1 - 1}${rnd(5, 9)}`], v = s => +s.replace(',', '.'), ans = x.reduce((m, s) => v(s) > v(m) ? s : m);
   return { kind: 'choices', ask: 'Quel est le plus grand nombre ?', prompt: '', answer: ans, answerText: ans, choices: shuffle(x).map(s => ({ v: s, html: s })), log: `plus grand : ${x.join(' ; ')}`, explain: `Les unités sont égales, on compare les dixièmes : ${x.map(s => `${s} a ${s.split(',')[1][0]} dixième${+s.split(',')[1][0] > 1 ? 's' : ''}`).join(', ')}. Le plus grand est ${ans}. Un nombre plus long n’est pas forcément plus grand !`, hint: 'Compare d’abord le chiffre juste après la virgule.' };
 }
-const labN = (q, v) => q.dec ? fmtD(v / 10 ** q.dec, q.dec) : fmt(v);
+const labN = (q, v) => q.fd ? (v % q.fd ? `${v}/${q.fd}` : fmt(v / q.fd)) : q.dec ? fmtD(v / 10 ** q.dec, q.dec) : fmt(v);
 function cm1Chasse(l) {
   const cfg = [null, { s: rnd(1, 9) * 1000, st: 100 }, { s: 0, st: 10000 }, { s: rnd(10, 98) * 10000, st: 1000 }, { s: rnd(0, 9) * 10, st: 1, dec: 1 }, { s: rnd(1, 89) * 10, st: 1, dec: 2 }][l];
   const k = rnd(1, 9), v = cfg.s + k * cfg.st, q0 = { dec: cfg.dec || 0 }, L = x => labN(q0, x), stp = L(cfg.st);
   const explain = `Chaque graduation avance de ${stp}. En partant de ${L(cfg.s)} et en avançant ${k} fois de ${stp}, on arrive à ${L(v)}.`;
   const base = { start: cfg.s, step: cfg.st, dec: q0.dec, k, mid: l === 2, answer: v, answerText: L(v), explain, hint: `Compte les graduations de ${stp} en ${stp} depuis ${L(cfg.s)}.` };
-  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache à ce nombre. Touche sa graduation !', prompt: L(v), log: `placer ${L(v)} (de ${L(cfg.s)} en ${stp})` };
+  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache sur la graduation de ce nombre. Touche-la !', prompt: L(v), log: `placer ${L(v)} (de ${L(cfg.s)} en ${stp})` };
   const wrong = shuffle([v + cfg.st, v - cfg.st, v + 2 * cfg.st, v - 2 * cfg.st]).filter(x => x >= cfg.s && x <= cfg.s + 10 * cfg.st && x !== v);
   return { ...base, kind: 'lineRead', ask: 'Quel nombre indique la flèche ?', prompt: '', log: `lire la flèche (de ${L(cfg.s)} en ${stp})`, choices: shuffle([v, ...[...new Set(wrong)].slice(0, 2)]).map(x => ({ v: x, html: L(x) })) };
 }
@@ -1995,15 +1997,257 @@ function cm1Horloge(l) {
   return { kind: 'choices', ask: `Le bateau arrive à ${hm(eh, em)} après ${dur(d)} de voyage. À quelle heure est-il parti ?`, prompt: '', answer: key(h, m), answerText: hm(h, m), choices: opts3(h, m), explain: `On recule de ${dur(d)} depuis ${hm(eh, em)} : il est parti à ${hm(h, m)}. Vérifie : ${hm(h, m)} + ${dur(d)} = ${hm(eh, em)}.`, hint: 'Recule d’abord des heures, puis des minutes.', log: `départ ${hm(eh, em)} − ${dur(d)}` };
 }
 
+/* ================= Maths de CM2 (BO n° 16 du 17 avril 2025, au CM2 à partir de la rentrée 2026) ================= */
+// Entiers jusqu'à 999 999 999, décimaux jusqu'aux millièmes, fractions de dénominateur ≤ 60 (fraction d'une quantité, entier × fraction,
+// sommes et différences), multiples et diviseurs (critères de divisibilité par 2, 5 et 10 seulement), calculs avec parenthèses,
+// × et ÷ par 10, 100, 1 000 d'un décimal, proportionnalité par linéarité (sans tableau), durées en heures, minutes et secondes.
+// Hors programme du CM2 (6e) : pourcentages, multiplication par 0,1, volumes, conditionnel et impératif.
+const CM2 = () => GR() === 'cm2';
+const fmt3 = x => fmtD(x, 3);
+const divsOf = n => range(1, n).filter(d => n % d === 0);
+// « million » est un nom : il prend un s au pluriel et n'est pas relié par des traits d'union (deux millions trois-cent-mille)
+function wordsBig(n) { const m = Math.floor(n / 1e6), r = n % 1e6, p = [];
+  if (m) p.push(`${m === 1 ? 'un' : w999(m, true)} million${m > 1 ? 's' : ''}`); if (r || !m) p.push(words(r)); return p.join(' '); }
+// Choix de nombres (entiers) : la bonne réponse et deux pièges distincts
+// Choix de fractions [numérateur, dénominateur] : la bonne réponse et deux pièges distincts (valeur différente)
+const fch = (ans, cands) => { const out = [ans]; for (const c of cands) if (c[0] > 0 && c[1] > 0 && Math.abs(c[0] / c[1] - ans[0] / ans[1]) > 1e-9 && !out.some(o => o[0] === c[0] && o[1] === c[1]) && out.length < 3) out.push(c);
+  return shuffle(out).map(([n, d]) => ({ v: `${n}/${d}`, html: frac(n, d) })); };
+const nch = (ans, cands, f = fmt) => shuffle([ans, ...[...new Set(cands)].filter(x => x !== ans).slice(0, 2)]).map(v => ({ v, html: f(v) }));
+
+function cm2Canon(l) {
+  if (l === 1) { const t = pick(['crit', 'mult', 'div']);
+    if (t === 'crit') { const k = pick([2, 5, 10]), base = rnd(10, 99) * 10, ans = k === 10 ? base : k === 5 ? base + 5 : base + pick([2, 4, 6, 8]);
+      const w = k === 10 ? [base + 5, base + pick([2, 4])] : k === 5 ? [base + pick([1, 3]), base + pick([6, 8])] : [base + pick([1, 3]), base + pick([5, 7, 9])];
+      const crit = { 2: 'Un nombre est divisible par 2 s’il se termine par 0, 2, 4, 6 ou 8 : c’est un nombre pair.', 5: 'Un nombre est divisible par 5 s’il se termine par 0 ou par 5.', 10: 'Un nombre est divisible par 10 s’il se termine par 0.' }[k];
+      return { kind: 'choices', ask: `Quel nombre est divisible par ${k} ?`, prompt: '', answer: ans, answerText: fmt(ans), choices: nch(ans, w), log: `divisible par ${k}`, explain: `${crit} ${fmt(ans)} se termine par ${ans % 10}.`, hint: 'Regarde seulement le dernier chiffre.' }; }
+    const a = rnd(3, 9);
+    if (t === 'mult') { const b = rnd(4, 12), ans = a * b, w = shuffle([ans + 1, ans - 1, ans + 2, ans - 2, ans + a + 1].filter(x => x % a));
+      return { kind: 'choices', ask: `Quel nombre est un multiple de ${a} ?`, prompt: '', answer: ans, answerText: fmt(ans), choices: nch(ans, w), log: `multiple de ${a}`, explain: `${a} × ${b} = ${ans} : ${ans} est dans la table de ${a}, c’est un multiple de ${a}.`, hint: `Récite la table de ${a}.` }; }
+    const n = a * rnd(3, 11), w = shuffle(range(2, 10).filter(d => n % d));
+    return { kind: 'choices', ask: `Quel nombre est un diviseur de ${n} ?`, prompt: '', answer: a, answerText: String(a), choices: nch(a, w), log: `diviseur de ${n}`, explain: `${n} = ${a} × ${n / a} : la division de ${n} par ${a} tombe juste, donc ${a} est un diviseur de ${n}.`, hint: `Cherche dans quelle table on trouve ${n}.` };
+  }
+  if (l === 2) { const t = pick(['nb', 'com', 'mul']);
+    if (t === 'nb') { const n = pick([6, 8, 10, 12, 14, 15, 16, 18, 20, 21, 24, 28, 30]), D = divsOf(n);
+      return { kind: 'keypad', ask: `Combien le nombre ${n} a-t-il de diviseurs ?`, prompt: `${SLOT} diviseurs`, answer: D.length, answerText: String(D.length), log: `diviseurs de ${n}`, explain: `Les diviseurs de ${n} sont ${D.join(', ')} : il y en a ${D.length}. N’oublie ni 1 ni ${n} lui-même.`, hint: `Cherche toutes les multiplications qui font ${n}, en commençant par 1 × ${n}.` }; }
+    if (t === 'com') { let a, b, g; do { g = pick([2, 3, 4, 5, 6]); a = g * rnd(2, Math.floor(30 / g)); b = g * rnd(2, Math.floor(30 / g)); } while (a === b);
+      const da = divsOf(a), db = divsOf(b), only = shuffle(da.filter(d => d > 1 && !db.includes(d)).concat(db.filter(d => d > 1 && !da.includes(d))));
+      const w = only.length >= 2 ? only : only.concat(shuffle(range(2, 12).filter(d => a % d && b % d)));
+      return { kind: 'choices', ask: `Quel nombre est un diviseur commun à ${a} et à ${b} ?`, prompt: '', answer: g, answerText: String(g), choices: nch(g, w), log: `diviseur commun ${a} et ${b}`,
+        explain: `${a} = ${g} × ${a / g} et ${b} = ${g} × ${b / g} : ${g} divise les deux nombres. Diviseurs de ${a} : ${da.join(', ')}. Diviseurs de ${b} : ${db.join(', ')}.`, hint: 'Le bon nombre doit diviser les deux nombres à la fois.' }; }
+    let a, b; do { a = rnd(2, 9); b = rnd(2, 12); } while (a === b || a % b === 0 || b % a === 0);
+    const lcm = (x, y) => { let m = Math.max(x, y); while (m % x || m % y) m++; return m; }, L = lcm(a, b), ans = L * (L <= 30 && Math.random() < .4 ? 2 : 1);
+    const w = [a * rnd(2, 9), b * rnd(2, 9), a * b + a].filter(x => x % a || x % b);
+    return { kind: 'choices', ask: `Quel nombre est un multiple commun de ${a} et de ${b} ?`, prompt: '', answer: ans, answerText: fmt(ans), choices: nch(ans, w), log: `multiple commun ${a} et ${b}`,
+      explain: `${ans} = ${a} × ${ans / a} et ${ans} = ${b} × ${ans / b} : ${ans} est à la fois dans la table de ${a} et dans celle de ${b}.`, hint: `Écris quelques multiples de ${Math.max(a, b)}, puis cherche celui qui est aussi dans la table de ${Math.min(a, b)}.` };
+  }
+  if (l === 3) { const a = rnd(3, 9), b = rnd(11, 25), r = rnd(1, a - 1), n = a * b + r;
+    return { kind: 'keypad', ask: 'Trouve le quotient !', prompt: `${n} = ${a} × ${SLOT} + ${r}`, answer: b, answerText: String(b), log: `${n} = ${a} × … + ${r}`, dg: { t: 'reste', a, n },
+      explain: `${a} × ${b} = ${a * b} et ${a * b} + ${r} = ${n}. Dans ${n}, il y a ${b} fois ${a}, et il reste ${r}, qui est plus petit que ${a}.`, hint: `Commence par ${a} × 10 = ${a * 10}, puis ajoute des ${a} pour t’approcher de ${n}.` };
+  }
+  if (l === 4) { const t = pick(['pa', 'pm', 'two']), a = rnd(2, 9), b = rnd(2, 9), c = rnd(3, 9);
+    let prompt, ans, alt, steps;
+    if (t === 'pa') { prompt = `(${a} + ${b}) × ${c}`; ans = (a + b) * c; alt = a + b * c; steps = `${a} + ${b} = ${a + b}, puis ${a + b} × ${c} = ${ans}`; }
+    else if (t === 'pm') { const x = b * c + rnd(2, 30); prompt = `${x} − (${b} × ${c})`; ans = x - b * c; alt = (x - b) * c; steps = `${b} × ${c} = ${b * c}, puis ${x} − ${b * c} = ${ans}`; }
+    else { const e = rnd(2, 6), f = c + e; prompt = `(${a} + ${b}) × (${f} − ${c})`; ans = (a + b) * e; alt = a + b * f - c; steps = `${a} + ${b} = ${a + b} et ${f} − ${c} = ${e}, puis ${a + b} × ${e} = ${ans}`; }
+    return { kind: 'keypad', ask: 'Calcule en commençant par les parenthèses :', prompt: `${prompt} = ${SLOT}`, answer: ans, answerText: fmt(ans), log: prompt, dg: { t: 'par', alt },
+      explain: `On calcule d’abord ce qui est entre parenthèses : ${steps}.`, hint: 'Les parenthèses passent toujours en premier.' };
+  }
+  if (Math.random() < .55) { const x = rnd(2, 9), y = rnd(2, 9), i = rnd(1, 3), j = rnd(1, Math.min(3, 5 - i)), A = x * 10 ** i, B = y * 10 ** j, ans = A * B;
+    return { kind: 'keypad', big: 1, ask: 'Charge le canon avec la bonne réponse !', prompt: `${fmt(A)} × ${fmt(B)} = ${SLOT}`, answer: ans, answerText: fmt(ans), log: `${fmt(A)} × ${fmt(B)}`, dg: { t: 'zero', p: x * y },
+      explain: `${fmt(A)} × ${fmt(B)} = (${x} × ${y}) × (${fmt(10 ** i)} × ${fmt(10 ** j)}) = ${x * y} × ${fmt(10 ** (i + j))} = ${fmt(ans)}.`, hint: `Calcule ${x} × ${y}, puis compte tous les zéros.` }; }
+  const k = pick([11, 12, 21, 25, 101]), x = k === 101 ? rnd(12, 48) : k === 25 ? pick([8, 12, 16, 24, 32, 36]) : rnd(13, 45), ans = x * k;
+  const how = k === 11 ? `${x} × 10 + ${x} = ${x * 10} + ${x}` : k === 12 ? `${x} × 10 + ${x} × 2 = ${x * 10} + ${x * 2}` : k === 21 ? `${x} × 20 + ${x} = ${x * 20} + ${x}` : k === 101 ? `${x} × 100 + ${x} = ${fmt(x * 100)} + ${x}` : `${x} × 100 ÷ 4 = ${fmt(x * 100)} ÷ 4`;
+  return { kind: 'keypad', ask: 'Calcule avec une astuce :', prompt: `${x} × ${k} = ${SLOT}`, answer: ans, answerText: fmt(ans), log: `${x} × ${k}`, explain: `${x} × ${k} = ${how} = ${fmt(ans)}.`, hint: k === 25 ? '× 25, c’est × 100 puis le quart.' : `Coupe ${k} en ${k === 101 ? '100 + 1' : k === 21 ? '20 + 1' : k === 12 ? '10 + 2' : '10 + 1'}.` };
+}
+
+function cm2Foot(l) {
+  let q, ans, explain, log, ch, hint = 'Pi dit : coupe le calcul en petits calculs faciles.';
+  const D = x => fmt3(x);
+  if (l === 1) { const f = pick([10, 100, 1000]), up = Math.random() < .5;
+    if (up) { let n; do { n = rnd(101, 9999); } while (n % 10 === 0); const v = n / 100, r = n * f / 100; ans = D(r); log = `${D(v)} × ${fmt(f)}`; const z = f === 10 ? '0' : f === 100 ? '00' : '000';
+      ch = dch(ans, [D(r * 10), D(r / 10), `${D(v)}${z}`]); explain = `× ${fmt(f)} : chaque chiffre prend une valeur ${fmt(f)} fois plus grande, il glisse de ${String(f).length - 1} rang${f > 10 ? 's' : ''} vers la gauche. ${D(v)} × ${fmt(f)} = ${ans}.`; hint = `× ${fmt(f)} : chaque chiffre avance de ${String(f).length - 1} rang${f > 10 ? 's' : ''} vers la gauche dans le tableau.`; }
+    else { const n = f === 1000 ? rnd(12, 9999) : rnd(12, 9999) / (f === 100 ? 10 : 100), r = n / f; ans = D(r); log = `${D(n)} ÷ ${fmt(f)}`;
+      ch = dch(ans, [D(r * 10), D(n * f), D(r * 100)]); explain = `÷ ${fmt(f)} : chaque chiffre prend une valeur ${fmt(f)} fois plus petite, il glisse de ${String(f).length - 1} rang${f > 10 ? 's' : ''} vers la droite. ${D(n)} ÷ ${fmt(f)} = ${ans}.`; hint = `÷ ${fmt(f)} : le chiffre des unités devient celui des ${f === 10 ? 'dixièmes' : f === 100 ? 'centièmes' : 'millièmes'}.`; }
+    q = `${log} = ?`; }
+  else if (l === 2) { const t = pick(['addI', 'subI', 'n9']);
+    if (t === 'addI') { let x; do { x = rnd(21, 99); } while (x % 10 === 0); const k = rnd(3, 9), v = x / 10; ans = D(v + k); log = `${D(v)} + ${k}`; ch = dch(ans, [D(v + k / 10), D(v + k + 1), D(v + k - 1)]); explain = `On ajoute ${k} unités aux unités : ${Math.floor(v)} + ${k} = ${Math.floor(v) + k}. Les dixièmes ne changent pas : ${ans}.`; hint = 'Un nombre entier s’ajoute aux unités, pas aux dixièmes.'; }
+    else if (t === 'subI') { const x = rnd(101, 199), k = rnd(2, 9), v = x / 10; ans = D(v - k); log = `${D(v)} − ${k}`; ch = dch(ans, [D(v - k / 10), D(v - k + 1), D(v + k)]); explain = `On enlève ${k} aux unités : ${Math.floor(v)} − ${k} = ${Math.floor(v) - k}. Les dixièmes ne changent pas : ${ans}.`; hint = 'Un nombre entier s’enlève aux unités, pas aux dixièmes.'; }
+    else { const k = pick([9, 19, 29, 39, 49, 99, 98, 18, 28, 8]), n = rnd(120, 880), add = Math.random() < .6, r = add ? n + k : n - k, up = Math.ceil(k / 10) * 10; ans = r; log = `${n} ${add ? '+' : '−'} ${k}`; ch = opts(ans, [add ? n + up : n - up, ans + 10, ans - 2]);
+      explain = `${add ? '+' : '−'} ${k}, c’est ${add ? '+' : '−'} ${up} puis ${add ? '−' : '+'} ${up - k}. ${n} ${add ? '+' : '−'} ${up} = ${add ? n + up : n - up}, ${add ? '−' : '+'} ${up - k} : ${r}.`; hint = `Pense à ${up} : c’est plus facile, puis corrige de ${up - k}.`; }
+    q = `${log} = ?`; }
+  else if (l === 3) { const t = pick(['add', 'add', 'dbl', 'half']);
+    if (t === 'add') { let A, B; do { A = rnd(11, 89); B = rnd(11, 89); } while (!(A % 10) || !(B % 10) || A + B >= 100); const a = A / 10, b = B / 10; if (a + b >= 10) return cm2Foot(3); ans = D(a + b); log = `${D(a)} + ${D(b)}`; const carry = A % 10 + B % 10 >= 10;
+      ch = dch(ans, [carry ? `${Math.floor(A / 10) + Math.floor(B / 10)},${A % 10 + B % 10}` : D(a + b + 1), D(a + b - .1), D(a + b + .1)]); explain = `On ajoute les unités (${Math.floor(A / 10)} + ${Math.floor(B / 10)}), puis les dixièmes (${A % 10} + ${B % 10})${carry ? ` : ${A % 10 + B % 10} dixièmes, c’est 1 unité et ${(A + B) % 10} dixième${(A + B) % 10 > 1 ? 's' : ''}` : ''}. ${log} = ${ans}.`; hint = '10 dixièmes font 1 unité.'; }
+    else if (t === 'dbl') { const x = pick([36, 47, 28, 19, 65, 26, 78, 57]), v = x / 10, u = Math.floor(x / 10), dx = x % 10; ans = D(2 * v); log = `double de ${D(v)}`; ch = dch(ans, [`${2 * u},${2 * dx}`, D(2 * v + 1), D(2 * v - .1)]); explain = `Double des unités : ${2 * u}. Double des dixièmes : ${2 * dx} dixièmes, c’est 1 unité et ${2 * dx - 10} dixième${2 * dx - 10 > 1 ? 's' : ''}. ${D(v)} + ${D(v)} = ${ans}.`; hint = 'Double les unités, puis les dixièmes. 10 dixièmes font 1 unité.'; }
+    else { const odd = Math.random() < .5, v = odd ? pick([7, 9, 11, 13, 15]) : pick([7.4, 9.6, 3.8, 5.2, 8.6, 12.4]); ans = D(v / 2); log = `moitié de ${D(v)}`; ch = dch(ans, [D(v / 2 + .5), D(v / 2 + 1), D(v * 2)]); explain = odd ? `${v} = ${v - 1} + 1 : la moitié de ${v - 1} est ${(v - 1) / 2}, et la moitié de 1 est 0,5. La moitié de ${v} est ${ans}.` : `${ans} + ${ans} = ${D(v)}.`; hint = 'Partage en deux les unités, puis les dixièmes.'; }
+    q = `${t === 'add' ? log + ' = ?' : log[0].toUpperCase() + log.slice(1) + ' ?'}`; }
+  else if (l === 4) { const t = pick(['x5', 'x50', 'd4', 'd8']);
+    if (t === 'x5' || t === 'x50') { let x; do { x = rnd(12, 98); } while (t === 'x50' && x % 2); const v = x / 10, f = t === 'x5' ? 5 : 50; ans = D(v * f); log = `${D(v)} × ${f}`; ch = dch(ans, [D(v * f * 10), D(v * f / 10), D(v * f + f)]); explain = `× ${f}, c’est × ${f * 2} puis la moitié : ${D(v)} × ${f * 2} = ${D(v * f * 2)}, et la moitié de ${D(v * f * 2)} est ${ans}.`; hint = `Multiplie par ${f * 2}, puis prends la moitié.`; }
+    else { const d = t === 'd4' ? 4 : 8, k = d === 4 ? rnd(11, 49) : rnd(11, 30), n = d * k; ans = k; log = `${n} ÷ ${d}`; ch = opts(ans, [n / 2, k + 2, k * 2]); explain = `÷ ${d}, c’est ${d === 4 ? 'la moitié de la moitié' : 'la moitié de la moitié de la moitié'} : ${n} → ${n / 2} → ${n / 4}${d === 8 ? ` → ${n / 8}` : ''}.`; hint = `Partage en deux ${d === 4 ? 'deux' : 'trois'} fois de suite.`; }
+    q = `${log} = ?`; }
+  else { const t = pick(['fd', 'fd', 'rel']);
+    if (t === 'fd') { const [n, d, a, w1, w2] = pick([[1, 2, '0,5', '1,2', '0,2'], [1, 4, '0,25', '1,4', '0,4'], [3, 4, '0,75', '3,4', '0,34'], [3, 2, '1,5', '3,2', '0,32'], [1, 10, '0,1', '1,1', '0,01'], [5, 2, '2,5', '5,2', '0,52'], [1, 5, '0,2', '1,5', '0,5']]);
+      return { kind: 'choices', ask: 'Quelle est l’écriture décimale de cette fraction ?', prompt: frac(n, d), answer: a, answerText: a, choices: dch(a, [w1, w2]), log: `${n}/${d} en décimal`, explain: `${frac(n, d)} = ${a}. ${d === 4 ? `Un quart, c’est 25 centièmes : 1/4 = 0,25${n === 3 ? ', donc 3/4 = 0,75' : ''}.` : d === 2 ? (n > 1 ? `${n}/2 = ${n - 1}/2 + 1/2 = ${(n - 1) / 2} + 0,5 = ${a}.` : 'Un demi, c’est 5 dixièmes : 1/2 = 0,5.') : d === 5 ? 'Un cinquième, c’est 2 dixièmes : 1/5 = 0,2.' : 'Un dixième s’écrit au premier rang après la virgule.'} Attention : ce n’est pas « ${w1} » !`, hint: 'Pense à ce que vaut 1/2, 1/4 ou 1/10 en dixièmes ou en centièmes.' }; }
+    const [qq, a, w, e] = pick([['Combien de quarts font un demi ?', 2, [4, 1], 'Un demi, c’est deux quarts : 1/2 = 2/4.'], ['Combien de quarts font trois demis ?', 6, [3, 5], 'Un demi = deux quarts, donc trois demis = six quarts : 3/2 = 6/4.'],
+      ['Combien de dixièmes font un demi ?', 5, [2, 50], 'Un demi = cinq dixièmes : 1/2 = 5/10 = 0,5.'], ['Combien de centièmes font un quart ?', 25, [4, 40], 'Un quart = vingt-cinq centièmes : 1/4 = 25/100 = 0,25.'],
+      ['Combien de cinquièmes font une unité ?', 5, [1, 10], 'Une unité partagée en cinq : 5/5 = 1.'], ['Combien de demis font 3 unités ?', 6, [3, 2], 'Chaque unité fait deux demis : 3 = 6/2.']]);
+    return { kind: 'choices', ask: qq, prompt: '', answer: a, answerText: String(a), choices: nch(a, w), log: qq, explain: e, hint: 'Dessine dans ta tête une barre partagée en parts égales.' };
+  }
+  const answer = ch.some(c => typeof c.v === 'string') ? String(typeof ans === 'number' ? fmtD(ans) : ans) : ans;
+  return { kind: 'choices', ask: 'Tire dans la bonne case !', prompt: q, answer, answerText: typeof answer === 'number' ? fmt(answer) : answer, explain, hint, log, choices: ch };
+}
+
+function cm2Mine(l) {
+  const NM = ['centaines de millions', 'dizaines de millions', 'unités de millions', 'centaines de mille', 'dizaines de mille', 'unités de mille', 'centaines', 'dizaines', 'unités'];
+  if (l === 1) { const m = rnd(1, 999), t = Math.random() < .3 ? 0 : rnd(1, 999), u = Math.random() < .3 ? 0 : rnd(1, 999), n = m * 1e6 + t * 1e3 + u;
+    return { kind: 'keypad', big: 1, ask: 'Écris ce nombre en chiffres :', prompt: `<span class="words">${wordsBig(n)}</span><br>${SLOT}`, promptClass: 'mid', answer: n, answerText: fmt(n), log: wordsBig(n),
+      explain: `On écrit d’abord la classe des millions (${m}), puis celle des mille (${String(t).padStart(3, '0')}), puis celle des unités (${String(u).padStart(3, '0')}) : ${fmt(n)}. Une classe vide s’écrit 000.`, hint: 'Chaque classe (millions, mille, unités) s’écrit avec trois chiffres, sauf la première.' }; }
+  if (l === 2) { let n; do { n = rnd(100000000, 999999999); } while (new Set(String(n)).size < 6); const s = String(n);
+    if (Math.random() < .55) { const k = rnd(0, 5), ans = +s[k], others = [...new Set([...s].map(Number).filter(x => x !== ans))];
+      return { kind: 'choices', ask: `Quel est le chiffre des ${NM[k]} ?`, prompt: fmt(n), promptClass: 'mid', answer: ans, answerText: String(ans), choices: shuffle([ans, ...shuffle(others).slice(0, 2)]).map(v => ({ v, html: String(v) })), log: `chiffre des ${NM[k]} de ${fmt(n)}`,
+        explain: `Dans ${fmt(n)}, la classe des millions est ${s.slice(0, 3)}, celle des mille ${s.slice(3, 6)}, celle des unités ${s.slice(6)}. Le chiffre des ${NM[k]} est ${ans}.`, hint: 'Repère d’abord les trois classes : millions, mille, unités.' }; }
+    const u = pick([[1e6, 'millions'], [1e3, 'milliers'], [1e5, 'centaines de mille']]), ans = Math.floor(n / u[0]);
+    return { kind: 'choices', ask: `Combien y a-t-il de ${u[1]} en tout dans ce nombre ?`, prompt: fmt(n), promptClass: 'mid', answer: ans, answerText: fmt(ans), choices: opts(ans, [ans % 10, Math.floor(ans / 10), ans * 10]), log: `nombre de ${u[1]} dans ${fmt(n)}`,
+      explain: `Le nombre de ${u[1]}, c’est tout ce qui est écrit à partir de la colonne des ${u[1]} vers la gauche : ${fmt(ans)}. Le chiffre des ${u[1]}, lui, est seulement ${ans % 10}.`, hint: `Cache les chiffres à droite des ${u[1]}.` }; }
+  if (l === 3) { const a = rnd(10, 99), b = rnd(0, 9), c = rnd(0, 9), base = a * 1e6;
+    const x = [base + b * 1e5 + c * 1e4 + rnd(0, 9999), base + c * 1e5 + b * 1e4 + rnd(0, 9999), Math.floor(base / 10) + rnd(0, 99999)].filter((v, k, A) => A.indexOf(v) === k);
+    if (x.length < 3 || b === c) return cm2Mine(3); const big = Math.random() < .6, ans = big ? Math.max(...x) : Math.min(...x);
+    return { kind: 'choices', ask: `Quel est le ${big ? 'plus grand' : 'plus petit'} nombre ?`, prompt: '', answer: ans, answerText: fmt(ans), choices: shuffle(x).map(v => ({ v, html: fmt(v) })), log: `${big ? 'plus grand' : 'plus petit'} : ${x.map(fmt).join(' ; ')}`,
+      explain: `On compte d’abord les chiffres : un nombre de ${String(Math.min(...x)).length} chiffres est plus petit qu’un nombre de ${String(Math.max(...x)).length} chiffres. Si le nombre de chiffres est le même, on compare de gauche à droite. Le ${big ? 'plus grand' : 'plus petit'} est ${fmt(ans)}.`, hint: 'Compte les chiffres, puis compare de gauche à droite.' }; }
+  if (l === 4) { const t = pick(['ecr', 'chif', 'mil']), a = rnd(1, 19), d = rnd(1, 9), c = rnd(1, 9), m = rnd(1, 9);
+    if (t === 'ecr') { const zc = Math.random() < .5, ans = zc ? `${a},${d}0${m}` : `${a},${d}${c}${m}`, pr = zc ? `${a} + ${frac(d, 10)} + ${frac(m, 1000)}` : `${a} + ${frac(d, 10)} + ${frac(c, 100)} + ${frac(m, 1000)}`;
+      return { kind: 'choices', ask: 'Quel nombre est égal à :', prompt: pr, promptClass: 'mid', answer: ans, answerText: ans, choices: dch(ans, zc ? [`${a},${d}${m}`, `${a},${d}00${m}`, `${a},${m}0${d}`] : [`${a},${m}${c}${d}`, `${a},${d}${c}0${m}`, `${a}${d},${c}${m}`]), log: `${a} + ${d}/10${zc ? '' : ` + ${c}/100`} + ${m}/1000`,
+        explain: `Après la virgule : les dixièmes, puis les centièmes, puis les millièmes. ${zc ? 'Il n’y a pas de centièmes : on écrit un 0 à leur place. ' : ''}On obtient ${ans}.`, hint: 'Le troisième chiffre après la virgule est celui des millièmes.' }; }
+    if (t === 'chif') { const v = `${a},${d}${c}${m}`, k = rnd(0, 2), N = ['dixièmes', 'centièmes', 'millièmes'], ans = [d, c, m][k], w = [...new Set([d, c, m, a % 10].filter(x => x !== ans))];
+      return { kind: 'choices', ask: `Quel est le chiffre des ${N[k]} ?`, prompt: v, promptClass: 'mid', answer: ans, answerText: String(ans), choices: nch(ans, w.concat([(ans + 3) % 10, (ans + 5) % 10]), String), log: `chiffre des ${N[k]} de ${v}`, explain: `Dans ${v} : ${d} dixième${d > 1 ? 's' : ''}, ${c} centième${c > 1 ? 's' : ''} et ${m} millième${m > 1 ? 's' : ''}. Le chiffre des ${N[k]} est ${ans}.`, hint: 'Après la virgule : dixièmes, centièmes, millièmes.' }; }
+    const n = rnd(11, 999), ans = n, v = fmt3(n / 1000);
+    return { kind: 'choices', ask: `Combien de millièmes en tout dans ${v} ?`, prompt: '', answer: ans, answerText: fmt(ans), choices: opts(ans, [n % 10, Math.floor(n / 10), n * 10]), log: `millièmes dans ${v}`, explain: `${v} = ${frac(n, 1000)} : il y a ${fmt(n)} millièmes en tout (1 unité = 1 000 millièmes).`, hint: 'Écris le nombre comme une fraction de dénominateur 1 000.' };
+  }
+  const t = pick(['cmp', 'arr', 'enc']);
+  if (t === 'cmp') { const a = rnd(2, 19), d1 = rnd(1, 8), x = [`${a},${d1}`, `${a},${d1 - 1}${rnd(5, 9)}${rnd(1, 9)}`, `${a},0${rnd(1, 9)}${rnd(1, 9)}`, `${a},${d1}0${rnd(1, 9)}`], v = s => +s.replace(',', '.');
+    const pick3 = shuffle(x).slice(0, 3); if (new Set(pick3.map(v)).size < 3) return cm2Mine(5); const big = Math.random() < .6, ans = pick3.reduce((m, s) => (big ? v(s) > v(m) : v(s) < v(m)) ? s : m);
+    return { kind: 'choices', ask: `Quel est le ${big ? 'plus grand' : 'plus petit'} nombre ?`, prompt: '', answer: ans, answerText: ans, choices: pick3.map(s => ({ v: s, html: s })), log: `${big ? 'plus grand' : 'plus petit'} : ${pick3.join(' ; ')}`,
+      explain: `Les parties entières sont égales : on compare les dixièmes, puis les centièmes, puis les millièmes. Le ${big ? 'plus grand' : 'plus petit'} est ${ans}. Un nombre plus long n’est pas forcément plus grand !`, hint: 'Compare d’abord le chiffre juste après la virgule.' }; }
+  if (t === 'arr') { let n; do { n = rnd(101, 999); } while (!(n % 10)); const v = n / 10, ans = Math.round(v + 1e-9), s = fmt3(v);
+    return { kind: 'choices', ask: `Quel est l’arrondi à l’unité de ${s} ?`, prompt: '', answer: ans, answerText: String(ans), choices: nch(ans, [Math.floor(v) === ans ? ans + 1 : ans - 1, ans + 10, Math.floor(v / 10)]), log: `arrondi de ${s}`,
+      explain: `${s} est entre ${Math.floor(v)} et ${Math.floor(v) + 1}. Avec ${n % 10} dixième${n % 10 > 1 ? 's' : ''}, il est plus près de ${ans}${n % 10 === 5 ? ' (avec 5 dixièmes, on arrondit à l’entier supérieur)' : ''}. L’arrondi à l’unité est ${ans}.`, hint: 'Regarde le chiffre des dixièmes : à partir de 5, on arrondit au-dessus.' }; }
+  const n = rnd(1001, 29999), v = n / 1000, s = fmt3(v), e = Math.floor(v), ans = `entre ${e} et ${e + 1}`;
+  return { kind: 'choices', ask: `Entre quels nombres entiers consécutifs se trouve ${s} ?`, prompt: '', answer: ans, answerText: ans, choices: dch(ans, [`entre ${e + 1} et ${e + 2}`, `entre ${e - 1} et ${e}`, `entre ${n % 1000} et ${n % 1000 + 1}`]), log: `encadrer ${s}`,
+    explain: `La partie entière de ${s} est ${e} : ${e} < ${s} < ${e + 1}.`, hint: 'Regarde la partie entière, avant la virgule.' };
+}
+
+function cm2Chasse(l) {
+  if (l === 5) { const d = pick([5, 10]), s0 = d === 5 ? pick([0, 1, 2]) : pick([0, 1]), k = rnd(1, 9), num = s0 * d + k, E = Math.floor(num / d), r = num % d;
+    const L = v => v % d ? `${v}/${d}` : String(v / d), show = r && E && Math.random() < .4 ? `${E} + ${frac(r, d)}` : frac(num, d);
+    const base = { start: s0 * d, step: 1, fd: d, k, mid: d === 5, answer: num, answerText: L(num), explain: `L’unité est partagée en ${d} parts égales : chaque graduation vaut ${frac(1, d)}. ${!r ? `${frac(num, d)} = ${E} : c’est la graduation du nombre ${E}.` : E ? `${frac(num, d)} = ${E} + ${frac(r, d)} : on part de ${E} et on avance de ${r} graduation${r > 1 ? 's' : ''}.` : `On avance de ${r} graduation${r > 1 ? 's' : ''} depuis 0.`}`, hint: `Compte de ${frac(1, d)} en ${frac(1, d)} depuis ${s0}.` };
+    if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache sur la graduation de ce nombre. Touche-la !', prompt: show, log: `placer ${num}/${d}` };
+    const wr = shuffle([num + 1, num - 1, num + 2, num - 2].filter(x => x > s0 * d && x <= s0 * d + 10 && x !== num));
+    return { ...base, kind: 'lineRead', ask: 'Quel nombre indique la flèche ?', prompt: '', log: `lire ${num}/${d}`, choices: shuffle([num, ...wr.slice(0, 2)]).map(x => ({ v: x, html: x % d ? frac(x, d) : String(x / d) })) };
+  }
+  const cfg = [null, { s: rnd(0, 9) * 1e6, st: 1e6 }, { s: rnd(1, 98) * 1e6, st: 1e5 }, { s: rnd(10, 98) * 10, st: 1, dec: 2 }, { s: rnd(10, 989) * 10, st: 1, dec: 3 }][l];
+  const k = rnd(1, 9), v = cfg.s + k * cfg.st, q0 = { dec: cfg.dec || 0 }, L = x => labN(q0, x), stp = L(cfg.st);
+  const explain = `Chaque graduation avance de ${stp}. En partant de ${L(cfg.s)} et en avançant ${k} fois de ${stp}, on arrive à ${L(v)}.`;
+  const base = { start: cfg.s, step: cfg.st, dec: q0.dec, k, mid: l <= 2, answer: v, answerText: L(v), explain, hint: `Compte les graduations de ${stp} en ${stp} depuis ${L(cfg.s)}.` };
+  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache sur la graduation de ce nombre. Touche-la !', prompt: L(v), log: `placer ${L(v)} (de ${L(cfg.s)} en ${stp})` };
+  const wrong = shuffle([v + cfg.st, v - cfg.st, v + 2 * cfg.st, v - 2 * cfg.st]).filter(x => x >= cfg.s && x <= cfg.s + 10 * cfg.st && x !== v);
+  return { ...base, kind: 'lineRead', ask: 'Quel nombre indique la flèche ?', prompt: '', log: `lire la flèche (de ${L(cfg.s)} en ${stp})`, choices: shuffle([v, ...[...new Set(wrong)].slice(0, 2)]).map(x => ({ v: x, html: L(x) })) };
+}
+
+function cm2Marche(l) {
+  const denoms = [5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
+  const greedy = c => { const o = []; for (const d of denoms) while (c >= d) { o.push(coinLabel(d)); c -= d; } return o.join(' + '); };
+  const IT = pick([['cordes', 'corde'], ['lanternes', 'lanterne'], ['boussoles', 'boussole'], ['sacs de riz', 'sac de riz'], ['tonneaux', 'tonneau'], ['drapeaux', 'drapeau'], ['bougies', 'bougie']]);
+  const p = rnd(21, 119) * 5; let target, ask, explain, log, dg;
+  if (l === 1) { const n0 = rnd(2, 5), k = pick([2, 3]); target = n0 * k * p; ask = `${n0} ${IT[0]} coûtent ${fmtE(n0 * p)}. Paye ${n0 * k} ${IT[0]} :`; log = `${n0 * k} ${IT[0]} (${n0} pour ${fmtE(n0 * p)})`;
+    explain = `${n0 * k} ${IT[0]}, c’est ${k} fois plus que ${n0} ${IT[0]} : on paye ${k} fois plus. ${k} × ${fmtE(n0 * p)} = ${fmtE(target)}.`; }
+  else if (l === 2) { const a = rnd(3, 5), b = rnd(1, 2); target = (a + b) * p; ask = `${a} ${IT[0]} coûtent ${fmtE(a * p)} et ${b} ${b > 1 ? IT[0] : IT[1]} ${b > 1 ? 'coûtent' : 'coûte'} ${fmtE(b * p)}. Paye ${a + b} ${IT[0]} :`; log = `${a + b} ${IT[0]} = ${a} + ${b}`;
+    explain = `${a + b} ${IT[0]}, c’est ${a} ${IT[0]} et encore ${b}. On ajoute les prix : ${fmtE(a * p)} + ${fmtE(b * p)} = ${fmtE(target)}.`; }
+  else if (l === 3) { const k = pick([2, 3, 4]), n = rnd(1, 3); target = n * p; ask = `${n * k} ${IT[0]} coûtent ${fmtE(n * k * p)}. Paye ${n} ${n > 1 ? IT[0] : IT[1]} :`; log = `${n} ${IT[0]} (${n * k} pour ${fmtE(n * k * p)})`;
+    explain = `${n} ${n > 1 ? IT[0] : IT[1]}, c’est ${k} fois moins que ${n * k} : on paye ${k} fois moins. ${fmtE(n * k * p)} ÷ ${k} = ${fmtE(target)}.`; }
+  else if (l === 4) { const n = rnd(2, 4), paid = n * p > 1500 ? 5000 : pick([2000, 5000]), tot = n * p; if (tot >= paid) return cm2Marche(4); target = paid - tot; dg = { t: 'change', price: tot, paid };
+    ask = `Le cuistot achète ${n} ${IT[0]} à ${fmtE(p)} pièce et paye avec ${fmtE(paid)}. Rends-lui la monnaie :`; log = `monnaie sur ${fmtE(paid)} pour ${n} × ${fmtE(p)}`;
+    explain = `Étape 1 : ${n} × ${fmtE(p)} = ${fmtE(tot)}. Étape 2 : ${fmtE(paid)} − ${fmtE(tot)} = ${fmtE(target)}. Par exemple : ${greedy(target)}.`; }
+  else { const n0 = rnd(2, 4), k = 2, tot = n0 * k * p, paid = 5000; if (tot >= paid) return cm2Marche(5); target = paid - tot; dg = { t: 'change', price: tot, paid };
+    ask = `${n0} ${IT[0]} coûtent ${fmtE(n0 * p)}. Le cuistot en achète ${n0 * k} et paye avec ${fmtE(paid)}. Rends-lui la monnaie :`; log = `monnaie : ${n0 * k} ${IT[0]} (${n0} pour ${fmtE(n0 * p)})`;
+    explain = `Étape 1 : ${n0 * k} ${IT[0]}, c’est ${k} fois plus que ${n0} : ${k} × ${fmtE(n0 * p)} = ${fmtE(tot)}. Étape 2 : ${fmtE(paid)} − ${fmtE(tot)} = ${fmtE(target)}.`; }
+  if (l <= 3) explain += ` Par exemple : ${greedy(target)}.`;
+  return { kind: 'money', denoms, target, showTotal: l === 1, ask, price: '', answer: target, answerText: fmtE(target), explain, dg, hint: l >= 4 ? 'D’abord le prix total, ensuite la monnaie : pars du prix et complète jusqu’au billet.' : 'Pas besoin de chercher le prix d’un seul objet : regarde combien de fois plus (ou moins) tu en achètes.', log };
+}
+
+function cm2Cuisine(l) {
+  if (l === 1) { const d = pick([3, 4, 5, 6, 8, 10]), n = rnd(2, d - 1), k = rnd(2, d === 10 ? 9 : 12), Q = d * k, ans = n * k, U = pick([['€', '€'], ['mètres', 'm'], ['pirates', 'pirates'], ['œufs', 'œufs'], ['grammes', 'g'], ['doublons', 'doublons']]);
+    return { kind: 'choices', ask: `Combien font ${frac(n, d)} de ${Q} ${U[0]} ?`, prompt: '', answer: ans, answerText: `${ans} ${U[1]}`, choices: nch(ans, [k, Q - ans, ans + k, Q / n === Math.floor(Q / n) ? Q / n : ans + 1]).map(c => ({ ...c, html: `${fmt(c.v)} ${U[1]}` })), log: `${n}/${d} de ${Q}`,
+      explain: `On partage ${Q} en ${d} parts égales : ${Q} ÷ ${d} = ${k}. On prend ${n} parts : ${n} × ${k} = ${ans}. Donc ${frac(n, d)} de ${Q} ${U[0]}, c’est ${ans} ${U[1]}.`, hint: `Le dénominateur (en bas) dit en combien de parts on partage ${Q}, le numérateur (en haut) combien de parts on prend.` }; }
+  if (l === 2) { const d = rnd(2, 9), E = rnd(1, 4), r = rnd(1, d - 1), num = E * d + r, t = pick(['dec', 'rec', 'enc']);
+    if (t === 'dec') { const ans = `${E} + ${r}/${d}`;
+      return { kind: 'choices', ask: 'Quelle écriture est égale à cette fraction ?', prompt: frac(num, d), answer: ans, answerText: ans, choices: shuffle([[E, r, d], [E, (r % (d - 1)) + 1 === r ? r + 1 : (r % (d - 1)) + 1, d], [E + 1, r, d]].filter((x, k, A) => A.findIndex(y => y[1] === x[1] && y[0] === x[0]) === k)).map(([e, rr, dd]) => ({ v: `${e} + ${rr}/${dd}`, html: `${e} + ${frac(rr, dd)}` })), log: `${num}/${d} = entier + fraction`,
+        explain: `${E > 1 ? `${frac(d, d)} = 1, donc ${frac(E * d, d)} = ${E}.` : `${frac(d, d)} = 1.`} ${frac(num, d)} = ${frac(E * d, d)} + ${frac(r, d)} = ${E} + ${frac(r, d)}.`, hint: `Combien de fois ${d} dans ${num} ? Ce sont les unités entières.` }; }
+    if (t === 'rec') { const ans = `${num}/${d}`;
+      return { kind: 'choices', ask: 'Quelle fraction est égale à :', prompt: `${E} + ${frac(r, d)}`, answer: ans, answerText: ans, choices: fch([num, d], [[E + r, d], [E * 10 + r, d], [num + 1, d], [r, E * d]]), log: `${E} + ${r}/${d} en fraction`,
+        explain: `${E} = ${frac(E * d, d)} (chaque unité fait ${d} parts de ${frac(1, d)}). ${frac(E * d, d)} + ${frac(r, d)} = ${frac(num, d)}.`, hint: `Une unité, c’est ${d} parts de ${frac(1, d)}.` }; }
+    const ans = `entre ${E} et ${E + 1}`;
+    return { kind: 'choices', ask: 'Entre quels nombres entiers consécutifs se trouve cette fraction ?', prompt: frac(num, d), answer: ans, answerText: ans, choices: dch(ans, [`entre ${E + 1} et ${E + 2}`, `entre ${num} et ${num + 1}`, `entre ${d} et ${d + 1}`]), log: `encadrer ${num}/${d}`,
+      explain: `${frac(E * d, d)} = ${E} et ${frac((E + 1) * d, d)} = ${E + 1}. ${num} est entre ${E * d} et ${(E + 1) * d}, donc ${frac(num, d)} est entre ${E} et ${E + 1}.`, hint: `Cherche les multiples de ${d} juste avant et juste après ${num}.` }; }
+  if (l === 3) { let a, b, c, d2, ct, why; const t = pick(['sameN', 'mult', 'one', 'sameD']);
+    if (t === 'sameN') { a = c = rnd(1, 5); b = rnd(2, 6); d2 = b + rnd(1, 5); if (Math.random() < .5) [b, d2] = [d2, b]; ct = 'sameN'; why = `Même nombre de parts (${a}), mais une unité coupée en ${Math.min(b, d2)} donne des parts plus grandes qu’une unité coupée en ${Math.max(b, d2)}.`; }
+    else if (t === 'mult') { const base = rnd(2, 6), f = pick([2, 3]); b = base; d2 = base * f; a = rnd(1, 2 * b - 1); c = rnd(1, 2 * d2 - 1); ct = 'mult'; why = `${frac(a, b)} = ${frac(a * f, d2)} (chaque part coupée en ${f}). On compare ${frac(a * f, d2)} et ${frac(c, d2)}.`; }
+    else if (t === 'one') { b = rnd(3, 9); a = b + rnd(1, b); c = d2 = rnd(3, 9); c = d2 - rnd(1, d2 - 1); ct = 'one'; why = `${frac(a, b)} est plus grand que 1 (le numérateur dépasse le dénominateur), ${frac(c, d2)} est plus petit que 1.`; }
+    else { b = d2 = rnd(3, 9); a = rnd(1, 2 * b); c = rnd(1, 2 * b); while (c === a) c = rnd(1, 2 * b); ct = 'sameD'; why = 'Les parts ont la même taille : on compare le nombre de parts, en haut.'; }
+    const x = a / b, y = c / d2, sym = Math.abs(x - y) < 1e-9 ? '=' : x < y ? '<' : '>';
+    return { kind: 'compare', ct, fr: [[a, b], [c, d2]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, b)} <span class="slot">?</span> ${frac(c, d2)}`, answer: sym, answerText: sym, log: `comparer ${a}/${b} et ${c}/${d2}`, explain: `${why} Donc ${frac(a, b)} ${sym} ${frac(c, d2)}.`, hint: 'Pour comparer, il faut des parts de la même taille, ou comparer à 1.', choices: ['<', '=', '>'].map(s => ({ v: s, html: s })) }; }
+  if (l === 4) { const sub = Math.random() < .4, b = pick([2, 3, 4, 5, 6]), f = pick([1, 2, 3]), d = b * f; let a, c; do { a = rnd(1, 2 * b - 1); c = rnd(1, d + 4); } while (a === b || c === d);
+    const A = a * f, res = sub ? A - c : A + c; if (res <= 0) return cm2Cuisine(4); const op = sub ? '−' : '+', key = `${res}/${d}`;
+    const w = sub ? [[Math.abs(a - c) || 1, Math.abs(b - d) || b + d], [a - c > 0 ? a - c : A + c, d], [res + 1, d], [res, d + b]] : [[a + c, b + d], [a + c, d], [res + 1, d], [res, d + b]];
+    return { kind: 'choices', ask: 'Combien font :', prompt: `${frac(a, b)} ${op} ${frac(c, d)}`, answer: key, answerText: key, choices: fch([res, d], w), log: `${a}/${b} ${op} ${c}/${d}`,
+      explain: `${f > 1 ? `${frac(a, b)} = ${frac(A, d)} (chaque part coupée en ${f}). ` : ''}Les parts ont la même taille : ${A} ${op} ${c} = ${res}, donc ${frac(res, d)}. On n’${sub ? 'enlève' : 'ajoute'} jamais les dénominateurs !`, hint: f > 1 ? `Transforme d’abord ${frac(a, b)} pour avoir le dénominateur ${d}.` : 'Le dénominateur reste le même : on compte les parts.' }; }
+  if (Math.random() < .6) { const k = rnd(2, 6), d = rnd(2, 9); let n; do { n = rnd(1, d + 3); } while (n % d === 0); const ans = `${k * n}/${d}`;
+    return { kind: 'choices', ask: 'Combien font :', prompt: `${k} × ${frac(n, d)}`, answer: ans, answerText: ans, choices: fch([k * n, d], [[k * n, k * d], [k + n, d], [k * n + 1, d], [n, k * d]]), log: `${k} × ${n}/${d}`,
+      explain: `${k} × ${frac(n, d)}, c’est ${frac(n, d)} ajouté ${k} fois : ${k} × ${n} = ${k * n} parts de ${frac(1, d)}. Donc ${frac(k * n, d)}. Le dénominateur ne change pas.`, hint: 'On multiplie le numérateur (le nombre de parts), pas le dénominateur (la taille des parts).' }; }
+  const n = rnd(1, 999), v = fmt3(n / 1000);
+  return { kind: 'choices', ask: 'Quel nombre décimal est égal à cette fraction ?', prompt: frac(n, 1000), answer: v, answerText: v, choices: dch(v, [fmt3(n / 100), fmt3(n / 10), String(n)].filter(x => x !== v)), log: `${n}/1000 en décimal`,
+    explain: `${frac(n, 1000)}, ce sont ${fmt(n)} millième${n > 1 ? 's' : ''} : le chiffre des millièmes est au troisième rang après la virgule. ${frac(n, 1000)} = ${v}.`, hint: 'Les millièmes vont jusqu’au troisième rang après la virgule.' };
+}
+
+// Durées en heures, minutes et secondes (« 8 h 52 min 27 s »)
+const hms = (h, m, s) => s ? `${h} h ${m} min ${s} s` : m ? `${h} h ${m} min` : `${h} h`;
+const durS = t => { const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return [h ? `${h} h` : '', m ? `${m} min` : '', s ? `${s} s` : ''].filter(Boolean).join(' ') || '0 s'; };
+// « De 8 h 13 min 30 s à 8 h 14 min 0 s : 30 s. De 8 h 14 min 0 s à 9 h 0 min 0 s : 46 min. … »
+function stepsS(a, b) { const H = x => hms(Math.floor(x / 3600), Math.floor(x % 3600 / 60), x % 60), L = []; let c = a;
+  if (c % 60 && b - c > 60 - c % 60) { const n = c + 60 - c % 60; L.push(`De ${H(c)} à ${H(n)} : ${durS(n - c)}.`); c = n; }
+  if (c % 3600 && b - c > 3600 - c % 3600) { const n = c + 3600 - c % 3600; L.push(`De ${H(c)} à ${H(n)} : ${durS(n - c)}.`); c = n; }
+  if (b > c) L.push(`De ${H(c)} à ${H(b)} : ${durS(b - c)}.`); return L.join(' '); }
+function cm2Horloge(l) {
+  if (l === 1) return cm1Horloge(1);
+  const sch = (ans, w, f = durS) => shuffle([ans, ...[...new Set(w)].filter(x => x !== ans && x > 0).slice(0, 2)]).map(v => ({ v, html: f(v) }));
+  if (l === 2) { const m = rnd(1, 9), s = rnd(5, 55), t = 60 * m + s;
+    if (Math.random() < .5) return { kind: 'choices', ask: `Combien de secondes dans ${m} min ${s} s ?`, prompt: '', answer: t, answerText: `${t} s`, choices: nch(t, [m * 100 + s, t + 60, t - 10], v => `${v} s`), log: `${m} min ${s} s en secondes`, explain: `1 min = 60 s. ${m > 1 ? `${m} min = ${60 * m} s, et ` : ''}${60 * m} + ${s} = ${t} s.`, hint: 'Une minute, c’est 60 secondes (pas 100 !).' };
+    return { kind: 'choices', ask: `${t} secondes, c’est :`, prompt: '', answer: t, answerText: durS(t), choices: sch(t, [t + 40 < 600 ? t + 40 : t - 40, t + 60, t - 60]), log: `${t} s en minutes`, explain: `${t} = ${60 * m} + ${s}, et ${60 * m} s = ${m} min. Donc ${t} s = ${m} min ${s} s.`, hint: 'Enlève 60 secondes autant de fois que possible : chaque fois, c’est une minute.' }; }
+  if (l === 3) { const t = pick(['hm', 'jh', 'h1']);
+    if (t === 'hm') { const h = rnd(1, 4), m = rnd(1, 11) * 5, n = 60 * h + m; return { kind: 'choices', ask: `Combien de minutes dans ${h} h ${m} min ?`, prompt: '', answer: n, answerText: `${n} min`, choices: nch(n, [100 * h + m, n + 60, n - 10], v => `${v} min`), log: `${h} h ${m} min en minutes`, explain: `1 h = 60 min. ${h > 1 ? `${h} h = ${60 * h} min, et ` : ''}${60 * h} + ${m} = ${n} min.`, hint: 'Une heure, c’est 60 minutes.' }; }
+    if (t === 'jh') { const j = rnd(1, 4), h = rnd(1, 20), n = 24 * j + h; return { kind: 'choices', ask: `Combien d’heures dans ${j} jour${j > 1 ? 's' : ''} et ${h} h ?`, prompt: '', answer: n, answerText: `${n} h`, choices: nch(n, [10 * j + h, 12 * j + h, n + 24], v => `${v} h`), log: `${j} j ${h} h en heures`, explain: `1 jour = 24 h. ${j} jour${j > 1 ? 's' : ''} = ${24 * j} h, et ${24 * j} + ${h} = ${n} h.`, hint: 'Un jour, c’est 24 heures.' }; }
+    const k = pick([1, 2]), n = 3600 * k; return { kind: 'choices', ask: `Combien de secondes dans ${k} heure${k > 1 ? 's' : ''} ?`, prompt: '', answer: n, answerText: `${fmt(n)} s`, choices: nch(n, [60 * k, 100 * k * 60, 6000 * k], v => `${fmt(v)} s`), log: `${k} h en secondes`, explain: `1 h = 60 min et 1 min = 60 s, donc 1 h = 60 × 60 = 3 600 s.${k > 1 ? ` ${k} h = ${fmt(n)} s.` : ''}`, hint: 'Passe d’abord par les minutes : 60 minutes de 60 secondes.' }; }
+  const h = rnd(7, 16), m = rnd(0, 59), s = rnd(0, 59), st = 3600 * h + 60 * m + s;
+  if (l === 4) { const d = rnd(2, 59) * 60 + rnd(1, 59) + (Math.random() < .4 ? 3600 : 0), e = st + d, eh = Math.floor(e / 3600), em = Math.floor(e % 3600 / 60), es = e % 60;
+    return { kind: 'choices', ask: `La course part à ${hms(h, m, s)} et finit à ${hms(eh, em, es)}. Combien de temps a-t-elle duré ?`, prompt: '', answer: d, answerText: durS(d), choices: sch(d, [d + 40, d - 40, d + 60, d - 60]), log: `durée ${hms(h, m, s)} → ${hms(eh, em, es)}`,
+      explain: `${stepsS(st, e)} En tout : ${durS(d)}.`, hint: 'Avance d’abord jusqu’à la minute ronde, puis compte les minutes, puis les secondes restantes.' }; }
+  if (Math.random() < .5) { const a = rnd(65, 150), b = a + rnd(5, 45);
+    return { kind: 'choices', ask: `Tom a couru le tour du pont en ${durS(a)}, Lila en ${durS(b)}. Combien de secondes d’écart ?`, prompt: '', answer: b - a, answerText: `${b - a} s`, choices: nch(b - a, [b - a + 40, b - a + 60, b - a - 1 > 0 ? b - a - 1 : b - a + 2], v => `${v} s`), log: `écart ${durS(a)} / ${durS(b)}`,
+      explain: `${durS(a)} = ${a} s et ${durS(b)} = ${b} s. ${b} − ${a} = ${b - a} s.`, hint: 'Convertis les deux temps en secondes, puis fais la différence.' }; }
+  const d = rnd(1, 9) * 60 + rnd(1, 59), fh = rnd(21, 22), fs = 3600 * fh + 60 * m + s, e = fs + d, ds = d % 60, dm = (d - ds) / 60, sc = s + ds, tm = m + dm + (sc >= 60 ? 1 : 0), eh = Math.floor(e / 3600), em = Math.floor(e % 3600 / 60), es = e % 60, key = (a, b, c) => `${a}:${b}:${c}`;
+  const W = [[eh, em, (es + 40) % 60], [eh, (em + 1) % 60, es], [eh, em - 1 >= 0 ? em - 1 : 59, es]];
+  return { kind: 'choices', ask: `Le feu d’artifice commence à ${hms(fh, m, s)} et dure ${durS(d)}. À quelle heure finit-il ?`, prompt: '', answer: key(eh, em, es), answerText: hms(eh, em, es), choices: shuffle([[eh, em, es], ...W.filter((x, k, A) => key(...x) !== key(eh, em, es) && A.findIndex(y => key(...y) === key(...x)) === k).slice(0, 2)]).map(x => ({ v: key(...x), html: hms(...x) })), log: `${hms(fh, m, s)} + ${durS(d)}`,
+    explain: `On ajoute les secondes, puis les minutes. Secondes : ${s} + ${ds} = ${sc} s${sc >= 60 ? ` = ${durS(sc)}` : ''}. Minutes : ${m} + ${dm}${sc >= 60 ? ' + 1' : ''} = ${tm} min${tm >= 60 ? ` = ${durS(60 * tm)}` : ''}. Il finit à ${hms(eh, em, es)}.${sc >= 60 || tm >= 60 ? ' Rappel : 60 s = 1 min et 60 min = 1 h.' : ''}`, hint: 'Ajoute d’abord les secondes : 60 secondes font 1 minute.' };
+}
+
 /* ================= Français : conjugaison ================= */
 // Programme : CE2 (BO n° 41 du 31 octobre 2024), CM1 (cycle 3, rentrée 2025). Présent, futur, imparfait, passé composé.
 // Espace insécable entre un nombre et son unité : « 1,73 € » ou « 4 h 45 » ne se coupent jamais en fin de ligne
-const nbU = s => String(s).replace(/(\d) (€|c\b|h\b|min\b)/g, '$1\u00a0$2').replace(/(\d\u00a0h) (\d)/g, '$1\u00a0$2');
+const nbU = s => String(s).replace(/(\d) (€|c\b|h\b|min\b|s\b)/g, '$1\u00a0$2').replace(/(\d\u00a0h) (\d)/g, '$1\u00a0$2');
 const typo = s => s.replace(/ ([!?:;»])/g, ' $1').replace(/« /g, '« '); // espaces insécables de la typographie française
 const PRO = ['je', 'tu', 'il', 'nous', 'vous', 'ils'], PRN = ['je', 'tu', 'il, elle ou on', 'nous', 'vous', 'ils ou elles'];
-const TAU = { pr: 'au présent', fu: 'au futur', im: 'à l’imparfait', pc: 'au passé composé' };
-const TCUE = { pr: 'Aujourd’hui', fu: 'Demain', im: 'Autrefois', pc: 'Hier' };
-const END = { pr1: ['e', 'es', 'e', 'ons', 'ez', 'ent'], pr2: ['is', 'is', 'it', 'issons', 'issez', 'issent'], im: ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'], fu: ['ai', 'as', 'a', 'ons', 'ez', 'ont'] };
+const TAU = { pr: 'au présent', fu: 'au futur', im: 'à l’imparfait', pc: 'au passé composé', ps: 'au passé simple', pqp: 'au plus-que-parfait' };
+const TCUE = { pr: 'Aujourd’hui', fu: 'Demain', im: 'Autrefois', pc: 'Hier', ps: 'Ce jour-là', pqp: 'La veille' };
+const END = { pr1: ['e', 'es', 'e', 'ons', 'ez', 'ent'], pr2: ['is', 'is', 'it', 'issons', 'issez', 'issent'], im: ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'], fu: ['ai', 'as', 'a', 'ons', 'ez', 'ont'], ps1: ['ai', 'as', 'a', 'âmes', 'âtes', 'èrent'], ps2: ['is', 'is', 'it', 'îmes', 'îtes', 'irent'] };
 // g : groupe (0 = auxiliaire) · v : variante du 1er groupe (ger, cer, ll, è, yer) · e : passé composé avec être · x : complément · c : niveau (2 = CE2, 4 = CM1)
 const VB = {
   'être': { g: 0, c: 2, pr: ['suis', 'es', 'est', 'sommes', 'êtes', 'sont'], im: 'ét', fu: 'ser', pp: 'été', x: 'sur le pont' },
@@ -2029,11 +2273,16 @@ const VB = {
   'obéir': { g: 2, c: 4, x: 'aux ordres' }, 'remplir': { g: 2, c: 4, x: 'les tonneaux' }, 'atterrir': { g: 2, c: 4, x: 'sur la plage' },
 };
 const IRR = ['être', 'avoir', 'aller', 'faire', 'dire', 'venir', 'pouvoir', 'voir', 'vouloir', 'prendre'];
+// Passé simple des verbes irréguliers (CM2)
+Object.entries({ 'être': ['fus', 'fus', 'fut', 'fûmes', 'fûtes', 'furent'], 'avoir': ['eus', 'eus', 'eut', 'eûmes', 'eûtes', 'eurent'], 'aller': ['allai', 'allas', 'alla', 'allâmes', 'allâtes', 'allèrent'], 'faire': ['fis', 'fis', 'fit', 'fîmes', 'fîtes', 'firent'], 'dire': ['dis', 'dis', 'dit', 'dîmes', 'dîtes', 'dirent'], 'venir': ['vins', 'vins', 'vint', 'vînmes', 'vîntes', 'vinrent'], 'pouvoir': ['pus', 'pus', 'put', 'pûmes', 'pûtes', 'purent'], 'voir': ['vis', 'vis', 'vit', 'vîmes', 'vîtes', 'virent'], 'vouloir': ['voulus', 'voulus', 'voulut', 'voulûmes', 'voulûtes', 'voulurent'], 'prendre': ['pris', 'pris', 'prit', 'prîmes', 'prîtes', 'prirent'], 'partir': ['partis', 'partis', 'partit', 'partîmes', 'partîtes', 'partirent'] }).forEach(([v, f]) => { VB[v].ps = f; });
 const pp = inf => { const V = VB[inf]; return V.pp || (V.g === 2 ? inf.slice(0, -2) + 'i' : inf.slice(0, -2) + 'é'); };
 const ppA = (inf, s) => pp(inf) + (VB[inf].e ? (s.f ? 'e' : '') + (s.pl ? 's' : '') : '');
 function vforms(inf, t, s) {
   const V = VB[inf];
   if (t === 'pc') return VB[V.e ? 'être' : 'avoir'].pr.map(a => a + ' ' + (s ? ppA(inf, s) : pp(inf)));
+  if (t === 'pqp') return vforms(V.e ? 'être' : 'avoir', 'im').map(a => a + ' ' + (s ? ppA(inf, s) : pp(inf)));
+  if (t === 'ps') { if (V.ps) return V.ps; const st = inf.slice(0, -2); if (V.g === 2) return END.ps2.map(e => st + e);
+    const soft = V.v === 'ger' ? st + 'e' : V.v === 'cer' ? st.slice(0, -1) + 'ç' : st; return END.ps1.map((e, p) => (p === 5 ? st : soft) + e); }
   if (V.pr) return t === 'pr' ? V.pr : END[t].map(e => (t === 'im' ? V.im : V.fu) + e);
   const st = inf.slice(0, -2);
   if (V.g === 2) return t === 'pr' ? END.pr2.map(e => st + e) : t === 'im' ? END.im.map(e => st + 'iss' + e) : END.fu.map(e => inf + e);
@@ -2072,7 +2321,7 @@ function pickSubj(inf, t, cm1, avoidP = []) {
   const V = VB[inf];
   for (let k = 0; k < 40; k++) {
     const p = rnd(0, 5); if (avoidP.includes(p)) continue; const s = Object.assign({ p }, pick(SUBJ[p]));
-    if (t === 'pc' && V.e && (p !== 2 && p !== 5 || s.on || (!cm1 && s.f))) continue;
+    if ((t === 'pc' || t === 'pqp') && V.e && (p !== 2 && p !== 5 || s.on || (!cm1 && s.f))) continue;
     if (p === 0 && vowel(vforms(inf, t)[0])) continue;
     return s;
   }
@@ -2136,6 +2385,7 @@ function qMark(cm1) {
 function genConjug(l) {
   if (CP()) return cpSons(l);
   if (CE1()) return ce1Conjug(l);
+  if (CM2()) return cm2Conjug(l);
   const cm1 = CM1();
   if (!cm1) {
     if (l === 1) return Math.random() < .3 ? qPron(pick(['chanter', 'jouer', 'danser', 'regarder', 'être', 'avoir']), 'pr') : qFill(pick(['être', 'avoir', 'chanter', 'jouer', 'ramer', 'danser', 'regarder', 'chercher', 'trouver', 'grimper']), 'pr', false);
@@ -2198,7 +2448,7 @@ const natOf = t => /^D/.test(t) ? 'D' : t;
 const NATWHY = { N: 'Un nom commun désigne une personne, un animal ou une chose. On peut mettre « le », « la », « un » ou « une » devant.', Np: 'Un nom propre désigne une personne, un animal ou un lieu précis. Il commence par une majuscule.',
   A: 'Un adjectif précise le nom (couleur, taille, caractère…) et s’accorde avec lui.', V: 'Le verbe dit ce que fait le sujet. Il change quand on change le temps : hier…, demain…',
   D: 'Un déterminant se place devant le nom : le, la, les, un, une, des, mon, ce, chaque…', Pr: 'Un pronom remplace un nom : je, tu, il, elle, nous, vous, ils, elles.',
-  Adv: 'Un adverbe est un mot invariable qui précise le verbe ou la phrase : demain, lentement, puis…', Cj: 'Une conjonction de coordination relie deux mots ou deux groupes : mais, ou, et, donc, or, ni, car.', P: 'Une préposition introduit un groupe de mots : dans, sur, avec, pendant…' };
+  Adv: 'Un adverbe est un mot invariable qui précise le verbe ou la phrase : demain, lentement, puis…', Cj: 'Une conjonction de coordination relie deux mots ou deux groupes : mais, ou, et, or, ni, car.', P: 'Une préposition introduit un groupe de mots : dans, sur, avec, pendant…' };
 // Question « touche les mots » : par mots, ou par groupes (chunks) quand on cherche une fonction
 function qWords(sp, test, o) {
   const units = []; const seen = new Set();
@@ -2269,6 +2519,7 @@ function qFonction() {
 function genGram(l) {
   if (CP()) return cpGram(l);
   if (CE1()) return ce1Gram(l);
+  if (CM2()) return cm2Gram(l);
   const r = Math.random();
   if (!CM1()) {
     if (l === 1) return r < .5 ? qType() : qVerb();
@@ -2290,8 +2541,8 @@ const PLUR = [ // [singulier, pluriel, erreurs, règle, niveau]
   ['un oiseau', 'des oiseaux', ['des oiseaus', 'des oiseau'], 'Les noms en -eau prennent un x au pluriel.', 2], ['un jeu', 'des jeux', ['des jeus', 'des jeu'], 'Les noms en -eu prennent un x au pluriel.', 2],
   ['un cheveu', 'des cheveux', ['des cheveus', 'des cheveu'], 'Les noms en -eu prennent un x au pluriel.', 2], ['un cheval', 'des chevaux', ['des chevals', 'des chevaus'], 'La plupart des noms en -al font leur pluriel en -aux.', 2],
   ['un animal', 'des animaux', ['des animals', 'des animaus'], 'La plupart des noms en -al font leur pluriel en -aux.', 2], ['un journal', 'des journaux', ['des journals', 'des journaus'], 'La plupart des noms en -al font leur pluriel en -aux.', 2],
-  ['une voile', 'des voiles', ['des voile', 'des voilent'], 'En général, on ajoute un s au pluriel. Un nom ne prend jamais -nt : c’est la marque des verbes (ils chantent).', 2], ['un pirate', 'des pirates', ['des pirate', 'des piratent'], 'En général, on ajoute un s au pluriel. Un nom ne prend jamais -nt : c’est la marque des verbes (ils chantent).', 2],
-  ['une sirène', 'des sirènes', ['des sirène', 'des sirènent'], 'En général, on ajoute un s au pluriel. Un nom ne prend jamais -nt : c’est la marque des verbes (ils chantent).', 2], ['une corde', 'des cordes', ['des corde', 'des cordent'], 'En général, on ajoute un s au pluriel. Un nom ne prend jamais -nt : c’est la marque des verbes (ils chantent).', 2],
+  ['une voile', 'des voiles', ['des voile', 'des voilent'], 'En général, on ajoute un s au pluriel. Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).', 2], ['un pirate', 'des pirates', ['des pirate', 'des piratent'], 'En général, on ajoute un s au pluriel. Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).', 2],
+  ['une sirène', 'des sirènes', ['des sirène', 'des sirènent'], 'En général, on ajoute un s au pluriel. Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).', 2], ['une corde', 'des cordes', ['des corde', 'des cordent'], 'En général, on ajoute un s au pluriel. Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).', 2],
   ['une souris', 'des souris', ['des souriss', 'des sourix'], 'Les noms qui finissent déjà par -s, -x ou -z ne changent pas au pluriel.', 2], ['une voix', 'des voix', ['des voixs', 'des voixes'], 'Les noms qui finissent déjà par -s, -x ou -z ne changent pas au pluriel.', 2],
   ['un nez', 'des nez', ['des nezs', 'des nezes'], 'Les noms qui finissent déjà par -s, -x ou -z ne changent pas au pluriel.', 2],
   ['un bijou', 'des bijoux', ['des bijous', 'des bijou'], 'Sept noms en -ou prennent un x : bijou, caillou, chou, genou, hibou, joujou, pou.', 4], ['un caillou', 'des cailloux', ['des caillous', 'des caillou'], 'Sept noms en -ou prennent un x : bijou, caillou, chou, genou, hibou, joujou, pou.', 4],
@@ -2309,13 +2560,13 @@ const GNN = [['bateau', 'bateaux', 0, 'o'], ['trésor', 'trésors', 0, 'o'], ['c
   ['vague', 'vagues', 1, 'o'], ['sirène', 'sirènes', 1, 'h'], ['mouette', 'mouettes', 1, 'a'], ['baleine', 'baleines', 1, 'a'], ['tortue', 'tortues', 1, 'a']];
 // Adjectifs : [m, f, m pluriel, f pluriel, catégories de noms, avant le nom ?, niveau, règle du féminin]
 const GNA = [['petit', 'petite', 'petits', 'petites', 'oah', 1, 2], ['grand', 'grande', 'grands', 'grandes', 'oah', 1, 2], ['noir', 'noire', 'noirs', 'noires', 'oa', 0, 2], ['vert', 'verte', 'verts', 'vertes', 'oa', 0, 2],
-  ['bleu', 'bleue', 'bleus', 'bleues', 'oa', 0, 2], ['blanc', 'blanche', 'blancs', 'blanches', 'oa', 0, 2, 'blanc devient blanche au féminin.'], ['gros', 'grosse', 'gros', 'grosses', 'oah', 1, 2, 'gros double le s au féminin : grosse.'],
-  ['rouge', 'rouge', 'rouges', 'rouges', 'oa', 0, 2, 'rouge finit déjà par un e : il est pareil au masculin et au féminin.'], ['courageux', 'courageuse', 'courageux', 'courageuses', 'h', 0, 2, '-eux devient -euse au féminin.'],
+  ['bleu', 'bleue', 'bleus', 'bleues', 'oa', 0, 2], ['blanc', 'blanche', 'blancs', 'blanches', 'oa', 0, 2, '« Blanc » devient « blanche » au féminin.'], ['gros', 'grosse', 'gros', 'grosses', 'oah', 1, 2, '« Gros » double le s au féminin : « grosse ».'],
+  ['rouge', 'rouge', 'rouges', 'rouges', 'oa', 0, 2, '« Rouge » finit déjà par un e : il est pareil au masculin et au féminin.'], ['courageux', 'courageuse', 'courageux', 'courageuses', 'h', 0, 2, '-eux devient -euse au féminin.'],
   ['joli', 'jolie', 'jolis', 'jolies', 'oah', 1, 2], ['peureux', 'peureuse', 'peureux', 'peureuses', 'ah', 0, 4, '-eux devient -euse au féminin.'], ['heureux', 'heureuse', 'heureux', 'heureuses', 'ah', 0, 4, '-eux devient -euse au féminin.'],
   ['neuf', 'neuve', 'neufs', 'neuves', 'o', 0, 4, '-f devient -ve au féminin.'], ['sportif', 'sportive', 'sportifs', 'sportives', 'h', 0, 4, '-if devient -ive au féminin.'], ['léger', 'légère', 'légers', 'légères', 'o', 0, 4, '-er devient -ère au féminin.'],
   ['fier', 'fière', 'fiers', 'fières', 'ah', 0, 4, '-er devient -ère au féminin.'], ['cruel', 'cruelle', 'cruels', 'cruelles', 'h', 0, 4, '-el double le l au féminin : -elle.'], ['ancien', 'ancienne', 'anciens', 'anciennes', 'o', 0, 4, '-en double le n au féminin : -enne.'],
-  ['gentil', 'gentille', 'gentils', 'gentilles', 'ah', 0, 4, 'gentil devient gentille au féminin.'], ['beau', 'belle', 'beaux', 'belles', 'oah', 1, 4, 'beau devient belle au féminin et beaux au pluriel.'], ['doux', 'douce', 'doux', 'douces', 'h', 0, 4, 'doux devient douce au féminin.'],
-  ['vif', 'vive', 'vifs', 'vives', 'ah', 0, 4, '-if devient -ive au féminin.'], ['nouveau', 'nouvelle', 'nouveaux', 'nouvelles', 'oh', 1, 4, 'nouveau devient nouvelle au féminin et nouveaux au pluriel.']];
+  ['gentil', 'gentille', 'gentils', 'gentilles', 'ah', 0, 4, '« Gentil » devient « gentille » au féminin.'], ['beau', 'belle', 'beaux', 'belles', 'oah', 1, 4, '« Beau » devient « belle » au féminin et « beaux » au pluriel.'], ['doux', 'douce', 'doux', 'douces', 'h', 0, 4, '« Doux » devient « douce » au féminin.'],
+  ['vif', 'vive', 'vifs', 'vives', 'ah', 0, 4, '-if devient -ive au féminin.'], ['nouveau', 'nouvelle', 'nouveaux', 'nouvelles', 'oh', 1, 4, '« Nouveau » devient « nouvelle » au féminin et « nouveaux » au pluriel.']];
 const ART = (f, pl, def, before) => pl ? (def || before ? 'les' : 'des') : def ? (f ? 'la' : 'le') : f ? 'une' : 'un';
 // reg (CE1) : seulement les adjectifs qui prennent un simple -e au féminin (ou qui finissent déjà par e)
 const regA = x => !x[7] || x[0] === 'rouge';
@@ -2332,7 +2583,7 @@ function qAdj(cm1, reg) {
     explain: `« ${g.noun} » est ${gWhy(g.f, g.pl)}, donc l’adjectif aussi : ${g.gn}.${g.a[7] ? ' ' + cap(g.a[7]) : g.f || g.pl ? ` On ajoute ${g.f && g.pl ? '-es' : g.f ? '-e' : '-s'}.` : ''}`, hint: 'Regarde le nom : est-il masculin ou féminin ? singulier ou pluriel ?' };
 }
 function qGN(cm1, reg) {
-  const g = gnPick(cm1, reg), A2 = g.a[5] ? pick(GNA.filter(x => !x[5] && x[6] <= (cm1 ? 4 : 2) && (!reg || regA(x)) && x[4].includes(g.n[3]))) : null, fA2 = A2 ? A2[g.pl ? (g.f ? 3 : 2) : g.f ? 1 : 0] : '';
+  const g = gnPick(cm1, reg), A2 = g.a[5] ? pick(GNA.filter(x => !x[5] && x[6] <= (cm1 ? 4 : 2) && (!reg || regA(x)) && x[4].includes(g.n[3]) && !(['nouveau', 'neuf'].includes(g.a[0]) && ['nouveau', 'neuf'].includes(x[0])))) : null, fA2 = A2 ? A2[g.pl ? (g.f ? 3 : 2) : g.f ? 1 : 0] : '';
   const mk = (fa, nn, fb) => (g.a[5] ? `${g.det} ${fa} ${nn}` : `${g.det} ${nn} ${fa}`) + (A2 ? ' ' + fb : '');
   const alt = (A, form) => A.slice(0, 4).find(x => x !== form), right = mk(g.form, g.noun, fA2);
   const cands = [mk(alt(g.a, g.form), g.noun, fA2), mk(g.form, g.pl ? g.n[0] : g.n[1], fA2), A2 ? mk(g.form, g.noun, alt(A2, fA2)) : null].filter(x => x && x !== right);
@@ -2342,7 +2593,7 @@ function qGN(cm1, reg) {
 }
 function qPlur(cm1) {
   const it = pick(PLUR.filter(x => cm1 ? x[4] === 4 || Math.random() < .25 : x[4] === 2));
-  const sg = it[0].split(' ').slice(1).join(' '), why = e => /nt$/.test(e) ? 'Un nom ne prend jamais -nt au pluriel : c’est la marque des verbes (ils chantent).' : e === 'des ' + sg ? 'Il manque la marque du pluriel : on ne l’entend pas, mais on l’écrit.' : it[3];
+  const sg = it[0].split(' ').slice(1).join(' '), why = e => /nt$/.test(e) ? 'Le pluriel d’un nom ne se marque jamais par -nt : c’est la marque des verbes (ils chantent).' : e === 'des ' + sg ? 'Il manque la marque du pluriel : on ne l’entend pas, mais on l’écrit.' : it[3];
   return { kind: 'choices', typeable: { ans: it[1].split(' ').slice(1).join(' '), ask: 'Écris ce nom au pluriel :', prompt: `${it[0]} → ${it[1].split(' ')[0]} ${SLOT}`, strip: /^des /, }, ask: 'Mets ce groupe au pluriel :', prompt: `${it[0]} → …`, promptClass: 'sent', answer: it[1], answerText: it[1], choices: shuffle([it[1], ...it[2]]).map(v => v === it[1] ? { v, html: v } : { v, html: v, why: why(v) }), log: `pluriel de ${it[0]}`, explain: `${it[0]} → ${it[1]}. ${it[3]}`, hint: 'Regarde comment se termine le nom : -eau, -eu, -al, -ou, -ail… ou une autre lettre.' };
 }
 function qDet() {
@@ -2384,21 +2635,29 @@ const HOMO = [ // [phrase, réponse, autre, explication, niveau]
   ['Ce soir, ___ mange du poisson.', 'on', 'ont', '« on » est un pronom sujet : on peut dire « il mange ».', 4], ['Les mouettes ___ faim.', 'ont', 'on', '« ont », c’est le verbe avoir : on peut dire « avaient faim ».', 4],
   ['Regarde ___ baleines, là-bas !', 'ces', 'ses', '« ces » sert à montrer : « ces baleines-là ».', 4], ['Le capitaine range ___ cartes.', 'ses', 'ces', '« ses » veut dire « à lui » : on peut dire « mes cartes ».', 4],
   ['___ est caché le trésor ?', 'Où', 'Ou', '« où » avec un accent indique un lieu.', 4], ['Veux-tu du jus ___ de l’eau ?', 'ou', 'où', '« ou » sans accent indique un choix : on peut dire « ou bien ».', 4],
+  ['Le capitaine ___ donne une carte.', 'leur', 'leurs', '« leur » devant un verbe est un pronom : il veut dire « à eux ». Il ne prend jamais de s.', 6],
+  ['Les pirates rangent ___ épées.', 'leurs', 'leur', '« leurs » devant un nom pluriel est un déterminant : il s’accorde avec « épées ».', 6],
+  ['Les matelots lavent ___ navire.', 'leur', 'leurs', 'Un seul navire pour eux tous : le déterminant « leur » reste au singulier.', 6],
+  ['La carte ? Lila ___ trouvée.', 'l’a', 'la', '« l’a », c’est le pronom « l’ » et le verbe avoir : on peut dire « Lila l’avait trouvée ».', 6],
+  ['Pose le coffre ___, près du mât.', 'là', 'la', '« là » avec un accent indique un lieu : on peut dire « ici ».', 6],
+  ['Lila range ___ boussole.', 'la', 'là', '« la » est un déterminant devant le nom « boussole » : on peut dire « une boussole ».', 6],
   ['Je range ___ bottes.', 'mes', 'mais', '« mes » veut dire « à moi » : on peut dire « tes bottes ».', 4], ['Il pleut, ___ nous partons quand même.', 'mais', 'mes', '« mais » marque une opposition : on peut dire « pourtant ».', 4],
 ];
 // Le bon test de remplacement pour chaque paire d’homophones
 function homoHint(a, b) {
   const k = [a, b].map(x => x.toLowerCase()).sort().join('/');
   return { 'a/à': 'Essaie de dire « avait » à la place : si ça marche, on écrit « a ».', 'est/et': 'Essaie de dire « était » à la place : si ça marche, on écrit « est ».', 'son/sont': 'Essaie de dire « étaient » : si ça marche, on écrit « sont ». Sinon, « son » veut dire « à lui ».',
-    'on/ont': 'Essaie de dire « avaient » : si ça marche, on écrit « ont ». Sinon, essaie « il ».', 'ces/ses': '« ses » veut dire « à lui » ou « à elle ». « ces » sert à montrer.', 'ou/où': 'Si tu peux dire « ou bien », on écrit « ou ». Si ça parle d’un lieu, on écrit « où ».', 'mais/mes': 'Si ça veut dire « à moi », on écrit « mes ». Si ça veut dire « pourtant », on écrit « mais ».' }[k] || 'Essaie de remplacer le mot par un autre pour voir lequel a du sens.';
+    'on/ont': 'Essaie de dire « avaient » : si ça marche, on écrit « ont ». Sinon, essaie « il ».', 'ces/ses': '« ses » veut dire « à lui » ou « à elle ». « ces » sert à montrer.', 'ou/où': 'Si tu peux dire « ou bien », on écrit « ou ». Si ça parle d’un lieu, on écrit « où ».', 'mais/mes': 'Si ça veut dire « à moi », on écrit « mes ». Si ça veut dire « pourtant », on écrit « mais ».',
+    'leur/leurs': 'Devant un verbe, « leur » est un pronom et ne prend jamais de s. Devant un nom au pluriel, on écrit « leurs ».', 'la/l’a': 'Essaie « l’avait » : si ça marche, on écrit « l’a ».', 'la/là': 'Si tu peux dire « ici », on écrit « là ».' }[k] || 'Essaie de remplacer le mot par un autre pour voir lequel a du sens.';
 }
-function qHomo(cm1, ce1) {
-  const it = pick(HOMO.filter(x => ce1 ? /^(a|à|est|et)$/.test(x[1]) : cm1 ? x[4] === 4 || Math.random() < .3 : x[4] === 2)), sent = it[0].replace('___', SLOT);
+function qHomo(cm1, ce1, cm2) {
+  const it = pick(HOMO.filter(x => ce1 ? /^(a|à|est|et)$/.test(x[1]) : cm2 ? x[4] === 6 || Math.random() < .3 : cm1 ? x[4] === 4 || (x[4] < 4 && Math.random() < .3) : x[4] === 2)), sent = it[0].replace('___', SLOT);
   return { kind: 'choices', ask: 'Complète avec le bon mot :', prompt: sent, promptClass: 'sent', answer: it[1], answerText: it[0].replace('___', it[1]), choices: shuffle([it[1], it[2]]).map(v => ({ v, html: v })), log: it[0], explain: it[3], hint: homoHint(it[1], it[2]) };
 }
 function genAccords(l) {
   if (CP()) return cpAccords(l);
   if (CE1()) return ce1Accords(l);
+  if (CM2()) return cm2Accords(l);
   const cm1 = CM1(), r = Math.random();
   if (!cm1) { if (l === 1) return r < .6 ? qPlur(false) : qDet(); if (l === 2) return qAdj(false); if (l === 3) return r < .4 ? qHomo(false) : qSV(false); if (l === 4) return r < .3 ? qHomo(false) : r < .7 ? qGN(false) : qAdj(false); return r < .5 ? qHomo(false) : r < .7 ? qSV(false) : r < .85 ? qGN(false) : qPlur(false); }
   if (l === 1) return qPlur(true); if (l === 2) return r < .6 ? qAdj(true) : qGN(true); if (l === 3) return qSV(true); if (l === 4) return qPPetre();
@@ -2467,8 +2726,8 @@ const VOC = {
     ['« Il a une mémoire d’éléphant » veut dire :', 'il se souvient de tout', ['il a de grandes oreilles', 'il oublie tout'], 'C’est une comparaison au sens figuré.']],
   gen4: [['« Requin, dauphin, baleine » sont tous des…', 'animaux marins', ['oiseaux', 'insectes'], 'Le mot « animaux marins » est un mot générique : il regroupe ces mots particuliers.'],
     ['« Voilier, galion, paquebot » sont tous des…', 'bateaux', ['véhicules volants', 'maisons'], '« Bateau » est le mot générique.'], ['« Rubis, émeraude, diamant » sont tous des…', 'pierres précieuses', ['métaux', 'fleurs'], '« Pierres précieuses » est le mot générique.'],
-    ['Quel mot est un homonyme de « mer » ?', 'maire', ['marée', 'marin'], 'Mer, mère et maire se prononcent pareil mais n’ont pas le même sens ni la même orthographe : ce sont des homonymes.'],
-    ['Quel mot est un homonyme de « vert » ?', 'verre', ['vertical', 'verdure'], 'Vert, verre, ver, vers se prononcent pareil : ce sont des homonymes.'], ['Quel mot est un homonyme de « sang » ?', 'cent', ['sage', 'sable'], 'Sang, cent, sans se prononcent pareil.'],
+    ['Quel mot est un homonyme de « mer » ?', 'maire', ['marée', 'marin'], 'Mer, mère et maire se prononcent de la même façon mais n’ont pas le même sens ni la même orthographe : ce sont des homonymes.'],
+    ['Quel mot est un homonyme de « vert » ?', 'verre', ['vertical', 'verdure'], 'Vert, verre, ver, vers se prononcent de la même façon : ce sont des homonymes.'], ['Quel mot est un homonyme de « sang » ?', 'cent', ['sage', 'sable'], 'Sang, cent, sans se prononcent de la même façon.'],
     ['Quel est l’intrus ?', 'chameau', ['requin', 'dauphin'], 'Le chameau ne vit pas dans la mer.'], ['Quel est l’intrus ?', 'tulipe', ['ancre', 'voile'], 'La tulipe n’est pas une partie du bateau.'],
     ['Dans le dictionnaire, « navire » est écrit « n. m. ». Que veut dire « n. m. » ?', 'nom masculin', ['nombre mystérieux', 'nom de marin'], 'Le dictionnaire donne la nature et le genre du mot : n. m. = nom masculin.']],
 };
@@ -2488,10 +2747,229 @@ function qBank(key) {
 function genVocab(l) {
   if (CP()) return cpVocab(l);
   if (CE1()) return ce1Vocab(l);
+  if (CM2()) return cm2Vocab(l);
   const r = Math.random();
   if (!CM1()) { if (l === 1) return qAlpha(false); if (l === 2) return r < .7 ? qBank('fam2') : qAlpha(false); if (l === 3) return qBank('pre2'); if (l === 4) return qBank('syn2'); return r < .6 ? qBank('fig2') : r < .8 ? qBank('syn2') : qBank('pre2'); }
   if (l === 1) return r < .5 ? qAlpha(true) : qBank('pre4'); if (l === 2) return qBank('pre4'); if (l === 3) return qBank('syn4'); if (l === 4) return qBank('fig4');
   return r < .5 ? qBank('gen4') : r < .7 ? qBank('fig4') : r < .85 ? qAlpha(true) : qBank('syn4');
+}
+
+/* ================= Français de CM2 (BO n° 16 du 17 avril 2025) ================= */
+// Conjugaison : passé simple et plus-que-parfait d'être, avoir, des 1er et 2e groupes et de faire, aller, dire, venir, pouvoir, voir,
+// vouloir, prendre ; marque du temps et marque de la personne ; forme négative aux temps composés.
+// Grammaire : sujet inversé, attribut du sujet et COD, COD et COI, compléments circonstanciels de temps, de lieu, de cause, complément du nom,
+// épithète et attribut, prépositions, conjonctions de subordination, pronoms compléments, phrase simple et phrase complexe.
+// Orthographe : accord avec le sujet inversé, accord de l'attribut, participe passé avec être et avec avoir (COD placé avant).
+const CM2V = v => VB[v] && VB[v].c <= 4 && v !== 'partir'; // les verbes du programme (partir n'en fait pas partie)
+const IRR8 = ['faire', 'aller', 'dire', 'venir', 'pouvoir', 'voir', 'vouloir', 'prendre'];
+const KBDOK = s => /^[a-zéèêàçùâîô’' -]+$/i.test(s); // tapable au clavier de lettres du jeu (pas de û)
+const NMT = { pr: 'présent', fu: 'futur', im: 'imparfait', pc: 'passé composé', ps: 'passé simple', pqp: 'plus-que-parfait' };
+function qFill2(inf, t, cue = true) {
+  const V = VB[inf], s = pickSubj(inf, t, true, t === 'ps' && Math.random() < .55 ? [0, 1, 3, 4] : []), forms = vforms(inf, t, s), ans = forms[s.p], st = inf.slice(0, -2);
+  const w = new Map(), add = (c, why) => { if (c && c !== ans && !w.has(c)) w.set(c, why); };
+  if (t === 'ps') {
+    add(vforms(inf, 'im', s)[s.p], `« ${vforms(inf, 'im', s)[s.p]} » est à l’imparfait. Ici, le verbe est au passé simple : ${ans}.`);
+    if (V.g === 1 && !V.ps) add(st + END.ps2[s.p], `Les verbes en -er ont un passé simple en -a : il ${forms[2]}, ils ${forms[5]}.`);
+    if (V.g === 2) add(st + END.ps1[s.p], `Les verbes comme « finir » ont un passé simple en -i : il ${forms[2]}, ils ${forms[5]}.`);
+    if (V.pr) add(V.pr[s.p], `« ${V.pr[s.p]} » est au présent. Ici, le verbe est au passé simple : ${ans}.`);
+  } else {
+    const AX = V.e ? 'être' : 'avoir', OX = V.e ? 'avoir' : 'être';
+    add(VB[AX].pr[s.p] + ' ' + ppA(inf, s), `« ${VB[AX].pr[s.p]} ${ppA(inf, s)} » est au passé composé (auxiliaire au présent). Au plus-que-parfait, l’auxiliaire est à l’imparfait.`);
+    add(vforms(OX, 'im')[s.p] + ' ' + pp(inf), `Avec « ${inf} », les temps composés se forment avec l’auxiliaire « ${AX} ».`);
+    if (V.e) add(vforms('être', 'im')[s.p] + ' ' + ppA(inf, { f: !s.f, pl: s.pl }), `Avec « être », le participe passé s’accorde avec le sujet « ${s.t} » : ${gWhy(!!s.f, !!s.pl)}.`);
+    if (V.g === 1) add(vforms(AX, 'im')[s.p] + ' ' + inf, `Après l’auxiliaire, on écrit le participe passé « ${pp(inf)} », pas l’infinitif.`);
+  }
+  forms.forEach((f, k) => { if (f !== ans) add(f, `« ${f} » va avec « ${PRN[k]} », pas avec « ${s.t} ».`); });
+  const cands = [...w.keys()], pickW = shuffle(cands.slice(0, 3)).slice(0, 2);
+  const deQ = x => (vowel(x) ? 'd’' : 'de ') + `« ${x} »`;
+  const why = t === 'ps' ? `Passé simple ${deQ(inf)} : ${table(inf, 'ps')}.${V.v === 'ger' ? ' Devant -a, on garde le e : il mangea.' : V.v === 'cer' ? ' Devant -a, le c prend une cédille : il lança.' : ''}`
+    : `Plus-que-parfait = auxiliaire « ${V.e ? 'être' : 'avoir'} » à l’imparfait + participe passé « ${pp(inf)} ».${V.e ? ` Avec « être », le participe s’accorde avec le sujet : ${gWhy(!!s.f, !!s.pl)}.` : ''}`;
+  const hint = t === 'ps' ? (V.ps ? `« ${inf} » est irrégulier : il ${forms[2]}, ils ${forms[5]}.` : V.g === 2 ? 'Comme « finir » : -is, -is, -it, -îmes, -îtes, -irent.' : 'Verbes en -er : -ai, -as, -a, -âmes, -âtes, -èrent.') : `Auxiliaire « ${V.e ? 'être' : 'avoir'} » à l’imparfait (${V.e ? 'étais, était…' : 'avais, avait…'}) + participe passé.`;
+  const q = { kind: 'choices', ask: `Conjugue « ${inf} » ${TAU[t]} :`, prompt: `${cue ? `${TCUE[t]}, ${s.t}` : cap(s.t)} ${SLOT} ${V.x}.`, promptClass: 'sent', answer: ans, answerText: ans,
+    choices: shuffle([ans, ...pickW]).map(v => v === ans ? { v, html: v } : { v, html: v, why: w.get(v) }), log: `${s.t} … (${inf}, ${TAU[t]})`, explain: why, hint };
+  if (KBDOK(ans)) q.typeable = { ans, ask: `Écris le verbe « ${inf} » ${TAU[t]} :`, whys: Object.fromEntries(cands.map(c => [c, w.get(c)])) };
+  return q;
+}
+function qTense2(ts = ['im', 'ps', 'pc', 'pqp']) {
+  const t = pick(ts), inf = pick(Object.keys(VB).filter(v => CM2V(v) && v !== 'être' && v !== 'avoir')), s = pickSubj(inf, t, true, [0, 1, 3, 4]), form = vforms(inf, t, s)[s.p];
+  const ch = shuffle([t, ...shuffle(ts.filter(x => x !== t)).slice(0, 2)]).map(x => ({ v: x, html: NMT[x] }));
+  const W = { im: 'On voit la marque -ai- ou -i- de l’imparfait.', ps: 'C’est un temps simple du récit : marque -a-, -i-, -u- ou -in- (il chanta, il finit, il voulut, il vint).', pc: 'Auxiliaire au présent + participe passé.', pqp: 'Auxiliaire à l’imparfait + participe passé : c’est le plus-que-parfait.' };
+  return { kind: 'choices', ask: 'À quel temps est conjugué le verbe ?', prompt: `${cap(withSubj(s.t, form))} ${VB[inf].x}.`, promptClass: 'sent', answer: t, answerText: NMT[t], choices: ch, log: `temps de « ${withSubj(s.t, form)} »`,
+    explain: `« ${withSubj(s.t, form)} » est ${TAU[t]}. ${W[t]}`, hint: 'Un seul mot ? C’est un temps simple. Deux mots (auxiliaire + participe) ? Regarde le temps de l’auxiliaire.' };
+}
+function qNeg3() {
+  const inf = pick(Object.keys(VB).filter(v => CM2V(v) && !VB[v].e && v !== 'être' && v !== 'pouvoir')), s = pickSubj(inf, 'pqp', true, [0, 1, 3, 4]), aux = vforms('avoir', 'im')[s.p], P = pp(inf), x = VB[inf].x, S = cap(s.t);
+  const xn = x.replace(/^(un|une|des) (.+)$/, (_, d, w) => (vowel(w) ? 'd’' : 'de ') + w), ans = `${S} n’${aux} pas ${P} ${xn}.`;
+  return { kind: 'choices', ask: 'Quelle phrase est la forme négative de :', prompt: `${S} ${aux} ${P} ${x}.`, promptClass: 'sent', answer: ans, answerText: ans,
+    choices: shuffle([ans, `${S} n’${aux} ${P} pas ${xn}.`, `${S} ${aux} pas ${P} ${xn}.`]).map(v => ({ v, html: v })), log: `négation : ${s.t} ${aux} ${P}`,
+    explain: `Aux temps composés, « ne… pas » entoure l’auxiliaire : ${ans}${xn !== x ? ` Après « pas », « ${x.split(' ')[0]} » devient « ${xn.startsWith('d’') ? 'd’' : 'de'} ».` : ''}`, hint: '« ne » avant l’auxiliaire, « pas » juste après lui.' };
+}
+// Marque du temps et marque de la personne
+const MARKS = [['nous chantions', 'de l’imparfait', '-i-', '-ons', '-r-', 'chant-i-ons'], ['ils jouaient', 'de l’imparfait', '-ai-', '-ent', '-i-', 'jou-ai-ent'], ['vous finissiez', 'de l’imparfait', '-i-', '-ez', '-r-', 'finiss-i-ez'],
+  ['nous chanterons', 'du futur', '-r-', '-ons', '-i-', 'chante-r-ons'], ['vous prendrez', 'du futur', '-r-', '-ez', '-ai-', 'prend-r-ez'], ['ils chantèrent', 'du passé simple', '-è-', '-rent', '-ai-', 'chant-è-rent'],
+  ['ils finirent', 'du passé simple', '-i-', '-rent', '-r-', 'fin-i-rent'], ['ils voulurent', 'du passé simple', '-u-', '-rent', '-ai-', 'voul-u-rent'], ['ils vinrent', 'du passé simple', '-in-', '-rent', '-u-', 'v-in-rent'],
+  ['nous chantâmes', 'du passé simple', '-â-', '-mes', '-ai-', 'chant-â-mes'], ['elles prirent', 'du passé simple', '-i-', '-rent', '-u-', 'pr-i-rent'], ['ils purent', 'du passé simple', '-u-', '-rent', '-i-', 'p-u-rent']];
+function qMarkT() {
+  const [f, tn, m, pm, o, cut] = pick(MARKS);
+  return { kind: 'choices', ask: `Dans « ${f} », quelle est la marque ${tn} ?`, prompt: '', answer: m, answerText: m, choices: shuffle([m, pm, o]).map(v => ({ v, html: v, ...(v === pm ? { why: `« ${pm} » est la marque de la personne, pas celle du temps.` } : {}) })), log: `marque ${tn} : ${f}`,
+    explain: `${cut} : « ${m} » est la marque ${tn}, « ${pm} » celle de la personne.`, hint: 'La marque du temps se place entre le radical et la marque de la personne.' };
+}
+function cm2Conjug(l) {
+  const r = Math.random(), V = Object.keys(VB).filter(CM2V), G12 = V.filter(v => VB[v].g === 1 || VB[v].g === 2).concat(['être', 'avoir']);
+  if (l === 1) return r < .25 ? qMarkT() : qFill(pick(V), pick(['pr', 'im', 'fu', 'pc']), true, Math.random() < .5);
+  if (l === 2) return qFill2(pick(G12), 'ps');
+  if (l === 3) return r < .25 ? qMarkT() : qFill2(pick(IRR8.concat(['être', 'avoir'])), 'ps');
+  if (l === 4) return qFill2(pick(Math.random() < .45 ? V.filter(v => VB[v].e) : V), 'pqp');
+  return r < .3 ? qTense2() : r < .45 ? qNeg3() : r < .7 ? qFill2(pick(V), 'ps', Math.random() < .5) : qFill2(pick(V), 'pqp', Math.random() < .5);
+}
+
+// Grammaire : phrases écrites à la main, le groupe étudié est entre accolades et apparaît surligné
+const mkG = s => s.replace(/\{([^}]+)\}/g, (_, x) => `<mark>${esc(x)}</mark>`);
+const plain = s => s.replace(/[{}]/g, '');
+const FN = { a: 'attribut du sujet', d: 'complément d’objet direct', i: 'complément d’objet indirect', c: 'complément circonstanciel', n: 'complément du nom', e: 'épithète' };
+const G6 = {
+  inv: [['Sur le pont {dansent} les pirates.', 'les pirates', ['le pont', 'Sur le pont']], ['Où {est} caché le trésor ?', 'le trésor', ['Où', 'caché']], ['Dans la cale {dorment} trois rats.', 'trois rats', ['la cale', 'Dans la cale']],
+    ['Au loin {apparaît} une île.', 'une île', ['Au loin', 'loin']], ['« Terre ! » {crie} la vigie.', 'la vigie', ['Terre']], ['Que {cherchent} ces marins ?', 'ces marins', ['Que']],
+    ['{Veux}-tu venir avec nous ?', 'tu', ['nous', 'venir']], ['Quand {partirons}-nous ?', 'nous', ['Quand']], ['Derrière le rocher {nage} un crabe.', 'un crabe', ['le rocher', 'Derrière le rocher']],
+    ['Sur la plage {brillent} des coquillages.', 'des coquillages', ['la plage', 'Sur la plage']], ['Dans la cuisine {chantent} Gros-Louis et Pi.', 'Gros-Louis et Pi', ['la cuisine', 'Pi']], ['À quelle heure {arrive} le navire ?', 'le navire', ['À quelle heure', 'quelle heure']]],
+  att: [['Le capitaine est {furieux}.', 'a', 'Après le verbe « être », « furieux » dit comment est le sujet : c’est un attribut du sujet.'], ['Le capitaine regarde {la carte}.', 'd', '« la carte » est ce que regarde le capitaine, sans préposition : c’est un COD. Le capitaine n’est pas la carte.'],
+    ['Lila deviendra {une grande navigatrice}.', 'a', 'Avec « devenir », le groupe désigne la même personne que le sujet (Lila = une grande navigatrice) : c’est un attribut du sujet.'], ['Lila dessine {une grande carte}.', 'd', 'Lila n’est pas la carte : « une grande carte » est ce qu’elle dessine, c’est un COD.'],
+    ['La mer semble {calme}.', 'a', '« Sembler » est un verbe d’état : « calme » dit comment est la mer. C’est un attribut du sujet.'], ['Les pirates restent {silencieux}.', 'a', '« Rester » est un verbe d’état : « silencieux » dit comment sont les pirates.'],
+    ['Ce perroquet est {un vrai bavard}.', 'a', 'Le perroquet = un vrai bavard : après « être », c’est un attribut du sujet.'], ['Le cuisinier prépare {un ragoût}.', 'd', 'Le cuisinier n’est pas le ragoût : c’est ce qu’il prépare, un COD.'],
+    ['Tom paraît {fatigué}.', 'a', '« Paraître » est un verbe d’état : « fatigué » dit comment est Tom.'], ['Tom porte {un chapeau noir}.', 'd', 'Tom n’est pas le chapeau : c’est ce qu’il porte, un COD.']],
+  coi: [['Tom obéit {au capitaine}.', 'i', 'On dit « obéir à quelqu’un » : le complément est relié au verbe par une préposition (au = à le). C’est un COI.'], ['Tom écoute {le capitaine}.', 'd', 'Aucune préposition entre le verbe et son complément : c’est un COD.'],
+    ['Lila parle {à Pi}.', 'i', 'On dit « parler à » : le complément est introduit par « à ». C’est un COI.'], ['Le mousse pense {à son trésor}.', 'i', 'On dit « penser à » : c’est un COI.'],
+    ['Les marins rêvent {de la terre}.', 'i', 'On dit « rêver de » : le complément est introduit par « de ». C’est un COI.'], ['Pi mange {des graines}.', 'd', '« des » est ici un déterminant, pas une préposition : « des graines » est un COD.'],
+    ['Zoé écrit {au capitaine}.', 'i', 'On écrit « à quelqu’un » : c’est un COI.'], ['Zoé écrit {une lettre}.', 'd', 'On écrit « quelque chose » : sans préposition, c’est un COD.'], ['Le capitaine doute {de cette histoire}.', 'i', 'On dit « douter de » : c’est un COI.'], ['Lila cherche {sa boussole}.', 'd', 'Sans préposition, juste après le verbe : c’est un COD.']],
+  cc: [['{À l’aube}, le navire quitte le port.', 'le temps'], ['Le navire reste au port {à cause de la tempête}.', 'la cause'], ['Les rats dorment {dans la cale}.', 'le lieu'], ['{Pendant la nuit}, la vigie surveille la mer.', 'le temps'],
+    ['{Sous le grand palmier}, Lila creuse.', 'le lieu'], ['Tom tremble {parce qu’il a froid}.', 'la cause'], ['{Grâce au vent}, le navire avance vite.', 'la cause'], ['{Depuis trois jours}, la mer est calme.', 'le temps'],
+    ['Le mousse est puni {parce qu’il a menti}.', 'la cause'], ['Le trésor est enterré {sur l’île}.', 'le lieu'], ['{Chaque soir}, Augustin allume le phare.', 'le temps'], ['Pi s’est caché {derrière les tonneaux}.', 'le lieu']],
+  cn: [['Le coffre {du capitaine} est lourd.', 'n', '« du capitaine » complète le nom « coffre » : c’est un complément du nom, introduit par une préposition (du = de le).'], ['Lila porte une veste {en cuir}.', 'n', '« en cuir » précise le nom « veste » : complément du nom introduit par la préposition « en ».'],
+    ['La carte {au trésor} a disparu.', 'n', '« au trésor » précise le nom « carte » : c’est un complément du nom.'], ['Une {vieille} carte traîne sur la table.', 'e', '« vieille » est placé à côté du nom « carte », sans verbe entre eux : c’est un adjectif épithète.'],
+    ['Cette carte est {vieille}.', 'a', '« vieille » est relié au sujet par le verbe « être » : c’est un attribut du sujet.'], ['Le navire {aux voiles rouges} approche.', 'n', '« aux voiles rouges » précise le nom « navire » : complément du nom.'],
+    ['Pi adore les graines {de tournesol}.', 'n', '« de tournesol » précise le nom « graines » : complément du nom.'], ['Le {grand} mât craque.', 'e', '« grand » est collé au nom « mât » : épithète.'], ['Le mât est {grand}.', 'a', '« grand » est relié au sujet par « être » : attribut du sujet.'],
+    ['Un perroquet {bavard} vit à bord.', 'e', '« bavard » est juste à côté du nom « perroquet » : épithète.']],
+  nat: [['Le trésor est caché {sous} le sable.', 'une préposition'], ['Pi chante {quand} il a faim.', 'une conjonction de subordination'], ['Le capitaine {les} regarde.', 'un pronom personnel'], ['Tom {lui} donne la carte.', 'un pronom personnel'],
+    ['Nous partirons {avant} l’aube.', 'une préposition'], ['Le navire attend {que} la marée monte.', 'une conjonction de subordination'], ['Gros-Louis cuisine {avec} soin.', 'une préposition'], ['La vigie {nous} appelle.', 'un pronom personnel'],
+    ['Pi dort {mais} Tom veille.', 'une conjonction de coordination'], ['{Si} le vent tombe, nous ramerons.', 'une conjonction de subordination'], ['Lila range la carte {dans} le coffre.', 'une préposition'], ['Tom sourit {car} il a gagné.', 'une conjonction de coordination']],
+  phr: [['Le navire quitte le port à l’aube.', 1], ['Le navire quitte le port quand le soleil se lève.', 2], ['Lila grimpe au mât et elle surveille la mer.', 2], ['Pendant la tempête, les marins courageux replient les voiles.', 1],
+    ['Tom rame, Lila guette, Pi dort.', 3], ['Le capitaine pense que le trésor est caché sur cette île.', 2], ['Les pirates affamés dévorent le repas de Gros-Louis.', 1], ['Si le vent se lève, nous partirons.', 2],
+    ['Pour trouver le trésor, il faut suivre la carte.', 1], ['Le perroquet que Lila a dressé parle trois langues.', 2], ['À marée basse, les crabes sortent du sable.', 1], ['Gros-Louis chante pendant qu’il épluche les pommes de terre.', 2]] };
+const NATX = { 'une préposition': 'Une préposition introduit un groupe de mots : à, dans, par, pour, sur, sous, avec, avant…', 'une conjonction de subordination': 'Une conjonction de subordination relie une proposition à une autre : quand, que, si, parce que, lorsque…',
+  'un pronom personnel': 'Ici, c’est un pronom personnel complément : il remplace un nom placé ailleurs (le, la, les, lui, leur, nous…).', 'une conjonction de coordination': 'Une conjonction de coordination relie deux mots ou deux propositions : mais, ou, et, or, ni, car.' };
+function qG6(cat) {
+  const L = G6[cat];
+  if (cat === 'inv') { const [s, a, w] = pick(L), v = s.match(/\{([^}]+)\}/)[1];
+    return { kind: 'choices', ask: 'Quel est le sujet du verbe surligné ?', prompt: mkG(s), promptClass: 'sent', answer: a, answerText: a, choices: shuffle([a, ...w]).map(x => ({ v: x, html: esc(x) })), log: `sujet inversé : ${plain(s)}`,
+      explain: `« ${a} » est le sujet du verbe « ${v} », placé après lui : c’est un sujet inversé. Le verbe s’accorde quand même avec lui.`, hint: 'Pose la question « Qui est-ce qui… ? » ou « Qu’est-ce qui… ? » : le sujet peut se trouver après le verbe.' }; }
+  if (cat === 'cc') { const [s, a] = pick(L), o = ['le temps', 'le lieu', 'la cause'];
+    return { kind: 'choices', ask: 'Le complément circonstanciel surligné indique :', prompt: mkG(s), promptClass: 'sent', answer: a, answerText: a, choices: o.map(x => ({ v: x, html: x })), log: `CC : ${plain(s)}`,
+      explain: `« ${s.match(/\{([^}]+)\}/)[1]} » répond à la question « ${a === 'le temps' ? 'quand ?' : a === 'le lieu' ? 'où ?' : 'pourquoi ?'} » : c’est un complément circonstanciel de ${a.replace(/^l[ea] /, '')}. On peut le déplacer ou le supprimer.`, hint: 'Quand ? → temps. Où ? → lieu. Pourquoi ? → cause.' }; }
+  if (cat === 'nat') { const [s, a] = pick(L), o = shuffle(Object.keys(NATX).filter(x => x !== a)).slice(0, 2);
+    return { kind: 'choices', ask: 'Quelle est la nature du mot surligné ?', prompt: mkG(s), promptClass: 'sent', answer: a, answerText: a, choices: shuffle([a, ...o]).map(x => ({ v: x, html: x })), log: `nature : ${plain(s)}`, explain: `« ${s.match(/\{([^}]+)\}/)[1]} » est ${a}. ${NATX[a]}`, hint: 'Préposition : introduit un groupe. Conjonction de subordination : introduit une proposition. Pronom : remplace un nom.' }; }
+  if (cat === 'phr') { const [s, n] = pick(L), simple = n === 1, a = simple ? 'une phrase simple' : 'une phrase complexe';
+    if (Math.random() < .5) return { kind: 'choices', ask: 'Combien cette phrase contient-elle de verbes conjugués ?', prompt: s, promptClass: 'sent', answer: n, answerText: String(n), choices: [1, 2, 3].map(v => ({ v, html: String(v) })), log: `verbes conjugués : ${s}`,
+      explain: `Il y a ${n} verbe${n > 1 ? 's' : ''} conjugué${n > 1 ? 's' : ''}${/trouver|suivre/.test(s) ? ' : « trouver » et « suivre » sont à l’infinitif, ils ne comptent pas' : ''}. ${simple ? 'Un seul verbe conjugué : c’est une phrase simple.' : 'Plusieurs verbes conjugués : c’est une phrase complexe.'}`, hint: 'Un verbe conjugué change quand on change le temps. L’infinitif (manger, trouver) ne compte pas.' };
+    return { kind: 'choices', ask: 'Cette phrase est :', prompt: s, promptClass: 'sent', answer: a, answerText: a, choices: ['une phrase simple', 'une phrase complexe'].map(x => ({ v: x, html: x })), log: `simple ou complexe : ${s}`,
+      explain: `${n} verbe${n > 1 ? 's' : ''} conjugué${n > 1 ? 's' : ''} : ${simple ? 'c’est une phrase simple (une seule proposition).' : `c’est une phrase complexe (${n} propositions).`}`, hint: 'Compte les verbes conjugués : un seul, phrase simple ; plusieurs, phrase complexe.' }; }
+  const [s, k, e] = pick(L), pool = cat === 'att' ? ['a', 'd', 'c'] : cat === 'coi' ? ['i', 'd', 'c'] : ['n', 'e', 'a'], a = FN[k];
+  return { kind: 'choices', ask: 'Quelle est la fonction du groupe surligné ?', prompt: mkG(s), promptClass: 'sent', answer: a, answerText: a, choices: pool.map(x => ({ v: FN[x], html: FN[x] })), log: `fonction : ${plain(s)}`, explain: e,
+    hint: cat === 'att' ? 'Après être, sembler, devenir, paraître, rester : le groupe dit comment est le sujet (attribut). Sinon, c’est ce que fait le sujet (COD).' : cat === 'coi' ? 'Le complément est-il introduit par une préposition (à, de) ? Alors c’est un COI.' : 'Complément du nom : il précise un nom, avec une préposition. Épithète : adjectif collé au nom. Attribut : relié au sujet par un verbe d’état.' };
+}
+function cm2Gram(l) {
+  const r = Math.random();
+  if (l === 1) return r < .6 ? qG6('inv') : qNature(['N', 'Np', 'V', 'A', 'D', 'Pr', 'Adv', 'Cj', 'P']);
+  if (l === 2) return qG6('att');
+  if (l === 3) return r < .55 ? qG6('coi') : qG6('cc');
+  if (l === 4) return r < .55 ? qG6('cn') : qG6('nat');
+  return r < .35 ? qG6('phr') : qG6(pick(['inv', 'att', 'coi', 'cc', 'cn', 'nat']));
+}
+
+// Accords : sujet inversé, attribut du sujet, participe passé avec être et avec avoir
+const SVI = [['Sur le pont ___ les pirates.', 'danser', 'dansent', ['danse', 'danses'], 'les pirates'], ['Dans la cale ___ les rats.', 'dormir', 'dorment', ['dort', 'dors'], 'les rats'],
+  ['Où ___ les cartes du capitaine ?', 'être', 'sont', ['est', 'es'], 'les cartes du capitaine'], ['Que ___ les mouettes ?', 'crier', 'crient', ['crie', 'cries'], 'les mouettes'],
+  ['Dans la grotte ___ un trésor immense.', 'briller', 'brille', ['brillent', 'brilles'], 'un trésor immense'], ['Au sommet du mât ___ la vigie.', 'veiller', 'veille', ['veillent', 'veilles'], 'la vigie'],
+  ['« Terre ! » ___ les matelots.', 'crier', 'crient', ['crie', 'cries'], 'les matelots'], ['Derrière les rochers ___ deux requins.', 'nager', 'nagent', ['nage', 'nages'], 'deux requins'],
+  ['Quand ___ le navire de Crochet-d’Argent ?', 'arriver', 'arrive', ['arrivent', 'arrives'], 'le navire de Crochet-d’Argent'], ['Sur la plage ___ des coquillages nacrés.', 'briller', 'brillent', ['brille', 'brilles'], 'des coquillages nacrés'],
+  ['Dans la cuisine ___ Gros-Louis et Pi.', 'chanter', 'chantent', ['chante', 'chantes'], 'Gros-Louis et Pi'], ['Que ___ le capitaine ?', 'chercher', 'cherche', ['cherchent', 'cherches'], 'le capitaine']];
+function qSVI() {
+  const [t, inf, a, w, subj] = pick(SVI), pl = /(ent|ont)$/.test(a);
+  return { kind: 'choices', ask: `Accorde le verbe « ${inf} » au présent :`, prompt: t.replace('___', SLOT), promptClass: 'sent', answer: a, answerText: t.replace('___', a), choices: shuffle([a, ...w]).map(v => ({ v, html: v, ...(v !== a ? { why: `Le sujet est « ${subj} », placé après le verbe : il est au ${pl ? 'pluriel' : 'singulier'}.` } : {}) })), log: `sujet inversé : ${t}`,
+    explain: `Qui ${inf === 'être' ? 'est où' : 'fait l’action'} ? « ${subj} ». Le sujet est placé après le verbe, mais le verbe s’accorde quand même avec lui : ${pl ? 'pluriel' : 'singulier'}, on écrit « ${a} ».`, hint: 'Cherche le sujet : il peut être placé après le verbe.' };
+}
+const HUM = ['heureux', 'courageux', 'fier', 'gentil', 'peureux', 'sportif'];
+const ATTS = [['Les sirènes', 1, 1, HUM], ['Le capitaine', 0, 0, HUM], ['La mer', 1, 0, ['bleu', 'vert', 'noir']], ['Les vagues', 1, 1, ['blanc', 'noir']], ['Les pirates', 0, 1, HUM], ['Lila', 1, 0, HUM],
+  ['Les baleines', 1, 1, ['heureux', 'peureux', 'doux']], ['Le navire', 0, 0, ['neuf', 'ancien', 'léger', 'noir']], ['Tom et Lila', 0, 1, HUM], ['Les mouettes', 1, 1, ['blanc', 'peureux', 'vif']], ['Le perroquet', 0, 0, ['vert', 'heureux', 'fier', 'vif']]];
+const COP = [['être', 'est', 'sont'], ['sembler', 'semble', 'semblent'], ['devenir', 'devient', 'deviennent'], ['rester', 'reste', 'restent'], ['paraître', 'paraît', 'paraissent']];
+function qAttr() {
+  const S = pick(ATTS), adj = pick(S[3]), A = GNA.find(x => x[0] === adj);
+  const [nm, f, pl] = S, V = pick(COP), ans = A[pl ? (f ? 3 : 2) : f ? 1 : 0], forms = [...new Set(A.slice(0, 4))].filter(x => x !== ans), w = shuffle(forms).slice(0, 2);
+  if (w.length < 2) return qAttr();
+  return { kind: 'choices', ask: `Accorde l’adjectif « ${A[0]} » :`, prompt: `${nm} ${pl ? V[2] : V[1]} ${SLOT}.`, promptClass: 'sent', answer: ans, answerText: `${nm} ${pl ? V[2] : V[1]} ${ans}.`, choices: shuffle([ans, ...w]).map(v => ({ v, html: v })), log: `attribut : ${nm} ${pl ? V[2] : V[1]} … (${A[0]})`,
+    explain: `« ${ans} » est attribut du sujet « ${nm} » (verbe « ${V[0]} ») : il s’accorde avec le sujet, ${gWhy(!!f, !!pl)}${nm === 'Tom et Lila' ? ' (un garçon et une fille : masculin pluriel)' : ''}.${A[7] ? ' ' + A[7] : ''}`, hint: 'L’attribut du sujet s’accorde avec le sujet, comme un adjectif épithète.' };
+}
+// Participe passé avec avoir : pas d'accord avec le sujet ; accord avec le COD seulement s'il est placé avant (pronom le, la, les)
+const PPN = [['la carte', 1, 0], ['les cartes', 1, 1], ['le coffre', 0, 0], ['les coffres', 0, 1], ['la boussole', 1, 0], ['les voiles', 1, 1], ['les tonneaux', 0, 1], ['la clé', 1, 0], ['les perles', 1, 1], ['le trésor', 0, 0]];
+const PPV = ['trouver', 'chercher', 'ranger', 'regarder', 'nettoyer', 'acheter', 'choisir', 'remplir'];
+function qPPavoir() {
+  const [nm, f, pl] = pick(PPN), inf = pick(PPV.filter(v => !(['remplir'].includes(v) && !/tonneaux|coffre/.test(nm)))), base = pp(inf), S = pick([['Lila', 'a'], ['Les pirates', 'ont'], ['Le capitaine', 'a'], ['Tom et Zoé', 'ont'], ['Les sirènes', 'ont']]), t = pick(['before', 'after', 'subj']);
+  const agr = base + (f ? 'e' : '') + (pl ? 's' : ''), opts4 = [base, base + 'e', base + 's', base + 'es'];
+  let prompt, ans, ex;
+  if (t === 'before') { const pr = pl ? 'les ' : 'l’'; prompt = `${cap(nm)} ? ${S[0]} ${pr}${S[1]} ${SLOT}.`; ans = agr; ex = `Le COD « ${pl ? 'les' : 'l’'} » remplace « ${nm} » (${gWhy(!!f, !!pl)}) et il est placé avant le verbe : le participe passé s’accorde avec lui. On écrit « ${ans} ».`; }
+  else if (t === 'after') { prompt = `${S[0]} ${S[1]} ${SLOT} ${nm}.`; ans = base; ex = `Avec « avoir », le participe passé ne s’accorde pas avec le sujet. Le COD « ${nm} » est placé après le verbe : pas d’accord. On écrit « ${ans} ».`; }
+  else { prompt = `${S[0]} ${S[1]} ${SLOT} toute la journée.`; ans = base; ex = `Avec « avoir », le participe passé ne s’accorde jamais avec le sujet « ${S[0]} ». On écrit « ${ans} ».`;
+    if (!['chercher', 'regarder', 'nettoyer', 'ranger'].includes(inf)) return qPPavoir(); }
+  const w = shuffle(opts4.filter(x => x !== ans)).slice(0, 2);
+  return { kind: 'choices', ask: `Accorde le participe passé de « ${inf} » :`, prompt, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, ...w]).map(v => ({ v, html: v })), log: `participe passé avec avoir : ${plain(prompt.replace(SLOT, '…'))}`,
+    explain: ex, hint: 'Avec « avoir » : on n’accorde jamais avec le sujet. On accorde avec le COD seulement s’il est placé avant le verbe.' };
+}
+function cm2Accords(l) {
+  const r = Math.random();
+  if (l === 1) return r < .6 ? qGN(true) : qPlur(true);
+  if (l === 2) return r < .75 ? qSVI() : qSV(true);
+  if (l === 3) return qAttr();
+  if (l === 4) return r < .5 ? qPPavoir() : qPPetre();
+  return r < .3 ? qHomo(true, false, true) : r < .5 ? qPPavoir() : r < .65 ? qAttr() : r < .8 ? qSVI() : r < .9 ? qPPetre() : qGN(true);
+}
+
+// Vocabulaire
+Object.assign(VOC, {
+  dic6: [['Dans le dictionnaire, « v. » veut dire :', 'verbe', ['voyelle', 'vieux'], 'Le dictionnaire indique la classe du mot : v. = verbe.'], ['Dans le dictionnaire, « adj. » veut dire :', 'adjectif', ['adverbe', 'adresse'], 'adj. = adjectif ; adv. = adverbe.'],
+    ['Dans le dictionnaire, « adv. » veut dire :', 'adverbe', ['adjectif', 'avant'], 'adv. = adverbe ; adj. = adjectif.'], ['Dans le dictionnaire, « n. f. » veut dire :', 'nom féminin', ['nombre final', 'nom familier'], 'n. = nom, f. = féminin.'],
+    ['Pour chercher « navigua » dans le dictionnaire, on cherche :', 'naviguer', ['navigua', 'navigation'], 'Un verbe se cherche à l’infinitif.'], ['Pour chercher « courageuses » dans le dictionnaire, on cherche :', 'courageux', ['courageuse', 'courage'], 'Un adjectif se cherche au masculin singulier.'],
+    ['Pour chercher « chevaux » dans le dictionnaire, on cherche :', 'cheval', ['chevaux', 'chevalier'], 'Un nom se cherche au singulier.'], ['Pour chercher « prirent » dans le dictionnaire, on cherche :', 'prendre', ['prir', 'prier'], '« prirent » est le verbe « prendre » au passé simple : on le cherche à l’infinitif.'],
+    ['Les mots repères en haut d’une page de dictionnaire indiquent :', 'le premier et le dernier mot de la page', ['les mots les plus difficiles', 'le titre du livre'], 'Ils aident à savoir très vite si le mot cherché est sur la page.'],
+    ['Entre les mots repères « marin » et « masque », on trouvera :', 'marteau', ['marchand', 'matelot'], 'marin < marteau < masque. « marchand » vient avant « marin », « matelot » après « masque ».']],
+  pol6: [['Dans « Lila a le sens de l’orientation », « sens » veut dire :', 'une capacité à se repérer', ['une direction', 'une signification'], 'Le mot « sens » est polysémique : direction, signification, capacité, organe des sens…'],
+    ['Dans « Le navire fait demi-tour et change de sens », « sens » veut dire :', 'direction', ['signification', 'goût'], 'Ici, « sens » veut dire « direction ».'], ['Dans « Ce mot a deux sens », « sens » veut dire :', 'signification', ['direction', 'odorat'], 'Ici, « sens » veut dire « signification ».'],
+    ['Dans « Au milieu de la nuit », « milieu » veut dire :', 'le moment central', ['l’endroit où vit un animal', 'le centre d’un objet'], 'Le mot « milieu » a plusieurs sens selon la phrase.'],
+    ['Dans « Le requin vit dans un milieu marin », « milieu » veut dire :', 'l’environnement où il vit', ['le centre', 'le moment central'], 'Ici, le milieu est l’endroit où vit un animal.'],
+    ['Dans « Tom a marqué un point », « point » veut dire :', 'une unité pour compter le score', ['un signe de ponctuation', 'un endroit précis'], 'Le mot « point » est polysémique.'],
+    ['Dans « Mets un point à la fin de la phrase », « point » veut dire :', 'un signe de ponctuation', ['une unité de score', 'un endroit'], 'Ici, c’est le signe qui termine une phrase.'],
+    ['Dans « Rendez-vous au point de départ », « point » veut dire :', 'un endroit précis', ['un signe de ponctuation', 'une unité de score'], 'Ici, « point » désigne un lieu.'],
+    ['« Jouer d’un instrument » veut dire :', 'faire de la musique', ['faire semblant', 'parier de l’argent'], 'Le verbe « jouer » change de sens selon le mot qui le suit : jouer à, jouer de, jouer sur…'],
+    ['« Jouer sur les mots » veut dire :', 's’amuser avec le double sens des mots', ['écrire sur un jeu', 'marcher sur des lettres'], 'Jouer sur les mots, c’est utiliser leurs différents sens.'],
+    ['Dans « Le capitaine tient la barre », « barre » veut dire :', 'le gouvernail du navire', ['un trait', 'une barre de chocolat'], 'Sur un bateau, la barre sert à diriger le navire.']],
+  mor6: [['Un animal « carnivore » :', 'mange de la viande', ['mange des plantes', 'mange de tout'], 'L’élément -vore veut dire « qui mange » : carni- (la chair, la viande) + -vore.'], ['Un animal « herbivore » :', 'mange des plantes', ['mange de la viande', 'ne mange rien'], 'herbi- (l’herbe) + -vore (qui mange).'],
+    ['Un animal « omnivore » :', 'mange de tout', ['mange seulement des fruits', 'ne mange que la nuit'], 'omni- veut dire « tout » : omnivore = qui mange de tout.'], ['Un produit « insecticide » sert à :', 'tuer les insectes', ['nourrir les insectes', 'attirer les insectes'], 'L’élément -cide veut dire « qui tue » : insecticide, pesticide.'],
+    ['Un « frugivore » mange surtout :', 'des fruits', ['des poissons', 'des insectes'], 'frugi- (les fruits) + -vore (qui mange).'], ['Que veut dire le préfixe « sous- » dans « sous-marin » ?', 'en dessous', ['à côté', 'au-dessus'], 'Un sous-marin navigue sous la mer.'],
+    ['Le mot « navigable » veut dire :', 'où l’on peut naviguer', ['qui navigue', 'qui a fait naufrage'], 'Le suffixe -able veut dire « que l’on peut… » : une rivière navigable.'], ['Le mot « inoubliable » veut dire :', 'qu’on ne peut pas oublier', ['qu’on oublie vite', 'qu’on a déjà oublié'], 'in- (le contraire) + oubli + -able (que l’on peut).'],
+    ['Quel est le radical commun à « navire », « naviguer », « navigation » ?', 'nav', ['ation', 'vire'], 'Nav- vient d’un mot latin qui veut dire « navire ».'], ['Un « tricorne » est un chapeau qui a :', 'trois cornes', ['trois couleurs', 'trois plumes'], 'Le préfixe tri- veut dire « trois » : tricorne, tricycle, triangle.'],
+    ['Un « bicorne » est un chapeau qui a :', 'deux cornes', ['deux couleurs', 'deux rubans'], 'Le préfixe bi- veut dire « deux » : bicorne, bicyclette.']],
+  syn6: [['Quel mot a le même sens que « naviguer » ?', 'voguer', ['nager', 'voler'], 'Naviguer et voguer sont deux verbes synonymes.'], ['Quel est le contraire du verbe « embarquer » ?', 'débarquer', ['naviguer', 'accoster'], 'Embarquer et débarquer sont deux verbes de sens contraire.'],
+    ['Quel est l’antonyme du nom « lenteur » ?', 'rapidité', ['rapide', 'lent'], 'Lenteur est un nom : son antonyme est un nom aussi (rapidité), pas un adjectif.'], ['Quel est le synonyme du nom « courage » ?', 'bravoure', ['courageux', 'peur'], 'Courage et bravoure sont deux noms de même sens.'],
+    ['Quel est le synonyme de l’adjectif « immense » ?', 'gigantesque', ['immensité', 'minuscule'], 'Immense et gigantesque sont deux adjectifs. « Immensité » est un nom.'], ['Quel est l’antonyme de l’adverbe « prudemment » ?', 'imprudemment', ['prudent', 'prudence'], 'Un adverbe a pour antonyme un adverbe : prudemment / imprudemment.'],
+    ['Sur un navire, le côté gauche s’appelle :', 'bâbord', ['tribord', 'la poupe'], 'Vocabulaire marin : bâbord à gauche, tribord à droite, en regardant vers l’avant.'], ['L’avant d’un navire s’appelle :', 'la proue', ['la poupe', 'la cale'], 'La proue est à l’avant, la poupe à l’arrière.'],
+    ['L’arrière d’un navire s’appelle :', 'la poupe', ['la proue', 'le pont'], 'La poupe est à l’arrière, la proue à l’avant.'], ['Le côté droit d’un navire s’appelle :', 'tribord', ['bâbord', 'la proue'], 'Tribord à droite, bâbord à gauche.'],
+    ['Quel verbe est le plus précis dans « Le requin ___ sa proie » ?', 'dévore', ['fait', 'a'], '« Dévorer » est plus précis que « faire » ou « avoir » : il dit exactement ce que fait le requin.']],
+});
+function cm2Vocab(l) {
+  const r = Math.random();
+  if (l === 1) return r < .4 ? qAlpha(true) : qBank('dic6');
+  if (l === 2) return qBank('pol6');
+  if (l === 3) return qBank('mor6');
+  if (l === 4) return qBank('syn6');
+  return r < .25 ? qBank('pol6') : r < .5 ? qBank('mor6') : r < .7 ? qBank('syn6') : r < .85 ? qBank('gen4') : qBank('fig4');
 }
 
 /* ================= Français : lecture et compréhension ================= */
@@ -2671,6 +3149,112 @@ const TXT = {
         ['e', 'Que voulaient faire les marins sur l’île ?', 'faire du feu et cuire du poisson', ['chercher un trésor', 'construire une cabane'], 'Le texte dit : « pour faire du feu et cuire du poisson ».']] },
     ],
   },
+  cm2: {
+    m: [
+      { t: 'Le message', x: 'Au petit matin, une mouette s’est posée sur le bastingage avec un rouleau de papier attaché à la patte. Lila l’a détaché avec précaution. Le message ne comportait que trois mots, écrits à l’encre rouge : « Attention au brouillard ! »', q: [
+        ['e', 'Où la mouette s’est-elle posée ?', 'sur le bastingage', ['sur le grand mât', 'sur l’épaule de Lila'], 'Le texte dit : « une mouette s’est posée sur le bastingage ».'],
+        ['e', 'Combien de mots contenait le message ?', 'trois', ['deux', 'dix'], 'Le texte dit : « Le message ne comportait que trois mots ».'],
+        ['a', 'Dans « Lila l’a détaché », « l’ » désigne :', 'le rouleau de papier', ['la mouette', 'le bastingage'], 'Lila détache le rouleau de papier attaché à la patte de la mouette.'],
+        ['i', 'Que conseille le message ?', 'd’être prudent à cause du brouillard', ['de partir le plus vite possible', 'de nourrir la mouette'], 'Le message met en garde : le brouillard est un danger, il faut être prudent.']] },
+      { t: 'L’eau douce', x: 'Il ne reste que deux tonneaux d’eau douce dans la cale. Le capitaine a décidé que chaque marin n’en boirait plus qu’un gobelet le matin et un le soir. Si la pluie ne tombe pas d’ici trois jours, le Fier Calcul devra changer de cap pour rejoindre l’île la plus proche.', q: [
+        ['e', 'Combien de tonneaux d’eau douce reste-t-il ?', 'deux', ['trois', 'un seul'], 'Le texte dit : « Il ne reste que deux tonneaux d’eau douce ».'],
+        ['i', 'Pourquoi le capitaine limite-t-il l’eau de chaque marin ?', 'pour que la réserve dure plus longtemps', ['parce que l’eau est sale', 'pour punir l’équipage'], 'Il reste peu d’eau : en buvant moins, on la fait durer.'],
+        ['i', 'Pourquoi le navire pourrait-il changer de cap ?', 'pour trouver de l’eau douce sur une île', ['pour fuir une tempête', 'pour chercher un trésor'], 'S’il ne pleut pas, il faudra aller chercher de l’eau sur l’île la plus proche.']] },
+      { t: 'La marmite', x: 'Gros-Louis a fabriqué une marmite qui ne se renverse jamais, même quand le navire tangue. Il l’a suspendue à des cordes, comme une balançoire. Depuis, plus une goutte de soupe ne tombe sur le plancher de la cuisine.', q: [
+        ['e', 'Comment Gros-Louis a-t-il installé sa marmite ?', 'suspendue à des cordes', ['clouée au plancher', 'posée sur un tonneau'], 'Le texte dit : « Il l’a suspendue à des cordes, comme une balançoire. »'],
+        ['i', 'Que se passait-il avant cette invention ?', 'La soupe se renversait quand le navire bougeait.', ['La soupe était froide.', 'Gros-Louis ne faisait jamais de soupe.'], '« Depuis, plus une goutte ne tombe » : avant, la soupe tombait sur le plancher.'],
+        ['v', 'Quand un navire « tangue », il :', 'se balance : l’avant et l’arrière montent et descendent tour à tour', ['coule', 's’arrête au port'], 'Sur les vagues, l’avant du navire monte pendant que l’arrière descend, puis l’inverse.']] },
+      { t: 'Le pari', x: 'Tom a parié avec Lila qu’il grimperait en haut du grand mât en moins d’une minute. Le perdant laverait les chaussettes du gagnant pendant une semaine. Tom est arrivé au sommet, essoufflé, juste avant que le sablier ne se vide.', q: [
+        ['e', 'En combien de temps Tom devait-il grimper ?', 'moins d’une minute', ['moins d’une heure', 'dix minutes'], 'Le texte dit : « en moins d’une minute ».'],
+        ['i', 'Qui a gagné le pari ?', 'Tom', ['Lila', 'personne'], 'Tom est arrivé avant que le sablier ne se vide : il a gagné.'],
+        ['i', 'Que va devoir faire Lila ?', 'laver les chaussettes de Tom', ['grimper au mât', 'laver ses propres chaussettes'], 'Tom a gagné le pari : la perdante, Lila, lavera les chaussettes du gagnant pendant une semaine.']] },
+      { t: 'Où est Pi ?', x: 'Ce matin, Pi n’était pas sur son perchoir. L’équipage l’a cherché dans toutes les cabines, en vain. À midi, on l’a enfin retrouvé dans la cale, endormi dans un sac de graines de tournesol à moitié vide.', q: [
+        ['e', 'Où a-t-on retrouvé Pi ?', 'dans la cale', ['dans une cabine', 'en haut du mât'], 'Le texte dit : « on l’a enfin retrouvé dans la cale ».'],
+        ['i', 'Pourquoi le sac est-il à moitié vide ?', 'Pi a mangé une partie des graines.', ['Le sac était troué.', 'Gros-Louis a fait un gâteau.'], 'Pi dort dans le sac à moitié vide : il a mangé les graines.'],
+        ['v', '« En vain » veut dire :', 'sans résultat', ['très vite', 'en silence'], 'L’équipage a cherché dans les cabines, mais ne l’a pas trouvé.']] },
+    ],
+    p: [
+      { t: 'La lettre de Zoé', x: 'Cher capitaine Barbe-Grise,\nJe vous écris depuis le port de Saint-Malo, où mon père répare les voiles des navires. J’ai onze ans, je sais nager, faire douze nœuds différents et lire une carte marine. Je ne crains ni le mal de mer ni les araignées. Si vous acceptez de me prendre comme mousse, je vous promets d’être la plus travailleuse de votre équipage.\nZoé', q: [
+        ['g', 'Ce texte est :', 'une lettre', ['un poème', 'une recette'], 'Il commence par « Cher capitaine » et se termine par la signature de Zoé.'],
+        ['e', 'Quel est le métier du père de Zoé ?', 'Il répare les voiles des navires.', ['Il est capitaine.', 'Il vend des cartes marines.'], 'Le texte dit : « où mon père répare les voiles des navires ».'],
+        ['e', 'Combien de nœuds Zoé sait-elle faire ?', 'douze', ['onze', 'deux'], 'Le texte dit : « faire douze nœuds différents ». Onze, c’est son âge.'],
+        ['i', 'Pourquoi Zoé énumère-t-elle tout ce qu’elle sait faire ?', 'pour convaincre le capitaine de l’engager', ['pour se moquer des pirates', 'pour raconter ses vacances'], 'Elle veut devenir mousse : elle montre qu’elle en est capable.'],
+        ['a', 'Dans « je vous promets », « vous » désigne :', 'le capitaine Barbe-Grise', ['le père de Zoé', 'l’équipage'], 'Zoé écrit au capitaine : c’est à lui qu’elle fait sa promesse.'],
+        ['v', 'Dans ce texte, un « mousse » est :', 'un jeune apprenti marin', ['de l’écume de mer', 'un cuisinier'], 'Le mot « mousse » a plusieurs sens. Ici, c’est un enfant qui apprend le métier de marin.']] },
+      { t: 'Les coraux', x: 'Les coraux ressemblent à des plantes ou à des pierres. Pourtant, ce sont des animaux ! Les coraux des récifs vivent en colonies de milliers de minuscules polypes qui fabriquent un squelette de calcaire. En s’accumulant pendant des milliers d’années, ces squelettes forment d’immenses récifs, qui abritent une grande partie des poissons des mers chaudes. Aujourd’hui, le réchauffement des océans menace les coraux : quand l’eau devient trop chaude, ils blanchissent et peuvent mourir.', q: [
+        ['g', 'Ce texte est :', 'un texte documentaire', ['un conte', 'une lettre'], 'Il explique des faits réels sur les coraux.'],
+        ['e', 'Que sont réellement les coraux ?', 'des animaux', ['des plantes', 'des pierres'], 'Le texte dit : « Pourtant, ce sont des animaux ! »'],
+        ['e', 'De quoi est fait le squelette des polypes ?', 'de calcaire', ['de bois', 'de sable'], 'Le texte dit : « un squelette de calcaire ».'],
+        ['i', 'Pourquoi la disparition des coraux serait-elle grave pour les poissons ?', 'Beaucoup de poissons perdraient leur abri.', ['Les poissons n’auraient plus d’eau.', 'Les poissons deviendraient blancs.'], 'Les récifs « abritent une grande partie des poissons » : sans eux, ces poissons n’auraient plus de refuge.'],
+        ['a', 'Dans « ils blanchissent », « ils » désigne :', 'les coraux', ['les océans', 'les poissons'], 'Ce sont les coraux qui blanchissent quand l’eau est trop chaude.'],
+        ['v', '« Abriter » veut dire :', 'protéger, offrir un refuge', ['détruire', 'nourrir'], 'Les récifs servent de refuge aux poissons.']] },
+      { t: 'Le rival', x: 'Le capitaine Crochet-d’Argent était jaloux de Barbe-Grise depuis toujours. Quand il apprit que l’équipage du Fier Calcul cherchait l’île aux Perles, il fit hisser toutes ses voiles et partit le premier. Il atteignit l’île deux jours avant son rival, creusa partout… et ne trouva que du sable. Ce qu’il ignorait, c’est que Barbe-Grise avait laissé traîner exprès une fausse carte dans une taverne du port.', q: [
+        ['e', 'Combien de jours d’avance Crochet-d’Argent avait-il ?', 'deux jours', ['trois jours', 'une semaine'], 'Le texte dit : « Il atteignit l’île deux jours avant son rival ».'],
+        ['i', 'Pourquoi Crochet-d’Argent n’a-t-il trouvé que du sable ?', 'Il avait suivi une fausse carte.', ['Le trésor avait déjà été pris.', 'Il avait oublié sa pelle.'], 'Barbe-Grise avait laissé traîner « une fausse carte » : son rival est allé au mauvais endroit.'],
+        ['i', 'Que montre la dernière phrase sur Barbe-Grise ?', 'Il est rusé : il a piégé son rival.', ['Il est distrait : il a perdu sa carte.', 'Il est généreux : il a offert son trésor.'], 'Il a fait exprès de laisser une fausse carte pour tromper Crochet-d’Argent.'],
+        ['a', 'Dans « avant son rival », « son rival » désigne :', 'Barbe-Grise', ['Crochet-d’Argent', 'le Fier Calcul'], 'Le rival de Crochet-d’Argent, c’est Barbe-Grise.'],
+        ['v', '« Exprès » veut dire :', 'volontairement', ['par erreur', 'très vite'], 'Barbe-Grise a laissé la carte en le voulant, pour tromper son rival.']] },
+      { t: 'Le gardien du phare', x: 'Sur le rocher de la Pointe-Noire se dresse un phare de quarante mètres. Chaque soir, Augustin, le gardien, monte les deux-cent-douze marches de l’escalier en colimaçon pour allumer la lanterne. Toute la nuit, le faisceau lumineux balaie la mer et avertit les bateaux du danger : autour du rocher, les récifs sont aussi tranchants que des lames. Augustin vit seul, mais il ne s’ennuie jamais. Il reconnaît chaque navire qui passe au large, rien qu’à la couleur de ses feux.', q: [
+        ['e', 'Combien de marches Augustin monte-t-il chaque soir ?', 'deux-cent-douze', ['quarante', 'cent-douze'], 'Le texte dit : « monte les deux-cent-douze marches ». Quarante, c’est la hauteur du phare en mètres.'],
+        ['i', 'À quoi sert ce phare ?', 'à éviter que les bateaux se brisent sur les récifs', ['à éclairer la maison du gardien', 'à guider les oiseaux'], 'Il « avertit les bateaux du danger » : les récifs tranchants qui entourent le rocher.'],
+        ['a', 'Dans « Il reconnaît chaque navire », « Il » désigne :', 'Augustin', ['le phare', 'le rocher'], 'C’est le gardien, Augustin, qui reconnaît les navires.'],
+        ['v', 'Un escalier « en colimaçon » est un escalier :', 'qui tourne en spirale', ['en bois', 'très large'], 'Le colimaçon, c’est l’escargot : l’escalier tourne comme sa coquille.'],
+        ['v', '« Le faisceau balaie la mer » veut dire :', 'la lumière passe sur toute la mer', ['le gardien nettoie la mer', 'le vent pousse les vagues'], 'C’est une image : la lumière tourne et passe partout, comme un balai.']] },
+      { t: 'Le partage', x: 'Après la bataille, l’équipage a ouvert le coffre du galion : il contenait quatre-cents pièces d’or. Selon le code des pirates, le capitaine reçoit deux parts, le cuisinier une part et demie, et chacun des neuf matelots une part. Tom a sorti son ardoise pour calculer, mais Lila avait déjà la réponse. Le capitaine, lui, a annoncé qu’il garderait sa deuxième part pour réparer le navire.', q: [
+        ['e', 'Combien de pièces d’or contenait le coffre ?', 'quatre-cents', ['deux-cents', 'quatre-mille'], 'Le texte dit : « il contenait quatre-cents pièces d’or ».'],
+        ['e', 'Combien de parts reçoit le cuisinier ?', 'une part et demie', ['deux parts', 'une part'], 'Le texte dit : « le cuisinier une part et demie ».'],
+        ['i', 'Que nous apprend le texte sur Lila ?', 'Elle calcule très vite, de tête.', ['Elle ne sait pas compter.', 'Elle veut tout l’or pour elle.'], 'Tom a besoin de son ardoise, mais Lila a « déjà la réponse ».'],
+        ['i', 'Que montre la décision du capitaine ?', 'Il pense d’abord au navire et à l’équipage.', ['Il veut devenir le plus riche.', 'Il n’aime pas l’or.'], 'Il utilise sa part pour réparer le navire de tout l’équipage.'],
+        ['a', 'Dans « il contenait quatre-cents pièces », « il » désigne :', 'le coffre', ['l’équipage', 'le capitaine'], 'C’est le coffre qui contient les pièces.'],
+        ['v', 'Le « code des pirates », c’est ici :', 'les règles que suivent les pirates', ['un message secret', 'un mot de passe'], 'Le code dit comment partager le butin.']] },
+      { t: 'La chanson de Pi', x: 'Je suis Pi, le perroquet du bord,\nJe parle, je chante et je veille encore.\nDu haut du mât, je vois le port,\nLes îles d’or et les vents du nord.\nMais quand l’orage gronde et mord,\nJe file à la cale… et je m’endors !', q: [
+        ['g', 'Ce texte est :', 'un poème', ['une lettre', 'un texte documentaire'], 'Il est écrit en vers, avec des rimes.'],
+        ['i', 'Qui parle dans ce texte ?', 'le perroquet Pi', ['le capitaine', 'la vigie'], 'Le premier vers dit : « Je suis Pi, le perroquet du bord ».'],
+        ['e', 'D’où Pi voit-il le port ?', 'du haut du mât', ['depuis la cale', 'depuis une île'], 'Le texte dit : « Du haut du mât, je vois le port ».'],
+        ['i', 'Que fait Pi pendant l’orage ?', 'Il se cache et s’endort.', ['Il guide le navire.', 'Il chante plus fort.'], '« Je file à la cale… et je m’endors ! » : il n’est pas très courageux.'],
+        ['a', 'Dans « je vois le port », « je » désigne :', 'Pi', ['le lecteur', 'le capitaine'], 'C’est Pi qui parle d’un bout à l’autre du poème.'],
+        ['v', 'Dans « l’orage gronde et mord », l’orage est décrit comme :', 'un animal menaçant', ['un ami', 'une machine'], 'Gronder et mordre, c’est ce que fait un animal en colère : c’est une image.']] },
+      { t: 'La carte codée', x: 'Sur le parchemin, le trésor n’était pas marqué d’une croix. À la place, il y avait une phrase étrange : « Là où l’ombre du grand palmier touche l’eau à midi, compte dix pas vers le soleil levant. » Lila comprit tout de suite qu’il fallait attendre le milieu de la journée. Elle s’assit à l’ombre et sortit sa montre. Tom, lui, se demandait encore de quel côté se lève le soleil.', q: [
+        ['e', 'Qu’est-ce qui remplaçait la croix sur le parchemin ?', 'une phrase étrange', ['un dessin de palmier', 'une flèche'], 'Le texte dit : « À la place, il y avait une phrase étrange ».'],
+        ['i', 'Pourquoi Lila sort-elle sa montre ?', 'pour savoir quand il sera midi', ['pour chronométrer Tom', 'pour lire la carte'], 'La phrase parle de l’ombre « à midi » : Lila attend le bon moment.'],
+        ['i', 'Dans quelle direction faut-il compter les dix pas ?', 'vers l’est', ['vers l’ouest', 'vers le nord'], 'Le soleil se lève à l’est : « vers le soleil levant », c’est vers l’est.'],
+        ['a', 'Dans « Elle s’assit à l’ombre », « Elle » désigne :', 'Lila', ['la carte', 'la phrase'], 'C’est Lila qui s’assoit et sort sa montre.'],
+        ['v', 'Un « parchemin » est :', 'une feuille faite de peau d’animal, utilisée autrefois pour écrire', ['un chemin de montagne', 'une boussole'], 'Autrefois, on écrivait sur des parchemins, faits de peau d’animal.']] },
+      { t: 'Le vieux marin', x: 'Sur le quai, un vieux marin raccommodait ses filets. Ses mains étaient couvertes de cicatrices et ses yeux plissés à force de fixer l’horizon. « Vous cherchez l’île aux Brumes ? demanda-t-il sans lever la tête. Beaucoup l’ont cherchée. Peu en sont revenus. » Puis il se tut et ne dit plus un mot, malgré les questions du capitaine.', q: [
+        ['e', 'Que faisait le vieux marin ?', 'Il raccommodait ses filets.', ['Il pêchait sur le quai.', 'Il lisait une carte.'], 'Le texte dit : « un vieux marin raccommodait ses filets ».'],
+        ['i', 'Pourquoi ses yeux sont-ils plissés ?', 'Il a passé sa vie à regarder la mer au loin.', ['Il a sommeil.', 'Il est en colère.'], '« À force de fixer l’horizon » : il a regardé au loin pendant des années.'],
+        ['i', 'Que veut faire comprendre le vieux marin ?', 'Le voyage vers l’île aux Brumes est dangereux.', ['L’île aux Brumes n’existe pas.', 'Il veut partir avec eux.'], '« Peu en sont revenus » : beaucoup de marins ont disparu en la cherchant.'],
+        ['a', 'Dans « Beaucoup l’ont cherchée », « l’ » désigne :', 'l’île aux Brumes', ['la tête', 'la mer'], 'Ce que beaucoup ont cherché, c’est l’île aux Brumes.'],
+        ['v', '« Raccommoder » veut dire :', 'réparer un tissu ou un filet', ['vendre', 'laver'], 'Le vieux marin répare les trous de ses filets.']] },
+    ],
+    l: [
+      { t: 'Journal de bord', x: '12 mai. Le vent est tombé hier soir. Depuis, le Fier Calcul n’avance plus d’un mètre. Les voiles pendent comme des chiffons et la chaleur est écrasante.\n14 mai. Toujours pas un souffle. Gros-Louis a dû diminuer les rations de biscuits. Pi ne dit plus un mot : même lui semble abattu.\n15 mai. Ce matin, j’ai vu des nuages s’amonceler à l’ouest et la mer se rider. J’ai crié « Vent en vue ! » si fort que tout l’équipage s’est réveillé en sursaut. Une heure plus tard, les voiles se gonflaient enfin. Le capitaine m’a tapé sur l’épaule sans rien dire. Venant de lui, c’est le plus beau des compliments.', q: [
+        ['g', 'Ce texte est :', 'un journal de bord, écrit jour après jour', ['un conte', 'une recette'], 'Chaque partie commence par une date : quelqu’un note ce qui se passe chaque jour.'],
+        ['i', 'Quel jour le vent est-il tombé ?', 'le 11 mai', ['le 12 mai', 'le 15 mai'], 'Le 12 mai, on lit : « Le vent est tombé hier soir. » Hier, c’était le 11 mai.'],
+        ['i', 'Qui écrit ce journal ?', 'un marin de l’équipage', ['le capitaine', 'Gros-Louis'], 'L’auteur dit « je » et parle du capitaine et de Gros-Louis comme d’autres personnes : c’est un autre marin du bord.'],
+        ['i', 'Que ressent l’auteur quand le capitaine lui tape sur l’épaule ?', 'de la fierté', ['de la honte', 'de la peur'], '« C’est le plus beau des compliments » : l’auteur est fier d’avoir aidé l’équipage.'],
+        ['v', '« Les voiles pendent comme des chiffons » : cette comparaison montre que les voiles sont :', 'molles, sans vent pour les gonfler', ['sales', 'déchirées'], 'Sans vent, les voiles ne se gonflent pas : elles pendent mollement.']] },
+      { t: 'Le calmar géant', x: 'Pendant des siècles, les marins ont raconté des histoires de monstres aux longs bras qui attaquaient les navires. Beaucoup de ces légendes ont sans doute été inspirées par un animal bien réel : le calmar géant.\nCe céphalopode, cousin de la pieuvre, peut mesurer plus de dix mètres, tentacules compris. Ses yeux, aussi grands qu’une assiette, comptent parmi les plus grands du monde animal. Ils lui permettent de voir dans l’obscurité des profondeurs, où il vit à plusieurs centaines de mètres sous la surface.\nLe calmar géant est si discret qu’il a fallu attendre 2004 pour le photographier vivant dans son milieu naturel. Son pire ennemi n’est pas l’homme, mais le cachalot, qui plonge très profond pour le chasser.', q: [
+        ['g', 'Ce texte est :', 'un texte documentaire', ['une légende', 'un journal de bord'], 'Il donne des informations vraies sur un animal réel.'],
+        ['e', 'En quelle année a-t-on photographié pour la première fois un calmar géant vivant dans son milieu ?', 'en 2004', ['en 1004', 'il y a des siècles'], 'Le texte dit : « il a fallu attendre 2004 pour le photographier vivant ».'],
+        ['i', 'D’où viennent peut-être les légendes de monstres aux longs bras ?', 'Des marins avaient aperçu des calmars géants.', ['Des marins avaient trop dormi.', 'Les pieuvres attaquaient les ports.'], 'Le texte dit que ces légendes ont été « inspirées par un animal bien réel ».'],
+        ['a', 'Dans « Ils lui permettent de voir », « Ils » désigne :', 'ses yeux', ['les marins', 'les tentacules'], 'Ce sont ses grands yeux qui lui permettent de voir dans le noir.'],
+        ['v', 'Dans ce texte, « discret » veut dire :', 'qui se montre très rarement', ['qui fait beaucoup de bruit', 'qui est très petit'], 'On a mis des siècles à le photographier : il se cache dans les profondeurs.']] },
+      { t: 'Le procès de Pi', x: 'GROS-LOUIS, furieux. — Capitaine, ce perroquet a encore volé une de mes crêpes !\nPI, l’air innocent. — Moi ? Je ne mange que des graines de tournesol.\nLE CAPITAINE. — Pi, tu as du sucre sur le bec.\nPI, après un silence. — C’est… du sable. Du sable très doux.\nTOM, éclatant de rire. — Du sable qui sent la fleur d’oranger ?\nLE CAPITAINE, sévère. — Pour ta peine, Pi, tu aideras Gros-Louis à faire la vaisselle pendant trois jours.\nPI, dans un murmure. — Un perroquet ne fait pas la vaisselle…', q: [
+        ['g', 'Ce texte est :', 'une scène de théâtre', ['un poème', 'un texte documentaire'], 'Le nom de chaque personnage est écrit avant ce qu’il dit, avec des indications pour jouer.'],
+        ['e', 'Quelle punition le capitaine donne-t-il à Pi ?', 'aider à faire la vaisselle pendant trois jours', ['rester dans la cale', 'ne plus manger de graines'], 'Le capitaine dit : « tu aideras Gros-Louis à faire la vaisselle pendant trois jours ».'],
+        ['i', 'Pourquoi le capitaine ne croit-il pas Pi ?', 'Pi a du sucre sur le bec.', ['Pi bégaie.', 'Tom l’a vu voler la crêpe.'], 'Le sucre sur le bec prouve que Pi a mangé une crêpe.'],
+        ['i', 'Pourquoi Tom éclate-t-il de rire ?', 'Il voit bien que Pi ment : le sable ne sent pas la fleur d’oranger.', ['Il trouve la crêpe ratée.', 'Il a volé la crêpe lui-même.'], 'Les crêpes sentent la fleur d’oranger, pas le sable : l’excuse de Pi ne tient pas.'],
+        ['g', 'À quoi servent « furieux », « l’air innocent », « sévère » ?', 'à dire comment les personnages parlent ou se tiennent', ['à donner le nom des personnages', 'à raconter la fin de l’histoire'], 'Au théâtre, ces indications aident les acteurs à jouer la scène.'],
+        ['v', '« Pour ta peine » veut dire :', 'comme punition', ['pour te consoler', 'pour te récompenser'], 'Le capitaine punit Pi pour son vol.']] },
+      { t: 'La traversée du récif', x: 'Pour rejoindre le lagon, le Fier Calcul devait franchir la passe du Serpent, un étroit chenal bordé de coraux coupants. Le capitaine monta lui-même à la proue et ordonna de réduire la voilure.\n« Lila, sonde le fond ! Tom, à la barre, et doucement ! »\nMètre après mètre, le navire glissa entre les récifs. À un moment, la coque frotta contre le corail dans un grincement sinistre ; tout l’équipage retint son souffle. Mais Tom donna un coup de barre au bon moment, et le navire se dégagea.\nQuand ils entrèrent enfin dans le lagon, l’eau était si claire qu’on voyait les poissons nager sous la quille. Le capitaine ne fit aucun discours. Il se contenta d’offrir sa propre ration de chocolat à Tom.', q: [
+        ['e', 'Comment s’appelle le passage que le navire doit franchir ?', 'la passe du Serpent', ['le lagon', 'le chenal du Corail'], 'Le texte dit : « franchir la passe du Serpent ».'],
+        ['i', 'Pourquoi le capitaine ordonne-t-il de réduire la voilure ?', 'pour que le navire avance plus lentement entre les récifs', ['parce qu’une voile est déchirée', 'pour aller plus vite'], 'Avec moins de voiles, le navire va moins vite : c’est plus prudent dans un passage dangereux.'],
+        ['i', 'Pourquoi tout l’équipage retient-il son souffle ?', 'Ils ont peur que la coque se brise.', ['Ils plongent sous l’eau.', 'Le capitaine leur demande le silence.'], 'La coque frotte contre le corail coupant : le navire risque d’être percé.'],
+        ['i', 'Pourquoi le capitaine offre-t-il son chocolat à Tom ?', 'pour le remercier d’avoir sauvé le navire', ['parce qu’il n’aime pas le chocolat', 'pour le punir'], 'Tom a donné « un coup de barre au bon moment » : le capitaine le félicite sans un mot.'],
+        ['v', 'Un « chenal » est :', 'un passage étroit où les bateaux peuvent naviguer', ['un grand port', 'une île minuscule'], 'Le texte parle d’« un étroit chenal bordé de coraux » : un couloir d’eau entre les récifs.']] },
+    ],
+  },
 };
 const QHINT = { e: 'La réponse est écrite dans le texte : relis-le en cherchant le mot important de la question.', i: 'La réponse n’est pas écrite mot pour mot : réfléchis à ce que le texte laisse comprendre.',
   a: 'Relis la phrase d’avant : qui ou quoi est remplacé ?', v: 'Relis la phrase où se trouve le mot : elle t’aide à comprendre son sens.', g: 'Pense au texte en entier : de quoi parle-t-il ? à quoi sert-il ?' };
@@ -2735,7 +3319,19 @@ const SKILLS = {
     conjug: ['conjuguer au présent finir, manger, appeler, aller…', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé avec être et avoir', 'reconnaître le temps, l’infinitif et le groupe', 'conjuguer au présent, imparfait, futur, passé composé'],
     gram: ['trouver la nature des mots', 'trouver le sujet et le nom noyau', 'trouver les compléments', 'reconnaître les déterminants et les adjectifs épithètes', 'trouver la fonction des groupes'],
     accords: ['écrire les pluriels difficiles', 'accorder les adjectifs dans le groupe nominal', 'accorder le verbe avec un sujet difficile', 'accorder le participe passé avec être', 'faire tous les accords, choisir le bon homophone'],
-    vocab: ['ranger des mots, comprendre préfixes et suffixes', 'comprendre préfixes, suffixes et radicaux', 'classer des synonymes, reconnaître les niveaux de langue', 'comprendre les sens d’un mot et les expressions', 'utiliser les mots génériques et les homonymes'] } };
+    vocab: ['ranger des mots, comprendre préfixes et suffixes', 'comprendre préfixes, suffixes et radicaux', 'classer des synonymes, reconnaître les niveaux de langue', 'comprendre les sens d’un mot et les expressions', 'utiliser les mots génériques et les homonymes'] },
+  cm2: { canons: ['reconnaître multiples, diviseurs, divisibles par 2, 5, 10', 'trouver des diviseurs et des multiples communs', 'faire une division avec reste au-delà des tables', 'calculer avec des parenthèses', 'multiplier des dizaines, centaines, utiliser la distributivité'],
+    stade: ['multiplier et diviser un décimal par 10, 100, 1 000', 'ajouter un entier à un décimal, ajouter 9, 19… 99', 'ajouter des décimaux, doubler et partager en deux', 'multiplier par 5 et 50, diviser par 4 et 8', 'écrire 1/2, 1/4, 3/4 en décimal'],
+    mine: ['écrire les nombres jusqu’à 999 999 999', 'trouver la valeur d’un chiffre dans un grand nombre', 'comparer de grands nombres', 'utiliser les millièmes', 'comparer, encadrer et arrondir des décimaux'],
+    jungle: ['lire une graduation de million en million', 'lire une graduation de 100 000 en 100 000', 'lire les centièmes', 'lire les millièmes', 'placer une fraction sur une droite graduée'],
+    marche: ['payer 2 ou 3 fois plus', 'additionner des prix connus', 'payer 2, 3 ou 4 fois moins', 'rendre la monnaie après plusieurs achats', 'résoudre un problème en plusieurs étapes'],
+    cuisine: ['prendre 2/3, 3/4… d’une quantité', 'écrire une fraction comme un entier et une fraction', 'comparer des fractions', 'additionner et soustraire des fractions', 'multiplier une fraction par un entier, utiliser les millièmes'],
+    horloge: ['lire l’heure à la minute', 'convertir minutes et secondes', 'convertir jours, heures et minutes', 'calculer une durée à la seconde', 'résoudre des problèmes de durées'],
+    lecture: ['comprendre un texte court', 'retrouver une information précise', 'déduire ce que le texte ne dit pas', 'comprendre les reprises et le vocabulaire', 'comprendre un texte long et reconnaître son genre'],
+    conjug: ['conjuguer aux temps du CM1, trouver la marque du temps', 'conjuguer au passé simple (-er, -ir, être, avoir)', 'conjuguer au passé simple faire, dire, venir…', 'conjuguer au plus-que-parfait', 'reconnaître et conjuguer les temps du récit'],
+    gram: ['trouver le sujet, même inversé', 'distinguer attribut du sujet et COD', 'distinguer COD, COI et compléments circonstanciels', 'reconnaître complément du nom, épithète et classes de mots', 'distinguer phrase simple et phrase complexe'],
+    accords: ['accorder le groupe nominal', 'accorder le verbe avec un sujet inversé', 'accorder l’attribut du sujet', 'accorder le participe passé avec être et avoir', 'faire tous les accords, leur / leurs, la / l’a / là'],
+    vocab: ['utiliser le dictionnaire', 'comprendre les mots polysémiques', 'comprendre un mot grâce à sa formation', 'choisir des synonymes et des antonymes précis', 'maîtriser les sens et la formation des mots'] } };
 const skillName = (id, L) => ((SKILLS[GR()] || SKILLS.ce2)[id] || [])[L - 1] || `niveau ${L}`;
 // État d'une compétence : acquise (80 % sur au moins 4 questions, ou les deux étapes de la route passées), à revoir (moins de 60 %),
 // en cours (déjà travaillée ou au niveau actuel de la route), à découvrir
@@ -3198,7 +3794,7 @@ function renderGame() {
 function refreshBottom() { const rt = $('.rtext'), y = rt ? rt.scrollTop : 0; $('#gb').innerHTML = qcardHTML(R.q) + inputHTML(R.q); const r2 = $('.rtext'); if (r2) r2.scrollTop = y; }
 
 // Rappel libre : retrouver la réponse fait plus travailler la mémoire que la reconnaître parmi trois.
-// À partir du niveau 4 (sauf au CP), une partie des calculs du Stade se tapent au clavier, et au CE2 et au CM1 une partie
+// À partir du niveau 4 (sauf au CP), une partie des calculs du Stade se tapent au clavier, et du CE2 au CM2 une partie
 // des verbes et des pluriels s'écrivent lettre à lettre. Les pièges des choix gardent leur explication pour le diagnostic.
 const normT = x => String(x).toLowerCase().replace(/[’']/g, '\'').replace(/\s+/g, ' ').trim();
 const noAcc = x => normT(x).normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -3209,7 +3805,7 @@ function recall(q) {
     const pr = String(q.prompt), slot = /= \?$/.test(pr) ? pr.replace(/= \?$/, `= ${SLOT}`) : /…/.test(pr) && !/[a-z]/i.test(pr.replace(/…/, '')) ? pr.replace('…', SLOT).replace(/ \?$/, '') : null;
     return Object.assign({}, q, { kind: 'keypad', ask: 'Écris le résultat, puis tire !', prompt: slot || `<span class="words">${pr}</span><br>${SLOT}`, promptClass: slot ? '' : 'mid', choices: undefined, sayChoices: false, whyOf, recall: 1 });
   }
-  if (q.typeable && ['ce2', 'cm1'].includes(GR()) && Math.random() < .5) {
+  if (q.typeable && ['ce2', 'cm1', 'cm2'].includes(GR()) && Math.random() < .5) {
     const T = q.typeable; Object.entries(T.whys || {}).forEach(([k, w]) => { whyOf[normT(k)] = w; }); return Object.assign({}, q, { kind: 'type', ask: T.ask, prompt: T.prompt || q.prompt, answer: T.ans, choices: undefined, whyOf, recall: 1 });
   }
   return q;
@@ -3259,6 +3855,7 @@ function diagnose(q, g) {
     return v > need ? `Tu as colorié ${v - need} part${v - need > 1 ? 's' : ''} de trop.` : `Il manque ${need - v} part${need - v > 1 ? 's' : ''}.`; }
   if (q.kind === 'compare') { if (q.ct === 'sameN') return 'Les deux fractions ont le même nombre de parts colorées. Plus on coupe en beaucoup de parts, plus chaque part est petite : la fraction au plus grand dénominateur est la plus petite.';
     if (q.ct === 'mult') return 'Avant de comparer, écris les deux fractions avec le même dénominateur.';
+    if (q.ct === 'one') return 'Compare chaque fraction à 1 : une fraction est plus grande que 1 quand le nombre du haut dépasse celui du bas.';
     return 'Les parts ont la même taille : il suffit de comparer le nombre de parts, en haut.'; }
   if (q.kind === 'line' && typeof g.k === 'number') { const dk = g.k - q.k; if (Math.abs(dk) === 1) return `Tu t’es arrêté une graduation ${dk > 0 ? 'trop loin' : 'trop tôt'}. Compte chaque bond à partir de ${labN(q, q.start)}.`; return ''; }
   if (q.kind === 'money') { if (d.t === 'change' && v === d.price) return 'Tu as donné le prix. Il fallait rendre ce qui manque entre le prix et le billet.'; if (d.t === 'change' && v === d.paid) return 'Tu as rendu tout le billet : il faut garder le prix et rendre seulement la différence.'; return ''; }
@@ -3271,6 +3868,7 @@ function diagnose(q, g) {
   if (d.t === 'm2') { const t = d.x - d.x % 10, u = d.x % 10; if (v === t * d.y + u) return `Tu as oublié de multiplier les unités : ${u} × ${d.y} = ${u * d.y}.`; if (v === t + u * d.y) return `Tu as oublié de multiplier les dizaines : ${t} × ${d.y} = ${t * d.y}.`; }
   if (d.t === 'add') { if (v === Math.abs(d.a - d.b)) return 'Tu as enlevé au lieu d’ajouter.'; if (v === a - 10 && d.a % 10 + d.b % 10 >= 10) return 'Tu as oublié la retenue : 10 unités font une dizaine de plus.'; }
   if (d.t === 'comp') { if (v === d.s + d.a) return `Tu as ajouté ${d.a} et ${d.s}. On cherche ce qu’il faut ajouter à ${d.a} pour arriver à ${d.s}.`; if (v === d.s) return `${d.s}, c’est le total. On cherche ce qui manque à ${d.a} pour y arriver.`; }
+  if (d.t === 'par' && v === d.alt) return 'Tu n’as pas commencé par les parenthèses : on calcule toujours d’abord ce qui est entre parenthèses.';
   if (d.t === 'pb' && v === d.alt) return 'Tu as fait l’autre opération. Relis l’histoire : que se passe-t-il au début, puis ensuite ?';
   const sv = String(v), sa = String(a);
   if (sa.length >= 2 && sv.length === sa.length && sv !== sa && [...sv].sort().join('') === [...sa].sort().join('')) return q.kind === 'mine' ? 'Tu as les bons blocs, mais pas dans les bonnes colonnes.' : 'Tu as inversé des chiffres : chaque chiffre a sa place (unités, dizaines, centaines).';
@@ -3665,7 +4263,7 @@ function onboarding() {
   app.appendChild(m);
   $$('.avs button', m).forEach(b => b.addEventListener('click', () => { S.avatar = b.dataset.v; SND.tap(); $$('.avs button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
   $$('.grades button', m).forEach(b => b.addEventListener('click', () => { gr = b.dataset.g; SND.tap(); $$('.grades button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
-  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CP, CE1, CE2 ou CM1.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
+  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CP, CE1, CE2, CM1 ou CM2.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
     S.name = $('#nm').value.trim().slice(0, 14) || 'Capitaine'; S.intro = true; if (ask) setGrade(gr); save(); m.remove(); ac(); SND.fanfare(); show('map'); setTimeout(() => voice('carte', true), 600); });
 }
 function setGrade(g) { if (!GRADES[g]) return; S.grade = g; P(); applyGrade(); mapScroll = null; save(); }
@@ -3674,7 +4272,7 @@ function setGrade(g) { if (!GRADES[g]) return; S.grade = g; P(); applyGrade(); m
 function key(k) {
   if (!R || R.locked) return;
   if (k === 'ok') { if (R.input) { const [ok, g] = check(); answer(ok, g); } return; }
-  if (k === 'del') R.input = R.input.slice(0, -1); else if (R.input.length < 6) R.input = (R.input + k).replace(/^0+(?=\d)/, '');
+  if (k === 'del') R.input = R.input.slice(0, -1); else if (R.input.length < (R.q.big ? 9 : 6)) R.input = (R.input + k).replace(/^0+(?=\d)/, '');
   SND.tap(); const s = $('#slot'); if (s) s.textContent = R.input ? fmt(R.input) : '';
   const f = $('.key.fire'); if (f) f.classList.toggle('ready', !!R.input);
 }
