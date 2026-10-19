@@ -389,7 +389,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .port .card{position:absolute;left:16px;right:16px;bottom:calc(var(--sbm) + 18px);border-radius:24px;padding:18px 16px 16px}
 .modal{position:absolute;inset:0;z-index:100;display:grid;place-items:safe center;overflow-y:auto;padding:max(16px,calc(var(--st) + 60px)) 16px 16px;background:rgba(6,20,28,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .modal .box{width:100%;max-width:400px;border-radius:26px;padding:20px 18px 18px;text-align:center;display:flex;flex-direction:column;gap:12px}
-.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .grades button{min-height:64px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.45);color:var(--ink)}
 .grades b{font:800 24px/1 var(--f-d)}.grades span{font-size:14px;color:var(--ink-2)}
 .grades button[aria-pressed="true"]{background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 4px 0 var(--brass-lo)}
@@ -793,7 +793,7 @@ const ADMIN = /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.
 const KEY = ADMIN ? 'archipel-nombres-admin' : 'archipel-nombres-v2';
 // La progression (îles, marée, revanches, erreurs, victoires par mer) est rangée par classe dans S.g ; le reste (nom, doublons, équipage, navire) est commun.
 const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false });
-const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' } };
+const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce1: { n: 'CE1', age: '7 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' } };
 const PDEF = () => ({ isl: {}, tide: null, rev: [], errors: [], wins: { m: 0, f: 0 } });
 function migrate(o) {
   if (!o.g || typeof o.g !== 'object') o.g = {};
@@ -973,7 +973,9 @@ const ISLES = [
 // Notions affichées en CP (les îles restent les mêmes, le contenu change)
 const CPN = { canons: 'Additions jusqu’à 20', stade: 'Calcul mental', mine: 'Dizaines et unités', jungle: 'Droite graduée jusqu’à 100', marche: 'Pièces et billets', cuisine: 'Moitiés, doubles et problèmes', horloge: 'Heures, jours et mois',
   lecture: 'Lire de petites phrases', conjug: 'Sons et syllabes', gram: 'Mots et phrases', accords: 'Le, la, un, une', vocab: 'Mots et catégories' };
-ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; });
+const CE1N = { canons: 'Additions et premières tables', stade: 'Calcul mental', mine: 'Nombres jusqu’à 1 000', jungle: 'Droite graduée jusqu’à 1 000', marche: 'Euros et centimes', cuisine: 'Moitié, tiers, quart et problèmes', horloge: 'Heures, demi-heures et durées',
+  lecture: 'Lecture et compréhension', conjug: 'Présent et futur', gram: 'Phrase, verbe et nom', accords: 'Accords et homophones', vocab: 'Alphabet, familles, synonymes' };
+ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; });
 const SEAS = { m: { n: 'Mer des Chiffres', s: 'Maths', ic: '123' }, f: { n: 'Mer des Lettres', s: 'Français', ic: 'Abc' } };
 function applyGrade() { ISLES.forEach(i => { i.notion = i[GR()] || i.ce2; }); }
 applyGrade();
@@ -1313,13 +1315,138 @@ function cpVocab(l) {
   return { kind: 'choices', ask: `Quel mot n’est pas ${CPCAT[c][0]} ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...two].map(v => ({ v, html: v })), log: `intrus (${c}) : ${ans}`, explain: `« ${two[0]} » et « ${two[1]} » sont ${CPCAT[c][2]}. « ${ans} » n’est pas ${CPCAT[c][0]}.`, hint: 'Cherche le mot qui ne va pas avec les autres.', sayChoices: true };
 }
 
-function genCanon(l) { return CP() ? cpCanon(l) : CM1() ? cm1Canon(l) : ce2Canon(l); }
-function genFoot(l) { return CP() ? cpFoot(l) : CM1() ? cm1Foot(l) : ce2Foot(l); }
-function genMine(l) { return CP() ? cpMine(l) : CM1() ? cm1Mine(l) : ce2Mine(l); }
-function genChasse(l) { return CP() ? cpChasse(l) : CM1() ? cm1Chasse(l) : ce2Chasse(l); }
-function genMarche(l) { return CP() ? cpMarche(l) : CM1() ? cm1Marche(l) : ce2Marche(l); }
-function genHorloge(l) { return CP() ? cpHorloge(l) : CM1() ? cm1Horloge(l) : ce2Horloge(l); }
-function genCuisine(l) { return CP() ? cpCuisine(l) : CM1() ? cm1Cuisine(l) : ce2Cuisine(l); }
+/* ================= CE1 (7 ans) ================= */
+// Le CE1 fait le pont entre le CP et le CE2 : nombres jusqu'à 1 000, additions et soustractions, premières tables (2, 3, 4, 5, 10),
+// moitié, tiers et quart, heures et demi-heures, euros ; en français, présent et futur de « être », « avoir » et des verbes en -er,
+// verbe, nom, déterminant, sujet, a / à, et / est, son / sont, ordre alphabétique, familles et synonymes.
+const CE1 = () => GR() === 'ce1';
+const ER1 = ['chanter', 'jouer', 'danser', 'regarder', 'chercher', 'trouver', 'grimper', 'ramer', 'crier'];
+function ce1Canon(l) {
+  if (l === 1) return cpCanon(pick([4, 5]));
+  const tabs = l === 2 ? [2, 10] : l === 3 ? [2, 5, 10] : [2, 3, 4, 5, 10], a = pick(l === 4 ? [3, 4, 3, 4, 2, 5] : tabs), b = rnd(2, 10), p = a * b;
+  const rep = b <= 5 ? ` C’est ${Array(b).fill(a).join(' + ')}.` : '';
+  if (l === 5 && Math.random() < .5) return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt: `${a} × ${SLOT} = ${p}`, answer: b, answerText: fmt(b), log: `${a} × … = ${p}`,
+    explain: `${a} × ${b} = ${p}, donc le nombre caché est ${b}. On compte de ${a} en ${a} jusqu’à ${p} : ${range(1, b).map(i => a * i).join(', ')}.`, hint: `Compte de ${a} en ${a} jusqu’à ${p} et compte combien de bonds tu fais.` };
+  const flip = Math.random() < .5, log = flip ? `${b} × ${a}` : `${a} × ${b}`;
+  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt: `${log} = ${SLOT}`, answer: p, answerText: fmt(p), log,
+    explain: `${a} × ${b} = ${p}. On compte de ${a} en ${a} : ${range(1, b).map(i => a * i).join(', ')}.${rep}`, hint: `Compte de ${a} en ${a}, ${b} fois.` };
+}
+function ce1Foot(l) {
+  let q, ans, explain, log, hint, extra = [];
+  if (l === 1) { const a = rnd(4, 9), b = rnd(3, 9), add = Math.random() < .6; if (add) { ans = a + b; log = `${a} + ${b}`; explain = a + b > 10 ? `${a} + ${10 - a} = 10, puis 10 + ${a + b - 10} = ${a + b}.` : `${a} + ${b} = ${a + b}.`; }
+    else { ans = a; log = `${a + b} − ${b}`; explain = `${b} + ${a} = ${a + b}, donc ${a + b} − ${b} = ${a}.`; } q = `${log} = ?`; hint = 'Passe par 10 : c’est plus facile.'; }
+  else if (l === 2) { if (Math.random() < .5) { const n = rnd(6, 25); ans = 2 * n; log = `double de ${n}`; q = `Le double de ${n} ?`; explain = `Le double, c’est deux fois le même nombre : ${n} + ${n} = ${ans}.`; extra = [n + 2, ans + 10]; }
+    else { const n = rnd(3, 25) * 2; ans = n / 2; log = `moitié de ${n}`; q = `La moitié de ${n} ?`; explain = `La moitié, c’est partager en deux parts égales : ${ans} + ${ans} = ${n}.`; extra = [n * 2, ans + 2]; } hint = 'Le double et la moitié vont ensemble : le double de 6 est 12, la moitié de 12 est 6.'; }
+  else if (l === 3) { const n = rnd(11, 889), k = pick([10, 10, 100]), up = Math.random() < .6; ans = up ? n + k : n - k; log = `${n} ${up ? '+' : '−'} ${k}`; q = `${log} = ?`;
+    explain = `${up ? 'Ajouter' : 'Enlever'} ${k}, c’est ${up ? 'ajouter' : 'enlever'} ${k === 10 ? 'une dizaine' : 'une centaine'} : ${n} ${up ? '+' : '−'} ${k} = ${ans}.`; hint = `Seul le chiffre des ${k === 10 ? 'dizaines' : 'centaines'} change.`; extra = [up ? n + (k === 10 ? 100 : 10) : n - (k === 10 ? 100 : 10), up ? n + 1 : n - 1]; }
+  else if (l === 4) { const a = rnd(1, 9) * 10; ans = 100 - a; log = `${a} + … = 100`; q = `${a} + … = 100 ?`; explain = `${a} + ${ans} = 100 : ${a / 10} dizaines + ${ans / 10} dizaines = 10 dizaines.`; hint = 'Compte en dizaines jusqu’à 100.'; extra = [ans + 10, 100 + a]; }
+  else { const a = rnd(12, 79), b = Math.random() < .5 ? rnd(3, 9) : rnd(1, 2) * 10; ans = a + b; log = `${a} + ${b}`; q = `${log} = ?`;
+    explain = b >= 10 ? `On ajoute ${b / 10} dizaine${b > 10 ? 's' : ''} : ${a} + ${b} = ${ans}.` : (a % 10 + b > 10 ? `${a} + ${10 - a % 10} = ${a + 10 - a % 10}, puis + ${b - (10 - a % 10)} = ${ans}.` : `${a % 10} + ${b} = ${a % 10 + b}, donc ${a} + ${b} = ${ans}.`); hint = 'Ajoute d’abord jusqu’à la dizaine suivante.'; extra = [ans + 10, ans - 1]; }
+  return { kind: 'choices', ask: 'Tire dans la bonne case !', prompt: q, answer: ans, answerText: fmt(ans), explain, hint, log, choices: opts(ans, extra) };
+}
+function ce1Mine(l) {
+  if (l <= 2) { const n = l === 1 ? rnd(101, 499) : rnd(101, 999), [c, d, u] = [Math.floor(n / 100), Math.floor(n / 10) % 10, n % 10];
+    return { kind: 'mine', cols: 3, target: n, showTotal: l === 1, answer: n, answerText: fmt(n), prompt: fmt(n), ask: 'Construis ce nombre avec les blocs :', log: fmt(n),
+      explain: `${n}, c’est ${pl(c, 'centaine')}, ${pl(d, 'dizaine')} et ${pl(u, 'unité')}.`, hint: 'Le premier chiffre donne les centaines, puis les dizaines, puis les unités.' }; }
+  if (l === 3) { const c = rnd(1, 9), d = rnd(0, 9), u = rnd(0, 9), n = c * 100 + d * 10 + u;
+    return { kind: 'mineRead', cols: 3, counts: [0, c, d, u], answer: n, answerText: fmt(n), ask: 'Quel nombre forment ces blocs ?', prompt: SLOT, log: `${c} centaines, ${d} dizaines, ${u} unités`,
+      explain: `${pl(c, 'centaine')}, ${pl(d, 'dizaine')} et ${pl(u, 'unité')} : ${n}.`, hint: 'Compte les plaques de 100, puis les barres de 10, puis les petits cubes.' }; }
+  if (l === 4) { const n = rnd(102, 987), dg = [Math.floor(n / 100), Math.floor(n / 10) % 10, n % 10]; if (new Set(dg).size < 3) return ce1Mine(4);
+    const k = rnd(0, 2), nm = ['centaines', 'dizaines', 'unités'][k];
+    return { kind: 'choices', ask: `Dans ${n}, quel est le chiffre des ${nm} ?`, prompt: '', answer: dg[k], answerText: String(dg[k]), choices: dg.map(v => ({ v, html: String(v) })), log: `chiffre des ${nm} de ${n}`,
+      explain: `${n} : ${pl(dg[0], 'centaine')}, ${pl(dg[1], 'dizaine')}, ${pl(dg[2], 'unité')}. Le chiffre des ${nm} est ${dg[k]}.`, hint: 'De gauche à droite : centaines, dizaines, unités.' }; }
+  const h = rnd(1, 8), list = [...new Set([h * 100 + rnd(10, 99), h * 100 + rnd(10, 99), (h + 1) * 100 + rnd(0, 9), h * 100 + rnd(0, 9) * 10 + rnd(0, 9)])].slice(0, 3);
+  if (list.length < 3) return ce1Mine(5); const ans = Math.max(...list);
+  return { kind: 'choices', ask: 'Quel est le plus grand nombre ?', prompt: '', answer: ans, answerText: fmt(ans), choices: list.map(v => ({ v, html: fmt(v) })), log: `plus grand : ${list.join(', ')}`,
+    explain: `On compare d’abord les centaines, puis les dizaines, puis les unités. Le plus grand est ${ans}.`, hint: 'Compare d’abord le chiffre des centaines.' };
+}
+function ce1Chasse(l) {
+  const cfgs = [null, { s: 0, st: 10 }, { s: rnd(1, 9) * 10, st: 1 }, { s: 0, st: 100 }, { s: rnd(1, 8) * 100, st: 10 }];
+  const cfg = l <= 4 ? cfgs[l] : pick(cfgs.slice(2)), k = rnd(1, 9), v = cfg.s + k * cfg.st;
+  const base = { start: cfg.s, step: cfg.st, k, mid: true, answer: v, answerText: fmt(v), explain: `Chaque trait avance de ${cfg.st}. ${fmt(cfg.s)} + ${k} × ${cfg.st} = ${fmt(v)}.`, hint: `Compte de ${cfg.st} en ${cfg.st} depuis ${fmt(cfg.s)}.` };
+  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache à ce nombre. Touche son trait !', prompt: fmt(v), log: `placer ${v} (de ${cfg.s} en ${cfg.st})` };
+  const wrong = shuffle([v + cfg.st, v - cfg.st, v + 2 * cfg.st]).filter(x => x >= cfg.s && x <= cfg.s + 10 * cfg.st && x !== v);
+  return { ...base, kind: 'lineRead', ask: 'Quel nombre montre la flèche ?', prompt: '', log: `lire la flèche (de ${cfg.s} en ${cfg.st})`, choices: shuffle([v, ...wrong.slice(0, 2)]).map(x => ({ v: x, html: fmt(x) })) };
+}
+function ce1Marche(l) {
+  const denoms = l === 1 ? [1000, 500, 200, 100] : l === 2 || l === 4 ? [2000, 1000, 500, 200, 100] : l === 3 ? [500, 200, 100, 50, 20, 10] : [1000, 500, 200, 100];
+  const greedy = c => { const o = []; for (const d of denoms) while (c >= d) { o.push(coinLabel(d)); c -= d; } return o.join(' + '); };
+  let target, ask, price = '', explain, log, hint = 'Commence par le plus gros billet ou la plus grosse pièce possible.';
+  if (l <= 3) { target = l === 1 ? rnd(5, 20) * 100 : l === 2 ? rnd(12, 50) * 100 : rnd(11, 99) * 10; ask = `Le cuistot achète ${pick(ITEMS)}. Paye la somme exacte :`; price = fmtE(target); log = `payer ${fmtE(target)}`; explain = `Il fallait ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
+  else if (l === 4) { const a = rnd(5, 25), b = rnd(3, 20), [i1, i2] = shuffle(ITEMS); target = (a + b) * 100; ask = `Le cuistot achète ${i1} à ${a} € et ${i2} à ${b} €. Paye le tout :`; log = `payer ${a} € + ${b} €`; explain = `${a} € + ${b} € = ${a + b} €, par exemple : ${greedy(target)}.`; }
+  else { const pr = rnd(3, 17); target = (20 - pr) * 100; ask = `Un client achète ${pick(ITEMS)} à ${pr} € et paye avec un billet de 20 €. Rends-lui la monnaie :`; log = `rendre sur 20 € pour ${pr} €`;
+    explain = `De ${pr} € à 20 €, il manque ${20 - pr} € : on rend ${fmtE(target)}, par exemple : ${greedy(target)}.`; hint = 'Pour rendre la monnaie, pars du prix et complète jusqu’à 20 € : ce que tu ajoutes, c’est la monnaie.'; }
+  return { kind: 'money', denoms, target, showTotal: l <= 3, ask, price, answer: target, answerText: fmtE(target), explain, hint, log };
+}
+function ce1Cuisine(l) {
+  if (l <= 2) { const [d, nm] = l === 1 ? [2, 'la moitié'] : pick([[4, 'un quart'], [3, 'un tiers'], [2, 'la moitié']]), parts = d * (l === 1 ? pick([1, 2, 3, 4]) : pick([1, 2])), k = parts / d;
+    return { kind: 'pizza', parts, n: 1, d, ask: `Le cuistot a coupé la pizza en ${parts} parts. Colore :`, prompt: `<span class="words">${nm}</span>`, promptClass: 'mid', answer: `1/${d}`, answerText: `${k} part${k > 1 ? 's' : ''} sur ${parts}`, log: `${nm} d’une pizza en ${parts}`,
+      explain: `${nm[0].toUpperCase() + nm.slice(1)}, c’est une part quand on coupe en ${d} parts pareilles. Ici : ${k} part${k > 1 ? 's' : ''} sur ${parts}.`, hint: `Partage la pizza en ${d} morceaux égaux dans ta tête, et colores-en un.` }; }
+  if (l === 3) { const k = rnd(3, 20), n = 2 * k, w = pick(['biscuits', 'poissons', 'bananes', 'doublons']);
+    return { kind: 'choices', ask: `Deux pirates se partagent ${n} ${w} en parts égales. Combien chacun ?`, prompt: '', answer: k, answerText: fmt(k), choices: opts(k, [n, k + 2]), log: `moitié de ${n}`,
+      explain: `La moitié de ${n}, c’est ${k}, car ${k} + ${k} = ${n}.`, hint: `Cherche le nombre qui, ajouté à lui-même, donne ${n}.` }; }
+  if (l === 4) { const g = rnd(2, 5), e = pick([2, 3, 4, 5, 10]), w = pick([['paniers', 'pommes'], ['sacs', 'oranges'], ['boîtes', 'biscuits'], ['filets', 'poissons']]);
+    return { kind: 'keypad', ask: `Le cuistot a ${g} ${w[0]} de ${e} ${w[1]}. Combien de ${w[1]} en tout ?`, prompt: SLOT, answer: g * e, answerText: fmt(g * e), log: `${g} × ${e} (problème)`,
+      explain: `${g} ${w[0]} de ${e}, c’est ${Array(g).fill(e).join(' + ')} = ${g * e}, ou ${g} × ${e} = ${g * e}.`, hint: `Ajoute ${e} autant de fois qu’il y a de ${w[0]}.` }; }
+  const a = rnd(20, 60), b = rnd(10, 30), c = rnd(5, Math.min(30, a + b - 5)), ans = a + b - c, w = pick(['pommes', 'poissons', 'œufs', 'biscuits']);
+  return { kind: 'keypad', ask: `Le cuistot a ${a} ${w}. Il en achète ${b}, puis en utilise ${c}. Combien lui en reste-t-il ?`, prompt: SLOT, answer: ans, answerText: fmt(ans), log: `${a} + ${b} − ${c}`,
+    explain: `D’abord ${a} + ${b} = ${a + b}. Puis ${a + b} − ${c} = ${ans}.`, hint: 'Fais le calcul en deux étapes : ce qu’il achète, puis ce qu’il utilise.' };
+}
+function ce1Half() {
+  const h = rnd(1, 12), key = (a, b) => `${a}:${b}`, wrong = shuffle([[h % 12 + 1, 30], [h, 0], [(h + 10) % 12 + 1, 30]]).slice(0, 2);
+  return { kind: 'choices', clock: { h, m: 30 }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h, 30), answerText: hm(h, 30), choices: [[h, 30], ...wrong].map(([a, b]) => ({ v: key(a, b), html: hm(a, b) })), log: `lire ${h} h 30`,
+    explain: `La grande aiguille est sur le 6 : c’est la demie (30 minutes). La petite aiguille est entre le ${h} et le ${h % 12 + 1} : il est ${h} h 30, ${h} heures et demie.`, hint: 'Quand la grande aiguille est sur le 6, c’est « et demie ». Regarde le chiffre que la petite aiguille vient de dépasser.' };
+}
+function ce1Horloge(l) {
+  if (l === 1) return cpClock();
+  if (l === 2) return ce1Half();
+  if (l === 3) return Math.random() < .5 ? cpClock() : ce1Half();
+  if (l === 4) { const a = rnd(1, 8), d = rnd(1, 4), w = shuffle([...new Set([d + 1, d === 1 ? d + 2 : d - 1, d + 3])]).slice(0, 2);
+    return { kind: 'choices', ask: `Le bateau part à ${a} h et arrive à ${a + d} h. Combien de temps dure le voyage ?`, prompt: '', answer: d, answerText: `${d} heure${d > 1 ? 's' : ''}`, choices: [d, ...w].map(v => ({ v, html: `${v} h` })), log: `durée ${a} h → ${a + d} h`,
+      explain: `De ${a} h à ${a + d} h, on compte les heures : ${range(a + 1, a + d).map(x => x + ' h').join(', ')}. Le voyage dure ${d} heure${d > 1 ? 's' : ''}.`, hint: 'Compte les heures une par une depuis le départ.' }; }
+  return pick([() => cpSuite(JOURS, pick(['apres', 'hier']), 'jour'), () => cpSuite(MOIS, 'apres', 'mois'),
+    () => ({ kind: 'choices', ask: 'Combien y a-t-il de minutes dans une heure ?', prompt: '', answer: 60, answerText: '60', choices: [60, 100, 30].map(v => ({ v, html: String(v) })), log: 'minutes dans une heure', explain: 'Une heure dure 60 minutes : la grande aiguille fait un tour complet.', hint: 'La grande aiguille fait un tour en une heure : compte de 5 en 5.' }),
+    () => ({ kind: 'choices', ask: 'Combien y a-t-il de mois dans une année ?', prompt: '', answer: 12, answerText: '12', choices: [12, 10, 7].map(v => ({ v, html: String(v) })), log: 'mois dans une année', explain: 'Une année a 12 mois, de janvier à décembre.', hint: 'Récite les mois de janvier à décembre en comptant.' })])();
+}
+function ce1Conjug(l) {
+  if (l === 1) return qPron(pick(ER1.concat(['être', 'avoir'])), 'pr');
+  if (l === 2) return qFill(pick(['être', 'avoir'].concat(ER1)), 'pr', false);
+  if (l === 3) return Math.random() < .4 ? qPron(pick(ER1.concat(['être', 'avoir'])), 'pr') : qFill(pick(['être', 'avoir', 'aller'].concat(ER1)), 'pr', false);
+  if (l === 4) return qFill(pick(['être', 'avoir'].concat(ER1)), 'fu', false);
+  return Math.random() < .3 ? qTense(pick(ER1), ['pr', 'fu'], false) : qFill(pick(['être', 'avoir'].concat(ER1)), pick(['pr', 'fu']), false);
+}
+function ce1Gram(l) {
+  const r = Math.random();
+  if (l === 1) return r < .5 ? cpGram(3) : qType();
+  if (l === 2) return qVerb();
+  if (l === 3) return r < .5 ? qTagMulti('N', 'noms communs', 'On peut mettre « le », « la », « un » ou « une » devant un nom commun. Attention : Pi, Lila… sont des noms propres.') : qTagMulti('D', 'déterminants', 'Le déterminant est le petit mot juste devant le nom.');
+  if (l === 4) return r < .5 ? qFn('S') : qVerb();
+  return r < .35 ? qNeg2() : r < .6 ? qType() : r < .8 ? qFn('S') : qVerb();
+}
+function ce1Accords(l) {
+  const r = Math.random();
+  if (l === 1) return r < .5 ? cpAccords(4) : qDet();
+  if (l === 2) return qPlur(false);
+  if (l === 3) return qAdj(false);
+  if (l === 4) return qHomo(false);
+  return r < .4 ? qHomo(false) : r < .7 ? qSV(false) : qPlur(false);
+}
+function ce1Vocab(l) {
+  const r = Math.random();
+  if (l === 1) return r < .5 ? cpVocab(4) : qAlpha(false);
+  if (l === 2) return r < .5 ? cpVocab(3) : qAlpha(false);
+  if (l === 3) return qBank('fam2');
+  if (l === 4) return qBank('syn2');
+  return r < .4 ? qBank('fam2') : r < .7 ? qBank('syn2') : qAlpha(false);
+}
+
+function genCanon(l) { return CP() ? cpCanon(l) : CE1() ? ce1Canon(l) : CM1() ? cm1Canon(l) : ce2Canon(l); }
+function genFoot(l) { return CP() ? cpFoot(l) : CE1() ? ce1Foot(l) : CM1() ? cm1Foot(l) : ce2Foot(l); }
+function genMine(l) { return CP() ? cpMine(l) : CE1() ? ce1Mine(l) : CM1() ? cm1Mine(l) : ce2Mine(l); }
+function genChasse(l) { return CP() ? cpChasse(l) : CE1() ? ce1Chasse(l) : CM1() ? cm1Chasse(l) : ce2Chasse(l); }
+function genMarche(l) { return CP() ? cpMarche(l) : CE1() ? ce1Marche(l) : CM1() ? cm1Marche(l) : ce2Marche(l); }
+function genHorloge(l) { return CP() ? cpHorloge(l) : CE1() ? ce1Horloge(l) : CM1() ? cm1Horloge(l) : ce2Horloge(l); }
+function genCuisine(l) { return CP() ? cpCuisine(l) : CE1() ? ce1Cuisine(l) : CM1() ? cm1Cuisine(l) : ce2Cuisine(l); }
 // Décimaux : on calcule en centièmes entiers, on affiche avec une virgule (3.5 → « 3,5 »)
 const fmtD = (x, d = 2) => { const [a, b = ''] = (Math.round(x * 100) / 100).toFixed(d).split('.'); const t = b.replace(/0+$/, ''); return fmt(+a) + (t ? ',' + t : ''); };
 function dch(ans, cands) { const a = typeof ans === 'number' ? fmtD(ans) : ans, out = [];
@@ -1587,6 +1714,7 @@ function qMark(cm1) {
 }
 function genConjug(l) {
   if (CP()) return cpSons(l);
+  if (CE1()) return ce1Conjug(l);
   const cm1 = CM1();
   if (!cm1) {
     if (l === 1) return Math.random() < .3 ? qPron(pick(['chanter', 'jouer', 'danser', 'regarder', 'être', 'avoir']), 'pr') : qFill(pick(['être', 'avoir', 'chanter', 'jouer', 'ramer', 'danser', 'regarder', 'chercher', 'trouver', 'grimper']), 'pr', false);
@@ -1718,6 +1846,7 @@ function qFonction() {
 }
 function genGram(l) {
   if (CP()) return cpGram(l);
+  if (CE1()) return ce1Gram(l);
   const r = Math.random();
   if (!CM1()) {
     if (l === 1) return r < .5 ? qType() : qVerb();
@@ -1841,6 +1970,7 @@ function qHomo(cm1) {
 }
 function genAccords(l) {
   if (CP()) return cpAccords(l);
+  if (CE1()) return ce1Accords(l);
   const cm1 = CM1(), r = Math.random();
   if (!cm1) { if (l === 1) return r < .6 ? qPlur(false) : qDet(); if (l === 2) return qAdj(false); if (l === 3) return r < .4 ? qHomo(false) : qSV(false); if (l === 4) return r < .3 ? qHomo(false) : r < .7 ? qGN(false) : qAdj(false); return r < .5 ? qHomo(false) : r < .7 ? qSV(false) : r < .85 ? qGN(false) : qPlur(false); }
   if (l === 1) return qPlur(true); if (l === 2) return r < .6 ? qAdj(true) : qGN(true); if (l === 3) return qSV(true); if (l === 4) return qPPetre();
@@ -1929,6 +2059,7 @@ function qBank(key) {
 }
 function genVocab(l) {
   if (CP()) return cpVocab(l);
+  if (CE1()) return ce1Vocab(l);
   const r = Math.random();
   if (!CM1()) { if (l === 1) return qAlpha(false); if (l === 2) return r < .7 ? qBank('fam2') : qAlpha(false); if (l === 3) return qBank('pre2'); if (l === 4) return qBank('syn2'); return r < .6 ? qBank('fig2') : r < .8 ? qBank('syn2') : qBank('pre2'); }
   if (l === 1) return r < .5 ? qAlpha(true) : qBank('pre4'); if (l === 2) return qBank('pre4'); if (l === 3) return qBank('syn4'); if (l === 4) return qBank('fig4');
@@ -2117,7 +2248,8 @@ const QHINT = { e: 'La réponse est écrite dans le texte : relis-le en cherchan
   a: 'Relis la phrase d’avant : qui ou quoi est remplacé ?', v: 'Relis la phrase où se trouve le mot : elle t’aide à comprendre son sens.', g: 'Pense au texte en entier : de quoi parle-t-il ? à quoi sert-il ?' };
 function genLecture(l) {
   if (CP()) return cpLecture(l);
-  const B = TXT[GR()], set = l === 1 ? B.m : l === 5 ? B.l : B.p, types = l === 2 ? ['e'] : l === 3 ? ['i', 'e'] : l === 4 ? ['a', 'v'] : null;
+  if (CE1()) { if (l <= 2) return cpLecture(l + 2); l -= 2; }
+  const B = TXT[CE1() ? 'ce2' : GR()], set = l === 1 ? B.m : l === 5 ? B.l : B.p, types = l === 2 ? ['e'] : l === 3 ? ['i', 'e'] : l === 4 ? ['a', 'v'] : null;
   const fresh = T => T.q.filter(q => (!types || types.includes(q[0])) && !(R && R.seen && R.seen.has(`${T.t} · ${q[1]}`)));
   // On reste sur le même texte tant qu'il a des questions : l'enfant ne relit pas un nouveau texte à chaque fois
   let T = R && R.rt && set.includes(R.rt) && fresh(R.rt).length ? R.rt : pick(set.filter(t => fresh(t).length).concat([])) || pick(set);
@@ -2751,7 +2883,7 @@ function onboarding() {
   app.appendChild(m);
   $$('.avs button', m).forEach(b => b.addEventListener('click', () => { S.avatar = b.dataset.v; SND.tap(); $$('.avs button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
   $$('.grades button', m).forEach(b => b.addEventListener('click', () => { gr = b.dataset.g; SND.tap(); $$('.grades button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
-  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CP, CE2 ou CM1.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
+  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CP, CE1, CE2 ou CM1.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
     S.name = $('#nm').value.trim().slice(0, 14) || 'Capitaine'; S.intro = true; if (ask) setGrade(gr); save(); m.remove(); ac(); SND.fanfare(); show('map'); setTimeout(() => voice('carte', true), 600); });
 }
 function setGrade(g) { if (!GRADES[g]) return; S.grade = g; P(); applyGrade(); mapScroll = null; save(); }
