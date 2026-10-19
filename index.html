@@ -926,7 +926,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.6 bêta · octobre 2026';
+const VERSION = '1.7 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -1407,7 +1407,7 @@ const CPL = [
   ['Le petit crabe a peur. Il se cache sous un rocher. Le requin passe sans le voir.', 'Où est-ce que le crabe se cache ?', 'sous un rocher', ['dans le sable', 'sur le bateau'], 3]];
 // readAlone : le haut-parleur lit la question, jamais le texte (c'est l'enfant qui le lit)
 function cpLecture(l) {
-  const it = pick(CPL.filter(x => x[4] === (l <= 2 ? 1 : l <= 4 ? 2 : 3)));
+  const it = pick(CPL.filter(x => x[4] === [1, pick([1, 2]), 2, pick([2, 3]), 3][l - 1])); /* progression : 1 phrase, 1 ou 2, 2, 2 ou 3, 3 */
   return { kind: 'choices', ask: it[1], prompt: esc(it[0]), promptClass: 'sent', readAlone: true, answer: it[2], answerText: it[2], choices: [it[2], ...it[3]].map(v => ({ v, html: esc(v) })), log: `${it[0]} · ${it[1]}`,
     explain: `Relis le texte : « ${it[0]} » La réponse est : ${it[2]}.`, hint: 'Relis la phrase doucement, mot après mot.' };
 }
@@ -1575,12 +1575,12 @@ const FRN = { 2: 'un demi', 3: 'un tiers', 4: 'un quart' }; // au-delà : un cin
 const frName = d => FRN[d] || `un ${['', '', '', '', '', 'cinquième', 'sixième', 'septième', 'huitième', 'neuvième', 'dixième'][d]}`;
 const FRWHY = 'Le nombre du bas (le dénominateur) dit en combien de parts égales on coupe. Le nombre du haut (le numérateur) dit combien de parts on prend.';
 function ce1Pizza(l) {
-  const d = l === 1 ? pick([2, 3, 4]) : l === 2 ? rnd(5, 10) : rnd(3, 8), n = l <= 2 ? 1 : rnd(2, d - 1);
+  const d = l === 1 ? pick([2, 3, 4]) : l === 2 ? pick([5, 6, 8, 10]) : pick([3, 4, 5, 6, 8]), n = l <= 2 ? 1 : rnd(2, d - 1); /* CE1 : dénominateurs 2, 3, 4, 5, 6, 8 ou 10 */
   return { kind: 'pizza', parts: d, n, d, ask: `Le cuistot a coupé la pizza en ${d} parts égales. Colorie :`, prompt: frac(n, d), answer: `${n}/${d}`, answerText: `${n} part${n > 1 ? 's' : ''} sur ${d}`, log: `colorier ${n}/${d}`,
     explain: `${frac(n, d)}${n === 1 ? ` (${frName(d)})` : ''} : on coupe en ${d} parts égales et on en colorie ${n}. ${FRWHY}`, hint: 'Le nombre du bas dit en combien de parts on coupe, celui du haut combien on en colorie.' };
 }
 function ce1Fractions() {
-  if (Math.random() < .5) { const d = rnd(3, 10), a = rnd(1, d - 2), b = rnd(1, d - 1 - a), s = a + b;
+  if (Math.random() < .5) { const d = pick([3, 4, 5, 6, 8, 10]), a = rnd(1, d - 2), b = rnd(1, d - 1 - a), s = a + b;
     const wrong = shuffle([[s, 2 * d], [s + 1, d], [s - 1, d]]).slice(0, 2), key = (x, y) => `${x}/${y}`;
     return { kind: 'choices', ask: `Le cuistot coupe une tarte en ${d} parts égales. Pi mange ${frac(a, d)} de la tarte, Lila ${frac(b, d)}. Quelle part de la tarte ont-ils mangée en tout ?`, prompt: '', answer: key(s, d), answerText: `${s}/${d}`,
       choices: shuffle([[s, d], ...wrong]).map(([x, y]) => x === s && y === d ? { v: key(x, y), html: frac(x, y) } : { v: key(x, y), html: frac(x, y), why: y !== d ? `Tu as aussi additionné les dénominateurs. La tarte est toujours coupée en ${d} : le nombre du bas ne change pas.` : `Recompte les parts : ${a} + ${b} = ${s}.` }), log: `${a}/${d} + ${b}/${d}`,
@@ -1591,7 +1591,7 @@ function ce1Fractions() {
     explain: `${a} part${a > 1 ? 's' : ''} sur ${d}, c’est ${frac(a, d)}. ${FRWHY}`, hint: 'En bas : en combien de parts on a coupé. En haut : combien de parts il a mangées.' };
 }
 function ce1Compare() {
-  const d = rnd(3, 10); let a, c; do { a = rnd(1, d - 1); c = rnd(1, d - 1); } while (a === c && Math.random() < .8);
+  const d = pick([3, 4, 5, 6, 8, 10]); let a, c; do { a = rnd(1, d - 1); c = rnd(1, d - 1); } while (a === c && Math.random() < .8);
   const sym = a < c ? '<' : a > c ? '>' : '=';
   return { kind: 'compare', ct: 'sameD', fr: [[a, d], [c, d]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, d)} <span class="slot">?</span> ${frac(c, d)}`, answer: sym, answerText: sym, log: `comparer ${a}/${d} et ${c}/${d}`,
     explain: `Les deux fractions ont le même dénominateur (${d}) : les parts ont la même taille. On compare les numérateurs, ${a} et ${c}. Donc ${frac(a, d)} ${sym} ${frac(c, d)}.`, hint: 'Les parts ont la même taille : qui en a le plus ?', choices: ['<', '=', '>'].map(s => ({ v: s, html: s })) };
@@ -1729,12 +1729,11 @@ function cm1Foot(l) {
     else if (t === 'dbl') { const n = pick([150, 250, 350, 450, 1500, 2500, 125, 175]); ans = 2 * n; log = `double de ${fmt(n)}`; q = `Le double de ${fmt(n)} ?`; explain = `${fmt(n)} + ${fmt(n)} = ${fmt(ans)}.`; ch = opts(ans, [ans + 100, ans - 100, n + 2]); }
     else { const n = pick([300, 500, 700, 900, 1500, 3000, 5000, 1100]); ans = n / 2; log = `moitié de ${fmt(n)}`; q = `La moitié de ${fmt(n)} ?`; explain = `${fmt(ans)} + ${fmt(ans)} = ${fmt(n)}.`; ch = opts(ans, [ans + 50, ans - 50, n * 2]); } }
   else if (l === 3) { const t = pick(['add', 'add', 'half', 'dbl']);
-    if (t === 'add') { const x = rnd(11, 89), y = rnd(1, 9); ans = (x + y) / 10; log = `${fmtD(x / 10)} + ${fmtD(y / 10)}`; q = `${log} = ?`; const carry = x % 10 + y >= 10, dx = k => k > 1 ? `${k} dixièmes` : `${k} dixième`; explain = x % 10 ? `${dx(x % 10)} + ${dx(y)} = ${dx(x % 10 + y)}${carry ? `, et 10 dixièmes font 1 unité` : ''}. Donc ${log} = ${fmtD(ans)}.` : `${fmtD(x / 10)} + ${dx(y)} = ${fmtD(ans)}.`; ch = dch(ans, [ans + .1, ans - .1, ans + 1, carry ? `${Math.floor(x / 10)},${x % 10 + y}` : ans - 1]); hint = 'Ajoute les dixièmes entre eux. 10 dixièmes font 1 unité.'; }
+    if (t === 'add') { const x = rnd(1, 8) * 10 + rnd(0, 8), y = rnd(1, 9 - x % 10); /* CM1 : sans retenue */ ans = (x + y) / 10; log = `${fmtD(x / 10)} + ${fmtD(y / 10)}`; q = `${log} = ?`; const carry = x % 10 + y >= 10, dx = k => k > 1 ? `${k} dixièmes` : `${k} dixième`; explain = x % 10 ? `${dx(x % 10)} + ${dx(y)} = ${dx(x % 10 + y)}${carry ? `, et 10 dixièmes font 1 unité` : ''}. Donc ${log} = ${fmtD(ans)}.` : `${fmtD(x / 10)} + ${dx(y)} = ${fmtD(ans)}.`; ch = dch(ans, [ans + .1, ans - .1, ans + 1, carry ? `${Math.floor(x / 10)},${x % 10 + y}` : ans - 1]); hint = 'Ajoute les dixièmes entre eux. 10 dixièmes font 1 unité.'; }
     else if (t === 'half') { const n = pick([3, 5, 7, 9, 11, 13, 15, 19]); ans = n / 2; log = `moitié de ${n}`; q = `La moitié de ${n} ?`; explain = `${fmtD(ans)} + ${fmtD(ans)} = ${n}. La moitié de ${n}, c’est ${Math.floor(n / 2)} et encore une demie : ${fmtD(ans)}.`; ch = dch(ans, [ans + .5, ans - .5, ans + 1]); }
     else { const x = pick([5, 15, 25, 35, 45, 12, 24, 36]); ans = 2 * x / 10; log = `double de ${fmtD(x / 10)}`; q = `Le double de ${fmtD(x / 10)} ?`; explain = `${fmtD(x / 10)} + ${fmtD(x / 10)} = ${fmtD(ans)}.`; ch = dch(ans, [ans + 1, ans - .1, `${2 * Math.floor(x / 10)},${2 * (x % 10)}`]); } }
-  else if (l === 4) { const t = pick(['x10', 'x100', 'd10']);
+  else if (l === 4) { const t = pick(['x10', 'd10']); /* décimal × 100 : programme du CM2 */
     if (t === 'x10') { const x = rnd(11, 99), v = x / 10; ans = x; log = `${fmtD(v)} × 10`; explain = `× 10 : le chiffre des dixièmes devient celui des unités. ${fmtD(v)} × 10 = ${ans}.`; ch = dch(String(ans), [v * 100, `${fmtD(v)}0`, v / 10]); }
-    else if (t === 'x100') { const x = rnd(11, 99), v = x / 10; ans = x * 10; log = `${fmtD(v)} × 100`; explain = `× 100 : chaque chiffre prend une valeur cent fois plus grande. ${fmtD(v)} × 100 = ${fmt(ans)}.`; ch = dch(fmt(ans), [x, `${fmtD(v)}00`, x * 100]); }
     else { const x = rnd(11, 99); const v = x / 10; ans = v; log = `${x} ÷ 10`; explain = `÷ 10 : le chiffre des unités devient celui des dixièmes. ${x} ÷ 10 = ${fmtD(v)}.`; ch = dch(v, [x / 100, x * 10, v + 1]); }
     q = `${log} = ?`; if (typeof ans === 'number' && !Number.isInteger(ans)) ans = fmtD(ans); else ans = fmt(ans); }
   else { const t = pick(['frac', 'frac', 'x25', 'diff']);
@@ -1790,7 +1789,7 @@ function cm1Marche(l) {
 }
 function cm1Cuisine(l) {
   if (l === 1) return ce2Cuisine(pick([2, 3]));
-  if (l === 2) { const d = pick([2, 3, 4, 5, 10]), n = d === 2 ? 1 : rnd(1, d - 1), k = rnd(2, d === 10 ? 9 : 8), Q = d * k, ans = n * k, what = pick([['pirates', 'des'], ['doublons', 'des'], ['bananes', 'des'], ['boulets', 'des']]);
+  if (l === 2) { const d = pick([2, 3, 4, 5, 10]), n = 1, /* CM1 : fractions unitaires d'une quantité (deux tiers de… : CM2) */ k = rnd(2, d === 10 ? 9 : 8), Q = d * k, ans = n * k, what = pick([['pirates', 'des'], ['doublons', 'des'], ['bananes', 'des'], ['boulets', 'des']]);
     return { kind: 'choices', ask: `Combien font ${frac(n, d)} ${what[1]} ${Q} ${what[0]} ?`, prompt: '', answer: ans, answerText: fmt(ans), choices: opts(ans, [k, Q - ans, ans + k]), log: `${n}/${d} de ${Q}`,
       explain: `On partage ${Q} en ${d} parts égales : ${Q} ÷ ${d} = ${k}. ${n > 1 ? `On prend ${n} parts : ${n} × ${k} = ${ans}.` : `On prend une part : ${k}.`}`, hint: `Le nombre du bas dit en combien de parts on partage ${Q}.` }; }
   if (l === 3) { let a, b, c, d2, why; const t = pick(['mult', 'mult', 'one']);
@@ -2116,7 +2115,7 @@ function genGram(l) {
   if (l === 2) return r < .6 ? qFn('S') : qNoyau();
   if (l === 3) return r < .55 ? qFn('O') : qFn('C');
   if (l === 4) return r < .4 ? qDetType() : r < .7 ? qTagMulti('A', 'adjectifs épithètes', 'L’adjectif épithète est placé juste à côté du nom qu’il précise.') : qNoyau();
-  return r < .35 ? qFonction() : r < .55 ? qNature(['N', 'Np', 'V', 'A', 'D', 'Pr', 'Adv', 'Cj', 'P']) : r < .8 ? qFn('O') : qFn('C');
+  return r < .35 ? qFonction() : r < .55 ? qNature(['N', 'Np', 'V', 'A', 'D', 'Pr', 'Adv', 'Cj']) : r < .8 ? qFn('O') : qFn('C');
 }
 
 /* ================= Français : accords et homophones ================= */
@@ -2196,7 +2195,7 @@ const SV4 = [['Le capitaine des pirates', 'regarder', 2, 'la mer', 'Le sujet est
   ['Sur le pont', 'danser', 5, 'les pirates', 'Le sujet est placé après le verbe : qui danse ? les pirates.', 1], ['Dans la cale', 'dormir', 5, 'les rats', 'Le sujet est placé après le verbe : qui dort ? les rats.', 1]];
 VB['claquer'] = { g: 1, c: 9, x: '' }; VB['parler'] = { g: 1, c: 9, x: '' }; VB['briller'] = { g: 1, c: 9, x: '' }; VB['surveiller'] = { g: 1, c: 9, x: '' }; VB['dormir'] = { g: 3, c: 9, pr: ['dors', 'dors', 'dort', 'dormons', 'dormez', 'dorment'], im: 'dorm', fu: 'dormir', pp: 'dormi', x: '' };
 function qSV(cm1) {
-  const it = pick(cm1 ? SV4 : SV2), F = vforms(it[1], 'pr'), ans = F[it[2]], w = [...new Set([F[2], F[5], F[1]])].filter(x => x !== ans);
+  const it = pick(cm1 ? SV4.filter(x => !x[5]) : SV2), /* sujet inversé : programme du CM2 */ F = vforms(it[1], 'pr'), ans = F[it[2]], w = [...new Set([F[2], F[5], F[1]])].filter(x => x !== ans);
   const prompt = `${it[0]} ${SLOT} ${it[3]}.`;
   const why = v => `${v === F[1] ? `« ${v} » va avec « tu » (terminaison -s).` : v === F[5] ? `« ${v} » va avec un sujet pluriel (ils, elles).` : `« ${v} » va avec un sujet singulier (il, elle).`} ${it[4] || `Ici, le sujet est « ${it[0]} ».`}`;
   return { kind: 'choices', ask: `Accorde le verbe « ${it[1]} » au présent :`, prompt, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, ...w.slice(0, 2)]).map(v => v === ans ? { v, html: v } : { v, html: v, why: why(v) }), log: `accord : ${it[0]} … (${it[1]})`,
@@ -2526,51 +2525,51 @@ const SKILLS = {
   cp: { canons: ['additionner jusqu’à 5', 'additionner jusqu’à 10', 'trouver le complément à 10', 'ajouter à un nombre entre 10 et 20', 'passer la dizaine et trouver ce qui manque'],
     stade: ['dire le nombre juste avant et juste après', 'soustraire jusqu’à 10', 'trouver le double d’un nombre', 'ajouter ou enlever 10', 'calculer avec des dizaines'],
     mine: ['construire un nombre jusqu’à 30', 'construire un nombre jusqu’à 99', 'lire un nombre en dizaines et unités', 'trouver les dizaines et les unités', 'comparer des nombres jusqu’à 99'],
-    jungle: ['placer un nombre de 0 à 10', 'placer un nombre de 10 à 20', 'placer un nombre jusqu’à 50', 'placer un nombre jusqu’à 100', 'lire une droite graduée sans aide'],
+    jungle: ['placer un nombre de 0 à 10', 'placer un nombre de 10 à 20', 'placer un nombre entre 20 et 60', 'placer un nombre jusqu’à 100', 'lire une droite graduée sans aide'],
     marche: ['payer avec des pièces de 1 € et 2 €', 'payer jusqu’à 10 €', 'payer jusqu’à 20 € avec des billets', 'payer deux achats', 'rendre la monnaie sur 10 €'],
-    cuisine: ['trouver la moitié de quelques parts', 'trouver la moitié de 8, 10 ou 12', 'partager en deux parts égales', 'résoudre un problème de groupes ou de partage', 'résoudre un problème (ajout, retrait, ce qui manque)'],
-    horloge: ['connaître l’ordre des jours', 'trouver la veille', 'lire l’heure pile', 'connaître l’ordre des mois', 'me repérer dans le temps'],
-    lecture: ['lire une phrase simple', 'comprendre une phrase', 'lire deux phrases', 'comprendre un petit texte', 'trouver une information dans un texte'],
-    conjug: ['reconnaître la première lettre d’un mot', 'entendre les rimes', 'compter les syllabes', 'trouver une syllabe', 'reconnaître les sons ou, on, an, oi, ch'],
-    gram: ['trouver un mot dans une phrase', 'compter les mots d’une phrase', 'repérer la majuscule et le point', 'remettre les mots dans l’ordre', 'reconnaître une phrase qui a du sens'],
+    cuisine: ['trouver la moitié de 2, 4 ou 6 parts', 'trouver la moitié de 8, 10 ou 12', 'partager en deux parts égales', 'résoudre un problème de groupes ou de partage', 'résoudre un problème (ajout, retrait, ce qui manque)'],
+    horloge: ['connaître l’ordre des jours', 'dire le jour d’hier, savoir qu’une semaine a 7 jours', 'lire l’heure pile', 'connaître l’ordre des mois', 'me repérer dans le temps'],
+    lecture: ['lire une phrase simple', 'comprendre une ou deux phrases', 'comprendre deux phrases', 'comprendre un petit texte', 'trouver une information dans un texte'],
+    conjug: ['reconnaître la première lettre d’un mot', 'entendre les rimes', 'compter les syllabes', 'trouver la syllabe qui manque dans un mot', 'lire ou, on, an, oi, ch, conjuguer être et avoir'],
+    gram: ['trouver un mot dans une phrase', 'compter les mots d’une phrase', 'repérer la majuscule et le point', 'reconnaître une phrase qui a du sens', 'reconnaître une phrase bien écrite et qui a du sens'],
     accords: ['choisir le ou la', 'choisir un ou une', 'écrire le pluriel avec un s', 'reconnaître un mot au pluriel', 'remplacer un nom par il ou elle'],
     vocab: ['reconnaître les animaux et les fruits', 'ranger un mot dans sa catégorie', 'trouver le contraire', 'connaître l’ordre de l’alphabet', 'trouver l’intrus'] },
-  ce1: { canons: ['passer la dizaine (9 + 6)', 'utiliser les tables de 2 et de 10', 'utiliser les tables de 2, 5 et 10', 'utiliser les tables de 3 et de 4', 'trouver le nombre caché d’une multiplication'],
-    stade: ['additionner et soustraire jusqu’à 20', 'trouver doubles et moitiés', 'ajouter ou enlever 10 et 100', 'trouver le complément à 100', 'ajouter un petit nombre ou des dizaines'],
-    mine: ['construire un nombre jusqu’à 499', 'construire un nombre jusqu’à 999', 'lire centaines, dizaines et unités', 'trouver le chiffre des centaines, des dizaines, des unités', 'comparer des nombres jusqu’à 1 000'],
-    jungle: ['lire une graduation de 10 en 10', 'lire une graduation de 1 en 1', 'lire une graduation de 100 en 100', 'placer un nombre jusqu’à 1 000', 'lire toutes sortes de graduations'],
+  ce1: { canons: ['additionner et compléter jusqu’à 20', 'utiliser les tables de 2 et de 10', 'utiliser les tables de 2, 5 et 10', 'utiliser les tables de 2, 3, 4 et 5', 'utiliser les tables et trouver le nombre caché'],
+    stade: ['additionner et soustraire jusqu’à 20', 'trouver le double ou la moitié d’un nombre', 'ajouter ou enlever 10 et 100', 'compléter à 100 avec des dizaines (70 + 30)', 'ajouter un petit nombre ou des dizaines'],
+    mine: ['construire un nombre jusqu’à 499', 'construire un nombre jusqu’à 999', 'trouver le nombre formé par des centaines, dizaines, unités', 'trouver le chiffre des centaines, des dizaines, des unités', 'comparer des nombres jusqu’à 1 000'],
+    jungle: ['lire une graduation de 10 en 10', 'lire une graduation de 1 en 1', 'lire une graduation de 100 en 100', 'lire une graduation de 10 en 10 entre deux centaines', 'lire toutes sortes de graduations'],
     marche: ['payer jusqu’à 20 €', 'payer jusqu’à 50 €', 'payer avec des centimes', 'additionner deux prix avec centimes', 'rendre la monnaie avec les centimes'],
-    cuisine: ['colorier 1/2, 1/3 et 1/4', 'colorier une fraction de 1/5 à 1/10', 'colorier une fraction comme 3/5', 'comparer des fractions de même dénominateur', 'additionner des fractions et résoudre un problème'],
-    horloge: ['lire l’heure pile', 'lire la demie', 'lire les quarts d’heure', 'calculer une durée', 'lire les heures de l’après-midi'],
-    lecture: ['comprendre un petit texte', 'retrouver une information', 'trouver une information cachée', 'comprendre les mots et les reprises', 'lire un texte plus long'],
-    conjug: ['trouver le bon pronom', 'conjuguer au présent', 'conjuguer au futur, trouver l’infinitif', 'conjuguer à l’imparfait', 'conjuguer au passé composé'],
-    gram: ['écrire une phrase, reconnaître son type', 'trouver le verbe', 'trouver les noms et les déterminants', 'trouver le sujet', 'mettre une phrase à la forme négative'],
-    accords: ['choisir le, la ou les', 'mettre un nom au pluriel', 'accorder l’adjectif au féminin', 'accorder le groupe nominal et le verbe', 'faire tous les accords, a / à, et / est'],
-    vocab: ['ranger des lettres dans l’ordre', 'trouver un contraire, ranger des mots', 'trouver les mots de la même famille', 'trouver un synonyme', 'comprendre les préfixes et les expressions'] },
-  ce2: { canons: ['utiliser les tables de 2, 5 et 10', 'utiliser les tables de 3 et de 4', 'utiliser toutes les tables', 'trouver le nombre caché d’une multiplication', 'diviser avec les tables'],
-    stade: ['additionner et soustraire jusqu’à 20', 'trouver doubles et moitiés', 'ajouter et enlever des unités ou des dizaines', 'multiplier par 10 et par 100', 'calculer vite : compléments à 100, × 25'],
-    mine: ['lire et construire les nombres jusqu’à 999', 'lire et construire les nombres jusqu’à 9 999', 'lire les nombres écrits en lettres', 'faire les échanges (10 centaines = 1 millier)', 'décomposer un nombre'],
-    jungle: ['lire une graduation de 10 en 10', 'lire une graduation de 100 en 100', 'placer un nombre entre deux milliers', 'lire une graduation de 1 000 en 1 000', 'lire une graduation de 1 en 1'],
-    marche: ['payer en euros', 'payer avec billets, pièces et centimes', 'payer un prix avec centimes', 'rendre la monnaie', 'additionner deux prix'],
-    cuisine: ['colorier 1/2 et 1/4', 'colorier une fraction', 'reconnaître des fractions égales', 'comparer des fractions', 'résoudre un problème de fractions'],
+    cuisine: ['colorier 1/2, 1/3 et 1/4', 'colorier 1/5, 1/6, 1/8 ou 1/10', 'colorier une fraction comme 3/5, trouver une moitié', 'comparer des fractions et résoudre un problème de groupes', 'additionner des fractions et résoudre un problème'],
+    horloge: ['lire l’heure pile', 'lire la demie', 'lire les quarts d’heure', 'calculer une durée', 'lire les heures de l’après-midi et calculer des durées'],
+    lecture: ['comprendre un petit texte', 'retrouver une information', 'retrouver une information écrite dans le texte', 'trouver une information cachée', 'comprendre les pronoms et les mots du texte'],
+    conjug: ['trouver le bon pronom', 'conjuguer au présent', 'conjuguer au futur, trouver l’infinitif', 'conjuguer à l’imparfait', 'conjuguer au passé composé, reconnaître le temps'],
+    gram: ['repérer majuscule et point, trouver le type de phrase', 'trouver le verbe', 'trouver les noms et les déterminants', 'trouver le sujet et le verbe', 'utiliser la négation, trouver le sujet et le verbe'],
+    accords: ['choisir le, la ou les, reconnaître un pluriel', 'mettre un nom au pluriel', 'accorder l’adjectif au féminin et au pluriel', 'accorder le groupe nominal et le verbe', 'faire tous les accords, a / à, et / est'],
+    vocab: ['ranger lettres et mots dans l’ordre alphabétique', 'trouver un contraire, ranger des mots', 'trouver les mots de la même famille', 'trouver un synonyme ou un contraire', 'reconnaître familles, synonymes, préfixes et expressions'] },
+  ce2: { canons: ['utiliser les tables de 2, 5 et 10', 'utiliser les tables de 2, 3, 4, 5 et 10', 'utiliser toutes les tables', 'trouver le nombre caché d’une multiplication', 'multiplier, trouver le nombre caché, diviser'],
+    stade: ['additionner et soustraire jusqu’à 20', 'trouver le double ou la moitié d’un nombre', 'ajouter et enlever des unités ou des dizaines', 'multiplier par 10 et 100, doubler et partager en deux', 'calculer de tête jusqu’à 100 avec des astuces'],
+    mine: ['lire et construire les nombres jusqu’à 999', 'lire et construire les nombres jusqu’à 9 999', 'lire les nombres écrits en lettres', 'faire les échanges entre unités, dizaines, centaines', 'écrire un nombre à partir de sa décomposition'],
+    jungle: ['lire une graduation de 10 en 10', 'lire une graduation de 100 en 100', 'placer un nombre entre deux centaines (de 10 en 10)', 'lire une graduation de 1 000 en 1 000', 'lire une graduation de 1 en 1'],
+    marche: ['payer en euros', 'payer avec des pièces de 10, 20 et 50 centimes', 'payer un prix au centime près', 'rendre la monnaie', 'additionner deux prix'],
+    cuisine: ['colorier des demis et des quarts', 'colorier une fraction', 'reconnaître des fractions égales', 'comparer des fractions', 'résoudre un problème de fractions'],
     horloge: ['lire l’heure pile', 'lire la demie', 'lire les quarts d’heure', 'lire l’heure de 5 en 5 minutes', 'lire à la minute, calculer une durée'],
-    lecture: ['comprendre un texte court', 'retrouver une information écrite', 'déduire une information', 'comprendre les reprises et les mots', 'lire un texte plus long'],
-    conjug: ['conjuguer être, avoir et les verbes en -er au présent', 'conjuguer les verbes irréguliers et le futur', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé', 'reconnaître tous les temps'],
-    gram: ['reconnaître le type de phrase et le verbe', 'trouver les noms et les déterminants', 'trouver adjectifs, sujet et pronoms', 'utiliser la négation, trouver la nature d’un mot', 'trouver la nature et la fonction'],
-    accords: ['mettre les noms au pluriel', 'accorder l’adjectif', 'accorder le verbe, choisir a / à, et / est', 'accorder le groupe nominal', 'faire tous les accords'],
-    vocab: ['ranger des mots dans l’ordre alphabétique', 'trouver les mots de la même famille', 'comprendre les préfixes', 'trouver un synonyme', 'comprendre le sens figuré'] },
-  cm1: { canons: ['utiliser les tables et le nombre caché', 'diviser avec les tables', 'multiplier par 10 et par 100', 'faire une division avec reste', 'multiplier un nombre à 2 chiffres'],
-    stade: ['multiplier et diviser par 10, 100, 1 000', 'compléments à 1 000, doubles et moitiés', 'calculer avec des nombres décimaux', 'multiplier un décimal, prendre une fraction d’un nombre', 'calculer vite (× 25, soustractions)'],
-    mine: ['lire les grands nombres', 'écrire un grand nombre en chiffres', 'trouver un chiffre, compter les milliers', 'écrire un nombre donné en lettres', 'utiliser dixièmes et centièmes'],
-    jungle: ['lire une graduation de 100 en 100', 'lire une graduation de 10 000 en 10 000', 'placer un grand nombre', 'lire les dixièmes', 'lire les centièmes'],
+    lecture: ['comprendre un texte court', 'retrouver une information écrite', 'déduire une information', 'comprendre les pronoms et les mots du texte', 'comprendre un texte plus long'],
+    conjug: ['conjuguer être, avoir et les verbes en -er au présent', 'conjuguer les verbes irréguliers et le futur', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé', 'conjuguer et reconnaître les quatre temps'],
+    gram: ['reconnaître le type de phrase et le verbe', 'trouver les noms et les déterminants', 'trouver les adjectifs, le sujet et les pronoms', 'utiliser la négation, trouver la nature d’un mot', 'trouver la nature d’un mot et le sujet du verbe'],
+    accords: ['mettre les noms au pluriel', 'accorder l’adjectif', 'accorder le verbe, choisir a/à, et/est, son/sont', 'accorder le groupe nominal', 'faire les accords et choisir le bon homophone'],
+    vocab: ['ranger des mots dans l’ordre alphabétique', 'trouver les mots de la même famille', 'comprendre les préfixes et les suffixes', 'trouver un synonyme ou un contraire', 'comprendre le sens figuré'] },
+  cm1: { canons: ['utiliser les tables, trouver le nombre caché', 'diviser avec les tables', 'multiplier et diviser des dizaines, des centaines', 'faire une division avec reste', 'multiplier un nombre à 2 chiffres, diviser avec reste'],
+    stade: ['multiplier et diviser par 10, 100, 1 000', 'compléter à 1 000, trouver un double ou une moitié', 'ajouter des dixièmes, doubler et partager en deux', 'multiplier ou diviser un décimal par 10', 'prendre une fraction d’un nombre et calculer vite'],
+    mine: ['construire un nombre jusqu’à 9 999', 'écrire un grand nombre en chiffres', 'distinguer chiffre des milliers et nombre de milliers', 'écrire un nombre à partir de sa décomposition', 'utiliser dixièmes et centièmes'],
+    jungle: ['lire une graduation de 100 en 100', 'lire une graduation de 10 000 en 10 000', 'placer un grand nombre', 'lire les dixièmes', 'lire les centièmes'],
     marche: ['payer avec des centimes', 'rendre la monnaie', 'additionner des prix', 'calculer le prix de plusieurs objets', 'rendre la monnaie sur 50 €'],
-    cuisine: ['prendre une fraction d’une quantité', 'calculer avec les fractions', 'comparer des fractions', 'passer d’une fraction décimale à un décimal', 'additionner des fractions'],
-    horloge: ['lire l’heure à la minute', 'convertir heures et minutes', 'calculer une durée', 'trouver l’heure d’arrivée ou de départ', 'résoudre des problèmes de durée'],
-    lecture: ['comprendre un texte documentaire', 'retrouver une information précise', 'faire une inférence', 'comprendre les reprises et le vocabulaire', 'lire un conte ou une légende'],
-    conjug: ['conjuguer le 2e groupe au présent', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé avec être', 'reconnaître le temps, l’infinitif et le groupe', 'conjuguer à tous les temps'],
-    gram: ['trouver la nature des mots', 'trouver le sujet et le nom noyau', 'trouver les compléments', 'reconnaître déterminants et épithètes', 'trouver la fonction des groupes'],
-    accords: ['écrire les pluriels difficiles', 'accorder adjectifs et groupes nominaux', 'accorder le verbe avec un sujet difficile', 'accorder le participe passé avec être', 'faire tous les accords et homophones'],
-    vocab: ['ranger des mots, comprendre les préfixes', 'utiliser les préfixes', 'trouver synonymes et niveaux de langue', 'comprendre le sens figuré', 'utiliser mots génériques et homonymes'] } };
+    cuisine: ['colorier une fraction d’une pizza', 'prendre le tiers, le quart… d’une quantité', 'comparer des fractions', 'écrire 7/10 ou 45/100 avec une virgule', 'additionner des fractions'],
+    horloge: ['lire l’heure à la minute', 'convertir heures et minutes', 'calculer une durée', 'trouver l’heure d’arrivée', 'retrouver l’heure de départ'],
+    lecture: ['comprendre un texte court', 'retrouver une information précise', 'déduire ce que le texte ne dit pas', 'comprendre les pronoms et le vocabulaire du texte', 'comprendre un texte long'],
+    conjug: ['conjuguer au présent finir, manger, appeler, aller…', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé avec être et avoir', 'reconnaître le temps, l’infinitif et le groupe', 'conjuguer au présent, imparfait, futur, passé composé'],
+    gram: ['trouver la nature des mots', 'trouver le sujet et le nom noyau', 'trouver les compléments', 'reconnaître les déterminants et les adjectifs épithètes', 'trouver la fonction des groupes'],
+    accords: ['écrire les pluriels difficiles', 'accorder les adjectifs dans le groupe nominal', 'accorder le verbe avec un sujet difficile', 'accorder le participe passé avec être', 'faire tous les accords, choisir le bon homophone'],
+    vocab: ['ranger des mots, comprendre préfixes et suffixes', 'comprendre préfixes, suffixes et radicaux', 'classer des synonymes, reconnaître les niveaux de langue', 'comprendre les sens d’un mot et les expressions', 'utiliser les mots génériques et les homonymes'] } };
 const skillName = (id, L) => ((SKILLS[GR()] || SKILLS.ce2)[id] || [])[L - 1] || `niveau ${L}`;
 // État d'une compétence : acquise (80 % sur au moins 4 questions, ou les deux étapes de la route passées), à revoir (moins de 60 %),
 // en cours (déjà travaillée ou au niveau actuel de la route), à découvrir
@@ -2631,22 +2630,23 @@ function questsHTML() {
 /* ================= L'histoire de l'archipel ================= */
 // Le Kraken a déchiré la carte du trésor en douze morceaux : chaque coffre d'île en cache un et débloque un chapitre.
 const SAGA = [
-  { id: 'prologue', t: 'La carte déchirée', x: ['Une nuit de tempête, le Kraken surgit près du port. D’un coup de tentacule, il arrache la carte du Trésor de l’Archipel des mains du capitaine Barbe-Grise.', 'Il la déchire en douze morceaux, qui s’envolent vers douze îles.', '« Celui qui retrouvera les douze morceaux trouvera le trésor », grogne le capitaine. Pi bat des ailes : « Alors en route, moussaillon ! Chaque coffre d’île cache un morceau. »'] },
-  { id: 'canons', t: 'Le premier morceau', x: ['Sur l’Île des Canons, les vieux canons tonnent encore. Au fond du coffre, sous des boulets rouillés, tu trouves un morceau de carte.', 'On y voit le port et une rose des vents. « Bien visé ! », crie Pi.', 'Mais au loin, une ombre glisse sous les vagues : le Kraken te surveille…'] },
-  { id: 'stade', t: 'Le ballon de cuir', x: ['Au Stade des Vagues, les pirates jouent au ballon sur une plage de sable blanc. Le gardien te lance un défi : chaque bon calcul est un but !', 'Quand le coffre s’ouvre, un morceau de carte apparaît, roulé dans un vieux ballon de cuir.', 'Il montre une île en forme de croissant de lune.'] },
-  { id: 'mine', t: 'Les blocs qui brillent', x: ['Dans la Mine aux Blocs, tout se compte par dizaines, par centaines et par milliers. Les mineurs empilent des blocs de pierre précieuse.', 'Derrière la plus grande pile, le coffre cache un nouveau morceau.', 'On y voit un chemin de pointillés qui serpente entre les rochers.'] },
-  { id: 'jungle', t: 'La grenouille sauteuse', x: ['La jungle est pleine de bruits étranges. Une grenouille saute de graduation en graduation sur un vieux tronc d’arbre.', 'Elle te guide jusqu’au coffre, caché sous les lianes.', 'Le morceau de carte montre une cascade… et le coin d’une croix à moitié effacée.'] },
-  { id: 'marche', t: 'Le marchand fantôme', x: ['Au Marché du Port, un marchand transparent compte ses pièces sans jamais se tromper. « Rends-moi la monnaie juste, et je te donnerai ce que tu cherches. »', 'Tu comptes, tu rends, il sourit.', 'Dans une bourse de velours, il y a un morceau de carte. On y lit un mot : « Nord ».'] },
-  { id: 'cuisine', t: 'La recette secrète', x: ['Le Chef Pieuvre coupe ses tartes en parts parfaitement égales. « La moitié pour l’équipage, le quart pour le capitaine, et le reste pour moi ! »', 'Dans le coffre de la cuisine, entre deux pots d’épices, tu trouves un morceau de carte.', 'Il sent la cannelle et montre une baie tranquille.'] },
-  { id: 'horloge', t: 'Le temps des marées', x: ['Sur l’Île de l’Horloge, une immense tour sonne toutes les heures. Le gardien du temps t’explique : « Les marées obéissent aux aiguilles. »', 'À midi pile, le coffre s’ouvre tout seul.', 'Le morceau de carte indique quand partir : « Quand la grande aiguille sera sur le 12. »'] },
-  { id: 'lecture', t: 'La grotte aux histoires', x: ['Dans la Grotte aux Histoires, les murs sont couverts de récits de pirates. Pi lit à voix haute pendant que tu cherches des indices.', 'Un morceau de carte est glissé entre les pages d’un vieux livre.', 'On y voit une sirène dessinée à l’encre bleue.'] },
-  { id: 'conjug', t: 'La forge des verbes', x: ['À la Forge des Verbes, le forgeron transforme les verbes : hier, aujourd’hui, demain…', '« Un bon capitaine sait parler du passé et de l’avenir ! », dit-il en frappant l’enclume.', 'Le morceau de carte sort tout chaud du coffre. Il montre un récif en forme de dents.'] },
-  { id: 'gram', t: 'Le récif des phrases', x: ['La Murène des Phrases garde le récif. Elle mélange les mots pour faire échouer les navires.', 'Mais toi, tu remets chaque phrase dans le bon ordre, et le passage s’ouvre.', 'Dans le coffre, le morceau de carte montre la route secrète entre les rochers.'] },
-  { id: 'accords', t: 'Le pont des accords', x: ['Le Troll du Pont ne laisse passer que ceux qui accordent bien les mots.', '« Les vagues bleues, la voile blanche ! », réponds-tu. Le troll grogne et s’écarte.', 'Dans son coffre, un morceau de carte montre une île cachée dans le brouillard.'] },
-  { id: 'vocab', t: 'La baie des mots', x: ['Dans la Baie des Mots, une baleine connaît tous les mots du dictionnaire. Elle te souffle des synonymes et des contraires.', 'Sur son dos, un coffre t’attend.', 'À l’intérieur, un morceau de carte… et la promesse que le trésor n’est plus très loin.'] },
-  { id: 'final', t: 'Le trésor de l’archipel', x: ['Tu assembles les douze morceaux sur le pont. La carte complète montre l’île cachée derrière le brouillard.', 'Barbe-Grise sourit : « Le vrai trésor, moussaillon, ce n’est pas l’or. C’est tout ce que tu as appris en chemin. »', 'Pi ajoute : « Mais un peu d’or, c’est bien aussi ! » Le coffre du trésor s’ouvre : il brille de mille doublons.'] } ];
+  { id: 'prologue', t: 'La carte déchirée', x: ['Une nuit de tempête, le Kraken sort des vagues près du port. C’est un énorme monstre des mers, très grognon. D’un coup de tentacule, il attrape la carte au trésor du capitaine Barbe-Grise !', 'Crac ! Il la déchire en douze morceaux. Le vent les emporte vers douze îles de l’archipel.', '« Sans les douze morceaux, adieu le trésor ! » soupire le capitaine. Pi bat des ailes : « Alors en route, moussaillon ! Chaque île cache un coffre, et chaque coffre cache un morceau. »'] },
+  { id: 'canons', t: 'La rose des vents', x: ['Sur l’Île des Canons, les vieux canons font encore boum ! Au fond du coffre, sous des boulets rouillés, tu trouves un morceau de carte.', 'On y voit le port et une rose des vents : l’étoile qui montre le nord, le sud, l’est et l’ouest. « Bien visé ! » crie Pi.', 'Au loin, une ombre glisse sous les vagues : c’est le Kraken des Tables. Pi gonfle ses plumes : « Pas de panique ! Avec de bons calculs, on n’a peur de personne. »'] },
+  { id: 'stade', t: 'Le ballon de cuir', x: ['Au Stade des Vagues, les pirates jouent au football sur une plage de sable blanc. Le Crabe Gardien te lance un défi : chaque bon calcul est un but !', 'Tu tires, tu marques ! Au bord du terrain, le coffre s’ouvre. Dedans, un morceau de carte est caché dans un vieux ballon de cuir.', 'Il montre une île en forme de croissant de lune. Le Crabe Gardien claque des pinces : « Joli tir ! On se retrouve pour le grand match. »'] },
+  { id: 'mine', t: 'Les blocs qui brillent', x: ['Dans la Mine aux Blocs, tout se compte par paquets de dix : dix unités font une dizaine, dix dizaines font une centaine. Les mineurs empilent des blocs de pierre précieuse.', 'Derrière la plus grande pile, le Golem des Blocs fait la sieste. Chut ! Sur la pointe des pieds, tu ouvres le coffre.', 'Dedans, un morceau de carte montre un chemin en pointillés qui zigzague entre les rochers.'] },
+  { id: 'jungle', t: 'Le crocodile qui compte', x: ['Dans la Jungle des Créatures, les perroquets crient et les singes rigolent. Sur un vieux tronc couvert de traits, un petit crocodile avance de graduation en graduation.', '« Un, deux, trois… Suis-moi ! » dit-il. Il te guide jusqu’au coffre, caché sous les lianes.', 'Le morceau de carte montre une cascade et un grand palmier. Le petit crocodile sourit : « Je m’appelle Croco Comparo. Je peux venir avec toi ? »'] },
+  { id: 'marche', t: 'Le marchand transparent', x: ['Au Marché du Port, un marchand tout transparent compte ses pièces. C’est le Marchand Fantôme ! Il rit : « Hou hou ! Sais-tu compter aussi bien que moi ? »', 'Tu comptes les pièces et les billets. Tu paies le bon prix et tu rends la monnaie sans te tromper. Le fantôme applaudit : « Bravo ! Notre grand duel, ce sera pour plus tard. »', 'Sous sa table, le coffre s’ouvre. Dans un petit sac de velours, tu trouves un morceau de carte avec un seul mot : « Nord ».'] },
+  { id: 'cuisine', t: 'La tarte du Chef Pieuvre', x: ['Dans la Cuisine du Navire, le Chef Pieuvre coupe une tarte en quatre parts égales. Avec ses huit bras, il va très vite !', 'Il annonce : « Deux parts pour l’équipage, c’est la moitié. Une part pour le capitaine, c’est un quart. Et la dernière part pour moi : un autre quart ! »', 'Dans le coffre, entre deux pots d’épices, tu trouves un morceau de carte. Il sent la cannelle et montre une baie tranquille.'] },
+  { id: 'horloge', t: 'À l’heure pile', x: ['Sur l’Île de l’Horloge, une immense tour sonne toutes les heures : dong, dong ! Le Maître des Heures sourit : « Ici, même les vagues arrivent à l’heure ! »', 'À midi pile, les deux aiguilles se retrouvent sur le 12. Clic ! Le coffre s’ouvre tout seul.', 'Le morceau de carte dit quand partir : « Pars quand la petite aiguille sera sur le 3 et la grande aiguille sur le 12. » C’est-à-dire à trois heures pile !'] },
+  { id: 'lecture', t: 'Les lunettes de Pi', x: ['Dans la Grotte aux Histoires, les murs racontent des aventures de pirates. Pi a oublié ses lunettes : « Lis pour moi, s’il te plaît ! »', 'Alors c’est toi qui lis, phrase après phrase. Pi écoute et cherche les indices avec toi. Entre les pages d’un vieux livre, voici un morceau de carte !', 'On y voit une sirène dessinée à l’encre bleue. Au fond de la grotte, quelqu’un chante tout doucement… Qui est-ce ? Tu le sauras bientôt.'] },
+  { id: 'conjug', t: 'Le marteau du forgeron', x: ['À la Forge des Verbes, le Forgeron des Temps tape sur son enclume : cling, clang ! Sous son marteau, les mots changent de forme.', 'Il chante : « Hier, je naviguais. Aujourd’hui, je navigue. Demain, je naviguerai ! » Un bon pirate sait parler du passé, du présent et du futur.', 'Le morceau de carte sort tout chaud du coffre. Attention aux doigts ! Il montre un récif en forme de dents de requin.'] },
+  { id: 'gram', t: 'Le Récif des Phrases', x: ['Ici vit la Murène des Phrases. Elle adore les farces : elle mélange les mots, et les navires se perdent !', 'Toi, tu trouves le verbe et tu ranges les mots. Une majuscule au début, un point à la fin : la phrase est parfaite ! Un passage s’ouvre. La murène ronchonne : « Bien joué… On se reverra ! »', 'Le coffre t’attend sur le sable, au fond de l’eau claire. Dedans, un morceau de carte montre une route secrète à travers le récif.'] },
+  { id: 'accords', t: 'Le troll grognon', x: ['Au Pont des Accords, les mots doivent bien aller ensemble. Le Troll du Pont surveille tout, les bras croisés.', 'Tu accordes chaque mot : « les vagues bleues, les voiles blanches ». Le troll grogne, mais il sourit un peu : « Pas mauvais… Pour traverser mon pont, reviens me défier plus tard ! »', 'Sous une planche, tu trouves le coffre. Dedans, un morceau de carte montre une île cachée dans le brouillard.'] },
+  { id: 'vocab', t: 'La baleine qui sait tout', x: ['Dans la Baie des Mots vit la Baleine Dictionnaire. Elle connaît tous les mots du monde ! Elle te souffle des mots qui veulent dire la même chose, puis des contraires.', '« Énorme, gigantesque… comme moi ! » dit-elle en riant. Sur son dos, un coffre t’attend.', 'Dedans, un morceau de carte avec une grande croix rouge ! Mais où se trouve cette croix ? Pour le savoir, il faudra réunir tous les morceaux.'] },
+  { id: 'final', t: 'Le trésor de l’archipel', x: ['Sur le pont du Fier Calcul, tu assembles les douze morceaux. La carte est complète ! Elle montre une île cachée derrière le brouillard. Cap sur l’île !', 'Sous une grande croix rouge, tu creuses… Bong ! Voici le coffre du trésor : cinq cents doublons brillent au soleil. Au loin, le Kraken boude.', 'Barbe-Grise sourit : « Bravo, capitaine ! Les nombres, les mots, les heures… Tout ce que tu as appris, c’est à toi pour toujours. » Pi ajoute : « Et les doublons aussi ! »'] } ];
 const chapterOpen = c => c.id === 'prologue' || (c.id === 'final' ? playable().every(i => IS(i.id).node > CHEST) : IS(c.id).node > CHEST);
 const sagaCount = () => SAGA.filter(chapterOpen).length;
+const pieces = () => { const n = playable().filter(i => IS(i.id).node > CHEST).length; return `${n} morceau${n > 1 ? 'x' : ''}`; }; // morceaux de la carte au trésor (un par coffre d'île)
 // La carte au trésor se reconstitue : un morceau par île, dans l'ordre des îles
 function treasureMap() {
   const isl = playable(), W = 400, H = 300, cw = 100, ch = 100;
@@ -2657,21 +2657,21 @@ function treasureMap() {
     <g transform="translate(24,24)" stroke="#6b4a1f" fill="none" stroke-width="1.2"><circle r="13"/><path d="M0-18L3.5 0 0 18-3.5 0Z" fill="#a8382a"/><path d="M-18 0L0 3 18 0 0-3Z" fill="#6b4a1f"/></g>
     <g transform="translate(${pts[pts.length - 1][0] + 28},${pts[pts.length - 1][1] + 26})" stroke="#a8241a" stroke-width="4.5" stroke-linecap="round"><path d="M-9-9L9 9M9-9L-9 9"/></g>`;
   const fog = isl.map((i, k) => chapterOpen(SAGA.find(c => c.id === i.id)) ? '' : `<g><rect x="${(k % 4) * cw}" y="${Math.floor(k / 4) * ch}" width="${cw}" height="${ch}" fill="#22343b" opacity=".92"/><text x="${(k % 4) * cw + 50}" y="${Math.floor(k / 4) * ch + 62}" text-anchor="middle" font-family="Georgia,serif" font-size="34" fill="#4d6a73">?</text></g>`).join('');
-  return `<svg class="tmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Carte au trésor : ${sagaCount() - 1} morceaux sur 12"><defs><radialGradient id="tmg" cx="50%" cy="50%" r="70%"><stop offset="0" stop-color="#f1e0b6"/><stop offset=".8" stop-color="#dcc28c"/><stop offset="1" stop-color="#b8955a"/></radialGradient></defs>${art}${fog}<g stroke="rgba(90,60,25,.35)" stroke-width="1">${[100, 200, 300].map(x => `<path d="M${x} 0V${H}"/>`).join('')}${[100, 200].map(y => `<path d="M0 ${y}H${W}"/>`).join('')}</g></svg>`;
+  return `<svg class="tmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Carte au trésor : ${pieces()} sur 12"><defs><radialGradient id="tmg" cx="50%" cy="50%" r="70%"><stop offset="0" stop-color="#f1e0b6"/><stop offset=".8" stop-color="#dcc28c"/><stop offset="1" stop-color="#b8955a"/></radialGradient></defs>${art}${fog}<g stroke="rgba(90,60,25,.35)" stroke-width="1">${[100, 200, 300].map(x => `<path d="M${x} 0V${H}"/>`).join('')}${[100, 200].map(y => `<path d="M0 ${y}H${W}"/>`).join('')}</g></svg>`;
 }
 function sagaHTML() {
   const read = P().sagaRead || [];
-  return `<section class="jsec"><h2>L’histoire de l’archipel</h2><p class="sub" style="margin:0 0 10px">Le Kraken a déchiré la carte du trésor. Chaque coffre d’île cache un morceau et un chapitre de l’histoire.</p>
-    <div class="tmapw">${treasureMap()}<span>${sagaCount() - 1 > 12 ? 12 : Math.max(0, sagaCount() - 1)} morceau${sagaCount() > 2 ? 'x' : ''} sur 12</span></div>
-    ${SAGA.map((c, k) => { const open = chapterOpen(c), i = isleById(c.id); return `<button class="chap${open ? '' : ' lk'}${open && !read.includes(c.id) ? ' unread' : ''}" ${open ? `data-a="saga" data-c="${c.id}"` : 'disabled'}><span class="cn">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Final' : 'Chapitre ' + k}</span><b>${open ? c.t : '???'}</b><small>${open ? (read.includes(c.id) ? 'Relire' : 'Nouveau ! Touche pour lire') : c.id === 'final' ? 'Retrouve les douze morceaux' : `Ouvre le coffre ${i.art.replace(/^(l’|le |la )/, m => ({ 'l’': 'de l’', 'le ': 'du ', 'la ': 'de la ' })[m])}`}</small></button>`; }).join('')}</section>`;
+  return `<section class="jsec"><h2>L’histoire de l’archipel</h2><p class="sub" style="margin:0 0 10px">Le Kraken a déchiré la carte au trésor. Chaque coffre d’île cache un morceau et un chapitre de l’histoire.</p>
+    <div class="tmapw">${treasureMap()}<span>${pieces()} sur 12</span></div>
+    ${SAGA.map((c, k) => { const open = chapterOpen(c), i = isleById(c.id); return `<button class="chap${open ? '' : ' lk'}${open && !read.includes(c.id) ? ' unread' : ''}" ${open ? `data-a="saga" data-c="${c.id}"` : 'disabled'}><span class="cn">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Final' : 'Chapitre ' + k}</span><b>${open ? typo(c.t) : '???'}</b><small>${open ? (read.includes(c.id) ? 'Relire' : 'Nouveau ! Touche pour lire') : c.id === 'final' ? 'Retrouve les douze morceaux' : `Ouvre le coffre ${i.art.replace(/^(l’|le |la )/, m => ({ 'l’': 'de l’', 'le ': 'du ', 'la ': 'de la ' })[m])}`}</small></button>`; }).join('')}</section>`;
 }
 function openSaga(id) {
   const c = SAGA.find(x => x.id === id); if (!c || !chapterOpen(c)) return; const k = SAGA.indexOf(c), i = isleById(id);
   P().sagaRead = [...new Set([...(P().sagaRead || []), id])]; save();
   const m = document.createElement('div'); m.className = 'modal saga';
   m.innerHTML = `<div class="box paper" role="dialog" aria-label="${esc(c.t)}"><img src="${IMG(i ? i.img : id === 'final' ? 'chest-open' : 'guide-capitaine')}" alt="" style="width:${i ? 150 : 130}px;margin:-74px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
-    <div class="smallcaps" style="color:var(--ink-2)">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Chapitre final' : 'Chapitre ' + k}</div><div class="disp" style="font-size:28px">${c.t}</div>
-    <div class="stxt">${c.x.map(t => `<p>${esc(t)}</p>`).join('')}</div>
+    <div class="smallcaps" style="color:var(--ink-2)">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Chapitre final' : 'Chapitre ' + k}</div><div class="disp" style="font-size:28px">${typo(c.t)}</div>
+    <div class="stxt">${c.x.map(t => `<p>${esc(typo(t))}</p>`).join('')}</div>
     <div class="errbtns">${canSay() ? `<button class="say" data-a="sagasay" aria-label="Écouter">${ico('iSound')}</button>` : ''}<button class="brass-btn" data-a="sagaclose">Fermer</button></div></div>`;
   m.dataset.c = id; app.appendChild(m);
 }
@@ -3243,7 +3243,7 @@ function endEscale() {
     if (R.ok === R.n) grantEp(R.i.ep);
     if (R.boss && R.i.id === 'canons') grantEp('Vainqueur du Kraken');
     questEv('win', R.i.id); if (R.ok === R.n) questEv('perfect');
-    if (R.node === CHEST) { const c = SAGA.find(x => x.id === R.i.id); if (c) rewards.push({ img: 'deco-compass', b: `Nouveau chapitre : « ${c.t} »`, s: 'Un morceau de la carte au trésor ! Lis-le dans ton journal.', tag: 'Histoire', saga: c.id });
+    if (R.node === CHEST) { const c = SAGA.find(x => x.id === R.i.id); if (c) rewards.push({ img: 'deco-compass', b: typo(`Nouveau chapitre : « ${c.t} »`), s: typo('Un morceau de la carte au trésor ! Lis la suite dans ton journal.'), tag: 'Histoire', saga: c.id });
       if (playable().every(i => IS(i.id).node > CHEST || i.id === R.i.id && s.node > CHEST) && !P().sagaFinal) { P().sagaFinal = 1; S.gold += 500; R.gold += 500; grantEp('Chasseur de Trésor'); rewards.push({ img: 'chest-open', b: 'Les douze morceaux sont réunis : +500 !', s: 'Lis le chapitre final dans ton journal', tag: 'Histoire', saga: 'final' }); } }
     ISLES.forEach(i => { if (i.unlock && !i.soon && i.sea === R.i.sea && SW(i.sea) === i.unlock) rewards.push({ img: i.img, b: `${i.n} sort du brouillard`, s: `Nouvelle île : ${i.notion}`, tag: 'Carte' }); });
   } else { s.fails++; }
@@ -3456,8 +3456,8 @@ function restoreFrom(code) {
 /* ================= Onboarding ================= */
 function onboarding() {
   const m = document.createElement('div'); m.className = 'modal'; const ask = !S.grade; let gr = S.grade;
-  m.innerHTML = `<form class="box paper" id="ob" autocomplete="off"><img src="${IMG('guide-capitaine')}" alt="Le Capitaine Barbe-Grise" style="width:${ask ? 130 : 160}px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
-    <div class="disp" style="font-size:28px">Bienvenue à bord !</div><p style="margin:0;color:var(--ink-2)">Le Capitaine Barbe-Grise et son perroquet Pi vont t’accompagner d’île en île. Comment s’appelle le capitaine ?</p>
+  m.innerHTML = `<form class="box paper" id="ob" autocomplete="off"><img src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise" style="width:${ask ? 130 : 160}px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
+    <div class="disp" style="font-size:28px">Bienvenue à bord !</div><p style="margin:0;color:var(--ink-2)">Le capitaine Barbe-Grise et son perroquet Pi vont t’accompagner d’île en île. Comment s’appelle le capitaine ?</p>
     <label for="nm" class="smallcaps" style="color:var(--ink-2)">Ton nom de pirate</label><input id="nm" maxlength="14" placeholder="Ex. : Léo" value="${esc(S.name)}">
     <div class="smallcaps" style="color:var(--ink-2)">Ton portrait</div><div class="avs ob" role="group" aria-label="Ton portrait">${AVATARS.map(a => `<button type="button" data-v="${a}" aria-pressed="${capt() === 'capt-' + a}" aria-label="Portrait ${a.toUpperCase()}"><img src="${IMG('capt-' + a)}" alt=""></button>`).join('')}</div>
     ${ask ? `<div class="smallcaps" style="color:var(--ink-2)">Ta classe</div><div class="grades" role="group" aria-label="Ta classe">${Object.entries(GRADES).map(([k, g]) => `<button type="button" data-g="${k}" aria-pressed="false"><b>${g.n}</b><span>${g.age}</span></button>`).join('')}</div>` : ''}
