@@ -733,6 +733,36 @@ textarea.fld{min-height:76px}
 .say svg{width:19px;height:19px}.say:active{transform:scale(.92)}
 .errbtns{display:flex;gap:10px;align-items:center}.errbtns .say{position:static;flex:none;width:52px;height:52px}.errbtns .brass-btn{flex:1}
 .revb.retry{background:linear-gradient(180deg,#6fb3d9,#2f7fa8)}
+.kbd{display:flex;flex-direction:column;gap:6px;user-select:none;-webkit-user-select:none}
+.kr{display:flex;justify-content:center;gap:4px}
+.kk{flex:1;max-width:44px;height:44px;border-radius:10px;font:600 19px var(--f-u);color:var(--ink);background:linear-gradient(#fbf3df,#ecdcb6);box-shadow:0 3px 0 #a98a52,0 5px 10px rgba(0,0,0,.22),inset 0 1px 0 #fff;padding:0}
+.kk:active{transform:translateY(2px);box-shadow:0 1px 0 #a98a52}
+.kr.acc .kk{background:linear-gradient(#fff3d6,#f1d79c);color:#6a3d12}
+.kk.dk{max-width:none;flex:1.3;background:rgba(8,26,36,.75);color:#cfe0df;box-shadow:0 3px 0 #041016,inset 0 0 0 1px rgba(243,213,140,.2)}.kk.dk svg{width:22px;height:22px}
+.kk.sp{max-width:none;flex:3;font-size:14px;color:var(--ink-2)}
+.kk.ok{max-width:none;flex:2.2;font:400 20px var(--f-p);color:#fff5e4;background:radial-gradient(130% 110% at 50% 0%,#5fc58c,#2f8f5a 60%,#22693f);box-shadow:0 3px 0 #164a2b,0 5px 10px rgba(0,0,0,.25),inset 0 1px 0 rgba(220,255,230,.6)}
+.kk.ok[disabled]{filter:grayscale(.7) brightness(.85)}
+.segs i.sk{background:rgba(255,255,255,.32)}
+.ship.me.sail{left:22%}
+.guidefig{position:absolute;left:3%;bottom:6%;width:min(44%,230px);z-index:3;filter:drop-shadow(0 12px 12px rgba(0,0,0,.4))}
+.dock{grid-template-columns:repeat(4,1fr)}.dock button{font-size:12.5px;white-space:nowrap}
+.dock .di.new{box-shadow:0 0 0 2px var(--wax-hi),0 0 10px rgba(224,100,79,.8);opacity:1}
+.jsec{margin:18px 0 6px}.jsec h2{margin:0 0 4px;font-family:var(--f-p);font-weight:400;font-size:26px;color:#fffaf0}
+.skbar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden;margin:0 0 4px}.skbar i{display:block;height:100%;background:linear-gradient(90deg,var(--kelp),#a6e3bf)}
+.skisle{margin:8px 0;border-radius:16px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--glass-line)}
+.skisle summary{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;list-style:none}.skisle summary::-webkit-details-marker{display:none}
+.skisle summary img{width:44px;height:40px;object-fit:contain;flex:none}
+.skisle summary span{flex:1;min-width:0}.skisle summary b{display:block;font:600 15px var(--f-u);color:#fffaf0}.skisle summary small{color:var(--mist);font-size:12.5px}
+.skisle.lk summary img{filter:grayscale(.8) brightness(.7)}
+.dots{display:flex;gap:4px;flex:none}.dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.15)}
+.dots .d-ok{background:var(--kelp)}.dots .d-cur{background:var(--brass)}.dots .d-rev{background:var(--wax-hi)}
+.skisle ul{list-style:none;margin:0;padding:2px 12px 10px}
+.skisle li{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,.07);font-size:14px;color:#e6efe9}
+.skisle li span:nth-child(2){flex:1}.skisle li em{font-style:normal;font-size:12px;color:var(--mist);white-space:nowrap}
+.skisle li .ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:800;font-size:13px;background:rgba(255,255,255,.1)}
+.sk-ok .ic{background:var(--kelp);color:#0b2230}.sk-cur .ic{background:var(--brass);color:#2a1a07}.sk-rev .ic{background:var(--wax-hi);color:#fff}.sk-new{opacity:.55}
+.mini-btn{flex:none;height:30px;padding:0 10px;border-radius:15px;font:600 12.5px var(--f-u);color:#2a1a07;background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 2px 0 var(--brass-lo)}
+.why .diag{display:block;margin:0 0 8px;padding:8px 10px;border-radius:12px;background:rgba(184,56,42,.08);box-shadow:inset 3px 0 0 var(--wax-hi);color:var(--ink)}
 /* ---------- 1.5 : océan WebGL, îles sous l'orage, voiles flous, boutons, mouettes ---------- */
 .sea-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 .seagl .ocean{visibility:hidden}
@@ -1035,7 +1065,12 @@ ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; });
 const SEAS = { m: { n: 'Mer des Chiffres', s: 'Maths', ic: '123' }, f: { n: 'Mer des Lettres', s: 'Français', ic: 'Abc' } };
 function applyGrade() { ISLES.forEach(i => { i.notion = i[GR()] || i.ce2; }); }
 applyGrade();
-const isleById = id => ISLES.find(i => i.id === id);
+// Escales sans île : chaque question y vient d'une vraie île (escale mélangée : révisions entrelacées ; test du capitaine : placement)
+const VIRT = {
+  mix: { id: 'mix', v: 1, sea: 'm', n: 'Escale mélangée', art: 'l’escale mélangée', notion: 'Révisions mélangées', img: 'deco-compass', hero: 'bg-sea-golden', boss: { n: '', img: 'deco-compass' }, ep: '', sfx: ['BIEN JOUÉ !', 'BRAVO !', 'DANS LE MILLE !'] },
+  test: { id: 'test', v: 1, sea: 'm', n: 'Test du capitaine', art: 'le test du capitaine', notion: 'Trouver ton niveau', img: 'guide-capitaine', hero: 'bg-port-dusk', boss: { n: '', img: 'guide-capitaine' }, ep: '', sfx: ['BIEN VU !', 'BRAVO !'] } };
+const isleById = id => VIRT[id] || ISLES.find(i => i.id === id);
+const QI = () => (R && R.qi) || (R && R.i); // île de la question en cours (différente de l'escale pour les escales mélangées)
 const SW = sea => P().wins[sea] || 0; // victoires de la classe en cours, dans une mer
 const unlocked = i => ADMIN || (!i.soon && SW(i.sea) >= i.unlock);
 const left = i => i.unlock - SW(i.sea);
@@ -1044,8 +1079,9 @@ const NODES = 10, CHEST = 5, BOSS = 10;
 const nodeDiff = (n, fails) => Math.max(1, Math.ceil(n / 2) - (fails >= 2 ? 1 : 0));
 
 /* ================= Générateurs (niveaux 1 à 5) ================= */
-function opts(x, extra = [], f = fmt) { const out = new Set(); const cand = [...extra, ...shuffle([x + 1, x - 1, x + 10, x - 10, x + 2, x - 2])];
-  for (const v of cand) { if (out.size >= 2) break; if (Number.isInteger(v) && v >= 0 && v !== x) out.add(v); } return shuffle([x, ...out]).map(v => ({ v, html: f(v) })); }
+// Un piège peut être un nombre ou [nombre, pourquoi] : le « pourquoi » s'affiche si l'enfant le choisit
+function opts(x, extra = [], f = fmt) { const out = new Map(); const cand = [...extra.map(e => Array.isArray(e) ? e : [e]), ...shuffle([x + 1, x - 1, x + 10, x - 10, x + 2, x - 2]).map(v => [v])];
+  for (const [v, why] of cand) { if (out.size >= 2) break; if (Number.isInteger(v) && v >= 0 && v !== x && !out.has(v)) out.set(v, why); } return shuffle([[x], ...out]).map(([v, why]) => why ? { v, html: f(v), why } : { v, html: f(v) }); }
 
 function ce2Canon(l) {
   const tabs = l === 1 ? [2, 5, 10] : l === 2 ? [2, 3, 4, 5, 10] : [2, 3, 4, 5, 6, 7, 8, 9];
@@ -1059,7 +1095,7 @@ function ce2Canon(l) {
   const seq = range(1, b).map(i => fmt(a * i)).join(', ');
   const explain = m === 'd' ? `${a} × ${b} = ${p}. On compte de ${a} en ${a} : ${seq}.` : `${a} × ${b} = ${p}${m === 'div' ? `, donc ${p} ÷ ${a} = ${b}. Diviser, c’est faire la multiplication à l’envers.` : `, donc le nombre caché est ${b}.`}`;
   const hint = m === 'd' ? `Compte de ${a} en ${a}, ${b} fois : ${range(1, Math.min(b, 3)).map(i => a * i).join(', ')}…` : `Cherche dans la table de ${a} le résultat ${p}.`;
-  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log };
+  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log, dg: m === 'd' ? { t: 'mul', a, b } : m === 'div' ? { t: 'div', a, p } : { t: 'miss', a, p } };
 }
 function ce2Foot(l) {
   let q, ans, explain, log, extra = [];
@@ -1067,12 +1103,12 @@ function ce2Foot(l) {
     if (Math.random() < .7) { ans = a + b; log = `${a} + ${b}`; explain = a + b > 10 ? `${a} + ${10 - a} = 10, puis 10 + ${a + b - 10} = ${a + b}.` : `${a} + ${b} = ${a + b}.`; }
     else { const s = a + b; ans = a; log = `${s} − ${b}`; explain = `${b} + ${a} = ${s}, donc ${s} − ${b} = ${a}.`; } q = `${log} = ?`;
   } else if (l === 2) {
-    if (Math.random() < .5) { const n = pick([...range(1, 20), 25, 30, 35, 40, 45, 50, 60, 75]); ans = 2 * n; log = `double de ${n}`; q = `Le double de ${n} ?`; explain = `Le double, c’est le nombre plus lui-même : ${n} + ${n} = ${2 * n}.`; extra = [n + 2, 2 * n + 10]; }
-    else { const n = pick([...range(2, 40, 2), 50, 60, 70, 80, 90, 100, 120, 150]); ans = n / 2; log = `moitié de ${n}`; q = `La moitié de ${n} ?`; explain = `${n / 2} + ${n / 2} = ${n}, donc la moitié de ${n} est ${n / 2}.`; extra = [n * 2, n - 2]; }
+    if (Math.random() < .5) { const n = pick([...range(1, 20), 25, 30, 35, 40, 45, 50, 60, 75]); ans = 2 * n; log = `double de ${n}`; q = `Le double de ${n} ?`; explain = `Le double, c’est le nombre plus lui-même : ${n} + ${n} = ${2 * n}.`; extra = [[n / 2, 'Tu as pris la moitié au lieu du double.'], [n + 2, `Tu as ajouté 2. Le double, c’est ajouter le nombre lui-même : ${n} + ${n}.`], 2 * n + 10]; }
+    else { const n = pick([...range(2, 40, 2), 50, 60, 70, 80, 90, 100, 120, 150]); ans = n / 2; log = `moitié de ${n}`; q = `La moitié de ${n} ?`; explain = `${n / 2} + ${n / 2} = ${n}, donc la moitié de ${n} est ${n / 2}.`; extra = [[n * 2, 'Tu as pris le double au lieu de la moitié.'], [n - 2, `Tu as enlevé 2. La moitié, c’est partager ${n} en deux parts égales.`]]; }
   } else if (l === 3) { const a = rnd(21, 89), u = a % 10, t = pick(['addU', 'addT', 'subU', 'subT']);
-    if (t === 'addU') { const d = u >= 2 ? rnd(10 - u, 9) : rnd(2, 9); ans = a + d; log = `${a} + ${d}`; explain = u + d > 10 ? `${a} + ${10 - u} = ${a + 10 - u}, puis + ${d - (10 - u)} = ${ans}.` : `${a} + ${d} = ${ans}.`; extra = [ans - 10, ans + 10]; }
+    if (t === 'addU') { const d = u >= 2 ? rnd(10 - u, 9) : rnd(2, 9); ans = a + d; log = `${a} + ${d}`; explain = u + d > 10 ? `${a} + ${10 - u} = ${a + 10 - u}, puis + ${d - (10 - u)} = ${ans}.` : `${a} + ${d} = ${ans}.`; extra = [u + d >= 10 ? [ans - 10, `Tu as oublié la dizaine : ${u} + ${d} = ${u + d}, ça fait une dizaine de plus.`] : ans - 10, ans + 10]; }
     else if (t === 'addT') { const k = rnd(1, 9), b = 10 * k; ans = a + b; log = `${a} + ${b}`; explain = `On ajoute ${pl(k, 'dizaine')} : ${a} + ${b} = ${ans}.`; extra = [a + k, ans + 10]; }
-    else if (t === 'subU') { const d = rnd(2, 9); ans = a - d; log = `${a} − ${d}`; explain = d > u && u > 0 ? `${a} − ${u} = ${a - u}, puis − ${d - u} = ${ans}.` : `${a} − ${d} = ${ans}.`; extra = [ans + 10, ans - 10]; }
+    else if (t === 'subU') { const d = rnd(2, 9); ans = a - d; log = `${a} − ${d}`; explain = d > u && u > 0 ? `${a} − ${u} = ${a - u}, puis − ${d - u} = ${ans}.` : `${a} − ${d} = ${ans}.`; extra = [d > u ? [ans + 10, `Il faut casser une dizaine : ${u} est plus petit que ${d}, donc le chiffre des dizaines baisse.`] : ans + 10, ans - 10]; }
     else { const k = rnd(1, Math.floor(a / 10) - 1), b = 10 * k; ans = a - b; log = `${a} − ${b}`; explain = `On enlève ${pl(k, 'dizaine')} : ${a} − ${b} = ${ans}.`; extra = [a - k, ans + 10]; }
     q = `${log} = ?`;
   } else if (l === 4) { const t = pick(['x10', 'x100', 'dbl', 'half']);
@@ -1112,12 +1148,12 @@ const ITEMS = ['une corde', 'un poisson', 'une boussole', 'une longue-vue', 'une
 function ce2Marche(l) {
   const denoms = l === 1 ? [1000, 500, 200, 100] : l === 2 ? [1000, 500, 200, 100, 50, 20, 10] : [2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
   const greedy = c => { const o = []; for (const d of [2000, 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1]) while (c >= d) { o.push(coinLabel(d)); c -= d; } return o.join(' + '); };
-  let target, ask, price, explain, log;
+  let target, ask, price, explain, log, dgM = null;
   if (l <= 3) { target = l === 1 ? rnd(2, 19) * 100 : l === 2 ? rnd(1, 9) * 100 + rnd(1, 9) * 10 : rnd(105, 999); ask = `Le cuistot achète ${pick(ITEMS)}. Paye la somme exacte :`; price = fmtE(target); log = `payer ${fmtE(target)}`; explain = `Il fallait ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
-  else if (l === 4) { const paid = pick([500, 1000]), p = rnd(paid === 500 ? 105 : 510, paid - 5); target = paid - p; ask = `Un client achète ${pick(ITEMS)} à ${fmtE(p)} et paye avec ${fmtE(paid)}. Rends-lui la monnaie :`; price = ''; log = `rendre sur ${fmtE(paid)} pour ${fmtE(p)}`;
+  else if (l === 4) { const paid = pick([500, 1000]), p = rnd(paid === 500 ? 105 : 510, paid - 5); target = paid - p; ask = `Un client achète ${pick(ITEMS)} à ${fmtE(p)} et paye avec ${fmtE(paid)}. Rends-lui la monnaie :`; price = ''; log = `rendre sur ${fmtE(paid)} pour ${fmtE(p)}`; dgM = { t: 'change', price: p, paid };
     const up = Math.ceil(p / 100) * 100; explain = (up > p ? `De ${fmtE(p)} à ${fmtE(up)}, il manque ${fmtC(up - p)}. ` : '') + (paid > up ? `De ${fmtE(up)} à ${fmtE(paid)}, il manque ${fmtC(paid - up)}. ` : '') + `On rend ${fmtC(target)}, par exemple : ${greedy(target)}.`; }
   else { const a = rnd(105, 899), b = rnd(105, 899); target = a + b; const [i1, i2] = shuffle(ITEMS); ask = `Le cuistot achète ${i1} à ${fmtE(a)} et ${i2} à ${fmtE(b)}. Paye le total exact :`; price = ''; log = `payer ${fmtE(a)} + ${fmtE(b)}`; explain = `${fmtE(a)} + ${fmtE(b)} = ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
-  return { kind: 'money', denoms, target, showTotal: l <= 3, ask, price, answer: target, answerText: fmtE(target), explain, hint: /paye avec/.test(ask) ? 'Pour rendre la monnaie, pars du prix et complète jusqu’à la somme donnée : ce que tu ajoutes, c’est la monnaie.' : 'Commence par le plus gros billet ou la plus grosse pièce possible.', log };
+  return { kind: 'money', denoms, target, showTotal: l <= 3, ask, price, answer: target, answerText: fmtE(target), explain, dg: dgM, hint: /paye avec/.test(ask) ? 'Pour rendre la monnaie, pars du prix et complète jusqu’à la somme donnée : ce que tu ajoutes, c’est la monnaie.' : 'Commence par le plus gros billet ou la plus grosse pièce possible.', log };
 }
 const hm = (h, m) => m ? `${h} h ${String(m).padStart(2, '0')}` : `${h} h`;
 const dur = n => n < 60 ? `${n} min` : n % 60 ? `${Math.floor(n / 60)} h ${String(n % 60).padStart(2, '0')}` : `${n / 60} h`;
@@ -1139,10 +1175,11 @@ function ce2Horloge(l) {
   }
   if (l <= 4) {
     const h = rnd(1, 12), m = l === 1 ? 0 : l === 2 ? pick([0, 30]) : l === 3 ? pick([0, 15, 30, 45]) : pick(range(0, 55, 5));
-    const key = (a, b) => `${a}:${b}`, cand = [[h % 12 + 1, m], [(h + 10) % 12 + 1, m], [h, (m + 30) % 60], [m / 5 || 12, (h % 12) * 5], [h, m === 0 ? 15 : 0]];
+    const hw = m ? `La petite aiguille est entre le ${h} et le ${h % 12 + 1} : on lit le chiffre qu’elle a dépassé, le ${h}.` : `La petite aiguille montre les heures : elle est sur le ${h}.`, mw = `La grande aiguille montre les minutes : elle est sur le ${m / 5 || 12}, donc ${m ? m + ' minutes' : 'c’est l’heure pile'}.`;
+    const key = (a, b) => `${a}:${b}`, cand = [[h % 12 + 1, m, hw], [(h + 10) % 12 + 1, m, hw], [h, (m + 30) % 60, mw], [m / 5 || 12, (h % 12) * 5, 'Tu as échangé les aiguilles : la petite montre les heures, la grande montre les minutes.'], [h, m === 0 ? 15 : 0, mw]];
     const seen = new Set([key(h, m)]), wrong = [];
-    for (const [a, b] of shuffle(cand)) { if (wrong.length >= 2) break; if (!seen.has(key(a, b))) { seen.add(key(a, b)); wrong.push([a, b]); } }
-    const choices = shuffle([[h, m], ...wrong]).map(([a, b]) => ({ v: key(a, b), html: hm(a, b) }));
+    for (const [a, b, w] of shuffle(cand)) { if (wrong.length >= 2) break; if (!seen.has(key(a, b))) { seen.add(key(a, b)); wrong.push([a, b, w]); } }
+    const choices = shuffle([[h, m], ...wrong]).map(([a, b, w]) => w ? { v: key(a, b), html: hm(a, b), why: w } : { v: key(a, b), html: hm(a, b) });
     const explain = `La petite aiguille montre les heures : ${m ? `elle a dépassé le ${h}` : `elle est sur le ${h}`}. La grande aiguille montre les minutes : ${m ? `elle est sur le ${m / 5}, donc ${m} minutes (on compte de 5 en 5)` : 'elle est sur le 12, c’est l’heure pile'}. Il est ${hm(h, m)}.`;
     return { kind: 'choices', clock: { h, m }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h, m), answerText: hm(h, m), choices, explain, hint: 'La petite aiguille montre les heures, la grande aiguille montre les minutes.', log: `lire ${hm(h, m)}` };
   }
@@ -1164,9 +1201,9 @@ function ce2Cuisine(l) {
     return { kind: 'compare', fr: [[a, b], [c, d2]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, b)} <span class="slot">?</span> ${frac(c, d2)}`, answer: sym, answerText: sym, log: `comparer ${a}/${b} et ${c}/${d2}`, explain: `${why} Donc ${frac(a, b)} ${sym} ${frac(c, d2)}.`, hint: 'Regarde les barres : laquelle est la plus remplie ?', choices: ['<', '=', '>'].map(s => ({ v: s, html: s })) }; }
   const d = pick([6, 8, 10, 12]), who = shuffle(['le mousse', 'le perroquet', 'le capitaine', 'la vigie']).slice(0, 2);
   const a = rnd(1, Math.floor(d / 3)), b = rnd(1, Math.floor(d / 3)), rest = d - a - b;
-  const wrong = [...new Set([a + b, rest + 1, rest - 1].filter(x => x > 0 && x < d && x !== rest))].slice(0, 2);
+  const wrong = [...new Set([a + b, rest + 1, rest - 1].filter(x => x > 0 && x < d && x !== rest))].slice(0, 2), WHY = x => x === a + b ? `${frac(a + b, d)}, c’est ce qui a été mangé. La question demande ce qui reste.` : `Recompte : le gâteau entier fait ${frac(d, d)}, on enlève ${frac(a + b, d)}.`;
   return { kind: 'choices', cake: d, ask: `Gâteau coupé en ${d} parts. ${who[0][0].toUpperCase() + who[0].slice(1)} mange ${frac(a, d)}, ${who[1]} mange ${frac(b, d)}. Quelle fraction reste-t-il ?`, prompt: '', answer: rest, answerText: `${rest}/${d}`, log: `${d}/${d} − ${a}/${d} − ${b}/${d}`,
-    explain: `${frac(a, d)} + ${frac(b, d)} = ${frac(a + b, d)}. Le gâteau entier, c’est ${frac(d, d)}. Il reste ${frac(d, d)} − ${frac(a + b, d)} = ${frac(rest, d)}.`, hint: `Le gâteau entier fait ${frac(d, d)}. Enlève ce qui a été mangé.`, choices: shuffle([rest, ...wrong]).map(x => ({ v: x, html: frac(x, d) })) };
+    explain: `${frac(a, d)} + ${frac(b, d)} = ${frac(a + b, d)}. Le gâteau entier, c’est ${frac(d, d)}. Il reste ${frac(d, d)} − ${frac(a + b, d)} = ${frac(rest, d)}.`, hint: `Le gâteau entier fait ${frac(d, d)}. Enlève ce qui a été mangé.`, choices: shuffle([rest, ...wrong]).map(x => x === rest ? { v: x, html: frac(x, d) } : { v: x, html: frac(x, d), why: WHY(x) }) };
 }
 
 /* ================= Maths de CM1 (BO n° 16 du 17 avril 2025) ================= */
@@ -1197,7 +1234,7 @@ function cpCanon(l) {
   else { a = rnd(5, 9); const s = rnd(a + 2, Math.min(20, a + 9)); ans = s - a; log = `${a} + … = ${s}`; prompt = `${a} + ${SLOT} = ${s}`;
     explain = s > 10 && a < 10 ? `De ${a} à 10, il y a ${10 - a}. De 10 à ${s}, il y a ${s - 10}. ${10 - a} + ${s - 10} = ${ans}, donc ${a} + ${ans} = ${s}.` : `${a} + ${ans} = ${s}. ${surc(a, ans)}`;
     hint = `Pars de ${a} et avance jusqu’à ${s} : compte les bonds.`; }
-  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log };
+  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log, dg: /…/.test(log) ? { t: 'comp', a, s: ans + a } : { t: 'add', a, b } };
 }
 function cpFoot(l) {
   let q, ans, explain, log, hint, extra = [];
@@ -1206,7 +1243,7 @@ function cpFoot(l) {
   else if (l === 2) { const a = rnd(3, 10), b = rnd(1, a - 1); ans = a - b; log = `${a} − ${b}`; q = `${log} = ?`;
     explain = `Si on enlève ${b} à ${a}, il en reste ${ans}. On vérifie : ${ans} + ${b} = ${a}.`; hint = `Montre ${a} doigts, puis baisses-en ${b}.`; extra = [a + b]; }
   else if (l === 3) { const n = rnd(1, 10); ans = 2 * n; log = `double de ${n}`; q = `Le double de ${n} ?`;
-    explain = `Le double, c’est deux fois le même nombre : ${n} + ${n} = ${ans}.`; hint = `Le double de ${n}, c’est ${n} + ${n}.`; extra = [n + 1, ans + 2]; }
+    explain = `Le double, c’est deux fois le même nombre : ${n} + ${n} = ${ans}.`; hint = `Le double de ${n}, c’est ${n} + ${n}.`; extra = [[n + 1, `Tu as ajouté 1. Le double, c’est ${n} + ${n}.`], ans + 2]; }
   else if (l === 4) { const n = rnd(11, 89), up = Math.random() < .6; ans = up ? n + 10 : n - 10; log = `${n} ${up ? '+' : '−'} 10`; q = `${log} = ?`;
     explain = `${up ? 'Ajouter' : 'Enlever'} 10, c’est ${up ? 'ajouter' : 'enlever'} une dizaine : ${n} ${up ? '+' : '−'} 10 = ${ans}. Le chiffre des unités ne change pas.`; hint = 'Seul le chiffre des dizaines change.'; extra = [up ? n + 1 : n - 1, up ? n + 11 : n - 9]; }
   else { const a = rnd(1, 8), b = rnd(1, 9 - a), add = Math.random() < .6; ans = add ? (a + b) * 10 : a * 10;
@@ -1249,12 +1286,12 @@ function cpChasse(l) {
 function cpMarche(l) {
   const denoms = l === 1 ? [200, 100] : l === 2 || l === 5 ? [500, 200, 100] : [1000, 500, 200, 100];
   const greedy = c => { const o = []; for (const d of denoms) while (c >= d) { o.push(coinLabel(d)); c -= d; } return o.join(' + '); };
-  let target, ask, price = '', explain, log, hint = 'Commence par le plus gros billet ou la plus grosse pièce, puis complète.';
+  let target, ask, price = '', explain, log, hint = 'Commence par le plus gros billet ou la plus grosse pièce, puis complète.', dgM = null;
   if (l <= 3) { target = (l === 1 ? rnd(2, 5) : l === 2 ? rnd(3, 10) : rnd(6, 20)) * 100; ask = `Le cuistot achète ${pick(ITEMS)}. Paye :`; price = fmtE(target); log = `payer ${fmtE(target)}`; explain = `Il fallait ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
   else if (l === 4) { const a = rnd(1, 8), b = rnd(1, 9), [i1, i2] = shuffle(ITEMS); target = (a + b) * 100; ask = `Le cuistot achète ${i1} à ${a} € et ${i2} à ${b} €. Paye le tout :`; log = `payer ${a} € + ${b} €`; explain = `${a} € + ${b} € = ${a + b} €, par exemple : ${greedy(target)}.`; }
-  else { const pr = rnd(2, 9); target = (10 - pr) * 100; ask = `Un client achète ${pick(ITEMS)} à ${pr} € et paye avec un billet de 10 €. Rends-lui la monnaie :`; log = `rendre sur 10 € pour ${pr} €`;
+  else { const pr = rnd(2, 9); target = (10 - pr) * 100; ask = `Un client achète ${pick(ITEMS)} à ${pr} € et paye avec un billet de 10 €. Rends-lui la monnaie :`; log = `rendre sur 10 € pour ${pr} €`; dgM = { t: 'change', price: pr * 100, paid: 1000 };
     explain = `De ${pr} € à 10 €, on compte : ${range(pr + 1, 10).join(', ')}. Il manque ${10 - pr} € : on rend ${fmtE(target)}, par exemple : ${greedy(target)}.`; hint = `Compte de ${pr} jusqu’à 10 sur tes doigts : ce que tu ajoutes, c’est la monnaie.`; }
-  return { kind: 'money', denoms, target, showTotal: true, ask, price, answer: target, answerText: fmtE(target), explain, hint, log };
+  return { kind: 'money', denoms, target, showTotal: true, ask, price, answer: target, answerText: fmtE(target), explain, hint, log, dg: dgM };
 }
 // Problèmes du CP : on ne donne jamais de « mot-clé » (« encore » peut demander une soustraction). L'explication raconte la situation.
 const CPW = [['poissons', 'pêche', 'pêcher'], ['coquillages', 'ramasse', 'ramasser'], ['billes', 'gagne', 'gagner'], ['pommes', 'cueille', 'cueillir']];
@@ -1269,7 +1306,7 @@ function cpProbleme() {
     explain = `${who[0]} a ${a} et veut arriver à ${s}. De ${a} à ${s}, il y a ${ans} : ${a} + ${ans} = ${s}. On peut aussi calculer ${s} − ${a} = ${ans}.`; }
   else { b = rnd(2, 9); const r = rnd(3, 15); ans = r + b; ask = `${who[0]} donne ${b} ${w} à un ami. Il lui en reste ${r}. Combien en avait-${who[1]} au début ?`; log = `… − ${b} = ${r}`;
     explain = `Au début, ${who[0]} avait les ${r} qui restent et les ${b} donnés. ${r} + ${b} = ${ans}.`; }
-  return { kind: 'keypad', ask, prompt: SLOT, answer: ans, answerText: fmt(ans), log: `problème ${log}`, explain, hint: 'Dessine la situation : ce qu’il y a au début, ce qui change, ce qu’il y a à la fin.' };
+  return { kind: 'keypad', ask, prompt: SLOT, answer: ans, answerText: fmt(ans), log: `problème ${log}`, explain, hint: 'Dessine la situation : ce qu’il y a au début, ce qui change, ce qu’il y a à la fin.', dg: { t: 'pb', alt: t === 'ajout' ? Math.abs(a - b) : t === 'retrait' ? a + b : t === 'cherche-ajout' ? ans + 2 * a : Math.abs(ans - 2 * b) } };
 }
 function cpGroupes() {
   const t = pick(['double', 'groupes', 'partage']);
@@ -1303,7 +1340,7 @@ function cpSuite(list, mode, word) {
 // Heure pile : les pièges sont d'autres heures piles (les quarts et les demies ne sont pas au programme du CP)
 function cpClock() {
   const h = rnd(1, 12), key = a => `${a}:0`, wrong = shuffle([h % 12 + 1, (h + 10) % 12 + 1, h === 6 ? 12 : (h + 6) % 12 || 12]).filter((x, k, a) => x !== h && a.indexOf(x) === k).slice(0, 2);
-  return { kind: 'choices', clock: { h, m: 0 }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h), answerText: hm(h, 0), choices: [h, ...wrong].map(a => ({ v: key(a), html: hm(a, 0) })), log: `lire ${h} h`,
+  return { kind: 'choices', clock: { h, m: 0 }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h), answerText: hm(h, 0), choices: [h, ...wrong].map(a => a === h ? { v: key(a), html: hm(a, 0) } : { v: key(a), html: hm(a, 0), why: `La petite aiguille montre l’heure : elle est sur le ${h}, pas sur le ${a}.` }), log: `lire ${h} h`,
     explain: `La petite aiguille montre l’heure : elle est sur le ${h}. La grande aiguille est sur le 12 : c’est l’heure pile. Il est ${h === 1 ? 'une heure' : h + ' heures'}.`, hint: 'Regarde où pointe la petite aiguille.', sayChoices: true };
 }
 const WEEK = () => ({ kind: 'choices', ask: 'Combien y a-t-il de jours dans une semaine ?', prompt: '', answer: 7, answerText: '7', choices: [7, 5, 10].map(v => ({ v, html: String(v) })), log: 'jours dans une semaine', explain: 'Une semaine a 7 jours : lundi, mardi, mercredi, jeudi, vendredi, samedi et dimanche.', hint: 'Compte les jours de lundi à dimanche.', sayChoices: true });
@@ -1400,15 +1437,15 @@ const CPNOUNS = [['chat', 'm', 'chats', 'dort au soleil'], ['poule', 'f', 'poule
 function cpAccords(l) {
   const [w, g, p, pred] = pick(CPNOUNS);
   if (l <= 2 || (l === 5 && Math.random() < .3)) { const def = l !== 2 && (l !== 5 || Math.random() < .5), ans = def ? (g === 'm' ? 'le' : 'la') : (g === 'm' ? 'un' : 'une');
-    return { kind: 'choices', ask: def ? 'Choisis le bon petit mot : le ou la ?' : 'Choisis le bon petit mot : un ou une ?', prompt: `${SLOT} ${w}`, promptClass: 'sent', answer: ans, answerText: `${ans} ${w}`, choices: (def ? ['le', 'la'] : ['un', 'une']).map(v => ({ v, html: v })), log: `${ans} ${w}`,
+    return { kind: 'choices', ask: def ? 'Choisis le bon petit mot : le ou la ?' : 'Choisis le bon petit mot : un ou une ?', prompt: `${SLOT} ${w}`, promptClass: 'sent', answer: ans, answerText: `${ans} ${w}`, choices: (def ? ['le', 'la'] : ['un', 'une']).map(v => v === ans ? { v, html: v } : { v, html: v, why: `« ${v} » va avec les mots ${g === 'm' ? 'féminins' : 'masculins'}. « ${w} » est un mot ${g === 'm' ? 'masculin' : 'féminin'}.` }), log: `${ans} ${w}`,
       explain: `On dit « ${ans} ${w} » : « ${w} » est un mot ${g === 'm' ? `masculin, comme « le ${w === 'chat' ? 'lapin' : 'chat'} »` : `féminin, comme « la ${w === 'poule' ? 'lune' : 'poule'} »`}.`, hint: 'Dis les deux à voix haute : lequel sonne bien ?', sayChoices: true }; }
-  if (l === 3) return { kind: 'choices', ask: `Quand il y en a plusieurs : ${g === 'm' ? 'un' : 'une'} ${w}, des… ?`, prompt: '', answer: p, answerText: `des ${p}`, choices: [p, w].map(v => ({ v, html: v })), log: `pluriel de ${w}`,
+  if (l === 3) return { kind: 'choices', ask: `Quand il y en a plusieurs : ${g === 'm' ? 'un' : 'une'} ${w}, des… ?`, prompt: '', answer: p, answerText: `des ${p}`, choices: [{ v: p, html: p }, { v: w, html: w, why: 'Il manque le s : quand il y en a plusieurs, on ajoute un s à la fin du mot.' }], log: `pluriel de ${w}`,
     explain: `Quand il y en a plusieurs, on ajoute un « s » à la fin du mot : des ${p}. On ne l’entend pas, mais on l’écrit.`, hint: 'Plusieurs : regarde la dernière lettre du mot.' };
   if (l === 4) { const others = shuffle(CPNOUNS.filter(x => x[0] !== w)).slice(0, 2).map(x => x[0]);
-    return { kind: 'choices', ask: 'Quel mot va avec « des » ?', prompt: '', answer: p, answerText: `des ${p}`, choices: [p, ...others].map(v => ({ v, html: v })), log: `des + ${p}`,
+    return { kind: 'choices', ask: 'Quel mot va avec « des » ?', prompt: '', answer: p, answerText: `des ${p}`, choices: [p, ...others].map(v => v === p ? { v, html: v } : { v, html: v, why: `« ${v} » n’a pas de s à la fin : il n’y en a qu’un.` }), log: `des + ${p}`,
       explain: `« des » veut dire plusieurs : on écrit « des ${p} », avec un s à la fin.`, hint: 'Cherche le mot qui finit par un s.' }; }
   const ans = g === 'm' ? 'il' : 'elle', det = g === 'm' ? 'Le' : 'La';
-  return { kind: 'choices', ask: `${det} ${w} ${pred}. Quel petit mot peut remplacer « ${det.toLowerCase()} ${w} » ?`, prompt: `${SLOT} ${pred}.`, promptClass: 'sent', answer: ans, answerText: `${cap(ans)} ${pred}.`, choices: ['il', 'elle'].map(v => ({ v, html: v })), log: `il/elle : ${w}`,
+  return { kind: 'choices', ask: `${det} ${w} ${pred}. Quel petit mot peut remplacer « ${det.toLowerCase()} ${w} » ?`, prompt: `${SLOT} ${pred}.`, promptClass: 'sent', answer: ans, answerText: `${cap(ans)} ${pred}.`, choices: ['il', 'elle'].map(v => v === ans ? { v, html: v } : { v, html: v, why: `« ${v} » remplace un mot ${v === 'il' ? 'masculin (le…)' : 'féminin (la…)'}. On dit « ${det.toLowerCase()} ${w} ».` }), log: `il/elle : ${w}`,
     explain: `« ${det.toLowerCase()} ${w} » est ${g === 'm' ? 'masculin : on dit « il »' : 'féminin : on dit « elle »'}. ${cap(ans)} ${pred}.`, hint: '« le » va avec « il », « la » va avec « elle ».', sayChoices: true };
 }
 // Pas de mot à double sens (« orange » est aussi une couleur)
@@ -1438,10 +1475,10 @@ function ce1Canon(l) {
   if (l === 1) return cpCanon(pick([4, 5]));
   const tabs = l === 2 ? [2, 10] : l === 3 ? [2, 5, 10] : [2, 3, 4, 5, 10], a = pick(l === 4 ? [3, 4, 3, 4, 2, 5] : tabs), b = rnd(2, 10), p = a * b;
   const rep = b <= 5 ? ` C’est ${Array(b).fill(a).join(' + ')}.` : '';
-  if (l === 5 && Math.random() < .5) return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt: `${a} × ${SLOT} = ${p}`, answer: b, answerText: fmt(b), log: `${a} × … = ${p}`,
+  if (l === 5 && Math.random() < .5) return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt: `${a} × ${SLOT} = ${p}`, answer: b, answerText: fmt(b), log: `${a} × … = ${p}`, dg: { t: 'miss', a, p },
     explain: `${a} × ${b} = ${p}, donc le nombre caché est ${b}. On compte de ${a} en ${a} jusqu’à ${p} : ${range(1, b).map(i => a * i).join(', ')}.`, hint: `Compte de ${a} en ${a} jusqu’à ${p} et compte combien de bonds tu fais.` };
   const flip = Math.random() < .5, log = flip ? `${b} × ${a}` : `${a} × ${b}`;
-  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt: `${log} = ${SLOT}`, answer: p, answerText: fmt(p), log,
+  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt: `${log} = ${SLOT}`, answer: p, answerText: fmt(p), log, dg: { t: 'mul', a, b },
     explain: `${flip && a !== b ? `${b} × ${a}, c’est pareil que ${a} × ${b}. ` : ''}${a} × ${b} = ${p}. On compte de ${a} en ${a} : ${range(1, b).map(i => a * i).join(', ')}.${rep}`, hint: `Compte de ${a} en ${a}, ${b} fois.` };
 }
 function ce1Foot(l) {
@@ -1492,15 +1529,15 @@ function ce1Chasse(l) {
 function ce1Marche(l) {
   const denoms = l === 1 ? [1000, 500, 200, 100] : l === 2 ? [2000, 1000, 500, 200, 100] : l === 3 ? [500, 200, 100, 50, 20, 10] : l === 4 ? [1000, 500, 200, 100, 50, 20, 10] : [200, 100, 50, 20, 10, 5, 2, 1];
   const greedy = c => { const o = []; for (const d of denoms) while (c >= d) { o.push(coinLabel(d)); c -= d; } return o.join(' + '); };
-  let target, ask, price = '', explain, log, hint = 'Commence par le plus gros billet ou la plus grosse pièce possible.';
+  let target, ask, price = '', explain, log, hint = 'Commence par le plus gros billet ou la plus grosse pièce possible.', dgM = null;
   if (l <= 3) { target = l === 1 ? rnd(5, 20) * 100 : l === 2 ? rnd(12, 50) * 100 : rnd(11, 99) * 10; ask = `Le cuistot achète ${pick(ITEMS)}. Paye la somme exacte :`; price = fmtE(target); log = `payer ${fmtE(target)}`;
     explain = `Il fallait ${fmtE(target)}${target % 100 ? ` : ${pl(Math.floor(target / 100), 'euro')} et ${target % 100} centimes` : ''}, par exemple : ${greedy(target)}.`; if (l === 3) hint = '100 centimes font 1 euro. Paye d’abord les euros, puis les centimes.'; }
   else if (l === 4) { const a = rnd(1, 5) * 100 + rnd(1, 9) * 10, b = rnd(1, 4) * 100 + rnd(1, 9) * 10, [i1, i2] = shuffle(ITEMS); target = a + b; ask = `Le cuistot achète ${i1} à ${fmtE(a)} et ${i2} à ${fmtE(b)}. Paye le tout :`; log = `payer ${fmtE(a)} + ${fmtE(b)}`;
     const ce = a % 100 + b % 100; explain = `On ajoute les euros : ${Math.floor(a / 100)} + ${Math.floor(b / 100)} = ${Math.floor(a / 100) + Math.floor(b / 100)} €. Puis les centimes : ${a % 100} + ${b % 100} = ${ce} c${ce > 100 ? `, soit 1 € et ${ce - 100} c` : ce === 100 ? ', soit 1 €' : ''}. Total : ${fmtE(target)}, par exemple : ${greedy(target)}.`; hint = 'Ajoute d’abord les euros, puis les centimes. 100 centimes font 1 euro.'; }
-  else { const p = rnd(105, 495); target = 500 - p; ask = `Un client achète ${pick(ITEMS)} à ${fmtE(p)} et paye avec un billet de 5 €. Rends-lui la monnaie :`; log = `rendre sur 5 € pour ${fmtE(p)}`;
+  else { const p = rnd(105, 495); target = 500 - p; ask = `Un client achète ${pick(ITEMS)} à ${fmtE(p)} et paye avec un billet de 5 €. Rends-lui la monnaie :`; log = `rendre sur 5 € pour ${fmtE(p)}`; dgM = { t: 'change', price: p, paid: 500 };
     const up = Math.ceil(p / 100) * 100; explain = (up > p ? `De ${fmtE(p)} à ${fmtE(up)}, il manque ${fmtC(up - p)}. ` : '') + (up < 500 ? `De ${fmtE(up)} à 5 €, il manque ${fmtC(500 - up)}. ` : '') + `On rend ${fmtC(target)}, par exemple : ${greedy(target)}.`;
     hint = 'Pars du prix et complète jusqu’à l’euro suivant, puis jusqu’à 5 € : ce que tu ajoutes, c’est la monnaie.'; }
-  return { kind: 'money', denoms, target, showTotal: l <= 3, ask, price, answer: target, answerText: fmtE(target), explain, hint, log };
+  return { kind: 'money', denoms, target, showTotal: l <= 3, ask, price, answer: target, answerText: fmtE(target), explain, hint, log, dg: dgM };
 }
 const FRN = { 2: 'un demi', 3: 'un tiers', 4: 'un quart' }; // au-delà : un cinquième, un sixième…
 const frName = d => FRN[d] || `un ${['', '', '', '', '', 'cinquième', 'sixième', 'septième', 'huitième', 'neuvième', 'dixième'][d]}`;
@@ -1514,17 +1551,17 @@ function ce1Fractions() {
   if (Math.random() < .5) { const d = rnd(3, 10), a = rnd(1, d - 2), b = rnd(1, d - 1 - a), s = a + b;
     const wrong = shuffle([[s, 2 * d], [s + 1, d], [s - 1, d]]).slice(0, 2), key = (x, y) => `${x}/${y}`;
     return { kind: 'choices', ask: `Le cuistot coupe une tarte en ${d} parts égales. Pi mange ${frac(a, d)} de la tarte, Lila ${frac(b, d)}. Quelle part de la tarte ont-ils mangée en tout ?`, prompt: '', answer: key(s, d), answerText: `${s}/${d}`,
-      choices: shuffle([[s, d], ...wrong]).map(([x, y]) => ({ v: key(x, y), html: frac(x, y) })), log: `${a}/${d} + ${b}/${d}`,
+      choices: shuffle([[s, d], ...wrong]).map(([x, y]) => x === s && y === d ? { v: key(x, y), html: frac(x, y) } : { v: key(x, y), html: frac(x, y), why: y !== d ? `Tu as aussi additionné les dénominateurs. La tarte est toujours coupée en ${d} : le nombre du bas ne change pas.` : `Recompte les parts : ${a} + ${b} = ${s}.` }), log: `${a}/${d} + ${b}/${d}`,
       explain: `${frac(a, d)} + ${frac(b, d)} = ${frac(s, d)} : les parts ont la même taille, on ajoute seulement le nombre de parts (${a} + ${b} = ${s}). Le dénominateur ne change pas : la tarte est toujours coupée en ${d}.`, hint: 'On compte les parts mangées. La tarte reste coupée pareil.' }; }
   const d = pick([4, 6, 8, 10]), a = rnd(1, d - 1), who = pick(['Pi', 'Tom', 'Lila']);
   return { kind: 'choices', ask: `Le cuistot coupe un gâteau en ${d} parts égales. ${who} en mange ${a}. Quelle part du gâteau ${who} a-t-${who === 'Lila' ? 'elle' : 'il'} mangée ?`, prompt: '', answer: `${a}/${d}`, answerText: `${a}/${d}`,
-    choices: shuffle([[a, d], [d, a], [d - a, d]].filter(([x, y], k, arr) => arr.findIndex(([p, q]) => p === x && q === y) === k)).map(([x, y]) => ({ v: `${x}/${y}`, html: frac(x, y) })), log: `${a} parts sur ${d}`,
+    choices: shuffle([[a, d], [d, a], [d - a, d]].filter(([x, y], k, arr) => arr.findIndex(([p, q]) => p === x && q === y) === k)).map(([x, y]) => x === a && y === d ? { v: `${x}/${y}`, html: frac(x, y) } : { v: `${x}/${y}`, html: frac(x, y), why: y !== d ? `Tu as inversé les deux nombres : en bas, le nombre de parts du gâteau (${d}) ; en haut, les parts mangées (${a}).` : `Ça, c’est la part qui reste. La question demande ce qui a été mangé.` }), log: `${a} parts sur ${d}`,
     explain: `${a} part${a > 1 ? 's' : ''} sur ${d}, c’est ${frac(a, d)}. ${FRWHY}`, hint: 'En bas : en combien de parts on a coupé. En haut : combien de parts il a mangées.' };
 }
 function ce1Compare() {
   const d = rnd(3, 10); let a, c; do { a = rnd(1, d - 1); c = rnd(1, d - 1); } while (a === c && Math.random() < .8);
   const sym = a < c ? '<' : a > c ? '>' : '=';
-  return { kind: 'compare', fr: [[a, d], [c, d]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, d)} <span class="slot">?</span> ${frac(c, d)}`, answer: sym, answerText: sym, log: `comparer ${a}/${d} et ${c}/${d}`,
+  return { kind: 'compare', ct: 'sameD', fr: [[a, d], [c, d]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, d)} <span class="slot">?</span> ${frac(c, d)}`, answer: sym, answerText: sym, log: `comparer ${a}/${d} et ${c}/${d}`,
     explain: `Les deux fractions ont le même dénominateur (${d}) : les parts ont la même taille. On compare les numérateurs, ${a} et ${c}. Donc ${frac(a, d)} ${sym} ${frac(c, d)}.`, hint: 'Les parts ont la même taille : qui en a le plus ?', choices: ['<', '=', '>'].map(s => ({ v: s, html: s })) };
 }
 function ce1Probleme(l) {
@@ -1546,7 +1583,7 @@ function ce1Cuisine(l) {
 }
 function ce1Half() {
   const h = rnd(1, 12), key = (a, b) => `${a}:${b}`, wrong = shuffle([[h % 12 + 1, 30], [h, 0], [(h + 10) % 12 + 1, 30]]).slice(0, 2);
-  return { kind: 'choices', clock: { h, m: 30 }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h, 30), answerText: hm(h, 30), choices: [[h, 30], ...wrong].map(([a, b]) => ({ v: key(a, b), html: hm(a, b) })), log: `lire ${h} h 30`,
+  return { kind: 'choices', clock: { h, m: 30 }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h, 30), answerText: hm(h, 30), choices: [[h, 30], ...wrong].map(([a, b]) => a === h && b === 30 ? { v: key(a, b), html: hm(a, b) } : { v: key(a, b), html: hm(a, b), why: b === 0 ? 'La grande aiguille est sur le 6 : c’est la demie, pas l’heure pile.' : `La petite aiguille est entre le ${h} et le ${h % 12 + 1} : on lit le chiffre qu’elle a déjà dépassé, le ${h}.` }), log: `lire ${h} h 30`,
     explain: `La grande aiguille est sur le 6 : c’est la demie (30 minutes). La petite aiguille est entre le ${h} et le ${h % 12 + 1} : il est ${h} h 30, ${h === 1 ? 'une heure' : h + ' heures'} et demie.`, hint: 'Quand la grande aiguille est sur le 6, c’est « et demie ». Regarde le chiffre que la petite aiguille vient de dépasser.' };
 }
 const QNM = { 15: ' (un quart d’heure)', 30: ' (une demi-heure)', 45: ' (trois quarts d’heure)' };
@@ -1599,7 +1636,7 @@ function ce1Gram(l) {
 // Pluriel en -s seulement (les pluriels en -x et -aux sont au programme du CE2)
 function ce1Plur() {
   const n = pick(GNN.filter(x => x[1] === x[0] + 's')), def = Math.random() < .5, sg = `${def ? (n[2] ? 'la' : 'le') : n[2] ? 'une' : 'un'} ${n[0]}`, D = def ? 'les' : 'des', ans = `${D} ${n[1]}`;
-  return { kind: 'choices', ask: 'Mets ce groupe au pluriel :', prompt: `${sg} → …`, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, `${D} ${n[0]}`, `${D} ${n[0]}nt`]).map(v => ({ v, html: v })), log: `pluriel de ${sg}`,
+  return { kind: 'choices', ask: 'Mets ce groupe au pluriel :', prompt: `${sg} → …`, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, `${D} ${n[0]}`, `${D} ${n[0]}nt`]).map(v => v === ans ? { v, html: v } : { v, html: v, why: /nt$/.test(v) ? 'Un nom ne prend jamais -nt au pluriel : c’est la marque des verbes (ils chantent).' : 'Il manque le s du pluriel : on ne l’entend pas, mais on l’écrit.' }), log: `pluriel de ${sg}`,
     explain: `${sg} → ${ans}. Au pluriel, on ajoute un s au nom. On ne l’entend pas, mais on l’écrit. Un nom ne prend jamais -nt : c’est la marque des verbes (ils chantent).`, hint: `« ${D} » veut dire plusieurs : le nom prend un s.` };
 }
 function ce1Accords(l) {
@@ -1646,7 +1683,8 @@ function cm1Canon(l) {
   else if (m === 'div10') { ans = b * 10; log = `${p * 10} ÷ ${a}`; prompt = `${fmt(p * 10)} ÷ ${a} = ${SLOT}`; explain = `${p} ÷ ${a} = ${b}, donc ${fmt(p * 10)} ÷ ${a} = ${ans}. Vérifie : ${a} × ${ans} = ${fmt(p * 10)}.`; hint = `Pense à ${p} ÷ ${a}, puis multiplie par 10.`; }
   else if (m === 'reste') { const r = rnd(1, a - 1), n = p + r; ans = b; log = `${n} = ${a} × … + ${r}`; prompt = `${n} = ${a} × ${SLOT} + ${r}`; explain = `${a} × ${b} = ${p}, et ${p} + ${r} = ${n}. Dans ${n}, il y a ${b} fois ${a} et il reste ${r}.`; hint = `Cherche dans la table de ${a} le résultat juste avant ${n}.`; }
   else { const x = rnd(1, 4) * 10 + rnd(1, 9), y = rnd(2, 6), t = x - x % 10, u = x % 10; ans = x * y; log = `${x} × ${y}`; prompt = `${log} = ${SLOT}`; explain = `${x} × ${y} = (${t} × ${y}) + (${u} × ${y}) = ${t * y} + ${u * y} = ${ans}.`; hint = `Coupe ${x} en ${t} + ${u}, multiplie chaque morceau par ${y}, puis ajoute.`; }
-  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log };
+  const dg = m === 'd' ? { t: 'mul', a, b } : m === 't' || m === 't2' ? { t: 'miss', a, p } : m === 'div' ? { t: 'div', a, p } : m === 'd10' || m === 'd100' ? { t: 'zero', p } : m === 'div10' ? { t: 'zero', p: b } : m === 'reste' ? { t: 'reste', a, n: p + Number(log.split(' + ')[1]) } : { t: 'm2', x: Number(log.split(' × ')[0]), y: Number(log.split(' × ')[1]) };
+  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log, dg };
 }
 function cm1Foot(l) {
   let q, ans, explain, log, ch, hint = 'Pi dit : coupe le calcul en petits calculs faciles.';
@@ -1727,7 +1765,7 @@ function cm1Cuisine(l) {
     if (t === 'mult') { const base = rnd(2, 10), f = base <= 6 ? pick([2, 3]) : 2; b = base; d2 = base * f; a = rnd(1, b - 1); c = rnd(1, d2 - 1); why = `${frac(a, b)} = ${frac(a * f, d2)} (on coupe chaque part en ${f}). On compare ${frac(a * f, d2)} et ${frac(c, d2)}.`; }
     else { b = d2 = rnd(3, 12); a = rnd(1, 2 * b); while (a === b) a = rnd(1, 2 * b); c = b; why = `${frac(b, b)}, c’est une unité entière. ${a > b ? `${frac(a, b)} dépasse l’unité : il y a plus de parts que dans une pizza entière.` : `${frac(a, b)} est plus petit qu’une unité.`}`; }
     const x = a / b, y = c / d2, sym = Math.abs(x - y) < 1e-9 ? '=' : x < y ? '<' : '>';
-    return { kind: 'compare', fr: [[a, b], [c, d2]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, b)} <span class="slot">?</span> ${frac(c, d2)}`, answer: sym, answerText: sym, log: `comparer ${a}/${b} et ${c}/${d2}`, explain: `${why} Donc ${frac(a, b)} ${sym} ${frac(c, d2)}.`, hint: 'Pour comparer, il faut des parts de la même taille.', choices: ['<', '=', '>'].map(s => ({ v: s, html: s })) }; }
+    return { kind: 'compare', ct: t, fr: [[a, b], [c, d2]], ask: 'Quel signe faut-il mettre ?', prompt: `${frac(a, b)} <span class="slot">?</span> ${frac(c, d2)}`, answer: sym, answerText: sym, log: `comparer ${a}/${b} et ${c}/${d2}`, explain: `${why} Donc ${frac(a, b)} ${sym} ${frac(c, d2)}.`, hint: 'Pour comparer, il faut des parts de la même taille.', choices: ['<', '=', '>'].map(s => ({ v: s, html: s })) }; }
   if (l === 4) { const t = pick(['d10', 'd100', 'mix']);
     if (t === 'd10') { const n = rnd(1, 9), ans = `0,${n}`; return { kind: 'choices', ask: 'Quel nombre décimal est égal à cette fraction ?', prompt: frac(n, 10), answer: ans, answerText: ans, choices: dch(ans, [`0,0${n}`, String(n * 10), `${n},1`]), log: `${n}/10 en décimal`, explain: `${frac(n, 10)}, c’est ${n} dixième${n > 1 ? 's' : ''} : on écrit ${n} juste après la virgule. ${frac(n, 10)} = ${ans}.`, hint: 'Les dixièmes s’écrivent au premier rang après la virgule.' }; }
     if (t === 'd100') { const n = rnd(11, 99), ans = `0,${n}`; return { kind: 'choices', ask: 'Quel nombre décimal est égal à cette fraction ?', prompt: frac(n, 100), answer: ans, answerText: ans, choices: dch(ans, [fmtD(n / 10), `0,0${n}`.slice(0, 5), String(n)]), log: `${n}/100 en décimal`, explain: `${frac(n, 100)}, ce sont ${n} centièmes, donc ${Math.floor(n / 10)} dixième${n >= 20 ? 's' : ''} et ${n % 10} centième${n % 10 > 1 ? 's' : ''}. ${frac(n, 100)} = ${ans}.`, hint: 'Les centièmes vont jusqu’au deuxième rang après la virgule.' }; }
@@ -1765,7 +1803,7 @@ function cm1Horloge(l) {
 // Espace insécable entre un nombre et son unité : « 1,73 € » ou « 4 h 45 » ne se coupent jamais en fin de ligne
 const nbU = s => String(s).replace(/(\d) (€|c\b|h\b|min\b)/g, '$1\u00a0$2').replace(/(\d\u00a0h) (\d)/g, '$1\u00a0$2');
 const typo = s => s.replace(/ ([!?:;»])/g, ' $1').replace(/« /g, '« '); // espaces insécables de la typographie française
-const PRO = ['je', 'tu', 'il', 'nous', 'vous', 'ils'];
+const PRO = ['je', 'tu', 'il', 'nous', 'vous', 'ils'], PRN = ['je', 'tu', 'il, elle ou on', 'nous', 'vous', 'ils ou elles'];
 const TAU = { pr: 'au présent', fu: 'au futur', im: 'à l’imparfait', pc: 'au passé composé' };
 const TCUE = { pr: 'Aujourd’hui', fu: 'Demain', im: 'Autrefois', pc: 'Hier' };
 const END = { pr1: ['e', 'es', 'e', 'ons', 'ez', 'ent'], pr2: ['is', 'is', 'it', 'issons', 'issez', 'issent'], im: ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'], fu: ['ai', 'as', 'a', 'ons', 'ez', 'ont'] };
@@ -1851,13 +1889,18 @@ function qFill(inf, t, cm1, cue = true) {
   if (t === 'pc') { other.length = 0; other.push(VB[V.e ? 'avoir' : 'être'].pr[s.p] + ' ' + pp(inf)); if (V.g === 1) other.push(VB[V.e ? 'être' : 'avoir'].pr[s.p] + ' ' + inf); if (V.e && cm1) other.push(VB['être'].pr[s.p] + ' ' + ppA(inf, { f: !s.f, pl: s.pl }), VB['être'].pr[s.p] + ' ' + ppA(inf, { f: s.f, pl: !s.pl })); }
   const w = []; for (const c of [pick(cands), ...shuffle(other), ...shuffle(cands)]) if (c && c !== ans && !w.includes(c) && w.length < 2) w.push(c);
   const head = cue ? `${TCUE[t]}, ${s.t}` : cap(s.t);
-  return { kind: 'choices', ask: `Conjugue « ${inf} » ${TAU[t]} :`, prompt: `${head} ${SLOT} ${V.x}.`, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, ...w]).map(v => ({ v, html: v })),
+  // Pourquoi ce piège est faux : autre personne, autre temps, mauvais auxiliaire, infinitif, accord oublié
+  const why = c => { const ps = forms.map((f, k) => f === c ? PRN[k] : '').filter(Boolean); if (ps.length) return `« ${c} » va avec « ${ps.join(' » ou « ')} », pas avec « ${s.t} ».`;
+    const tt = ['pr', 'fu', 'im'].find(x => x !== t && vforms(inf, x, s)[s.p] === c); if (tt) return `« ${c} » est ${TAU[tt]}. Ici, le verbe est ${TAU[t]}.`;
+    if (t === 'pc') { if (c.endsWith(' ' + inf)) return `Après l’auxiliaire, on écrit le participe passé « ${pp(inf)} », pas l’infinitif « ${inf} ».`; if (c.split(' ')[0] !== ans.split(' ')[0]) return `Avec « ${inf} », le passé composé se fait avec l’auxiliaire « ${V.e ? 'être' : 'avoir'} ».`; return `Avec « être », le participe passé s’accorde avec le sujet « ${s.t} » (${gWhy(s.f, s.pl)}).`; }
+    return ''; };
+  return { kind: 'choices', typeable: { ans, ask: `Écris le verbe « ${inf} » ${TAU[t]} :`, whys: Object.fromEntries([...new Set([...forms, ...['pr', 'fu', 'im'].map(x => vforms(inf, x, s)[s.p])])].filter(c => c && c !== ans && why(c)).map(c => [c, why(c)])) }, ask: `Conjugue « ${inf} » ${TAU[t]} :`, prompt: `${head} ${SLOT} ${V.x}.`, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, ...w]).map(v => v === ans || !why(v) ? { v, html: v } : { v, html: v, why: why(v) }),
     log: `${s.t} … (${inf}, ${TAU[t]})`, explain: conjWhy(inf, t, s), hint: conjHint(inf, t) };
 }
 function qPron(inf, t) {
   const forms = vforms(inf, t), ok = range(0, 5).filter(p => forms.filter(f => f === forms[p]).length === 1 && !(p === 0 && vowel(forms[0])));
   const p = pick(ok), Pn = ['Je', 'Tu', 'Il', 'Nous', 'Vous', 'Ils'], w = shuffle(range(0, 5).filter(q => q !== p && forms[q] !== forms[p] && !(q === 0 && vowel(forms[p])))).slice(0, 2);
-  return { kind: 'choices', ask: 'Quel pronom convient ?', prompt: `${SLOT} ${forms[p]} ${VB[inf].x}.`, promptClass: 'sent', answer: Pn[p], answerText: Pn[p], choices: shuffle([p, ...w]).map(q => ({ v: Pn[q], html: Pn[q] })),
+  return { kind: 'choices', ask: 'Quel pronom convient ?', prompt: `${SLOT} ${forms[p]} ${VB[inf].x}.`, promptClass: 'sent', answer: Pn[p], answerText: Pn[p], choices: shuffle([p, ...w]).map(q => q === p ? { v: Pn[q], html: Pn[q] } : { v: Pn[q], html: Pn[q], why: `Avec « ${PRO[q]} », on écrirait « ${forms[q]} ». Ici, la terminaison de « ${forms[p]} » va avec « ${PRO[p]} ».` }),
     log: `… ${forms[p]} (pronom)`, explain: `La terminaison « ${forms[p]} » va avec « ${PRO[p]} ». ${cap(inf)} ${TAU[t]} : ${table(inf, t)}.`, hint: 'Regarde la fin du verbe : -ons va avec nous, -ez avec vous, -ent ou -ont avec ils.' };
 }
 function qTense(inf, ts, cm1) {
@@ -2087,7 +2130,8 @@ function gnPick(cm1, reg) {
 const gWhy = (f, pl) => `${f ? 'féminin' : 'masculin'} ${pl ? 'pluriel' : 'singulier'}`;
 function qAdj(cm1, reg) {
   const g = gnPick(cm1, reg), forms = [...new Set(g.a.slice(0, 4))].filter(x => x !== g.form), w = shuffle(forms).slice(0, 2);
-  return { kind: 'choices', ask: `Accorde l’adjectif « ${g.a[0]} » :`, prompt: g.a[5] ? `${g.det} ${SLOT} ${g.noun}` : `${g.det} ${g.noun} ${SLOT}`, promptClass: 'sent', answer: g.form, answerText: g.gn, choices: shuffle([g.form, ...w]).map(v => ({ v, html: v })), log: `accord : ${g.gn}`,
+  const why = x => `« ${x} » est ${['masculin singulier', 'féminin singulier', 'masculin pluriel', 'féminin pluriel'][g.a.indexOf(x)]}, mais « ${g.noun} » est ${gWhy(g.f, g.pl)}.`;
+  return { kind: 'choices', ask: `Accorde l’adjectif « ${g.a[0]} » :`, prompt: g.a[5] ? `${g.det} ${SLOT} ${g.noun}` : `${g.det} ${g.noun} ${SLOT}`, promptClass: 'sent', answer: g.form, answerText: g.gn, choices: shuffle([g.form, ...w]).map(v => v === g.form ? { v, html: v } : { v, html: v, why: why(v) }), log: `accord : ${g.gn}`,
     explain: `« ${g.noun} » est ${gWhy(g.f, g.pl)}, donc l’adjectif aussi : ${g.gn}.${g.a[7] ? ' ' + cap(g.a[7]) : g.f || g.pl ? ` On ajoute ${g.f && g.pl ? '-es' : g.f ? '-e' : '-s'}.` : ''}`, hint: 'Regarde le nom : est-il masculin ou féminin ? singulier ou pluriel ?' };
 }
 function qGN(cm1, reg) {
@@ -2101,11 +2145,13 @@ function qGN(cm1, reg) {
 }
 function qPlur(cm1) {
   const it = pick(PLUR.filter(x => cm1 ? x[4] === 4 || Math.random() < .25 : x[4] === 2));
-  return { kind: 'choices', ask: 'Mets ce groupe au pluriel :', prompt: `${it[0]} → …`, promptClass: 'sent', answer: it[1], answerText: it[1], choices: shuffle([it[1], ...it[2]]).map(v => ({ v, html: v })), log: `pluriel de ${it[0]}`, explain: `${it[0]} → ${it[1]}. ${it[3]}`, hint: 'Regarde comment se termine le nom : -eau, -eu, -al, -ou, -ail… ou une autre lettre.' };
+  const sg = it[0].split(' ').slice(1).join(' '), why = e => /nt$/.test(e) ? 'Un nom ne prend jamais -nt au pluriel : c’est la marque des verbes (ils chantent).' : e === 'des ' + sg ? 'Il manque la marque du pluriel : on ne l’entend pas, mais on l’écrit.' : it[3];
+  return { kind: 'choices', typeable: { ans: it[1].split(' ').slice(1).join(' '), ask: 'Écris ce nom au pluriel :', prompt: `${it[0]} → ${it[1].split(' ')[0]} ${SLOT}`, strip: /^des /, }, ask: 'Mets ce groupe au pluriel :', prompt: `${it[0]} → …`, promptClass: 'sent', answer: it[1], answerText: it[1], choices: shuffle([it[1], ...it[2]]).map(v => v === it[1] ? { v, html: v } : { v, html: v, why: why(v) }), log: `pluriel de ${it[0]}`, explain: `${it[0]} → ${it[1]}. ${it[3]}`, hint: 'Regarde comment se termine le nom : -eau, -eu, -al, -ou, -ail… ou une autre lettre.' };
 }
 function qDet() {
   const n = pick(GNN.filter(x => !vowel(x[0]))), pl = Math.random() < .45, ans = pl ? 'les' : n[2] ? 'la' : 'le';
-  return { kind: 'choices', ask: 'Choisis le bon déterminant :', prompt: `${SLOT} ${pl ? n[1] : n[0]}`, promptClass: 'sent', answer: ans, answerText: `${ans} ${pl ? n[1] : n[0]}`, choices: ['le', 'la', 'les'].map(v => ({ v, html: v })), log: `déterminant de ${pl ? n[1] : n[0]}`,
+  const nm = pl ? n[1] : n[0], why = v => v === 'les' ? `« les » veut dire plusieurs, mais il n’y a qu’${n[2] ? 'une' : 'un'} « ${nm} ».` : pl ? `Il y en a plusieurs (« ${nm} » finit par ${nm.endsWith('x') ? 'x' : 's'}) : on écrit « les ».` : `« ${v} » va avec un nom ${v === 'le' ? 'masculin' : 'féminin'}, mais « ${nm} » est ${n[2] ? 'féminin' : 'masculin'}.`;
+  return { kind: 'choices', ask: 'Choisis le bon déterminant :', prompt: `${SLOT} ${pl ? n[1] : n[0]}`, promptClass: 'sent', answer: ans, answerText: `${ans} ${pl ? n[1] : n[0]}`, choices: ['le', 'la', 'les'].map(v => v === ans ? { v, html: v } : { v, html: v, why: why(v) }), log: `déterminant de ${pl ? n[1] : n[0]}`,
     explain: `« ${pl ? n[1] : n[0]} » est ${gWhy(n[2], pl)} : on écrit « ${ans} ${pl ? n[1] : n[0]} ».`, hint: 'Le, la ou les ? Un seul ou plusieurs ? Masculin ou féminin ?' };
 }
 // Accord sujet-verbe au présent, avec les pièges du CM1 (sujet éloigné, pronom « les », sujet inversé, deux sujets)
@@ -2120,7 +2166,8 @@ VB['claquer'] = { g: 1, c: 9, x: '' }; VB['parler'] = { g: 1, c: 9, x: '' }; VB[
 function qSV(cm1) {
   const it = pick(cm1 ? SV4 : SV2), F = vforms(it[1], 'pr'), ans = F[it[2]], w = [...new Set([F[2], F[5], F[1]])].filter(x => x !== ans);
   const prompt = `${it[0]} ${SLOT} ${it[3]}.`;
-  return { kind: 'choices', ask: `Accorde le verbe « ${it[1]} » au présent :`, prompt, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, ...w.slice(0, 2)]).map(v => ({ v, html: v })), log: `accord : ${it[0]} … (${it[1]})`,
+  const why = v => `${v === F[1] ? `« ${v} » va avec « tu » (terminaison -s).` : v === F[5] ? `« ${v} » va avec un sujet pluriel (ils, elles).` : `« ${v} » va avec un sujet singulier (il, elle).`} ${it[4] || `Ici, le sujet est « ${it[0]} ».`}`;
+  return { kind: 'choices', ask: `Accorde le verbe « ${it[1]} » au présent :`, prompt, promptClass: 'sent', answer: ans, answerText: ans, choices: shuffle([ans, ...w.slice(0, 2)]).map(v => v === ans ? { v, html: v } : { v, html: v, why: why(v) }), log: `accord : ${it[0]} … (${it[1]})`,
     explain: `${it[4] || `Le sujet « ${it[0].toLowerCase() === 'tu' ? 'tu' : it[0]} » est ${it[2] === 5 ? 'au pluriel : le verbe se termine par -ent' : it[2] === 1 ? 'à la 2e personne : le verbe se termine par -s' : 'au singulier : le verbe se termine par -e'}.`} On écrit « ${ans} ».`, hint: 'Cherche qui fait l’action : c’est le sujet. Le verbe s’accorde avec lui.' };
 }
 function qPPetre() {
@@ -2441,6 +2488,79 @@ function genLecture(l) {
   return { kind: 'read', title: T.t, text: typo(T.x), ask: typo(q), prompt: '', answer: a, answerText: typo(a), choices: shuffle([a, ...w]).map(v => ({ v, html: esc(typo(v)) })), log: `${T.t} · ${q}`, explain: esc(typo(e)), hint: QHINT[ty] };
 }
 
+/* ================= Compétences « Je sais… » ================= */
+// Une compétence par niveau d'île (1 à 5), pour chaque classe. Elles suivent le contenu des générateurs.
+const SKILLS = {
+  cp: { canons: ['additionner jusqu’à 5', 'additionner jusqu’à 10', 'trouver le complément à 10', 'ajouter à un nombre entre 10 et 20', 'passer la dizaine et trouver ce qui manque'],
+    stade: ['dire le nombre juste avant et juste après', 'soustraire jusqu’à 10', 'trouver le double d’un nombre', 'ajouter ou enlever 10', 'calculer avec des dizaines'],
+    mine: ['construire un nombre jusqu’à 30', 'construire un nombre jusqu’à 99', 'lire un nombre en dizaines et unités', 'trouver les dizaines et les unités', 'comparer des nombres jusqu’à 99'],
+    jungle: ['placer un nombre de 0 à 10', 'placer un nombre de 10 à 20', 'placer un nombre jusqu’à 50', 'placer un nombre jusqu’à 100', 'lire une droite graduée sans aide'],
+    marche: ['payer avec des pièces de 1 € et 2 €', 'payer jusqu’à 10 €', 'payer jusqu’à 20 € avec des billets', 'payer deux achats', 'rendre la monnaie sur 10 €'],
+    cuisine: ['trouver la moitié de quelques parts', 'trouver la moitié de 8, 10 ou 12', 'partager en deux parts égales', 'résoudre un problème de groupes ou de partage', 'résoudre un problème (ajout, retrait, ce qui manque)'],
+    horloge: ['connaître l’ordre des jours', 'trouver la veille', 'lire l’heure pile', 'connaître l’ordre des mois', 'me repérer dans le temps'],
+    lecture: ['lire une phrase simple', 'comprendre une phrase', 'lire deux phrases', 'comprendre un petit texte', 'trouver une information dans un texte'],
+    conjug: ['reconnaître la première lettre d’un mot', 'entendre les rimes', 'compter les syllabes', 'trouver une syllabe', 'reconnaître les sons ou, on, an, oi, ch'],
+    gram: ['trouver un mot dans une phrase', 'compter les mots d’une phrase', 'repérer la majuscule et le point', 'remettre les mots dans l’ordre', 'reconnaître une phrase qui a du sens'],
+    accords: ['choisir le ou la', 'choisir un ou une', 'écrire le pluriel avec un s', 'reconnaître un mot au pluriel', 'remplacer un nom par il ou elle'],
+    vocab: ['reconnaître les animaux et les fruits', 'ranger un mot dans sa catégorie', 'trouver le contraire', 'connaître l’ordre de l’alphabet', 'trouver l’intrus'] },
+  ce1: { canons: ['passer la dizaine (9 + 6)', 'utiliser les tables de 2 et de 10', 'utiliser les tables de 2, 5 et 10', 'utiliser les tables de 3 et de 4', 'trouver le nombre caché d’une multiplication'],
+    stade: ['additionner et soustraire jusqu’à 20', 'trouver doubles et moitiés', 'ajouter ou enlever 10 et 100', 'trouver le complément à 100', 'ajouter un petit nombre ou des dizaines'],
+    mine: ['construire un nombre jusqu’à 499', 'construire un nombre jusqu’à 999', 'lire centaines, dizaines et unités', 'trouver le chiffre des centaines, des dizaines, des unités', 'comparer des nombres jusqu’à 1 000'],
+    jungle: ['lire une graduation de 10 en 10', 'lire une graduation de 1 en 1', 'lire une graduation de 100 en 100', 'placer un nombre jusqu’à 1 000', 'lire toutes sortes de graduations'],
+    marche: ['payer jusqu’à 20 €', 'payer jusqu’à 50 €', 'payer avec des centimes', 'additionner deux prix avec centimes', 'rendre la monnaie avec les centimes'],
+    cuisine: ['colorier 1/2, 1/3 et 1/4', 'colorier une fraction de 1/5 à 1/10', 'colorier une fraction comme 3/5', 'comparer des fractions de même dénominateur', 'additionner des fractions et résoudre un problème'],
+    horloge: ['lire l’heure pile', 'lire la demie', 'lire les quarts d’heure', 'calculer une durée', 'lire les heures de l’après-midi'],
+    lecture: ['comprendre un petit texte', 'retrouver une information', 'trouver une information cachée', 'comprendre les mots et les reprises', 'lire un texte plus long'],
+    conjug: ['trouver le bon pronom', 'conjuguer au présent', 'conjuguer au futur, trouver l’infinitif', 'conjuguer à l’imparfait', 'conjuguer au passé composé'],
+    gram: ['écrire une phrase, reconnaître son type', 'trouver le verbe', 'trouver les noms et les déterminants', 'trouver le sujet', 'mettre une phrase à la forme négative'],
+    accords: ['choisir le, la ou les', 'mettre un nom au pluriel', 'accorder l’adjectif au féminin', 'accorder le groupe nominal et le verbe', 'faire tous les accords, a / à, et / est'],
+    vocab: ['ranger des lettres dans l’ordre', 'trouver un contraire, ranger des mots', 'trouver les mots de la même famille', 'trouver un synonyme', 'comprendre les préfixes et les expressions'] },
+  ce2: { canons: ['utiliser les tables de 2, 5 et 10', 'utiliser les tables de 3 et de 4', 'utiliser toutes les tables', 'trouver le nombre caché d’une multiplication', 'diviser avec les tables'],
+    stade: ['additionner et soustraire jusqu’à 20', 'trouver doubles et moitiés', 'ajouter et enlever des unités ou des dizaines', 'multiplier par 10 et par 100', 'calculer vite : compléments à 100, × 25'],
+    mine: ['lire et construire les nombres jusqu’à 999', 'lire et construire les nombres jusqu’à 9 999', 'lire les nombres écrits en lettres', 'faire les échanges (10 centaines = 1 millier)', 'décomposer un nombre'],
+    jungle: ['lire une graduation de 10 en 10', 'lire une graduation de 100 en 100', 'placer un nombre entre deux milliers', 'lire une graduation de 1 000 en 1 000', 'lire une graduation de 1 en 1'],
+    marche: ['payer en euros', 'payer avec billets, pièces et centimes', 'payer un prix avec centimes', 'rendre la monnaie', 'additionner deux prix'],
+    cuisine: ['colorier 1/2 et 1/4', 'colorier une fraction', 'reconnaître des fractions égales', 'comparer des fractions', 'résoudre un problème de fractions'],
+    horloge: ['lire l’heure pile', 'lire la demie', 'lire les quarts d’heure', 'lire l’heure de 5 en 5 minutes', 'lire à la minute, calculer une durée'],
+    lecture: ['comprendre un texte court', 'retrouver une information écrite', 'déduire une information', 'comprendre les reprises et les mots', 'lire un texte plus long'],
+    conjug: ['conjuguer être, avoir et les verbes en -er au présent', 'conjuguer les verbes irréguliers et le futur', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé', 'reconnaître tous les temps'],
+    gram: ['reconnaître le type de phrase et le verbe', 'trouver les noms et les déterminants', 'trouver adjectifs, sujet et pronoms', 'utiliser la négation, trouver la nature d’un mot', 'trouver la nature et la fonction'],
+    accords: ['mettre les noms au pluriel', 'accorder l’adjectif', 'accorder le verbe, choisir a / à, et / est', 'accorder le groupe nominal', 'faire tous les accords'],
+    vocab: ['ranger des mots dans l’ordre alphabétique', 'trouver les mots de la même famille', 'comprendre les préfixes', 'trouver un synonyme', 'comprendre le sens figuré'] },
+  cm1: { canons: ['utiliser les tables et le nombre caché', 'diviser avec les tables', 'multiplier par 10 et par 100', 'faire une division avec reste', 'multiplier un nombre à 2 chiffres'],
+    stade: ['multiplier et diviser par 10, 100, 1 000', 'compléments à 1 000, doubles et moitiés', 'calculer avec des nombres décimaux', 'multiplier un décimal, prendre une fraction d’un nombre', 'calculer vite (× 25, soustractions)'],
+    mine: ['lire les grands nombres', 'écrire un grand nombre en chiffres', 'trouver un chiffre, compter les milliers', 'écrire un nombre donné en lettres', 'utiliser dixièmes et centièmes'],
+    jungle: ['lire une graduation de 100 en 100', 'lire une graduation de 10 000 en 10 000', 'placer un grand nombre', 'lire les dixièmes', 'lire les centièmes'],
+    marche: ['payer avec des centimes', 'rendre la monnaie', 'additionner des prix', 'calculer le prix de plusieurs objets', 'rendre la monnaie sur 50 €'],
+    cuisine: ['prendre une fraction d’une quantité', 'calculer avec les fractions', 'comparer des fractions', 'passer d’une fraction décimale à un décimal', 'additionner des fractions'],
+    horloge: ['lire l’heure à la minute', 'convertir heures et minutes', 'calculer une durée', 'trouver l’heure d’arrivée ou de départ', 'résoudre des problèmes de durée'],
+    lecture: ['comprendre un texte documentaire', 'retrouver une information précise', 'faire une inférence', 'comprendre les reprises et le vocabulaire', 'lire un conte ou une légende'],
+    conjug: ['conjuguer le 2e groupe au présent', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé avec être', 'reconnaître le temps, l’infinitif et le groupe', 'conjuguer à tous les temps'],
+    gram: ['trouver la nature des mots', 'trouver le sujet et le nom noyau', 'trouver les compléments', 'reconnaître déterminants et épithètes', 'trouver la fonction des groupes'],
+    accords: ['écrire les pluriels difficiles', 'accorder adjectifs et groupes nominaux', 'accorder le verbe avec un sujet difficile', 'accorder le participe passé avec être', 'faire tous les accords et homophones'],
+    vocab: ['ranger des mots, comprendre les préfixes', 'utiliser les préfixes', 'trouver synonymes et niveaux de langue', 'comprendre le sens figuré', 'utiliser mots génériques et homonymes'] } };
+const skillName = (id, L) => ((SKILLS[GR()] || SKILLS.ce2)[id] || [])[L - 1] || `niveau ${L}`;
+// État d'une compétence : acquise (80 % sur au moins 4 questions, ou les deux étapes de la route passées), à revoir (moins de 60 %),
+// en cours (déjà travaillée ou au niveau actuel de la route), à découvrir
+function skillState(id, L) {
+  const s = IS(id), st = (s.lv || {})[L], acc = st && st[1] ? st[0] / st[1] : null, now = Math.min(5, nodeDiff(Math.min(s.node, NODES), 0));
+  if (st && st[1] >= 3 && acc < .6) return 'rev';
+  if ((st && st[1] >= 4 && acc >= .8) || s.node > 2 * L) return 'ok';
+  if (st || L <= now) return 'cur';
+  return 'new';
+}
+const SKST = { ok: ['acquis', '✓'], cur: ['en cours', '•'], rev: ['à revoir', '↺'], new: ['à découvrir', ''] };
+function skillsHTML() {
+  const seaBlock = sea => playable().filter(i => i.sea === sea).map(i => { const st = range(1, 5).map(L => skillState(i.id, L)), ok = st.filter(x => x === 'ok').length, lk = !unlocked(i);
+    return `<details class="skisle${lk ? ' lk' : ''}"><summary><img src="${IMG(i.img)}" alt=""><span><b>${i.n}</b><small>${ok} sur 5 acquise${ok > 1 ? 's' : ''}${lk ? ' · île encore cachée' : ''}</small></span><i class="dots">${st.map(x => `<i class="d-${x}"></i>`).join('')}</i></summary>
+      <ul>${st.map((x, k) => `<li class="sk-${x}"><span class="ic">${SKST[x][1]}</span><span>Je sais ${skillName(i.id, k + 1)}</span>${!lk && (x === 'rev' || x === 'cur') && 2 * k + 1 <= IS(i.id).node ? `<button class="mini-btn" data-a="play" data-i="${i.id}" data-n="${2 * k + 1}">S’entraîner</button>` : `<em>${SKST[x][0]}</em>`}</li>`).join('')}</ul></details>`; }).join('');
+  const all = playable().flatMap(i => range(1, 5).map(L => skillState(i.id, L))), nOk = all.filter(x => x === 'ok').length;
+  return `<section class="jsec"><h2>Ce que je sais faire</h2><p class="sub" style="margin:0 0 10px">${nOk} compétence${nOk > 1 ? 's' : ''} acquise${nOk > 1 ? 's' : ''} sur ${all.length} en ${GRADES[GR()].n}. Touche une île pour voir le détail.</p>
+    <div class="skbar"><i style="width:${Math.round(nOk / all.length * 100)}%"></i></div>
+    <h3 class="yh">${SEAS.m.n}</h3>${seaBlock('m')}<h3 class="yh">${SEAS.f.n}</h3>${seaBlock('f')}
+    <button class="ghost-btn" data-a="placetest" style="margin-top:14px">${P().placed ? 'Refaire le test du capitaine' : 'Passer le test du capitaine (5 min)'}</button></section>`;
+}
+
 /* ================= Marée du jour ================= */
 function ensureTide() {
   if (P().tide && P().tide.date === today()) return P().tide;
@@ -2452,6 +2572,7 @@ function ensureTide() {
   const best = om.slice().sort((a, b) => acc(b) - acc(a)).find(i => !stops.includes(i.id));
   stops.push(best ? best.id : stops[0] || 'canons');
   while (stops.length < 3) stops.push('canons');
+  if (ISLES.filter(i => !i.soon && unlocked(i)).length >= 3) stops[2] = 'mix'; // pratique entrelacée : plusieurs notions dans la même escale
   P().tide = { date: today(), stops, i: 0, gold: 0, start: 0, done: false }; save();
   return P().tide;
 }
@@ -2473,7 +2594,7 @@ function hudHTML() {
 }
 function dockHTML() {
   const b = (t, img, l, cls = '') => `<button data-a="tab" data-t="${t}" ${tab === t ? 'aria-current="page"' : ''}><img class="di ${cls}" src="${IMG(img)}" alt="">${l}</button>`;
-  return `<nav class="dock glass" aria-label="Navigation">${b('map', 'isle-canons', 'Carte')}${b('crew', 'crew-perroquet', 'Équipage')}${b('prime', capt(), 'Mon pirate')}</nav>`;
+  return `<nav class="dock glass" aria-label="Navigation">${b('map', 'isle-canons', 'Carte')}${b('journal', 'deco-compass', 'Journal', journalNew() ? 'new' : '')}${b('crew', 'crew-perroquet', 'Équipage')}${b('prime', capt(), 'Mon pirate')}</nav>`;
 }
 function bindCog() {
   const c = $('#cog'); if (!c) return; let tm, held = false;
@@ -2520,6 +2641,7 @@ function renderMap() {
   const hb = $('.seas').getBoundingClientRect().bottom, tt = $('.tide').getBoundingClientRect().top;
   sc.scrollTop = mapScroll != null ? mapScroll : Math.max(0, cur.y - (hb + tt) / 2 + 10);
   sc.addEventListener('scroll', () => { mapScroll = sc.scrollTop; }, { passive: true });
+  setTimeout(offerPlacement, 900);
 }
 function tideHTML(t) {
   const mini = t.stops.map((id, k) => { const i = isleById(id); return `<span class="${t.done || k < t.i ? 'done' : k === t.i ? 'cur' : ''}" title="${esc(i.notion)}"><img src="${IMG(i.img)}" alt="${esc(i.notion)}"></span>`; }).join('');
@@ -2576,16 +2698,45 @@ function renderIsle(id) {
 /* ================= Escale (jeu) ================= */
 function startEscale(id, node, fromTide) {
   if (sessionOver()) return renderPort();
-  const i = isleById(id), s = IS(id), boss = node === BOSS;
-  R = { i, node, d: boss ? 5 : nodeDiff(node, s.fails), boss, n: boss ? 8 : 6, q: null, k: 0, ok: 0, res: [], gold: 0, combo: 0, best: 0, seen: new Set(), fromTide, hp: 100, used: {}, goldBefore: S.gold, done: false, revs: 0, popped: {} };
+  const i = isleById(id), base = { q: null, k: 0, ok: 0, res: [], gold: 0, combo: 0, best: 0, seen: new Set(), fromTide, hp: 100, used: {}, goldBefore: S.gold, done: false, revs: 0, popped: {} };
+  if (i.v) { R = Object.assign(base, { i, node: 0, d: 3, boss: false, n: 6 });
+    if (id === 'test') { R.test = { list: playable().map(x => x.id), at: 0, st: 0, res: {} }; R.n = R.test.list.length * 2; }
+    ac(); music('escale'); return nextQ(); }
+  const s = IS(id), boss = node === BOSS;
+  R = Object.assign(base, { i, node, d: boss ? 5 : nodeDiff(node, s.fails), boss, n: boss ? 8 : 6 });
+  if (boss) R.plan = bossPlan(i, s);
   ac(); music(boss ? 'boss' : 'escale'); nextQ();
 }
+// Le boss vise les points faibles : deux questions déjà ratées sur l'île (revanches), puis les niveaux les moins réussis
+function bossPlan(i, s) {
+  const plan = shuffle(P().rev.filter(x => x.g === i.id)).slice(0, 2).map(r => ({ rev: r }));
+  Object.entries(s.lv || {}).map(([L, [ok, tot]]) => ({ L: +L, a: tot ? ok / tot : 1, tot })).filter(x => x.tot >= 2 && x.a < .8).sort((a, b) => a.a - b.a).slice(0, 3 - plan.length).forEach(w => plan.push({ lv: w.L }));
+  return plan;
+}
+// Escale mélangée : une île ouverte différente à chaque question, au niveau actuel de l'enfant ou juste en dessous
+function mixPick() {
+  const pool = playable().filter(unlocked), c = shuffle(pool.filter(i => i.id !== R.lastIsl))[0] || pool[0];
+  R.lastIsl = c.id; const now = Math.min(5, nodeDiff(Math.min(IS(c.id).node, NODES), IS(c.id).fails));
+  return { i: c, l: Math.max(1, now - (Math.random() < .5 ? 1 : 0)) };
+}
+// Test du capitaine : pour chaque île, une question de niveau 2, puis une de niveau 3 si la première est juste
+function testPick() {
+  const T = R.test; if (T.at >= T.list.length) return null;
+  return { i: isleById(T.list[T.at]), l: T.st ? 3 : 2 };
+}
+const advance = () => { R.k++; if (R.skip) { R.k++; R.res.push(null); R.skip = 0; } nextQ(); };
 function nextQ() {
   if (R.k >= R.n) return endEscale();
-  let q, t = 0; const rv = !R.boss && R.revs < 2 && P().rev.find(x => x.g === R.i.id && x.due <= today() && !R.seen.has(x.q.log));
-  if (R.retry && R.k >= R.retry.at) { q = Object.assign({}, R.retry.q, { retry: true }); R.retry = null; }
-  else if (rv) { q = Object.assign({}, rv.q, { rev: true }); R.revs++; setTimeout(() => voice('revanche', true), 500); } else do { q = R.i.gen(R.d); t++; } while (R.seen.has(q.log) && t < 20);
-  if (R.i.sea === 'f' && !q.typo) { ['ask', 'prompt', 'explain', 'hint', 'answerText'].forEach(k => { if (typeof q[k] === 'string') q[k] = typo(q[k]); }); (q.choices || []).forEach(c => { c.html = typo(String(c.html)); }); q.typo = 1; }
+  let q, t = 0; R.qi = null;
+  const tp = R.boss && R.plan && R.plan.length && [1, 3, 5].includes(R.k) ? R.plan.shift() : null;
+  const rv = !R.boss && !R.test && R.revs < 2 && P().rev.find(x => (R.i.id === 'mix' ? playable().some(i => i.id === x.g && unlocked(i)) : x.g === R.i.id) && x.due <= today() && !R.seen.has(x.q.log));
+  if (R.retry && R.k >= R.retry.at) { q = Object.assign({}, R.retry.q, { retry: true }); R.qi = R.retry.qi || null; R.retry = null; }
+  else if (R.test) { const pk = testPick(); if (!pk) return endEscale(); R.qi = pk.i; do { q = pk.i.gen(pk.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = pk.l; }
+  else if (tp && tp.rev) q = Object.assign({}, tp.rev.q, { rev: true, tgt: 1 });
+  else if (rv) { q = Object.assign({}, rv.q, { rev: true }); R.qi = isleById(rv.g); R.revs++; setTimeout(() => voice('revanche', true), 500); }
+  else { const src = R.i.id === 'mix' ? mixPick() : { i: R.i, l: tp ? tp.lv : R.d }; R.qi = src.i; do { q = src.i.gen(src.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = src.l; if (tp) q.tgt = 1; q = recall(q); }
+  if (q.tgt) setTimeout(() => R && R.q === q && pop(R.i.boss.img, `${R.i.boss.n} vise ton point faible : ${q.lv ? skillName(R.i.id, q.lv) : 'une question déjà ratée'}`), 700);
+  if (QI().sea === 'f' && !q.typo) { ['ask', 'prompt', 'explain', 'hint', 'answerText'].forEach(k => { if (typeof q[k] === 'string') q[k] = typo(q[k]); }); (q.choices || []).forEach(c => { c.html = typo(String(c.html)); }); q.typo = 1; }
   // La bonne réponse change de place à chaque question, et jamais trois fois de suite au même endroit (les signes <, =, > gardent leur ordre)
   if (q.choices && q.kind !== 'compare') { const at = c => c.findIndex(x => x.v === q.answer); let c, t2 = 0; do { c = shuffle(q.choices); t2++; } while (t2 < 10 && R.lastAt && R.lastAt[0] === at(c) && R.lastAt[1] === at(c)); q.choices = c; R.lastAt = [at(c), R.lastAt ? R.lastAt[0] : -1]; }
   if (!q.retry) R.seen.add(q.log); R.q = q; R.input = ''; R.locked = false; R.qt = performance.now(); R.counts = R.tray = R.sel = R.pick = R.dig = R.wsel = null;
@@ -2593,6 +2744,7 @@ function nextQ() {
 }
 function sceneHTML() {
   const { i, boss } = R;
+  if (i.v) return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="">${i.id === 'mix' ? shipArt('ship me sail', 'role="img" aria-label="Ton navire"') : `<img class="guidefig" src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise">`}<div class="waves"></div>${powersHTML()}</div>`;
   if (i.id === 'canons') {
     const fo = boss ? { img: 'boss-kraken', n: 'Le Kraken' } : foe();
     return `<div class="g-scene${boss ? ' storm' : ''}" id="scene"><img class="bg" src="${IMG(boss ? 'bg-storm' : 'bg-sea-golden')}" alt="">
@@ -2656,6 +2808,8 @@ function inputHTML(q) {
         <p class="purse-note">Chaque pièce et chaque billet peut servir plusieurs fois.</p>
         <button class="brass-btn valid" data-a="validate" ${tr.length ? '' : 'disabled'}>${give ? 'Rendre' : 'Payer'}${q.showTotal ? ` <small>· ${fmtE(sum)}</small>` : ''}</button>`; }
     case 'pizza': return `<button class="brass-btn" data-a="validate" ${R.sel && R.sel.size ? '' : 'disabled'}>Servir !</button>`;
+    case 'type': return `<div class="kbd" role="group" aria-label="Clavier">${KBD.map((r, j) => `<div class="kr${j === 3 ? ' acc' : ''}">${[...r].map(ch => `<button class="kk" data-a="tk" data-k="${ch}">${ch}</button>`).join('')}</div>`).join('')}
+      <div class="kr"><button class="kk dk" data-a="tk" data-k="del" aria-label="Effacer">${ico('iDel')}</button><button class="kk sp" data-a="tk" data-k=" " aria-label="Espace">espace</button><button class="kk ok" data-a="validate" ${R.input && R.input.trim() ? '' : 'disabled'}>Valider</button></div></div>`;
   }
 }
 // Lecture à voix haute (synthèse vocale du système, en français) : la consigne et le calcul, l’explication après une erreur.
@@ -2690,8 +2844,9 @@ function qcardHTML(q) {
   if (q.kind === 'read') return `<div class="qcard paper">${rev}${sayBtn()}<div class="rtext" tabindex="0"><b>${esc(q.title)}</b>${q.text.split('\n').map(p => `<p>${esc(p)}</p>`).join('')}</div><div class="ask rq">${nbU(q.ask)}</div></div>`;
   return `<div class="qcard paper">${rev}${sayBtn()}<div class="ask">${nbU(q.ask)}</div>${q.prompt ? `<div class="prompt ${q.promptClass || ''}">${q.prompt}</div>` : ''}${body}</div>`;
 }
-const TK = { keypad: 'keypad', mineRead: 'keypad', choices: 'choices', lineRead: 'choices', compare: 'choices', mine: 'mine', line: 'line', money: 'money', pizza: 'pizza', words: 'words', read: 'read' };
+const TK = { type: 'type', keypad: 'keypad', mineRead: 'keypad', choices: 'choices', lineRead: 'choices', compare: 'choices', mine: 'mine', line: 'line', money: 'money', pizza: 'pizza', words: 'words', read: 'read' };
 const TUTO = {
+  type: [['.qcard', 'Lis bien la phrase : le mot à écrire va dans la case.'], ['.kbd', 'Écris le mot avec le clavier. Les lettres avec un accent sont sur la dernière ligne.'], ['.kbd [data-a="validate"]', 'Puis touche Valider.']],
   keypad: [['.qcard', 'Lis bien le calcul en haut.'], ['.keypad', 'Tape ta réponse avec les chiffres. La flèche efface.'], ['[data-k="ok"]', 'Puis appuie ici pour valider ta réponse.']],
   choices: [['.qcard', 'Lis bien la question.'], ['.choices', 'Touche la bonne réponse parmi les trois.']],
   mine: [['.qcard', 'Construis ce nombre avec des blocs.'], ['.mcol .cnt', 'Touche une case pour choisir combien de milliers, de centaines, de dizaines ou d’unités.'], ['.mcol .pm', 'Tu peux aussi ajouter ou enlever un bloc avec + et −.'], ['[data-a="validate"]', 'Quand ton nombre est prêt, touche Valider.']],
@@ -2725,7 +2880,8 @@ function coachStep() {
 function endTuto() { const el = $('.coach'); el && el.remove(); if (coach) { S.tuto[coach.key] = 1; save(); } coach = null; if (R) R.qt = performance.now(); }
 function maybeTuto() { const key = TK[R.q.kind]; if (key && !S.tuto[key] && !$('.coach')) setTimeout(() => { if (R && !R.locked && R.q && TK[R.q.kind] === key) startTuto(key); }, 450); }
 function renderGame() {
-  const q = R.q, segs = range(0, R.n - 1).map(k => `<i class="${k < R.res.length ? (R.res[k] ? 'ok' : 'ko') : k === R.k ? 'cur' : ''}"></i>`).join('');
+  const q = R.q, segs = R.test ? R.test.list.map((id, k) => `<i class="${k < R.test.at ? 'ok' : k === R.test.at ? 'cur' : ''}"></i>`).join('') // test : un segment par île
+    : range(0, R.n - 1).map(k => `<i class="${k < R.res.length ? (R.res[k] ? 'ok' : R.res[k] === null ? 'sk' : 'ko') : k === R.k ? 'cur' : ''}"></i>`).join('');
   const keep = $('#scene') && R.sceneKept;
   const top = `<div class="ghud"><button class="round glass" data-a="quit" aria-label="Quitter l’escale">${ico('iClose')}</button><div class="segs glass" aria-label="Question ${R.k + 1} sur ${R.n}">${segs}</div><button class="help glass" data-a="tuto" aria-label="Comment jouer">?</button><div class="combo glass" style="${R.combo < 2 ? 'visibility:hidden' : ''}">${ico('iFlame')}×${R.combo}</div></div>`;
   if (keep) {
@@ -2741,15 +2897,39 @@ function renderGame() {
 }
 function refreshBottom() { const rt = $('.rtext'), y = rt ? rt.scrollTop : 0; $('#gb').innerHTML = qcardHTML(R.q) + inputHTML(R.q); const r2 = $('.rtext'); if (r2) r2.scrollTop = y; }
 
+// Rappel libre : retrouver la réponse fait plus travailler la mémoire que la reconnaître parmi trois.
+// À partir du niveau 4 (sauf au CP), une partie des calculs du Stade se tapent au clavier, et au CE2 et au CM1 une partie
+// des verbes et des pluriels s'écrivent lettre à lettre. Les pièges des choix gardent leur explication pour le diagnostic.
+const normT = x => String(x).toLowerCase().replace(/[’']/g, '\'').replace(/\s+/g, ' ').trim();
+const noAcc = x => normT(x).normalize('NFD').replace(/[̀-ͯ]/g, '');
+function recall(q) {
+  if (!R || GR() === 'cp' || (q.lv || R.d) < 4 || !q.choices || q.kind !== 'choices') return q;
+  const whyOf = {}; q.choices.forEach(c => { if (c.why) whyOf[normT(q.typeable && q.typeable.strip ? String(c.v).replace(q.typeable.strip, '') : c.v)] = c.why; });
+  if (QI().id === 'stade' && typeof q.answer === 'number' && Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 999999 && Math.random() < .6) {
+    const pr = String(q.prompt), slot = /= \?$/.test(pr) ? pr.replace(/= \?$/, `= ${SLOT}`) : /…/.test(pr) && !/[a-z]/i.test(pr.replace(/…/, '')) ? pr.replace('…', SLOT).replace(/ \?$/, '') : null;
+    return Object.assign({}, q, { kind: 'keypad', ask: 'Écris le résultat, puis tire !', prompt: slot || `<span class="words">${pr}</span><br>${SLOT}`, promptClass: slot ? '' : 'mid', choices: undefined, sayChoices: false, whyOf, recall: 1 });
+  }
+  if (q.typeable && ['ce2', 'cm1'].includes(GR()) && Math.random() < .5) {
+    const T = q.typeable; Object.entries(T.whys || {}).forEach(([k, w]) => { whyOf[normT(k)] = w; }); return Object.assign({}, q, { kind: 'type', ask: T.ask, prompt: T.prompt || q.prompt, answer: T.ans, choices: undefined, whyOf, recall: 1 });
+  }
+  return q;
+}
+const KBD = ['azertyuiop', 'qsdfghjklm', 'wxcvbn’-', 'éèêàçùâîô'];
+function tkey(k) {
+  if (!R || R.locked || R.q.kind !== 'type') return;
+  if (k === 'del') R.input = R.input.slice(0, -1); else if (R.input.length < 24) R.input += k;
+  SND.tap(); const s = $('#slot'); if (s) s.textContent = R.input; const v = $('.kbd [data-a="validate"]'); if (v) v.disabled = !R.input.trim();
+}
 function check(given) {
-  const q = R.q;
+  const q = R.q; R.gv = given ? { v: given.v, why: given.why } : null;
   switch (q.kind) {
-    case 'keypad': case 'mineRead': return [parseInt(R.input, 10) === q.answer, fmt(R.input || '—')];
-    case 'mine': { const c = R.counts, v = c[0] * 1000 + c[1] * 100 + c[2] * 10 + c[3]; return [v === q.target, fmt(v)]; }
-    case 'line': return [R.pick === q.k, labN(q, q.start + R.pick * q.step)];
+    case 'keypad': case 'mineRead': R.gv = { v: parseInt(R.input, 10) }; return [parseInt(R.input, 10) === q.answer, fmt(R.input || '—')];
+    case 'mine': { const c = R.counts, v = c[0] * 1000 + c[1] * 100 + c[2] * 10 + c[3]; R.gv = { v }; return [v === q.target, fmt(v)]; }
+    case 'line': R.gv = { v: q.start + R.pick * q.step, k: R.pick }; return [R.pick === q.k, labN(q, q.start + R.pick * q.step)];
     case 'lineRead': return [given.v === q.answer, labN(q, given.v)];
-    case 'money': { const s = R.tray.reduce((a, b) => a + b, 0); return [s === q.target, fmtE(s)]; }
-    case 'pizza': return [R.sel.size * q.d === q.n * q.parts, `${R.sel.size} part${R.sel.size > 1 ? 's' : ''} sur ${q.parts}`];
+    case 'money': { const s = R.tray.reduce((a, b) => a + b, 0); R.gv = { v: s }; return [s === q.target, fmtE(s)]; }
+    case 'type': R.gv = { v: normT(R.input) }; return [normT(R.input) === normT(q.answer), R.input.trim() || '—'];
+    case 'pizza': R.gv = { v: R.sel.size }; return [R.sel.size * q.d === q.n * q.parts, `${R.sel.size} part${R.sel.size > 1 ? 's' : ''} sur ${q.parts}`];
     case 'words': { const g = [...R.wsel].sort((a, b) => a - b); return [g.join(',') === q.answer, g.map(k => unp(q.chips[k])).join(' · ') || '—']; }
     default: return [given.v === q.answer, q.cake ? `${given.v}/${q.cake}` : String(typeof given.v === 'number' ? fmt(given.v) : given.v)];
   }
@@ -2760,25 +2940,64 @@ function pop(img, text, once) {
   const e = document.createElement('div'); e.className = 'pop glass'; e.innerHTML = `<img src="${IMG(img)}" alt="">${esc(text)}`; sc.appendChild(e); setTimeout(() => e.remove(), 2800);
 }
 function nearMiss(given) {
-  if (R.i.sea === 'f') return false;
+  if (QI().sea === 'f') return false;
   const a = Number(String(R.q.answer).replace(/\s/g, '').replace(',', '.')), g = Number(String(given).replace(/[^\d,.-]/g, '').replace(',', '.'));
   return Number.isFinite(a) && Number.isFinite(g) && String(given).trim() !== '' && Math.abs(a - g) <= Math.max(1, Math.abs(a) * .1);
 }
+// Pourquoi cette réponse est fausse : un message propre à l'erreur, quand on sait la reconnaître.
+// Les choix portent leur « pourquoi » ; les réponses tapées sont comparées aux erreurs classiques (q.dg garde les nombres du calcul).
+function diagnose(q, g) {
+  if (!g) return '';
+  if (g.why) return g.why;
+  const v = g.v, a = q.answer, d = q.dg || {};
+  if (q.whyOf && q.whyOf[normT(v)]) return q.whyOf[normT(v)];
+  if (q.kind === 'type') { const A = normT(a); if (noAcc(v) === noAcc(A)) return `Attention aux accents : on écrit « ${a} ».`; if (A.startsWith(v)) return `Il manque la fin du mot : regarde bien la terminaison.`; if (v.startsWith(A)) return 'Il y a des lettres en trop à la fin.'; return ''; }
+  if (q.kind === 'pizza') { const need = q.n * q.parts / q.d;
+    if (v === q.n && q.parts !== q.d) return `Tu as colorié ${v} part${v > 1 ? 's' : ''}, mais la pizza est coupée en ${q.parts} : les parts sont ${q.parts / q.d} fois plus petites, il en faut ${need}.`;
+    if (v === q.parts - need) return 'Tu as colorié la partie qui reste, pas celle qui est demandée.';
+    if (v === q.d && q.n !== q.d) return 'Le nombre du bas dit en combien de parts on coupe, pas combien on en colorie.';
+    return v > need ? `Tu as colorié ${v - need} part${v - need > 1 ? 's' : ''} de trop.` : `Il manque ${need - v} part${need - v > 1 ? 's' : ''}.`; }
+  if (q.kind === 'compare') { if (q.ct === 'sameN') return 'Les deux fractions ont le même nombre de parts colorées. Plus on coupe en beaucoup de parts, plus chaque part est petite : la fraction au plus grand dénominateur est la plus petite.';
+    if (q.ct === 'mult') return 'Avant de comparer, écris les deux fractions avec le même dénominateur.';
+    return 'Les parts ont la même taille : il suffit de comparer le nombre de parts, en haut.'; }
+  if (q.kind === 'line' && typeof g.k === 'number') { const dk = g.k - q.k; if (Math.abs(dk) === 1) return `Tu t’es arrêté une graduation ${dk > 0 ? 'trop loin' : 'trop tôt'}. Compte chaque bond à partir de ${labN(q, q.start)}.`; return ''; }
+  if (q.kind === 'money') { if (d.t === 'change' && v === d.price) return 'Tu as donné le prix. Il fallait rendre ce qui manque entre le prix et le billet.'; if (d.t === 'change' && v === d.paid) return 'Tu as rendu tout le billet : il faut garder le prix et rendre seulement la différence.'; return ''; }
+  if (typeof a !== 'number' || typeof v !== 'number' || !Number.isFinite(v) || v === a) return '';
+  if (d.t === 'mul') { if (v === d.a + d.b) return `Tu as additionné : ${d.a} + ${d.b} = ${v}. Mais ${d.a} × ${d.b}, c’est ${d.b} fois ${d.a}.`;
+    if (v === d.a * (d.b + 1) || v === d.b * (d.a + 1)) return 'Tu as compté un bond de trop dans la table.'; if (v === d.a * (d.b - 1) || v === d.b * (d.a - 1)) return 'Il te manque un bond dans la table.'; }
+  if (d.t === 'miss' || d.t === 'div') { if (v === d.p - d.a) return `Tu as fait ${d.p} − ${d.a}. On cherche combien de fois ${d.a} il faut pour faire ${d.p}.`; if (v * d.a === d.p + d.a) return `Un de trop : ${d.a} × ${v} = ${v * d.a}, ça dépasse ${d.p}.`; if (v * d.a === d.p - d.a) return `Un de moins : ${d.a} × ${v} = ${v * d.a}, il manque encore ${d.a} pour faire ${d.p}.`; }
+  if (d.t === 'reste') { if (v * d.a > d.n) return `${d.a} × ${v} = ${v * d.a} : c’est plus grand que ${d.n}. Prends le résultat de la table juste avant.`; }
+  if (d.t === 'zero') { if (v === d.p) return 'Tu as oublié de multiplier par 10 (ou 100) : il manque des zéros.'; if ([10, 100].some(k => v * k === a || v === a * k)) return 'Compte bien les zéros : ni trop, ni trop peu.'; }
+  if (d.t === 'm2') { const t = d.x - d.x % 10, u = d.x % 10; if (v === t * d.y + u) return `Tu as oublié de multiplier les unités : ${u} × ${d.y} = ${u * d.y}.`; if (v === t + u * d.y) return `Tu as oublié de multiplier les dizaines : ${t} × ${d.y} = ${t * d.y}.`; }
+  if (d.t === 'add') { if (v === Math.abs(d.a - d.b)) return 'Tu as enlevé au lieu d’ajouter.'; if (v === a - 10 && d.a % 10 + d.b % 10 >= 10) return 'Tu as oublié la retenue : 10 unités font une dizaine de plus.'; }
+  if (d.t === 'comp') { if (v === d.s + d.a) return `Tu as ajouté ${d.a} et ${d.s}. On cherche ce qu’il faut ajouter à ${d.a} pour arriver à ${d.s}.`; if (v === d.s) return `${d.s}, c’est le total. On cherche ce qui manque à ${d.a} pour y arriver.`; }
+  if (d.t === 'pb' && v === d.alt) return 'Tu as fait l’autre opération. Relis l’histoire : que se passe-t-il au début, puis ensuite ?';
+  const sv = String(v), sa = String(a);
+  if (sa.length >= 2 && sv.length === sa.length && sv !== sa && [...sv].sort().join('') === [...sa].sort().join('')) return q.kind === 'mine' ? 'Tu as les bons blocs, mais pas dans les bonnes colonnes.' : 'Tu as inversé des chiffres : chaque chiffre a sa place (unités, dizaines, centaines).';
+  const df = Math.abs(v - a);
+  if (df === 1) return `Tu es à 1 près : ${v > a ? 'un de trop' : 'il en manque un'}.`;
+  if (df === 10 && a >= 10) return `Tu t’es trompé d’une dizaine : ${v > a ? 'une de trop' : 'il en manque une'}.`;
+  if (df === 100 && a >= 100) return `Tu t’es trompé d’une centaine : ${v > a ? 'une de trop' : 'il en manque une'}.`;
+  if (df === 1000 && a >= 1000) return `Tu t’es trompé d’un millier : ${v > a ? 'un de trop' : 'il en manque un'}.`;
+  return '';
+}
 function answer(ok, givenText, btn) {
   if (R.locked) return; R.locked = true;
-  const ms = Math.min(30000, performance.now() - R.qt), s = IS(R.i.id);
+  const ms = Math.min(30000, performance.now() - R.qt), qi = QI(), s = IS(qi.id);
   s.tot++; s.ms += ms; if (ok) s.ok++;
+  { const L = R.q.lv || R.d; s.lv = s.lv || {}; const v = s.lv[L] || (s.lv[L] = [0, 0]); v[1]++; if (ok) v[0]++; } // réussite par niveau : compétences « Je sais… », boss ciblés
+  if (R.test) { const T = R.test, id = T.list[T.at]; if (T.st === 0 && ok) T.st = 1; else { T.res[id] = T.st === 0 ? 1 : ok ? 3 : 2; T.at++; T.st = 0; if (!ok && T.res[id] === 1) R.skip = 1; } }
   R.res.push(ok);
   if (btn) btn.classList.add(ok ? 'right' : 'wrong');
   if (ok) {
     R.ok++; R.combo++; R.best = Math.max(R.best, R.combo); if (R.combo === 3) setTimeout(() => voice('combo'), 700); else if (R.combo === 5) setTimeout(() => voice('rire'), 700); s.best = Math.max(s.best || 0, R.combo);
     // Le bonus de vitesse ne vaut que pour les faits numériques (tables, calcul mental) : en lecture ou en grammaire, il pousserait à répondre avant d’avoir lu
-    const fluency = ['canons', 'stade'].includes(R.i.id), fastLimit = has('tortue') ? 8000 : 6000, fast = fluency && ms < fastLimit;
+    const fluency = ['canons', 'stade'].includes(qi.id), fastLimit = has('tortue') ? 8000 : 6000, fast = fluency && ms < fastLimit;
     if (fluency) S.fastStreak = ms < 5000 ? (S.fastStreak || 0) + 1 : 0;
     if (S.fastStreak >= 5) grantEp('Calcul-Éclair');
     const gain = 4 * R.d + (fast ? (has('requin') ? 8 : 4) : 0) + Math.min(R.combo, has('phoque') ? 8 : 5);
     R.gold += gain; S.gold += gain;
-    if (R.q.rev) { const it = P().rev.find(x => x.q.log === R.q.log && x.g === R.i.id); if (it) { it.n = (it.n || 0) + 1; if (it.n >= 3) P().rev = P().rev.filter(x => x !== it); else it.due = inDays([1, 3, 7][it.n]); }
+    if (R.q.rev) { const it = P().rev.find(x => x.q.log === R.q.log && x.g === qi.id); if (it) { it.n = (it.n || 0) + 1; if (it.n >= 3) P().rev = P().rev.filter(x => x !== it); else it.due = inDays([1, 3, 7][it.n]); }
       S.gold += 5; R.gold += 5; setTimeout(() => pop('guide-perroquet-bravo', 'Revanche réussie · +5'), 650); }
     if (R.q.retry) { S.gold += 3; R.gold += 3; setTimeout(() => pop('guide-perroquet-bravo', 'Erreur corrigée · +3'), 650); }
     if (fast && ms >= 6000) pop('crew-tortue', 'La Tortue t’offre l’éclair');
@@ -2789,18 +3008,19 @@ function answer(ok, givenText, btn) {
     { const el = btn || $('[data-k="ok"]') || $('[data-a="validate"]') || $('.qcard'); if (el) { const [x, y] = ctr(el); FX.ring(x, y); FX.sparkles(x, y, 18); }
       const cb = $('.combo'); if (cb && R.combo >= 3) { const [x, y] = ctr(cb); FX.embers(x, y, 3 + Math.min(R.combo, 8)); }
       const gm = $('.screen.game'); gm && gm.classList.toggle('hot', R.combo >= 5); try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} }
-    setTimeout(() => { R.k++; nextQ(); }, R.i.id === 'canons' ? 2300 : 1900);
+    setTimeout(advance, R.i.id === 'canons' ? 2300 : 1900);
   } else {
     if (has('grenouille') && !R.used.grenouille && R.combo > 0) { R.used.grenouille = true; pop('crew-grenouille', 'La Grenouille garde ton combo'); } else R.combo = 0;
-    { const due = tomorrow(), it = P().rev.find(x => x.g === R.i.id && x.q.log === R.q.log); if (it) { it.due = due; it.n = 0; } else if (R.q.kind) { const qq = Object.assign({}, R.q); delete qq.rev; delete qq.retry; P().rev.push({ g: R.i.id, q: qq, due, n: 0 }); const mine = P().rev.filter(x => x.g === R.i.id); if (mine.length > 5) P().rev = P().rev.filter(x => x !== mine[0]); P().rev = P().rev.slice(-30); } }
+    if (!R.test) { const due = tomorrow(), it = P().rev.find(x => x.g === qi.id && x.q.log === R.q.log); if (it) { it.due = due; it.n = 0; } else if (R.q.kind) { const qq = Object.assign({}, R.q); delete qq.rev; delete qq.retry; delete qq.tgt; P().rev.push({ g: qi.id, q: qq, due, n: 0 }); const mine = P().rev.filter(x => x.g === qi.id); if (mine.length > 5) P().rev = P().rev.filter(x => x !== mine[0]); P().rev = P().rev.slice(-30); } }
     // Seconde chance : la question ratée revient deux questions plus loin, pour retrouver soi-même la bonne réponse juste après la correction
-    if (!R.q.retry && !R.retry && R.k + 2 < R.n) { const qq = Object.assign({}, R.q); delete qq.rev; R.retry = { q: qq, at: R.k + 2 }; }
+    if (!R.test && !R.q.retry && !R.retry && R.k + 2 < R.n) { const qq = Object.assign({}, R.q); delete qq.rev; delete qq.tgt; R.retry = { q: qq, at: R.k + 2, qi: R.qi }; }
     S.fastStreak = 0; SND.ko(); { const gm = $('.screen.game'); gm && gm.classList.remove('hot'); }
-    P().errors.unshift({ t: Date.now(), g: R.i.id, q: R.q.log, a: givenText, c: R.q.answerText }); P().errors = P().errors.slice(0, 40); save();
+    R.dg = ''; try { R.dg = diagnose(R.q, R.gv); } catch (e) {}
+    P().errors.unshift({ t: Date.now(), g: qi.id, q: R.q.log, a: givenText, c: R.q.answerText, d: R.dg ? R.dg.replace(/<[^>]+>/g, '') : '' }); P().errors = P().errors.slice(0, 40); save();
     if (R.i.id === 'canons') missFx();
     setTimeout(() => {
       const sh = document.createElement('div'); sh.className = 'sheet-err';
-      sh.innerHTML = `<div class="errcard paper" role="alertdialog" aria-modal="true"><div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.kind === 'money' && R.tray ? (() => { const s = R.tray.reduce((a, b) => a + b, 0), d = R.q.target - s; return `<b>Tu as donné ${fmtE(s)} : ${d > 0 ? `il manque ${fmtC(d)}` : `c’est ${fmtC(-d)} de trop`}.</b><br>`; })() : ''}${R.q.explain}</p><div class="errbtns">${sayBtn('e')}<button class="brass-btn" data-a="next">J’ai compris</button></div></div>`;
+      sh.innerHTML = `<div class="errcard paper" role="alertdialog" aria-modal="true"><div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.kind === 'money' && R.tray ? (() => { const s = R.tray.reduce((a, b) => a + b, 0), d = R.q.target - s; return `<b>Tu as donné ${fmtE(s)} : ${d > 0 ? `il manque ${fmtC(d)}` : `c’est ${fmtC(-d)} de trop`}.</b><br>`; })() : ''}${R.dg ? `<span class="diag"><b>Ta réponse : ${esc(givenText)}.</b> ${R.dg}</span>` : ''}${R.q.explain}</p><div class="errbtns">${sayBtn('e')}<button class="brass-btn" data-a="next">J’ai compris</button></div></div>`;
       app.firstElementChild.appendChild(sh); $('[data-a="next"]', sh).focus();
     }, R.i.id === 'canons' ? 700 : 350);
   }
@@ -2834,9 +3054,9 @@ function celebrate(fast, gain) {
     setTimeout(() => { SND.boom(); fx('boom', 'fx-explosion', 74, 58, 170); fx('smoke', 'fx-smoke', 76, 50, 150);
       hitFoe(); quake(); const f = $('#foe'); if (f) { const [x, y] = ctr(f); FX.sparkles(x, y, 18, 220); FX.puff(x, y - 20, 3); } }, 520);
   } else if (R.boss) { sfx('boss-hit') || boom(.4, .4); fx('boom', 'fx-explosion', 62, 48, 150); hitFoe(); quake(); const f = $('#foe'); if (f) { const [x, y] = ctr(f); FX.sparkles(x, y, 22, 240); } }
-  else { isleFx(R.i.id); if (ISLE_SFX[R.i.id]) sfx(ISLE_SFX[R.i.id]) || (R.i.id === 'marche' && SND.coin()); }
+  else { const qi = QI(); isleFx(qi.id); if (ISLE_SFX[qi.id]) sfx(ISLE_SFX[qi.id]) || (qi.id === 'marche' && SND.coin()); }
   const b = document.createElement('div'); b.className = 'burst';
-  b.innerHTML = `<span class="w">${pick(R.i.sfx)}</span><span class="g"><img src="${IMG('coin-doublon')}" alt="">+${gain}${fast ? ' · éclair !' : ''}</span>`;
+  b.innerHTML = `<span class="w">${pick(QI().sfx || R.i.sfx)}</span><span class="g"><img src="${IMG('coin-doublon')}" alt="">+${gain}${fast ? ' · éclair !' : ''}</span>`;
   setTimeout(() => { const sc = $('.screen.game.tall') || $('#scene'); sc && sc.appendChild(b); setTimeout(() => b.remove(), 1800); }, R.i.id === 'canons' ? 560 : 0);
 }
 function hitFoe() {
@@ -2849,7 +3069,26 @@ function missFx() { shoot(false); setTimeout(() => { SND.splash(); fx('splash', 
 function quake() { const sc = $('#scene'); if (!sc || calm()) return; sc.classList.remove('shake'); void sc.offsetWidth; sc.classList.add('shake'); setTimeout(() => sc.classList.remove('shake'), 500); }
 
 function grantEp(name) { if (!S.eps.includes(name)) { S.eps.push(name); if (!S.epithet) S.epithet = name; R && (R.newEp = R.newEp || name); save(); } }
+// Fin d'une escale mélangée ou du test du capitaine
+function endVirtual() {
+  R.done = true; S.rounds++; const rewards = [], mix = R.i.id === 'mix';
+  let win = true, stars = 0;
+  if (mix) { win = R.ok >= 4; stars = R.ok >= R.n ? 3 : R.ok >= R.n - 1 ? 2 : win ? 1 : 0;
+    if (win) { const lvBefore = shipLv(); S.wins++; const bonus = 20 + stars * 10; S.gold += bonus; R.gold += bonus;
+      rewards.push({ img: 'deco-compass', b: 'Escale mélangée réussie', s: `Des questions de plusieurs îles · +${bonus}`, tag: 'Révision' });
+      if (shipLv() > lvBefore) rewards.push({ img: shipImg(), b: `Ton navire devient un ${SHIPS[shipLv()][2]} !`, s: 'Le Fier Calcul s’agrandit', tag: 'Navire' }); } }
+  else { // test du capitaine : chaque île démarre au niveau 1, 3 ou 5 de sa route (jamais en dessous de la progression déjà faite)
+    Object.entries(R.test.res).forEach(([id, L]) => { const s = IS(id), node = 2 * L - 1, i = isleById(id);
+      if (s.node < node) { s.node = node; rewards.push({ img: i.img, b: i.n, s: `Tu commences au niveau ${node} de la route`, tag: 'Niveau' }); } });
+    if (!rewards.length) rewards.push({ img: 'guide-capitaine', b: 'Ta route ne change pas', s: 'Tu es déjà au bon niveau sur chaque île', tag: 'Test' });
+    P().placed = today(); S.gold += 50; R.gold += 50; }
+  rewards.unshift({ img: 'coin-doublon', b: `+${R.gold} doublons`, s: `${R.ok} bonnes réponses sur ${R.res.filter(x => x !== null).length}${R.best > 2 ? ` · combo ×${R.best}` : ''}`, tag: 'Butin' });
+  let tideNext = null;
+  if (R.fromTide && P().tide && !P().tide.done) { P().tide.gold += R.gold; P().tide.i++; if (P().tide.i >= 3) P().tide.done = true; else tideNext = isleById(P().tide.stops[P().tide.i]); }
+  save(); setTimeout(() => renderResult(win, stars, rewards, tideNext), 200);
+}
 function endEscale() {
+  if (R.i.v) return endVirtual();
   R.done = true; const s = IS(R.i.id), need = R.boss ? 6 : 4, win = R.ok >= need;
   const stars = R.ok >= R.n || (has('poisson') && R.ok >= R.n - 1) ? 3 : R.ok >= R.n - 1 ? 2 : win ? 1 : 0;
   S.rounds++; const rewards = [];
@@ -2888,14 +3127,15 @@ function renderResult(win, stars, rewards, tideNext) {
   stopMusic(); R.rewardTags = rewards.map(r => r.tag);
   if (win) { playBuf('mus-victoire', 'mus') || SND.fanfare(); setTimeout(() => voice(R.boss ? 'boss' : R.ok === R.n ? 'parfait' : 'victoire', true), 900); }
   else setTimeout(() => voice('presque', true), 500);
-  const title = win ? (R.boss ? (R.i.id === 'canons' ? 'Le Kraken plonge au fond des mers !' : `${R.i.boss.n} est vaincu !`) : R.i.id === 'canons' ? `${foe().n} a coulé !` : R.ok === R.n ? 'Escale parfaite !' : 'Escale réussie !') : 'Presque ! On réessaie ?';
+  const title = R.test ? 'Test terminé !' : R.i.v ? (win ? (R.ok === R.n ? 'Escale mélangée parfaite !' : 'Escale mélangée réussie !') : 'Presque ! On réessaie ?') : win ? (R.boss ? (R.i.id === 'canons' ? 'Le Kraken plonge au fond des mers !' : `${R.i.boss.n} est vaincu !`) : R.i.id === 'canons' ? `${foe().n} a coulé !` : R.ok === R.n ? 'Escale parfaite !' : 'Escale réussie !') : 'Presque ! On réessaie ?';
   const over = sessionOver(), tideDone = R.fromTide && P().tide && P().tide.done;
   const primary = over || tideDone ? `<button class="brass-btn" data-a="port">Retour au port</button>`
     : tideNext ? `<button class="brass-btn" data-a="tidenext">Escale suivante <small>· ${tideNext.notion}</small></button>`
+    : R.test ? `<button class="brass-btn" data-a="home">Voir la carte</button>` : R.i.v ? `<button class="brass-btn" data-a="play" data-i="mix" data-n="1">${win ? 'Encore une escale mélangée' : 'Réessayer'}</button>`
     : win ? `<button class="brass-btn" data-a="play" data-i="${R.i.id}" data-n="${Math.min(IS(R.i.id).node, NODES)}">Niveau suivant</button>` : `<button class="brass-btn" data-a="play" data-i="${R.i.id}" data-n="${R.node}">Réessayer</button>`;
   app.innerHTML = `<div class="screen result${win ? ' closed' : ''}"><div class="rays"></div>
-    <div class="head"><div class="smallcaps" style="color:#ffd9a0">${R.i.n} · niveau ${R.node} · ${GRADES[GR()].n}</div><div class="disp" style="margin-top:6px">${title}</div>
-      <div class="stars">${starSvg(42, stars >= 1)}${starSvg(56, stars >= 2)}${starSvg(42, stars >= 3)}${win ? [[-8, 10, 0], [92, 0, .5], [30, -30, .9], [70, 70, 1.3]].map(([x, y, d]) => `<img class="spk" src="${IMG('fx-sparkle')}" alt="" style="left:${x}%;top:${y}%;animation-delay:${d}s">`).join('') : ''}</div></div>
+    <div class="head"><div class="smallcaps" style="color:#ffd9a0">${R.i.n} · ${R.test ? 'placement' : R.i.v ? 'révisions' : 'niveau ' + R.node} · ${GRADES[GR()].n}</div><div class="disp" style="margin-top:6px">${title}</div>
+      <div class="stars"${R.test ? ' hidden' : ''}>${starSvg(42, stars >= 1)}${starSvg(56, stars >= 2)}${starSvg(42, stars >= 3)}${win ? [[-8, 10, 0], [92, 0, .5], [30, -30, .9], [70, 70, 1.3]].map(([x, y, d]) => `<img class="spk" src="${IMG('fx-sparkle')}" alt="" style="left:${x}%;top:${y}%;animation-delay:${d}s">`).join('') : ''}</div></div>
     <div class="chest ${win ? 'shake' : ''}" id="chest" ${win ? 'data-a="openchest" role="button" tabindex="0" aria-label="Ouvrir le coffre"' : ''}><div class="glow"></div>${win ? `<img class="bravo" src="${IMG('guide-perroquet-bravo')}" alt="">${capt() === 'capt-a' ? `<img class="victor" src="${IMG('capt-victory')}" alt="">` : ''}` : ''}<img class="closed" src="${IMG('chest-closed')}" alt=""><img class="opened" src="${IMG('chest-open')}" alt="" style="opacity:0">${win ? '<span class="tap">Touche le coffre</span>' : ''}</div>
     <div class="rewards paper" id="rewards" ${win ? 'hidden' : ''}>${rewards.map((r, k) => `<div class="rw" style="animation-delay:${k * .12}s"><div class="ic"><img src="${IMG(r.img)}" alt=""></div><div><b>${r.b}</b><span>${r.s}</span></div><span class="tagr">${r.tag}</span></div>`).join('')}</div>
     <div class="btns">${primary}<button class="ghost-btn" data-a="home">Carte</button></div></div>`;
@@ -2978,7 +3218,25 @@ function renderPrime() {
   bindCog();
   $$('.eps svg').forEach(s => { s.style.width = '14px'; s.style.height = '14px'; s.style.verticalAlign = '-1px'; });
 }
-function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice(t === 'crew' ? 'equipage' : 'pirate', true), 300); } ({ map: renderMap, crew: renderCrew, prime: renderPrime })[t](); }
+function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && t !== 'journal' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice(t === 'crew' ? 'equipage' : 'pirate', true), 300); } ({ map: renderMap, journal: renderJournal, crew: renderCrew, prime: renderPrime })[t](); }
+// Journal de bord : quêtes de la semaine, histoire de l'archipel, compétences
+const journalNew = () => false;
+function renderJournal() {
+  app.innerHTML = `<div class="screen" style="background:radial-gradient(ellipse at 50% 0%,#16384a,#0b2230 60%)">${hudHTML()}<div class="tabpage journal">
+    <h1>Journal de bord</h1><p class="sub">Tes quêtes, l’histoire de l’archipel et tout ce que tu sais faire.</p>
+    ${skillsHTML()}</div>${dockHTML()}</div>`;
+  bindCog();
+}
+// Proposé une fois, au premier passage sur la carte d'une classe encore vierge
+function offerPlacement() {
+  if (P().placed || P().placeAsked || $('.modal') || !S.intro || ISLES.some(i => IS(i.id).tot > 0)) return;
+  P().placeAsked = 1; save();
+  const m = document.createElement('div'); m.className = 'modal place';
+  m.innerHTML = `<div class="box paper" role="dialog" aria-label="Test du capitaine"><img src="${IMG('guide-capitaine')}" alt="" style="width:130px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))"><div class="disp" style="font-size:26px">Le test du capitaine</div>
+    <p style="margin:0;color:var(--ink-2)">Quelques questions sur chaque île pour que tu commences au bon niveau. Ça dure environ 5 minutes.</p>
+    <button class="brass-btn" data-a="placetest">Passer le test</button><button class="ghost-btn dark" data-a="placelater">Plus tard</button></div>`;
+  app.appendChild(m);
+}
 
 /* ================= Parents ================= */
 let parentSample = false;
@@ -2996,7 +3254,7 @@ function openParents() {
     ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
       return `<div class="prow"><img src="${IMG(i.img)}" alt=""><div><b>${i.notion}${badge}</b><span>Niveau ${Math.min(s.node, NODES)}/10 · ${s.tot} questions${s.tot ? ` · ${(s.ms / s.tot / 1000).toFixed(1).replace('.', ',')} s par réponse` : ''}</span></div><span class="pct">${p == null ? '–' : p + ' %'}</span></div>`; }).join('')}</div>` : ''; }).join('')}
     <div class="pcard"><h3>Minutes de jeu, 7 derniers jours</h3><div class="days">${last7.map(([x, s]) => `<div class="day"><span>${s ? Math.round(s / 60) : ''}</span><i style="height:${Math.max(2, s / maxS * 70)}px"></i><span>${x.toLocaleDateString('fr-FR', { weekday: 'short' }).slice(0, 3)}</span></div>`).join('')}</div></div>
-    <div class="pcard"><h3>Dernières erreurs</h3>${P().errors.length ? `<ul class="errs">${P().errors.slice(0, 12).map(e => `<li><b>${esc(e.q)}</b> · a répondu <span style="color:#ffb9ad">${esc(e.a)}</span>, bonne réponse <span style="color:#a6e3bf">${esc(e.c)}</span></li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Aucune erreur enregistrée.</p>'}</div>
+    <div class="pcard"><h3>Dernières erreurs</h3>${P().errors.length ? `<ul class="errs">${P().errors.slice(0, 12).map(e => `<li><b>${esc(e.q)}</b> · a répondu <span style="color:#ffb9ad">${esc(e.a)}</span>, bonne réponse <span style="color:#a6e3bf">${esc(e.c)}</span>${e.d ? `<br><small style="color:var(--mist)">${esc(e.d)}</small>` : ''}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Aucune erreur enregistrée.</p>'}</div>
     <div class="pcard"><h3>Bêta-test</h3><p class="note">Merci de tester l’Archipel ! Votre avis, même court, aide à améliorer le jeu.</p>
       <div class="gap"><button class="brass-btn" data-a="fb" style="min-height:50px;font-size:16px">Donner mon avis</button><button class="ghost-btn" data-a="guide">Guide pour les parents</button></div></div>
     <div class="pcard"><h3>Sauvegarde de la progression</h3><p class="note">Sur iPhone, Safari peut effacer les données d’un site peu utilisé. Gardez un code de sauvegarde (dans vos notes, par exemple) : il permet de tout retrouver, même sur un autre appareil.</p>
@@ -3091,7 +3349,9 @@ app.addEventListener('click', e => {
     case 'sea': if (S.sea === el.dataset.s) break; S.sea = el.dataset.s; save(); SND.tap(); mapScroll = null; renderMap(); if (S.sea === 'f') voice('lettres', true);
       if (!ISLES.some(i => i.sea === S.sea && !i.soon)) toast(`${SEAS[S.sea].n} : les îles arrivent bientôt. Le brouillard se lève dès que leurs cartes sont prêtes !`); break;
     case 'play': SND.tap(); startEscale(el.dataset.i, +el.dataset.n, false); break;
-    case 'tide': case 'tidenext': { const t = ensureTide(); const id = t.stops[t.i]; ac(); if (a === 'tide' && !t.i) voice('depart', true); startEscale(id, Math.min(IS(id).node, NODES), true); break; }
+    case 'tide': case 'tidenext': { const t = ensureTide(); const id = t.stops[t.i]; ac(); if (a === 'tide' && !t.i) voice('depart', true); startEscale(id, VIRT[id] ? 1 : Math.min(IS(id).node, NODES), true); break; }
+    case 'placetest': SND.tap(); { const m = $('.modal.place'); m && m.remove(); } startEscale('test', 1, false); break;
+    case 'placelater': { const m = $('.modal.place'); m && m.remove(); SND.tap(); break; }
     case 'free': toast('Choisis une île sur la carte.'); voice('libre', true); break;
     case 'quit': { if ($('.quitm')) break; const m = document.createElement('div'); m.className = 'modal quitm';
       m.innerHTML = `<div class="box paper" role="alertdialog" aria-label="Quitter l’escale ?"><img src="${IMG('crew-perroquet')}" alt="" style="width:96px;margin:-58px auto 0;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))"><div class="disp" style="font-size:26px">Quitter l’escale ?</div><p style="margin:0;color:var(--ink-2);font-size:16px">Tes réponses de cette escale seront perdues.</p><button class="brass-btn" data-a="quitno">Continuer à jouer</button><button class="ghost-btn dark" data-a="quityes">Quitter</button></div>`;
@@ -3119,6 +3379,7 @@ app.addEventListener('click', e => {
     case 'key': key(el.dataset.k); break;
     case 'choice': { if (!R || R.locked) break; const c = R.q.choices[+el.dataset.i]; const [ok, g] = check(c); answer(ok, g, el); break; }
     case 'digpick': R.dig = +el.dataset.k; SND.tap(); refreshBottom(); break;
+    case 'tk': tkey(el.dataset.k); break;
     case 'digset': R.counts[R.dig] = +el.dataset.d; R.dig = null; SND.tap(); refreshBottom(); break;
     case 'blk': { const k = +el.dataset.k; R.counts[k] = Math.max(0, Math.min(19, R.counts[k] + +el.dataset.d)); SND.tap(); refreshBottom(); break; }
     case 'pay': if (R.tray.length < 30) { R.tray.push(+el.dataset.c); SND.coin(); refreshBottom(); } else toast('Le plateau est plein : reprends des pièces en les touchant dans le plateau.'); break;
@@ -3127,8 +3388,8 @@ app.addEventListener('click', e => {
     case 'slice': { const k = +el.dataset.i; R.sel.has(k) ? R.sel.delete(k) : R.sel.add(k); SND.tap(); refreshBottom(); break; }
     case 'validate': { if (!R || R.locked) break; const [ok, g] = check(); answer(ok, g); break; }
     case 'say': { if (!R || !R.q) break; const q = R.q; SND.tap();
-      speak(el.dataset.w === 'e' ? `La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' || q.readAlone ? '' : q.prompt || ''} ${q.price || ''}`) + (q.sayChoices && q.choices ? ' ' + q.choices.map(c => speakable(c.html)).join(', ou ') + ' ?' : '')); break; }
-    case 'next': if (window.speechSynthesis) speechSynthesis.cancel(); if (R) { $$('.sheet-err').forEach(x => x.remove()); R.k++; nextQ(); } break;
+      speak(el.dataset.w === 'e' ? `${R && R.dg ? speakable(R.dg) + ' ' : ''}La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' || q.readAlone ? '' : q.prompt || ''} ${q.price || ''}`) + (q.sayChoices && q.choices ? ' ' + q.choices.map(c => speakable(c.html)).join(', ou ') + ' ?' : '')); break; }
+    case 'next': if (window.speechSynthesis) speechSynthesis.cancel(); if (R) { $$('.sheet-err').forEach(x => x.remove()); advance(); } break;
     case 'power': { const p = el.dataset.p; if (!R || R.locked || R.used[p]) break; R.used[p] = true; SND.tap();
       if (p === 'perroquet') { const sc = $('#scene'); const h = document.createElement('div'); h.className = 'pi-tip paper'; h.setAttribute('role', 'note'); h.innerHTML = `<img src="${IMG('crew-perroquet')}" alt=""><div><b>Pi :</b> ${R.q.hint}</div><button class="x" data-a="tipclose" aria-label="Fermer l’indice">${ico('iClose')}</button>`; sc && sc.appendChild(h); el.disabled = true; voice('indice'); }
       if (p === 'crabe') { R.seen.add(R.q.log); nextQ(); toast('Le Crabe Compteur te donne une autre question.'); }
@@ -3171,6 +3432,7 @@ document.addEventListener('keydown', e => {
   const sh = $('.sheet-err'); if (sh) { if (e.key === 'Enter') { e.preventDefault(); $('[data-a="next"]', sh).click(); } return; }
   const k = R.q.kind;
   if (k === 'keypad' || k === 'mineRead') { if (/^[0-9]$/.test(e.key)) key(e.key); else if (e.key === 'Backspace') key('del'); else if (e.key === 'Enter') { e.preventDefault(); key('ok'); } }
+  else if (k === 'type') { if (e.key.length === 1 && /[a-zàâçéèêëîïôûùü' ’-]/i.test(e.key)) { e.preventDefault(); tkey(e.key.toLowerCase()); } else if (e.key === 'Backspace') { e.preventDefault(); tkey('del'); } else if (e.key === 'Enter') { const v = $('.kbd [data-a="validate"]'); if (v && !v.disabled) { e.preventDefault(); v.click(); } } }
   else if (R.q.choices && /^[1-3]$/.test(e.key) && R.q.choices.length >= +e.key) { const b = $$('[data-a="choice"]')[+e.key - 1]; b && b.click(); }
   else if (e.key === 'Enter') { const v = $('[data-a="validate"]'); if (v && !v.disabled) { e.preventDefault(); v.click(); } }
 });
@@ -3383,7 +3645,7 @@ function decorate(kind) {
       FX.ambient(canons ? 'spray' : 'dust', () => zone(scene, { top: 60 }), canons ? .1 : .16); }
     else FX.ambient(null);
     const b = document.createElement('div'); b.className = 'lvlban' + (R.boss ? ' boss' : '');
-    b.innerHTML = R.boss ? `<small>Combat de boss</small><b>${R.i.boss.n}</b>` : `<small>${R.i.n}</small><b>Niveau ${R.node}</b>`;
+    b.innerHTML = R.boss ? `<small>Combat de boss</small><b>${R.i.boss.n}</b>` : R.i.v ? `<small>${R.i.n}</small><b>${R.test ? 'Trouve ton niveau' : 'Révisions'}</b>` : `<small>${R.i.n}</small><b>Niveau ${R.node}</b>`;
     scene.appendChild(b); setTimeout(() => b.remove(), 2600);
     if (R.boss) { setTimeout(() => { scene.classList.add('flashnow', 'shake'); boom(.35, .9); setTimeout(() => scene.classList.remove('flashnow', 'shake'), 700); }, 250); }
   } else if (kind === 'result') {
@@ -3416,10 +3678,10 @@ function titleScreen() {
 }
 if (ADMIN) { S.intro = true; if (!S.grade) setGrade('ce2'); if (!S.name) S.name = 'Admin'; S.crew = CREW.map(c => c.id); S.gold = Math.max(S.gold, 99999); S.wins = Math.max(S.wins, 30); save(); }
 renderMap = after(renderMap, 'map'); renderIsle = after(renderIsle, 'isle'); renderResult = after(renderResult, 'result'); renderPort = after(renderPort, 'port');
-renderCrew = after(renderCrew, 'crew'); renderPrime = after(renderPrime, 'prime'); renderGame = after(renderGame, 'game'); titleScreen = after(titleScreen, 'title');
+renderJournal = after(renderJournal, 'crew'); renderCrew = after(renderCrew, 'crew'); renderPrime = after(renderPrime, 'prime'); renderGame = after(renderGame, 'game'); titleScreen = after(titleScreen, 'title');
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 if (location.hash === '#direct') { show('map'); if (!S.intro) onboarding(); } else titleScreen();
-window.__arch = { get R() { return R; }, get S() { return S; }, FX, speakable, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge }, words, ISLES, setGrade, check, labN };
+window.__arch = { get R() { return R; }, get S() { return S; }, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge }, words, ISLES, setGrade, check, labN };
 })();
 </script>
 
