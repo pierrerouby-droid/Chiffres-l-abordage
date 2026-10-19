@@ -802,7 +802,9 @@ textarea.fld{min-height:76px}
 .mapveil.t{top:0;height:calc(var(--st) + 175px);background:linear-gradient(rgba(5,20,30,.5),rgba(5,20,30,0));-webkit-mask:linear-gradient(#000 30%,transparent);mask:linear-gradient(#000 30%,transparent)}
 .mapveil.b{bottom:0;height:calc(var(--sbm) + 320px);background:linear-gradient(rgba(5,20,30,0),rgba(5,20,30,.55));-webkit-mask:linear-gradient(transparent,#000 60%);mask:linear-gradient(transparent,#000 60%)}
 .brass-btn{gap:12px;min-height:62px;border-radius:16px;color:#2b1806;
-  background:radial-gradient(circle at 9px 9px,#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(circle at calc(100% - 9px) 9px,#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(circle at 9px calc(100% - 9px),#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),linear-gradient(180deg,#ffe8a8 0%,#f1c565 32%,#d29a3b 60%,#b37c27 100%);
+  background:radial-gradient(circle at 9px 9px,#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(circle at calc(100% - 9px) 9px,#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(circle at 9px calc(100% - 9px),#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#fff3c8 0 1.2px,#7a5218 1.9px 2.5px,transparent 3.1px),radial-gradient(120% 140% at 50% 50%,transparent 50%,rgba(110,62,12,.38) 100%),url(assets/tex-parchment.webp) 0 0/300px,linear-gradient(180deg,#fff0c4 0%,#f6d48a 34%,#e2b25f 62%,#c99343 100%);
+  /* Matière « vieille carte » : papier taché fondu dans le doré, bords brunis ; les rivets restent nets */
+  background-blend-mode:normal,normal,normal,normal,multiply,multiply,normal;
   box-shadow:0 4px 0 #6a4511,0 10px 22px rgba(0,0,0,.4),0 0 0 1px rgba(70,42,8,.6),inset 0 1px 0 rgba(255,250,228,.95),inset 0 -2px 0 rgba(110,70,18,.35)}
 .brass-btn::before{content:"";position:absolute;inset:5px 18px;border-radius:11px;border:1px solid rgba(120,78,20,.38);box-shadow:0 1px 0 rgba(255,244,210,.55),inset 0 1px 0 rgba(255,244,210,.4);pointer-events:none}
 .brass-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #6a4511,0 4px 10px rgba(0,0,0,.35),0 0 0 1px rgba(70,42,8,.6),inset 0 1px 0 rgba(255,250,228,.95)}
@@ -948,7 +950,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.8.6 bêta · octobre 2026';
+const VERSION = '1.8.7 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 if (isIOS && standalone) document.documentElement.classList.add('ios-app');
