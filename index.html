@@ -794,12 +794,12 @@ textarea.fld{min-height:76px}
 /* ---------- 1.5 : océan WebGL, îles sous l'orage, voiles flous, boutons, mouettes ---------- */
 .sea-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 .seagl .ocean{visibility:hidden}
-.storm{position:absolute;width:0;height:0;pointer-events:none;z-index:2}
-.storm .fogpatch,.storm .bolt{max-width:none}
-.storm .fogpatch{left:0;top:0;width:330px;opacity:.86;filter:brightness(.78) saturate(.55) hue-rotate(-10deg)}
-.storm .bolt{position:absolute;left:var(--bx,-20px);top:-44px;width:40px;height:94px;opacity:0;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 16px rgba(160,195,255,1));animation:bolt var(--bd,7s) linear infinite;animation-delay:var(--bdel,0s)}
-.storm.fb .bolt{transform:scaleX(-1)}
-.storm .flash{position:absolute;left:-160px;top:-95px;width:320px;height:190px;border-radius:50%;background:radial-gradient(closest-side,rgba(236,241,255,.9),rgba(200,215,255,.35) 48%,transparent);mix-blend-mode:screen;opacity:0;animation:cflash var(--bd,7s) linear infinite;animation-delay:var(--bdel,0s)}
+.mstorm{position:absolute;width:0;height:0;pointer-events:none;z-index:2}
+.mstorm .fogpatch,.mstorm .bolt{max-width:none}
+.mstorm .fogpatch{left:0;top:0;width:330px;opacity:.86;filter:brightness(.78) saturate(.55) hue-rotate(-10deg)}
+.mstorm .bolt{position:absolute;left:var(--bx,-20px);top:-44px;width:40px;height:94px;opacity:0;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 16px rgba(160,195,255,1));animation:bolt var(--bd,7s) linear infinite;animation-delay:var(--bdel,0s)}
+.mstorm.fb .bolt{transform:scaleX(-1)}
+.mstorm .flash{position:absolute;left:-160px;top:-95px;width:320px;height:190px;border-radius:50%;background:radial-gradient(closest-side,rgba(236,241,255,.9),rgba(200,215,255,.35) 48%,transparent);mix-blend-mode:screen;opacity:0;animation:cflash var(--bd,7s) linear infinite;animation-delay:var(--bdel,0s)}
 @keyframes bolt{0%,86%,100%{opacity:0}87%{opacity:1}88.5%{opacity:.1}90%{opacity:1}92.5%{opacity:0}}
 @keyframes cflash{0%,86%,100%{opacity:0}87%{opacity:.85}88.5%{opacity:.25}90%{opacity:.75}95%{opacity:0}}
 .mapveil{position:absolute;left:0;right:0;pointer-events:none;z-index:15;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
@@ -840,7 +840,28 @@ textarea.fld{min-height:76px}
 @keyframes mgbank{25%{transform:rotate(-9deg)}75%{transform:rotate(8deg)}}
 .mgull .wu,.mgull .wd{transform-box:view-box;transform-origin:0 0;animation:mgflap var(--f,3.6s) ease-in-out infinite;animation-delay:var(--fd,0s)}
 @keyframes mgflap{0%,8%,16%,24%,32%,100%{transform:scaleY(1)}4%,12%,20%,28%{transform:scaleY(.42) translateX(1.5px)}}
-@media (prefers-reduced-motion:reduce){.storm .bolt,.storm .flash,.key.fire.ready,.brass-btn .play svg{animation:none}.storm .bolt,.storm .flash{display:none}}
+@media (prefers-reduced-motion:reduce){.mstorm .bolt,.mstorm .flash,.key.fire.ready,.brass-btn .play svg{animation:none}.mstorm .bolt,.mstorm .flash{display:none}}
+
+/* ---------- Retours v1.8 : écran de jeu, doublons, onglets du bas ---------- */
+/* Réponses un peu plus bas : moins de vide sous les boutons, la scène gagne la place */
+.g-bottom{padding-bottom:calc(var(--sbm) + 5vh)}
+/* La zone de réponses défile en mode « tall » : de la place au-dessus de la carte pour le bandeau Revanche */
+.game.tall .g-bottom{padding-top:16px}
+/* Vagues de premier plan : la crête la plus haute monte à 49 % de l'image. La boîte est assez haute pour
+   la montrer en entier (0,39 × la largeur), sinon le haut de la vague était coupé net. */
+.g-scene .waves{height:max(34%,min(40vw,224px))}
+/* Compteur de doublons : plus grand, et il ne se laisse plus écraser par le nom */
+.purse{flex:none;height:42px;gap:7px;padding:0 15px 0 6px;border-radius:21px}
+.purse img{width:30px;height:30px}
+.purse b{font-size:19px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+/* Onglets du bas : plus hauts, plus contrastés, une marge autour de chaque onglet */
+.dock{height:78px;padding:0 6px;column-gap:4px;background:rgba(7,24,34,.78)}
+.dock button{justify-content:center;gap:5px;margin:7px 0;border-radius:18px;font:600 13px var(--f-u);color:#c6d9da;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+.dock button[aria-current="page"]{color:var(--brass-hi);background:rgba(243,213,140,.13);box-shadow:inset 0 0 0 1px rgba(243,213,140,.3)}
+.dock .di{width:34px;height:34px;margin-top:0;opacity:.92}
+.tide{bottom:calc(var(--sbm) + 102px)}
+.tabpage{padding-bottom:calc(var(--sbm) + 110px)}
+.toast{bottom:calc(var(--sbm) + 118px)}
 </style>
 
 <div id="app" aria-live="polite"></div>
@@ -926,7 +947,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.7 bêta · octobre 2026';
+const VERSION = '1.8 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -961,14 +982,23 @@ function boom(vol = .5, dur = .55) {
 /* Fichiers audio (musique, bruitages, voix) : listés dans assets/audio/manifest.json ; sinon les sons synthétiques ci-dessous servent de repli. */
 const AUDIO = 'assets/audio/';
 const VO = { titre: 3, intro: 1, carte: 1, accueil: 3, depart: 3, combo: 3, rire: 3, victoire: 3, parfait: 2, 'boss-debut': 2, boss: 3, coffre: 2, equipier: 2, ile: 2, navire: 2, presque: 3, indice: 2, revanche: 2, libre: 1, equipage: 1, pirate: 1, port: 3,
-  'tuto-keypad': 3, 'tuto-choices': 2, 'tuto-mine': 4, 'tuto-line': 2, 'tuto-money': 4, 'tuto-pizza': 2, 'tuto-words': 3, 'tuto-read': 3, lettres: 2 };
+  'tuto-keypad': 3, 'tuto-choices': 2, 'tuto-mine': 4, 'tuto-line': 2, 'tuto-money': 4, 'tuto-pizza': 2, 'tuto-words': 3, 'tuto-read': 3, lettres: 2,
+  test: 2, 'test-fin': 2, melange: 2, 'boss-cible': 2, quete: 2, chapitre: 2, journal: 1, 'tuto-type': 3 };
 const BUF = {}; let audioAsked = false, BUS = null, musSrc = null, musName = null, musWant = null, lastVo = 0;
 function bus() { const a = ac(); if (!a) return null; if (!BUS) { BUS = { sfx: a.createGain(), mus: a.createGain(), vo: a.createGain() }; BUS.mus.gain.value = .3; BUS.sfx.gain.value = .8; Object.values(BUS).forEach(g => g.connect(a.destination)); } return BUS; }
+// Les longues boucles de musique (2 à 4 min, 60 à 90 Mo une fois décodées) sont chargées quand elles doivent jouer,
+// et une seule reste en mémoire. Tout le reste (voix, bruitages, fanfare) est chargé au lancement.
+const MUS_LOOPS = ['carte', 'escale', 'boss', 'port'], HAVE = new Set(), musLoading = {};
+const decode = n => fetch(AUDIO + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)));
 function loadAudio() {
   if (audioAsked || !AC || location.protocol === 'file:') return; audioAsked = true;
-  fetch(AUDIO + 'manifest.json').then(r => r.ok ? r.json() : []).then(list => (Array.isArray(list) ? list : []).forEach(n =>
-    fetch(AUDIO + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)))
-      .then(buf => { BUF[n] = buf; if (n === 'mus-' + musWant || (n === 'mus-carte' && musWant === 'port')) music(musWant); }).catch(() => {}))).catch(() => {});
+  fetch(AUDIO + 'manifest.json').then(r => r.ok ? r.json() : []).then(list => { list = Array.isArray(list) ? list : []; list.forEach(n => HAVE.add(n));
+    if (musWant) music(musWant);
+    list.filter(n => !MUS_LOOPS.some(x => n === 'mus-' + x)).forEach(n => decode(n).then(buf => { BUF[n] = buf; }).catch(() => {})); }).catch(() => {});
+}
+function musFetch(n) {
+  if (BUF[n] || musLoading[n] || !HAVE.has(n)) return; musLoading[n] = 1;
+  decode(n).then(buf => { BUF[n] = buf; delete musLoading[n]; if (musWant && (n === 'mus-' + musWant || (n === 'mus-carte' && musWant === 'port'))) music(musWant); }).catch(() => { delete musLoading[n]; });
 }
 function playBuf(name, b = 'sfx', vol = 1) { if (!S.sound || !BUF[name]) return null; const B = bus(); if (!B) return null; const src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; src.buffer = BUF[name]; src.connect(g); g.connect(B[b]); src.start(); return src; }
 const sfx = (n, vol) => { const opts = ['', '-1', '-2', '-3'].map(v => `sfx-${n}${v}`).filter(x => BUF[x]); return opts.length ? !!playBuf(pick(opts), 'sfx', vol) : false; };
@@ -989,15 +1019,35 @@ function welcome(first) {
 }
 function voiceSoon(ev, tries = 20) { if (voice(ev, true) || tries <= 0) return; setTimeout(() => voiceSoon(ev, tries - 1), 250); }
 let voSrc = null;
+function stopVoice() {
+  if (voSrc) { try { voSrc.stop(); } catch (e) {} voSrc = null; }
+  if (BUS && AC) { const g = BUS.mus.gain, t = AC.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(.3, t + .4); }
+}
+// Histoire racontée par le Capitaine : 30 à 40 s par chapitre, donc chargée à la demande (pas au lancement) et libérée à la fermeture.
+// Le service worker la garde ensuite pour l'écoute hors connexion. Sans fichier, sans son ou sans voix : la voix de synthèse prend le relais.
+let sagaReq = 0;
+function sagaVoice(id, fallback) {
+  const n = `vo-saga-${id}`;
+  if (voSrc && voSrc.n === n && voiceLeft() > 0) { stopVoice(); return; }
+  if (!S.sound || !S.voice || !AC || location.protocol === 'file:') return fallback();
+  const req = ++sagaReq, open = () => req === sagaReq && $('.modal.saga');
+  if (BUF[n]) { say(n) || fallback(); return; }
+  fetch(AUDIO + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)))
+    .then(buf => { BUF[n] = buf; if (open()) say(n) || fallback(); }).catch(() => { if (open()) fallback(); });
+}
+function freeSaga() { sagaReq++; if (voSrc && /^vo-saga-/.test(voSrc.n || '')) stopVoice(); Object.keys(BUF).filter(k => k.startsWith('vo-saga-')).forEach(k => delete BUF[k]); }
+const voiceLeft = () => voSrc && voSrc.buffer ? Math.max(0, voSrc.buffer.duration * 1000 - (performance.now() - lastVo)) : 0;
 function say(name) {
   if (!S.sound || !S.voice || !BUF[name]) return false; if (voSrc) { try { voSrc.stop(); } catch (e) {} }
-  const src = playBuf(name, 'vo'); voSrc = src; lastVo = performance.now(); if (src && BUS) { const g = BUS.mus.gain, t = AC.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(.09, t + .2); g.linearRampToValueAtTime(.3, t + src.buffer.duration + .6); }
+  const src = playBuf(name, 'vo'); voSrc = src; if (src) src.n = name; lastVo = performance.now(); if (src && BUS) { const g = BUS.mus.gain, t = AC.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(.09, t + .2); g.linearRampToValueAtTime(.3, t + src.buffer.duration + .6); }
   return !!src;
 }
 function stopMusic() { if (!musSrc) return; const { src, g } = musSrc; try { const t = AC.currentTime; g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + .6); src.stop(t + .7); } catch (e) {} musSrc = null; musName = null; }
 function music(name) {
-  musWant = name; if (!name || !S.sound || !S.music) return stopMusic(); if (musName === name && musSrc) return;
-  const buf = BUF['mus-' + name] || (name === 'port' ? BUF['mus-carte'] : null), B = bus(); if (!B) return; if (!buf) return stopMusic(); stopMusic();
+  musWant = name; if (!name || !S.sound || !S.music) return stopMusic();
+  const n = 'mus-' + name; musFetch(n); if (name === 'port' && !HAVE.has(n)) musFetch('mus-carte');
+  const buf = BUF[n] || (name === 'port' ? BUF['mus-carte'] : null), B = bus(); if (!B) return; if (musSrc && musSrc.src.buffer === buf) return; if (!buf) return stopMusic(); stopMusic();
+  MUS_LOOPS.forEach(x => { const k = 'mus-' + x; if (BUF[k] && BUF[k] !== buf) delete BUF[k]; });
   const src = AC.createBufferSource(), g = AC.createGain(), t = AC.currentTime; src.buffer = buf; src.loop = true; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(1, t + 1.2); src.connect(g); g.connect(B.mus); src.start(); musSrc = { src, g }; musName = name;
 }
 const ISLE_SFX = { stade: 'kick', mine: 'block', jungle: 'pop', marche: 'cash', cuisine: 'slice', horloge: 'tick' };
@@ -2747,7 +2797,7 @@ function renderMap() {
       <span class="lbl"><b>${i.n}</b>${lk ? `<span class="lvl-pill lock">${ico('iLock')} ${left(i)} escale${left(i) > 1 ? 's' : ''} à gagner</span>` : `<span class="lvl-pill">Niveau ${Math.min(s.node, NODES)}/${NODES}</span>`}</span></button>`;
   }).join('');
   // Île pas encore ouverte : on la devine, floue, sous un nuage d'orage traversé d'éclairs
-  const fog = sea.filter(i => !unlocked(i)).map((i, k) => `<div class="storm${k % 2 ? ' fb' : ''}" style="left:${px(i)}px;top:${i.y - 18}px;--bd:${(6.5 + (k * 2.3) % 4).toFixed(1)}s;--bdel:-${(k * 2.9 % 7).toFixed(1)}s;--bx:${k % 2 ? 8 : -34}px" aria-hidden="true"><img class="fogpatch${k % 2 ? ' fb' : ''}" src="${IMG(k % 2 ? 'fx-fog-b' : 'fx-fog-a')}" alt="">${BOLT}<i class="flash"></i></div>`).join('');
+  const fog = sea.filter(i => !unlocked(i)).map((i, k) => `<div class="mstorm${k % 2 ? ' fb' : ''}" style="left:${px(i)}px;top:${i.y - 18}px;--bd:${(6.5 + (k * 2.3) % 4).toFixed(1)}s;--bdel:-${(k * 2.9 % 7).toFixed(1)}s;--bx:${k % 2 ? 8 : -34}px" aria-hidden="true"><img class="fogpatch${k % 2 ? ' fb' : ''}" src="${IMG(k % 2 ? 'fx-fog-b' : 'fx-fog-a')}" alt="">${BOLT}<i class="flash"></i></div>`).join('');
   app.innerHTML = `<div class="screen">
     <div class="map-scroll" id="mapScroll"><div class="map sea-${S.sea}">
       <div class="ocean"></div><div class="glints"></div>
@@ -2830,7 +2880,7 @@ function startEscale(id, node, fromTide) {
   const i = isleById(id), base = { q: null, k: 0, ok: 0, res: [], gold: 0, combo: 0, best: 0, seen: new Set(), fromTide, hp: 100, used: {}, goldBefore: S.gold, done: false, revs: 0, popped: {} };
   if (i.v) { R = Object.assign(base, { i, node: 0, d: 3, boss: false, n: 6 });
     if (id === 'test') { R.test = { list: playable().map(x => x.id), at: 0, st: 0, res: {} }; R.n = R.test.list.length * 2; }
-    ac(); music('escale'); return nextQ(); }
+    ac(); music('escale'); if (id === 'mix') setTimeout(() => voice('melange', true), voiceLeft() + 500); return nextQ(); }
   const s = IS(id), boss = node === BOSS;
   R = Object.assign(base, { i, node, d: boss ? 5 : nodeDiff(node, s.fails), boss, n: boss ? 8 : 6 });
   if (boss) R.plan = bossPlan(i, s);
@@ -2864,13 +2914,16 @@ function nextQ() {
   else if (tp && tp.rev) q = Object.assign({}, tp.rev.q, { rev: true, tgt: 1 });
   else if (rv) { q = Object.assign({}, rv.q, { rev: true }); R.qi = isleById(rv.g); R.revs++; setTimeout(() => voice('revanche', true), 500); }
   else { const src = R.i.id === 'mix' ? mixPick() : { i: R.i, l: tp ? tp.lv : R.d }; R.qi = src.i; do { q = src.i.gen(src.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = src.l; if (tp) q.tgt = 1; q = recall(q); }
-  if (q.tgt) setTimeout(() => R && R.q === q && pop(R.i.boss.img, `${R.i.boss.n} vise ton point faible : ${q.lv ? skillName(R.i.id, q.lv) : 'une question déjà ratée'}`), 700);
+  if (q.tgt) setTimeout(() => R && R.q === q && (R.cible || (R.cible = voice('boss-cible')), pop(R.i.boss.img, `${R.i.boss.n} vise ton point faible : ${q.lv ? skillName(R.i.id, q.lv) : 'une question déjà ratée'}`)), 700);
   if (QI().sea === 'f' && !q.typo) { ['ask', 'prompt', 'explain', 'hint', 'answerText'].forEach(k => { if (typeof q[k] === 'string') q[k] = typo(q[k]); }); (q.choices || []).forEach(c => { c.html = typo(String(c.html)); }); q.typo = 1; }
   // La bonne réponse change de place à chaque question, et jamais trois fois de suite au même endroit (les signes <, =, > gardent leur ordre)
   if (q.choices && q.kind !== 'compare') { const at = c => c.findIndex(x => x.v === q.answer); let c, t2 = 0; do { c = shuffle(q.choices); t2++; } while (t2 < 10 && R.lastAt && R.lastAt[0] === at(c) && R.lastAt[1] === at(c)); q.choices = c; R.lastAt = [at(c), R.lastAt ? R.lastAt[0] : -1]; }
   if (!q.retry) R.seen.add(q.log); R.q = q; R.input = ''; R.locked = false; R.qt = performance.now(); R.counts = R.tray = R.sel = R.pick = R.dig = R.wsel = null;
   renderGame();
 }
+// Recadrage horizontal des décors d'île : dans un écran en hauteur, on ne voit qu'environ la moitié de l'image.
+// Ces valeurs gardent le sujet (fort, forge, grotte…) dans le cadre plutôt que le centre de l'image.
+const HERO_X = { accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
 function sceneHTML() {
   const { i, boss } = R;
   if (i.v) return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="">${i.id === 'mix' ? shipArt('ship me sail', 'role="img" aria-label="Ton navire"') : `<img class="guidefig" src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise">`}<div class="waves"></div>${powersHTML()}</div>`;
@@ -2889,7 +2942,7 @@ function sceneHTML() {
     <div class="hpbox glass"><div style="display:flex;justify-content:space-between"><span class="smallcaps" style="color:#ffd9a0;letter-spacing:.12em">${i.boss.n}</span><span style="font:600 12px var(--f-u);color:var(--mist)" id="hpt">${R.hp} %</span></div><div class="bar"><i id="hp" style="width:${R.hp}%"></i></div></div>
     ${powersHTML()}</div>`;
   // Scène peinte d'un seul tenant (l'île dans sa mer), avec un lent mouvement de caméra
-  return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="" style="object-position:${i.id === 'jungle' ? '70%' : '50%'} 30%">
+  return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="" style="object-position:${HERO_X[i.id] || 50}% 30%">
     ${i.id === 'stade' ? `<img class="goal" src="${IMG('foot-goal')}" alt="">` : ''}${i.id === 'jungle' ? `<img class="jframe" src="${IMG('jungle-frame')}" alt="">` : ''}
     <div class="waves"></div>${powersHTML()}</div>`;
 }
@@ -3120,7 +3173,7 @@ function answer(ok, givenText, btn) {
   R.res.push(ok);
   if (btn) btn.classList.add(ok ? 'right' : 'wrong');
   if (ok) {
-    R.ok++; R.combo++; R.best = Math.max(R.best, R.combo); if (questEv('answers').length || (R.combo === 6 && questEv('combo').length) || (R.q.rev && questEv('rev').length)) setTimeout(() => pop('poster-blank', 'Quête accomplie !'), 1300); if (R.combo === 3) setTimeout(() => voice('combo'), 700); else if (R.combo === 5) setTimeout(() => voice('rire'), 700); s.best = Math.max(s.best || 0, R.combo);
+    R.ok++; R.combo++; R.best = Math.max(R.best, R.combo); const qDone = questEv('answers').length || (R.combo === 6 && questEv('combo').length) || (R.q.rev && questEv('rev').length); if (qDone) setTimeout(() => { pop('poster-blank', 'Quête accomplie !'); sfx('quest'); voice('quete', true); }, 1300); else if (R.combo === 3) setTimeout(() => voice('combo'), 700); else if (R.combo === 5) setTimeout(() => voice('rire'), 700); s.best = Math.max(s.best || 0, R.combo);
     // Le bonus de vitesse ne vaut que pour les faits numériques (tables, calcul mental) : en lecture ou en grammaire, il pousserait à répondre avant d’avoir lu
     const fluency = ['canons', 'stade'].includes(qi.id), fastLimit = has('tortue') ? 8000 : 6000, fast = fluency && ms < fastLimit;
     if (fluency) S.fastStreak = ms < 5000 ? (S.fastStreak || 0) + 1 : 0;
@@ -3261,7 +3314,7 @@ function endEscale() {
 }
 function renderResult(win, stars, rewards, tideNext) {
   stopMusic(); R.rewardTags = rewards.map(r => r.tag);
-  if (win) { playBuf('mus-victoire', 'mus') || SND.fanfare(); setTimeout(() => voice(R.boss ? 'boss' : R.ok === R.n ? 'parfait' : 'victoire', true), 900); }
+  if (win) { playBuf('mus-victoire', 'mus') || SND.fanfare(); setTimeout(() => voice(R.test ? 'test-fin' : R.boss ? 'boss' : R.ok === R.n ? 'parfait' : 'victoire', true), 900); }
   else setTimeout(() => voice('presque', true), 500);
   const title = R.test ? 'Test terminé !' : R.i.v ? (win ? (R.ok === R.n ? 'Escale mélangée parfaite !' : 'Escale mélangée réussie !') : 'Presque ! On réessaie ?') : win ? (R.boss ? (R.i.id === 'canons' ? 'Le Kraken plonge au fond des mers !' : `${R.i.boss.n} est vaincu !`) : R.i.id === 'canons' ? `${foe().n} a coulé !` : R.ok === R.n ? 'Escale parfaite !' : 'Escale réussie !') : 'Presque ! On réessaie ?';
   const over = sessionOver(), tideDone = R.fromTide && P().tide && P().tide.done;
@@ -3285,7 +3338,7 @@ function openChest() {
   c.classList.remove('shake'); c.classList.add('open'); { const bm = document.createElement('i'); bm.className = 'beam'; c.prepend(bm); const [x, y] = ctr(c); FX.sparkles(x, y, 28, 260); setTimeout(() => FX.sparkles(x, y - 30, 16, 200), 260); } $('.closed', c).style.opacity = 0; $('.opened', c).style.opacity = 1; const t = $('.tap', c); t && t.remove();
   sfx('chest-open'); sfx('coins') || (SND.coin(), setTimeout(SND.coin, 120), setTimeout(SND.coin, 240));
   const tags = (R && R.rewardTags) || [];
-  setTimeout(() => { if (tags.includes('Carte')) { sfx('unlock'); voice('ile', true); } else if (tags.includes('Rare') || tags.includes('Commun') || tags.includes('Épique')) { sfx('crew-join'); voice('equipier', true); } else if (tags.includes('Navire')) voice('navire', true); else voice('coffre', true); }, 700);
+  setTimeout(() => { if (tags.includes('Carte')) { sfx('unlock'); voice('ile', true); } else if (tags.includes('Histoire')) { sfx('page'); voice('chapitre', true); } else if (tags.includes('Rare') || tags.includes('Commun') || tags.includes('Épique')) { sfx('crew-join'); voice('equipier', true); } else if (tags.includes('Navire')) voice('navire', true); else voice('coffre', true); }, 700);
   { const g = document.createElement('img'); g.className = 'coinburst'; g.src = IMG('fx-coins'); g.alt = ''; c.appendChild(g); setTimeout(() => g.remove(), 1400); }
   const r = c.getBoundingClientRect(), ar = app.getBoundingClientRect();
   for (let k = 0; k < 14; k++) { const im = document.createElement('img'); im.className = 'coinfly'; im.src = IMG('coin-doublon'); im.alt = '';
@@ -3354,7 +3407,7 @@ function renderPrime() {
   bindCog();
   $$('.eps svg').forEach(s => { s.style.width = '14px'; s.style.height = '14px'; s.style.verticalAlign = '-1px'; });
 }
-function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && t !== 'journal' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice(t === 'crew' ? 'equipage' : 'pirate', true), 300); } ({ map: renderMap, journal: renderJournal, crew: renderCrew, prime: renderPrime })[t](); }
+function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice({ crew: 'equipage', prime: 'pirate', journal: 'journal' }[t], true), 300); } ({ map: renderMap, journal: renderJournal, crew: renderCrew, prime: renderPrime })[t](); }
 // Journal de bord : quêtes de la semaine, histoire de l'archipel, compétences
 const jHash = () => `${quests().wk}:${quests().list.filter(q => q.done).length}:${sagaCount()}`;
 const journalNew = () => { try { return P().jseen !== jHash(); } catch (e) { return false; } };
@@ -3372,7 +3425,7 @@ function offerPlacement() {
   m.innerHTML = `<div class="box paper" role="dialog" aria-label="Test du capitaine"><img src="${IMG('guide-capitaine')}" alt="" style="width:130px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))"><div class="disp" style="font-size:26px">Le test du capitaine</div>
     <p style="margin:0;color:var(--ink-2)">Quelques questions sur chaque île pour que tu commences au bon niveau. Ça dure environ 5 minutes.</p>
     <button class="brass-btn" data-a="placetest">Passer le test</button><button class="ghost-btn dark" data-a="placelater">Plus tard</button></div>`;
-  app.appendChild(m);
+  app.appendChild(m); setTimeout(() => $('.modal.place') && voice('test', true), voiceLeft() + 350);
 }
 
 /* ================= Parents ================= */
@@ -3492,8 +3545,8 @@ app.addEventListener('click', e => {
     case 'placetest': SND.tap(); { const m = $('.modal.place'); m && m.remove(); } startEscale('test', 1, false); break;
     case 'placelater': { const m = $('.modal.place'); m && m.remove(); SND.tap(); break; }
     case 'saga': SND.tap(); openSaga(el.dataset.c); break;
-    case 'sagasay': { const m = el.closest('.modal.saga'), c = m && SAGA.find(x => x.id === m.dataset.c); if (c) speak(`${c.t}. ${c.x.join(' ')}`); break; }
-    case 'sagaclose': { if (window.speechSynthesis) speechSynthesis.cancel(); const m = $('.modal.saga'); m && m.remove(); if (tab === 'journal' && !R) { const y = $('.tabpage') ? $('.tabpage').scrollTop : 0; renderJournal(); $('.tabpage').scrollTop = y; } break; }
+    case 'sagasay': { const m = el.closest('.modal.saga'), c = m && SAGA.find(x => x.id === m.dataset.c); if (c) { ac(); sagaVoice(c.id, () => speak(`${c.t}. ${c.x.join(' ')}`)); } break; }
+    case 'sagaclose': { if (window.speechSynthesis) speechSynthesis.cancel(); freeSaga(); const m = $('.modal.saga'); m && m.remove(); if (tab === 'journal' && !R) { const y = $('.tabpage') ? $('.tabpage').scrollTop : 0; renderJournal(); $('.tabpage').scrollTop = y; } break; }
     case 'free': toast('Choisis une île sur la carte.'); voice('libre', true); break;
     case 'quit': { if ($('.quitm')) break; const m = document.createElement('div'); m.className = 'modal quitm';
       m.innerHTML = `<div class="box paper" role="alertdialog" aria-label="Quitter l’escale ?"><img src="${IMG('crew-perroquet')}" alt="" style="width:96px;margin:-58px auto 0;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))"><div class="disp" style="font-size:26px">Quitter l’escale ?</div><p style="margin:0;color:var(--ink-2);font-size:16px">Tes réponses de cette escale seront perdues.</p><button class="brass-btn" data-a="quitno">Continuer à jouer</button><button class="ghost-btn dark" data-a="quityes">Quitter</button></div>`;
@@ -3823,7 +3876,7 @@ renderMap = after(renderMap, 'map'); renderIsle = after(renderIsle, 'isle'); ren
 renderJournal = after(renderJournal, 'crew'); renderCrew = after(renderCrew, 'crew'); renderPrime = after(renderPrime, 'prime'); renderGame = after(renderGame, 'game'); titleScreen = after(titleScreen, 'title');
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 if (location.hash === '#direct') { show('map'); if (!S.intro) onboarding(); } else titleScreen();
-window.__arch = { get R() { return R; }, get S() { return S; }, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge }, words, ISLES, setGrade, check, labN };
+window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge }, words, ISLES, setGrade, check, labN };
 })();
 </script>
 

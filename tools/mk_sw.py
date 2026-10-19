@@ -4,8 +4,9 @@ files=['./', './index.html', './aide.html', './manifest.webmanifest', './icon-19
 files += ['./assets/' + f for f in sorted(os.listdir(root + '/assets')) if f.endswith('.webp')]
 files += ['./assets/fonts/' + f for f in sorted(os.listdir(root + '/assets/fonts')) if f.endswith('.woff2')]
 aud = sorted(os.listdir(root + '/assets/audio'))
-files += ['./assets/audio/' + f for f in aud if f.startswith(('vo-', 'sfx-')) or f == 'manifest.json']
-sw = f"""// Mode hors connexion : met en cache le jeu, les images et les voix ; les musiques sont gardées après leur première écoute.
+# L'histoire racontée (vo-saga-*) est chargée à la demande, puis gardée après la première écoute, comme les musiques
+files += ['./assets/audio/' + f for f in aud if (f.startswith(('vo-', 'sfx-')) and not f.startswith('vo-saga-')) or f == 'manifest.json']
+sw = f"""// Mode hors connexion : met en cache le jeu, les images et les voix ; les musiques et l’histoire racontée sont gardées après leur première écoute.
 const V = 'archipel-{ver}';
 const FILES = {json.dumps(files)};
 self.addEventListener('install', e => {{ e.waitUntil(caches.open(V).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); }});
