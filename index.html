@@ -762,6 +762,34 @@ textarea.fld{min-height:76px}
 .skisle li .ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:800;font-size:13px;background:rgba(255,255,255,.1)}
 .sk-ok .ic{background:var(--kelp);color:#0b2230}.sk-cur .ic{background:var(--brass);color:#2a1a07}.sk-rev .ic{background:var(--wax-hi);color:#fff}.sk-new{opacity:.55}
 .mini-btn{flex:none;height:30px;padding:0 10px;border-radius:15px;font:600 12.5px var(--f-u);color:#2a1a07;background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 2px 0 var(--brass-lo)}
+.quest{display:flex;align-items:center;gap:12px;margin:8px 0;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--glass-line)}
+.quest .qi{width:46px;height:46px;flex:none;border-radius:50%;display:grid;place-items:center;font:800 14px var(--f-u);color:var(--brass-hi);background:rgba(0,0,0,.25);box-shadow:inset 0 0 0 2px rgba(243,213,140,.35)}
+.quest.done .qi{background:var(--kelp);color:#0b2230;font-size:20px;box-shadow:none}
+.quest .qt{flex:1;min-width:0}.quest .qt b{display:block;font:600 15px var(--f-u);color:#fffaf0;margin-bottom:6px}.quest .qt small{color:var(--mist);font-size:13px}
+.quest.bonus img{width:46px;height:46px;object-fit:contain;flex:none}.quest.bonus .qt b{margin-bottom:2px}
+.tmapw{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 0 0 2px rgba(138,98,36,.6);margin:0 0 10px}
+.tmap{display:block;width:100%;height:auto}.tmapw span{position:absolute;right:10px;bottom:8px;font:700 12px var(--f-u);color:#5a3a12;background:rgba(244,232,204,.85);padding:3px 8px;border-radius:10px}
+.chap{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--glass-line);color:#fffaf0}
+.chap .cn{display:block;font:700 11px var(--f-u);letter-spacing:.12em;text-transform:uppercase;color:var(--brass-hi)}.chap b{display:block;font:400 21px var(--f-p)}.chap small{color:var(--mist);font-size:13px}
+.chap.lk{opacity:.55}.chap.lk b{letter-spacing:.2em}.chap.unread{box-shadow:inset 0 0 0 2px var(--brass),0 0 16px rgba(243,213,140,.25)}.chap.unread small{color:var(--brass-hi)}
+.modal.saga .box{max-height:86vh;overflow-y:auto}.stxt{text-align:left;font:400 17px/1.55 var(--f-u);color:var(--ink)}.stxt p{margin:0 0 10px}
+.plan{border-radius:18px;padding:12px 14px;margin:14px 0 6px}.plan .ph{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.plan .ph b{display:block;font:400 21px var(--f-p);color:#fffaf0}.plan .ph small{color:var(--mist);font-size:13px}.plan .ph .smallcaps{color:var(--brass-hi)}
+.ring{--p:0;position:relative;width:64px;height:64px;flex:none;display:grid;place-items:center}
+.ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--brass-hi) calc(var(--p) * 1%),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(circle,transparent 24px,#000 25px);mask:radial-gradient(circle,transparent 24px,#000 25px)}
+.plan .ring b{position:relative;font:800 15px var(--f-u)!important;color:#fffaf0}
+.pp{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:14px;color:#e6efe9}.pp span{flex:1;min-width:0}.pp small{display:block;font-size:11.5px;color:var(--mist)}
+.pp .pb{width:34%;height:7px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}.pp .pb i{display:block;height:100%;background:linear-gradient(90deg,var(--brass),var(--brass-hi))}.pp em{font-style:normal;width:34px;text-align:right;color:var(--brass-hi);font-weight:700}
+.paints.gear svg{width:62%;height:auto;margin:6px auto 0;display:block}
+.sart .lamp{position:absolute;width:5%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff7d6 0 22%,rgba(255,196,90,.85) 40%,rgba(255,160,60,0) 72%);transform:translate(-50%,-50%) scale(3.2);mix-blend-mode:screen;animation:lampf 2.2s ease-in-out infinite;pointer-events:none}
+.sart .lamp.st{left:9.5%;top:57%}.sart .lamp.bw{left:80%;top:72%;animation-delay:-1.1s}
+.sart[data-lv="1"] .lamp.st{left:7%;top:62%}.sart[data-lv="1"] .lamp.bw{left:87%;top:71%}
+.sart[data-lv="2"] .lamp.st{left:9.5%;top:60%}.sart[data-lv="2"] .lamp.bw{left:85%;top:71%}
+@keyframes lampf{50%{opacity:.75;transform:translate(-50%,-50%) scale(2.8)}}
+.ship-token.lit{filter:drop-shadow(0 8px 6px rgba(0,0,0,.4)) drop-shadow(0 0 12px rgba(255,190,90,.85))}
+.wake{position:absolute;width:44px;height:130px;transform:translate(-50%,-6px) rotate(-30deg) translateY(34px);transform-origin:50% 0;pointer-events:none;transition:left 1.2s ease-in-out,top 1.2s ease-in-out}
+.wake path{animation:wake 1.1s linear infinite}@keyframes wake{to{stroke-dashoffset:-16}}
+@media (prefers-reduced-motion:reduce){.wake path,.sart .lamp{animation:none}}
 .why .diag{display:block;margin:0 0 8px;padding:8px 10px;border-radius:12px;background:rgba(184,56,42,.08);box-shadow:inset 3px 0 0 var(--wax-hi);color:var(--ink)}
 /* ---------- 1.5 : océan WebGL, îles sous l'orage, voiles flous, boutons, mouettes ---------- */
 .sea-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -898,7 +926,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.5 bêta · octobre 2026';
+const VERSION = '1.6 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -1015,12 +1043,15 @@ const PAINTS = [
 const shipFx = () => { const p = PAINTS.find(x => x[0] === S.paint); return p && p[3] !== 'none' ? `filter:${p[3]};` : ''; };
 const AVATARS = ['a', 'b', 'c', 'd'];
 const capt = () => 'capt-' + (AVATARS.includes(S.avatar) ? S.avatar : 'a');
-const GEAR = [['dragon', 'Proue dragon', 600, 'fig-dragon'], ['sirene', 'Proue sirène', 600, 'fig-sirene'], ['canon', 'Canon doré', 1000, 'cannon-gold']];
+const GEAR = [['dragon', 'Proue dragon', 600, 'fig-dragon'], ['sirene', 'Proue sirène', 600, 'fig-sirene'], ['canon', 'Canon doré', 1000, 'cannon-gold'], ['sillage', 'Sillage d’écume', 250, null], ['fanaux', 'Fanaux', 350, null]];
+const GEARSVG = { fanaux: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="27" r="16" fill="rgba(255,196,90,.35)"/><path d="M17 15h14l-2 4H19z" fill="#8a6224"/><rect x="18" y="19" width="12" height="16" rx="3" fill="#ffd36b" stroke="#8a6224" stroke-width="2"/><path d="M24 22c3 3 3 6 0 9-3-3-3-6 0-9z" fill="#fff4cf"/><path d="M18 35h12M24 9v6" stroke="#8a6224" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  sillage: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6c-3 10-12 22-18 34M24 6c3 10 12 22 18 34" fill="none" stroke="#e9f6f2" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 4"/><path d="M24 10v30" stroke="#bfe3e6" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round"/></svg>' };
+const lamps = () => S.lamps !== false && S.gear.includes('fanaux'), wakeOn = () => S.wake !== false && S.gear.includes('sillage');
 const goldCannon = () => S.gcan && S.gear.includes('canon');
 // Navire avec ses ornements : la proue se fixe à l'étrave, le canon doré sur le pont (positions réglées par taille de navire dans le CSS)
 function shipArt(cls, extra = '') {
   const fig = S.fig && S.gear.includes(S.fig) ? `<img class="figh f-${S.fig}" src="${IMG('fig-' + S.fig)}" alt="">` : '';
-  return `<div class="sart ${cls}" data-lv="${shipLv()}" ${extra}><img class="hull" src="${IMG(shipImg())}" alt="" style="${shipFx()}">${fig}${goldCannon() ? `<img class="gcan" src="${IMG('cannon-gold')}" alt="">` : ''}</div>`;
+  return `<div class="sart ${cls}" data-lv="${shipLv()}" ${extra}><img class="hull" src="${IMG(shipImg())}" alt="" style="${shipFx()}">${fig}${goldCannon() ? `<img class="gcan" src="${IMG('cannon-gold')}" alt="">` : ''}${lamps() ? '<i class="lamp st"></i><i class="lamp bw"></i>' : ''}</div>`;
 }
 const FLAGS = [['crane', 'Crâne'], ['ancre', 'Ancre'], ['etoile', 'Étoile'], ['coeur', 'Cœur'], ['eclair', 'Éclair'], ['couronne', 'Couronne'], ['lettre', 'Initiale']];
 function flagSym(id) {
@@ -1039,6 +1070,7 @@ const foe = () => FOES[R.node % 2];
 const EPITHETS = [ // [surnom, comment le gagner, île : masqué tant que l'île n'est pas jouable]
   ['Calcul-Éclair', '5 bonnes réponses de suite en moins de 5 s'], ['Canonnier d’Élite', '6 sur 6 à l’Île des Canons'], ['Tête Froide', '6 sur 6 au Stade des Vagues'],
   ['Bâtisseur', '6 sur 6 à la Mine aux Blocs'], ['Œil-de-Lynx', '6 sur 6 dans la Jungle'], ['Main-d’Or', '6 sur 6 au Marché du Port'], ['Fine Lame', '6 sur 6 à la Cuisine'], ['Vainqueur du Kraken', 'Bats le boss de l’Île des Canons'], ['Maître du Temps', '6 sur 6 à l’Île de l’Horloge', 'horloge'],
+  ['Chasseur de Trésor', 'Retrouve les douze morceaux de la carte'], ['Maître Charpentier', 'Termine le plan de ton navire'],
   ['Grand Liseur', '6 sur 6 à la Grotte aux Histoires', 'lecture'], ['Maître des Verbes', '6 sur 6 à la Forge des Verbes', 'conjug'], ['Chef de Phrase', '6 sur 6 au Récif des Phrases', 'gram'], ['Gardien des Accords', '6 sur 6 au Pont des Accords', 'accords'], ['Mille-Mots', '6 sur 6 à la Baie des Mots', 'vocab'],
 ];
 const ISLES = [
@@ -2561,6 +2593,102 @@ function skillsHTML() {
     <button class="ghost-btn" data-a="placetest" style="margin-top:14px">${P().placed ? 'Refaire le test du capitaine' : 'Passer le test du capitaine (5 min)'}</button></section>`;
 }
 
+/* ================= Quêtes de la semaine ================= */
+// Trois quêtes du lundi au dimanche : une sur l'île la moins réussie, deux tirées au sort. 60 doublons chacune, 150 de plus pour les trois.
+const weekKey = (d = new Date()) => today(new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7));
+const QUESTS = {
+  isle: { goal: 3, t: q => `Gagne 3 escales sur ${isleById(q.isl).art}` }, perfect: { goal: 2, t: () => 'Réussis 2 escales sans aucune faute' },
+  rev: { goal: 4, t: () => 'Réussis 4 revanches (des questions déjà ratées)' }, days: { goal: 4, t: () => 'Joue 4 jours différents cette semaine' },
+  tide: { goal: 3, t: () => 'Termine 3 marées du jour' }, mix: { goal: 2, t: () => 'Gagne 2 escales mélangées' },
+  answers: { goal: 50, t: () => 'Donne 50 bonnes réponses' }, combo: { goal: 1, t: () => 'Enchaîne 6 bonnes réponses de suite' } };
+function quests() {
+  const wk = weekKey(); let Q = P().quests;
+  if (!Q || Q.wk !== wk) {
+    const open = playable().filter(unlocked), acc = i => { const s = IS(i.id); return s.tot ? s.ok / s.tot : 1; };
+    const weak = open.slice().sort((a, b) => acc(a) - acc(b) || IS(a.id).node - IS(b.id).node)[0] || isleById('canons');
+    const pool = shuffle(['perfect', 'rev', 'days', 'tide', 'answers', 'combo'].concat(open.length >= 3 ? ['mix'] : [])).slice(0, 2);
+    Q = P().quests = { wk, list: [{ id: 'isle', isl: weak.id, n: 0 }, ...pool.map(id => ({ id, n: 0 }))], days: [], bonus: false }; save();
+  }
+  return Q;
+}
+// Un événement de jeu fait avancer les quêtes ; renvoie les récompenses gagnées pour le butin de l'escale
+function questEv(ev, x) {
+  const Q = quests(), out = [];
+  Q.list.forEach(q => { if (q.done || (q.id === 'isle' ? ev !== 'win' || x !== q.isl : ev !== q.id)) return;
+    q.n = Math.min(QUESTS[q.id].goal, q.n + 1);
+    if (q.n >= QUESTS[q.id].goal) { q.done = true; S.gold += 60; out.push({ img: 'poster-blank', b: 'Quête accomplie : +60 doublons', s: QUESTS[q.id].t(q), tag: 'Quête' }); } });
+  if (!Q.bonus && Q.list.every(q => q.done)) { Q.bonus = true; S.gold += 150; out.push({ img: 'chest-open', b: 'Coffre de la semaine : +150 doublons', s: 'Les trois quêtes sont accomplies !', tag: 'Quête' }); }
+  if (out.length) { save(); if (R) R.qrw = (R.qrw || []).concat(out); }
+  return out;
+}
+function questsHTML() {
+  const Q = quests(), left = 7 - (new Date().getDay() + 6) % 7, nd = Q.list.filter(q => q.done).length;
+  return `<section class="jsec"><h2>Quêtes de la semaine</h2><p class="sub" style="margin:0 0 10px">Encore ${left} jour${left > 1 ? 's' : ''}. Chaque quête rapporte 60 doublons ; les trois ensemble ouvrent le coffre de la semaine.</p>
+    ${Q.list.map(q => { const g = QUESTS[q.id].goal; return `<div class="quest${q.done ? ' done' : ''}"><div class="qi">${q.done ? '✓' : `${q.n}/${g}`}</div><div class="qt"><b>${QUESTS[q.id].t(q)}</b><div class="skbar"><i style="width:${Math.round(q.n / g * 100)}%"></i></div></div></div>`; }).join('')}
+    <div class="quest bonus${Q.bonus ? ' done' : ''}"><img src="${IMG(Q.bonus ? 'chest-open' : 'chest-closed')}" alt=""><div class="qt"><b>Coffre de la semaine · +150</b><small>${Q.bonus ? 'Ouvert ! De nouvelles quêtes arrivent lundi.' : `${nd} quête${nd > 1 ? 's' : ''} accomplie${nd > 1 ? 's' : ''} sur 3`}</small></div></div></section>`;
+}
+
+/* ================= L'histoire de l'archipel ================= */
+// Le Kraken a déchiré la carte du trésor en douze morceaux : chaque coffre d'île en cache un et débloque un chapitre.
+const SAGA = [
+  { id: 'prologue', t: 'La carte déchirée', x: ['Une nuit de tempête, le Kraken surgit près du port. D’un coup de tentacule, il arrache la carte du Trésor de l’Archipel des mains du capitaine Barbe-Grise.', 'Il la déchire en douze morceaux, qui s’envolent vers douze îles.', '« Celui qui retrouvera les douze morceaux trouvera le trésor », grogne le capitaine. Pi bat des ailes : « Alors en route, moussaillon ! Chaque coffre d’île cache un morceau. »'] },
+  { id: 'canons', t: 'Le premier morceau', x: ['Sur l’Île des Canons, les vieux canons tonnent encore. Au fond du coffre, sous des boulets rouillés, tu trouves un morceau de carte.', 'On y voit le port et une rose des vents. « Bien visé ! », crie Pi.', 'Mais au loin, une ombre glisse sous les vagues : le Kraken te surveille…'] },
+  { id: 'stade', t: 'Le ballon de cuir', x: ['Au Stade des Vagues, les pirates jouent au ballon sur une plage de sable blanc. Le gardien te lance un défi : chaque bon calcul est un but !', 'Quand le coffre s’ouvre, un morceau de carte apparaît, roulé dans un vieux ballon de cuir.', 'Il montre une île en forme de croissant de lune.'] },
+  { id: 'mine', t: 'Les blocs qui brillent', x: ['Dans la Mine aux Blocs, tout se compte par dizaines, par centaines et par milliers. Les mineurs empilent des blocs de pierre précieuse.', 'Derrière la plus grande pile, le coffre cache un nouveau morceau.', 'On y voit un chemin de pointillés qui serpente entre les rochers.'] },
+  { id: 'jungle', t: 'La grenouille sauteuse', x: ['La jungle est pleine de bruits étranges. Une grenouille saute de graduation en graduation sur un vieux tronc d’arbre.', 'Elle te guide jusqu’au coffre, caché sous les lianes.', 'Le morceau de carte montre une cascade… et le coin d’une croix à moitié effacée.'] },
+  { id: 'marche', t: 'Le marchand fantôme', x: ['Au Marché du Port, un marchand transparent compte ses pièces sans jamais se tromper. « Rends-moi la monnaie juste, et je te donnerai ce que tu cherches. »', 'Tu comptes, tu rends, il sourit.', 'Dans une bourse de velours, il y a un morceau de carte. On y lit un mot : « Nord ».'] },
+  { id: 'cuisine', t: 'La recette secrète', x: ['Le Chef Pieuvre coupe ses tartes en parts parfaitement égales. « La moitié pour l’équipage, le quart pour le capitaine, et le reste pour moi ! »', 'Dans le coffre de la cuisine, entre deux pots d’épices, tu trouves un morceau de carte.', 'Il sent la cannelle et montre une baie tranquille.'] },
+  { id: 'horloge', t: 'Le temps des marées', x: ['Sur l’Île de l’Horloge, une immense tour sonne toutes les heures. Le gardien du temps t’explique : « Les marées obéissent aux aiguilles. »', 'À midi pile, le coffre s’ouvre tout seul.', 'Le morceau de carte indique quand partir : « Quand la grande aiguille sera sur le 12. »'] },
+  { id: 'lecture', t: 'La grotte aux histoires', x: ['Dans la Grotte aux Histoires, les murs sont couverts de récits de pirates. Pi lit à voix haute pendant que tu cherches des indices.', 'Un morceau de carte est glissé entre les pages d’un vieux livre.', 'On y voit une sirène dessinée à l’encre bleue.'] },
+  { id: 'conjug', t: 'La forge des verbes', x: ['À la Forge des Verbes, le forgeron transforme les verbes : hier, aujourd’hui, demain…', '« Un bon capitaine sait parler du passé et de l’avenir ! », dit-il en frappant l’enclume.', 'Le morceau de carte sort tout chaud du coffre. Il montre un récif en forme de dents.'] },
+  { id: 'gram', t: 'Le récif des phrases', x: ['La Murène des Phrases garde le récif. Elle mélange les mots pour faire échouer les navires.', 'Mais toi, tu remets chaque phrase dans le bon ordre, et le passage s’ouvre.', 'Dans le coffre, le morceau de carte montre la route secrète entre les rochers.'] },
+  { id: 'accords', t: 'Le pont des accords', x: ['Le Troll du Pont ne laisse passer que ceux qui accordent bien les mots.', '« Les vagues bleues, la voile blanche ! », réponds-tu. Le troll grogne et s’écarte.', 'Dans son coffre, un morceau de carte montre une île cachée dans le brouillard.'] },
+  { id: 'vocab', t: 'La baie des mots', x: ['Dans la Baie des Mots, une baleine connaît tous les mots du dictionnaire. Elle te souffle des synonymes et des contraires.', 'Sur son dos, un coffre t’attend.', 'À l’intérieur, un morceau de carte… et la promesse que le trésor n’est plus très loin.'] },
+  { id: 'final', t: 'Le trésor de l’archipel', x: ['Tu assembles les douze morceaux sur le pont. La carte complète montre l’île cachée derrière le brouillard.', 'Barbe-Grise sourit : « Le vrai trésor, moussaillon, ce n’est pas l’or. C’est tout ce que tu as appris en chemin. »', 'Pi ajoute : « Mais un peu d’or, c’est bien aussi ! » Le coffre du trésor s’ouvre : il brille de mille doublons.'] } ];
+const chapterOpen = c => c.id === 'prologue' || (c.id === 'final' ? playable().every(i => IS(i.id).node > CHEST) : IS(c.id).node > CHEST);
+const sagaCount = () => SAGA.filter(chapterOpen).length;
+// La carte au trésor se reconstitue : un morceau par île, dans l'ordre des îles
+function treasureMap() {
+  const isl = playable(), W = 400, H = 300, cw = 100, ch = 100;
+  const pts = isl.map((i, k) => k === 0 ? [66, 68] : [(k % 4) * cw + 50 + ((k * 37) % 23) - 11, Math.floor(k / 4) * ch + 50 + ((k * 53) % 25) - 12]); // la première île laisse la place à la rose des vents
+  const route = pts.map((p, k) => `${k ? 'L' : 'M'}${p[0]},${p[1]}`).join(' ');
+  const blob = ([x, y], k) => `<path d="M${x - 22},${y} q4,-16 22,-15 q18,-1 21,12 q3,14 -14,17 q-12,6 -22,-1 q-10,-4 -7,-13z" fill="${['#c9a463', '#b9a05a', '#c7a86b'][k % 3]}" stroke="#7a5a2a" stroke-width="1.6"/><circle cx="${x + 2}" cy="${y - 2}" r="4" fill="#5f8a4a"/>`;
+  const art = `<rect width="${W}" height="${H}" fill="url(#tmg)"/>${pts.map(blob).join('')}<path d="${route}" fill="none" stroke="#8a2f1f" stroke-width="2.4" stroke-dasharray="5 6" stroke-linecap="round"/>
+    <g transform="translate(24,24)" stroke="#6b4a1f" fill="none" stroke-width="1.2"><circle r="13"/><path d="M0-18L3.5 0 0 18-3.5 0Z" fill="#a8382a"/><path d="M-18 0L0 3 18 0 0-3Z" fill="#6b4a1f"/></g>
+    <g transform="translate(${pts[pts.length - 1][0] + 28},${pts[pts.length - 1][1] + 26})" stroke="#a8241a" stroke-width="4.5" stroke-linecap="round"><path d="M-9-9L9 9M9-9L-9 9"/></g>`;
+  const fog = isl.map((i, k) => chapterOpen(SAGA.find(c => c.id === i.id)) ? '' : `<g><rect x="${(k % 4) * cw}" y="${Math.floor(k / 4) * ch}" width="${cw}" height="${ch}" fill="#22343b" opacity=".92"/><text x="${(k % 4) * cw + 50}" y="${Math.floor(k / 4) * ch + 62}" text-anchor="middle" font-family="Georgia,serif" font-size="34" fill="#4d6a73">?</text></g>`).join('');
+  return `<svg class="tmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Carte au trésor : ${sagaCount() - 1} morceaux sur 12"><defs><radialGradient id="tmg" cx="50%" cy="50%" r="70%"><stop offset="0" stop-color="#f1e0b6"/><stop offset=".8" stop-color="#dcc28c"/><stop offset="1" stop-color="#b8955a"/></radialGradient></defs>${art}${fog}<g stroke="rgba(90,60,25,.35)" stroke-width="1">${[100, 200, 300].map(x => `<path d="M${x} 0V${H}"/>`).join('')}${[100, 200].map(y => `<path d="M0 ${y}H${W}"/>`).join('')}</g></svg>`;
+}
+function sagaHTML() {
+  const read = P().sagaRead || [];
+  return `<section class="jsec"><h2>L’histoire de l’archipel</h2><p class="sub" style="margin:0 0 10px">Le Kraken a déchiré la carte du trésor. Chaque coffre d’île cache un morceau et un chapitre de l’histoire.</p>
+    <div class="tmapw">${treasureMap()}<span>${sagaCount() - 1 > 12 ? 12 : Math.max(0, sagaCount() - 1)} morceau${sagaCount() > 2 ? 'x' : ''} sur 12</span></div>
+    ${SAGA.map((c, k) => { const open = chapterOpen(c), i = isleById(c.id); return `<button class="chap${open ? '' : ' lk'}${open && !read.includes(c.id) ? ' unread' : ''}" ${open ? `data-a="saga" data-c="${c.id}"` : 'disabled'}><span class="cn">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Final' : 'Chapitre ' + k}</span><b>${open ? c.t : '???'}</b><small>${open ? (read.includes(c.id) ? 'Relire' : 'Nouveau ! Touche pour lire') : c.id === 'final' ? 'Retrouve les douze morceaux' : `Ouvre le coffre ${i.art.replace(/^(l’|le |la )/, m => ({ 'l’': 'de l’', 'le ': 'du ', 'la ': 'de la ' })[m])}`}</small></button>`; }).join('')}</section>`;
+}
+function openSaga(id) {
+  const c = SAGA.find(x => x.id === id); if (!c || !chapterOpen(c)) return; const k = SAGA.indexOf(c), i = isleById(id);
+  P().sagaRead = [...new Set([...(P().sagaRead || []), id])]; save();
+  const m = document.createElement('div'); m.className = 'modal saga';
+  m.innerHTML = `<div class="box paper" role="dialog" aria-label="${esc(c.t)}"><img src="${IMG(i ? i.img : id === 'final' ? 'chest-open' : 'guide-capitaine')}" alt="" style="width:${i ? 150 : 130}px;margin:-74px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
+    <div class="smallcaps" style="color:var(--ink-2)">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Chapitre final' : 'Chapitre ' + k}</div><div class="disp" style="font-size:28px">${c.t}</div>
+    <div class="stxt">${c.x.map(t => `<p>${esc(t)}</p>`).join('')}</div>
+    <div class="errbtns">${canSay() ? `<button class="say" data-a="sagasay" aria-label="Écouter">${ico('iSound')}</button>` : ''}<button class="brass-btn" data-a="sagaclose">Fermer</button></div></div>`;
+  m.dataset.c = id; app.appendChild(m);
+}
+
+/* ================= Plan du navire ================= */
+// Le navire se construit toute la saison : coque (victoires), voiles, figures de proue, canon doré, fanaux, sillage (doublons)
+function shipPlan() {
+  const nx = SHIPS[shipLv() + 1], parts = [
+    ['Coque', shipLv() + 1, 3, nx ? `${SHIPS[shipLv()][2]} · ${nx[2]} à ${nx[0]} victoires` : 'galion, le plus grand navire'],
+    ['Voiles', S.paints.length, PAINTS.length, 'nouvelles couleurs'], ['Figures de proue', ['dragon', 'sirene'].filter(x => S.gear.includes(x)).length, 2, 'dragon, sirène'],
+    ['Canon doré', +S.gear.includes('canon'), 1, ''], ['Fanaux', +S.gear.includes('fanaux'), 1, 'lumières de poupe et de proue'], ['Sillage', +S.gear.includes('sillage'), 1, 'écume derrière le navire']];
+  const have = parts.reduce((a, x) => a + x[1], 0), tot = parts.reduce((a, x) => a + x[2], 0), pct = Math.round(have / tot * 100);
+  return { pct, html: `<div class="plan glass"><div class="ph"><div class="ring" style="--p:${pct}"><b>${pct}%</b></div><div><span class="smallcaps">Plan du navire</span><b>${pct >= 100 ? 'Navire entièrement gréé !' : 'Ton navire se construit'}</b><small>${have} pièces sur ${tot}</small></div></div>
+    ${parts.map(([n, h, t, d]) => `<div class="pp"><span>${n}${d ? `<small>${d}</small>` : ''}</span><i class="pb"><i style="width:${Math.round(h / t * 100)}%"></i></i><em>${h}/${t}</em></div>`).join('')}</div>` };
+}
+function checkShipwright() { if (shipPlan().pct >= 100) grantEp('Maître Charpentier'); }
+
 /* ================= Marée du jour ================= */
 function ensureTide() {
   if (P().tide && P().tide.date === today()) return P().tide;
@@ -2630,7 +2758,8 @@ function renderMap() {
       <img class="fogpatch" src="${IMG('fx-fog-a')}" alt="" style="left:${W * .3}px;top:200px;width:420px"><img class="fogpatch fb" src="${IMG('fx-fog-b')}" alt="" style="left:${W * .75}px;top:${krak ? 40 : 120}px;width:${krak ? 300 : 440}px">
       <div class="mers" style="top:24px">Mers inexplorées</div>
       ${isleHTML}${fog}
-      <img class="ship-token" id="token" src="${IMG('ship-player-top')}" alt="Ton navire" style="${shipFx()}left:${px(cur) + (cur.x < 50 ? 120 : -120)}px;top:${cur.y - 40}px">
+      ${wakeOn() ? `<svg class="wake" viewBox="0 0 60 170" aria-hidden="true" style="left:${px(cur) + (cur.x < 50 ? 120 : -120)}px;top:${cur.y - 40}px"><defs><linearGradient id="wkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4fbf8" stop-opacity=".9"/><stop offset="1" stop-color="#f4fbf8" stop-opacity="0"/></linearGradient></defs><path d="M30 0C25 50 14 110 2 170M30 0c5 50 16 110 28 170" fill="none" stroke="url(#wkg)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="9 7"/><path d="M30 6v120" stroke="url(#wkg)" stroke-width="2" stroke-dasharray="4 8" stroke-linecap="round"/></svg>` : ''}
+      <img class="ship-token${lamps() ? ' lit' : ''}" id="token" src="${IMG('ship-player-top')}" alt="Ton navire" style="${shipFx()}left:${px(cur) + (cur.x < 50 ? 120 : -120)}px;top:${cur.y - 40}px">
     </div></div><div class="mapveil t" aria-hidden="true"></div><div class="mapveil b" aria-hidden="true"></div>
     ${hudHTML()}
     <div class="seas glass" role="group" aria-label="Choisir la mer">${Object.entries(SEAS).map(([k, v]) => `<button data-a="sea" data-s="${k}" aria-pressed="${S.sea === k}"><b>${v.ic}</b>${v.n}</button>`).join('')}</div>
@@ -2985,12 +3114,13 @@ function answer(ok, givenText, btn) {
   if (R.locked) return; R.locked = true;
   const ms = Math.min(30000, performance.now() - R.qt), qi = QI(), s = IS(qi.id);
   s.tot++; s.ms += ms; if (ok) s.ok++;
+  { const Q = quests(); if (!Q.days.includes(today())) { Q.days.push(today()); questEv('days'); } }
   { const L = R.q.lv || R.d; s.lv = s.lv || {}; const v = s.lv[L] || (s.lv[L] = [0, 0]); v[1]++; if (ok) v[0]++; } // réussite par niveau : compétences « Je sais… », boss ciblés
   if (R.test) { const T = R.test, id = T.list[T.at]; if (T.st === 0 && ok) T.st = 1; else { T.res[id] = T.st === 0 ? 1 : ok ? 3 : 2; T.at++; T.st = 0; if (!ok && T.res[id] === 1) R.skip = 1; } }
   R.res.push(ok);
   if (btn) btn.classList.add(ok ? 'right' : 'wrong');
   if (ok) {
-    R.ok++; R.combo++; R.best = Math.max(R.best, R.combo); if (R.combo === 3) setTimeout(() => voice('combo'), 700); else if (R.combo === 5) setTimeout(() => voice('rire'), 700); s.best = Math.max(s.best || 0, R.combo);
+    R.ok++; R.combo++; R.best = Math.max(R.best, R.combo); if (questEv('answers').length || (R.combo === 6 && questEv('combo').length) || (R.q.rev && questEv('rev').length)) setTimeout(() => pop('poster-blank', 'Quête accomplie !'), 1300); if (R.combo === 3) setTimeout(() => voice('combo'), 700); else if (R.combo === 5) setTimeout(() => voice('rire'), 700); s.best = Math.max(s.best || 0, R.combo);
     // Le bonus de vitesse ne vaut que pour les faits numériques (tables, calcul mental) : en lecture ou en grammaire, il pousserait à répondre avant d’avoir lu
     const fluency = ['canons', 'stade'].includes(qi.id), fastLimit = has('tortue') ? 8000 : 6000, fast = fluency && ms < fastLimit;
     if (fluency) S.fastStreak = ms < 5000 ? (S.fastStreak || 0) + 1 : 0;
@@ -3084,7 +3214,9 @@ function endVirtual() {
     P().placed = today(); S.gold += 50; R.gold += 50; }
   rewards.unshift({ img: 'coin-doublon', b: `+${R.gold} doublons`, s: `${R.ok} bonnes réponses sur ${R.res.filter(x => x !== null).length}${R.best > 2 ? ` · combo ×${R.best}` : ''}`, tag: 'Butin' });
   let tideNext = null;
-  if (R.fromTide && P().tide && !P().tide.done) { P().tide.gold += R.gold; P().tide.i++; if (P().tide.i >= 3) P().tide.done = true; else tideNext = isleById(P().tide.stops[P().tide.i]); }
+  if (mix && win) { questEv('mix'); if (R.ok === R.n) questEv('perfect'); }
+  if (R.fromTide && P().tide && !P().tide.done) { P().tide.gold += R.gold; P().tide.i++; if (P().tide.i >= 3) { P().tide.done = true; questEv('tide'); } else tideNext = isleById(P().tide.stops[P().tide.i]); }
+  if (R.qrw) rewards.push(...R.qrw);
   save(); setTimeout(() => renderResult(win, stars, rewards, tideNext), 200);
 }
 function endEscale() {
@@ -3110,6 +3242,9 @@ function endEscale() {
     join('crabe');
     if (R.ok === R.n) grantEp(R.i.ep);
     if (R.boss && R.i.id === 'canons') grantEp('Vainqueur du Kraken');
+    questEv('win', R.i.id); if (R.ok === R.n) questEv('perfect');
+    if (R.node === CHEST) { const c = SAGA.find(x => x.id === R.i.id); if (c) rewards.push({ img: 'deco-compass', b: `Nouveau chapitre : « ${c.t} »`, s: 'Un morceau de la carte au trésor ! Lis-le dans ton journal.', tag: 'Histoire', saga: c.id });
+      if (playable().every(i => IS(i.id).node > CHEST || i.id === R.i.id && s.node > CHEST) && !P().sagaFinal) { P().sagaFinal = 1; S.gold += 500; R.gold += 500; grantEp('Chasseur de Trésor'); rewards.push({ img: 'chest-open', b: 'Les douze morceaux sont réunis : +500 !', s: 'Lis le chapitre final dans ton journal', tag: 'Histoire', saga: 'final' }); } }
     ISLES.forEach(i => { if (i.unlock && !i.soon && i.sea === R.i.sea && SW(i.sea) === i.unlock) rewards.push({ img: i.img, b: `${i.n} sort du brouillard`, s: `Nouvelle île : ${i.notion}`, tag: 'Carte' }); });
   } else { s.fails++; }
   if (R.newEp) rewards.push({ img: capt(), b: `Nouveau surnom : « ${R.newEp} »`, s: 'À afficher sur ton avis de recherche', tag: 'Surnom' });
@@ -3117,7 +3252,8 @@ function endEscale() {
   if (rankUp) rewards.push({ img: 'poster-blank', b: `Nouveau titre : ${rankUp}`, s: 'Ta prime grimpe', tag: 'Prime' });
   rewards.unshift({ img: 'coin-doublon', b: `+${R.gold} doublons`, s: `${R.ok} bonnes réponses sur ${R.n}${R.best > 2 ? ` · combo ×${R.best}` : ''}`, tag: 'Butin' });
   let tideNext = null;
-  if (R.fromTide && P().tide && !P().tide.done) { P().tide.gold += R.gold; P().tide.i++; if (P().tide.i >= 3) P().tide.done = true; else tideNext = isleById(P().tide.stops[P().tide.i]); }
+  if (R.fromTide && P().tide && !P().tide.done) { P().tide.gold += R.gold; P().tide.i++; if (P().tide.i >= 3) { P().tide.done = true; questEv('tide'); } else tideNext = isleById(P().tide.stops[P().tide.i]); }
+  if (R.qrw) rewards.push(...R.qrw);
   save();
   const sinks = win && (R.i.id === 'canons' || R.boss);
   if (sinks) { setTimeout(() => sfx('sink'), 250); const f = $('#foe'); if (f) { if (R.i.id === 'canons' && !R.boss) { const fo = foe(); if (fo.hit) f.src = IMG(fo.hit); else f.classList.add('dmg'); } setTimeout(() => f.classList.add('sunk'), 250); } }
@@ -3137,7 +3273,7 @@ function renderResult(win, stars, rewards, tideNext) {
     <div class="head"><div class="smallcaps" style="color:#ffd9a0">${R.i.n} · ${R.test ? 'placement' : R.i.v ? 'révisions' : 'niveau ' + R.node} · ${GRADES[GR()].n}</div><div class="disp" style="margin-top:6px">${title}</div>
       <div class="stars"${R.test ? ' hidden' : ''}>${starSvg(42, stars >= 1)}${starSvg(56, stars >= 2)}${starSvg(42, stars >= 3)}${win ? [[-8, 10, 0], [92, 0, .5], [30, -30, .9], [70, 70, 1.3]].map(([x, y, d]) => `<img class="spk" src="${IMG('fx-sparkle')}" alt="" style="left:${x}%;top:${y}%;animation-delay:${d}s">`).join('') : ''}</div></div>
     <div class="chest ${win ? 'shake' : ''}" id="chest" ${win ? 'data-a="openchest" role="button" tabindex="0" aria-label="Ouvrir le coffre"' : ''}><div class="glow"></div>${win ? `<img class="bravo" src="${IMG('guide-perroquet-bravo')}" alt="">${capt() === 'capt-a' ? `<img class="victor" src="${IMG('capt-victory')}" alt="">` : ''}` : ''}<img class="closed" src="${IMG('chest-closed')}" alt=""><img class="opened" src="${IMG('chest-open')}" alt="" style="opacity:0">${win ? '<span class="tap">Touche le coffre</span>' : ''}</div>
-    <div class="rewards paper" id="rewards" ${win ? 'hidden' : ''}>${rewards.map((r, k) => `<div class="rw" style="animation-delay:${k * .12}s"><div class="ic"><img src="${IMG(r.img)}" alt=""></div><div><b>${r.b}</b><span>${r.s}</span></div><span class="tagr">${r.tag}</span></div>`).join('')}</div>
+    <div class="rewards paper" id="rewards" ${win ? 'hidden' : ''}>${rewards.map((r, k) => `<div class="rw" style="animation-delay:${k * .12}s"><div class="ic"><img src="${IMG(r.img)}" alt=""></div><div><b>${r.b}</b><span>${r.s}</span></div>${r.saga ? `<button class="mini-btn" data-a="saga" data-c="${r.saga}">Lire</button>` : `<span class="tagr">${r.tag}</span>`}</div>`).join('')}</div>
     <div class="btns">${primary}<button class="ghost-btn" data-a="home">Carte</button></div></div>`;
   if (!win) { $('#chest').style.opacity = .35; }
   centerRays();
@@ -3177,13 +3313,13 @@ function renderPort() {
 
 /* ================= Onglets ================= */
 function yardHTML() {
-  return `<section class="yard" aria-label="Chantier naval"><h2>Chantier naval</h2><p class="sub" style="margin:0">Dépense tes doublons pour repeindre et décorer ton navire. Ta prime, elle, ne baisse jamais.</p>
+  return `<section class="yard" aria-label="Chantier naval"><h2>Chantier naval</h2><p class="sub" style="margin:0">Dépense tes doublons pour gréer ton navire pièce par pièce. Ta prime, elle, ne baisse jamais.</p>${shipPlan().html}
     <div class="treasure glass"><img src="${IMG('coin-pile')}" alt=""><div><span class="smallcaps">Ton trésor</span><b class="num">${fmt(wallet())} doublons</b></div></div>
     <div class="paints">${PAINTS.map(([id, n, price, f]) => { const own = S.paints.includes(id), on = S.paint === id, can = own || wallet() >= price;
       return `<button class="paint${on ? ' on' : ''}${can ? '' : ' cant'}" data-a="paint" data-p="${id}"><img src="${IMG(shipImg())}" alt="" style="${f !== 'none' ? `filter:${f}` : ''}"><b>${n}</b><span>${on ? 'À bord' : own ? 'Choisir' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div>
-    <h3 class="yh">Ornements</h3><p class="sub" style="margin:0">Une figure de proue à l’avant, un canon doré sur le pont. Touche un ornement acheté pour le poser ou le retirer.</p>
-    <div class="paints gear">${GEAR.map(([id, n, price, img]) => { const own = S.gear.includes(id), on = own && (id === 'canon' ? S.gcan : S.fig === id), can = own || wallet() >= price;
-      return `<button class="paint${on ? ' on' : ''}${can ? '' : ' cant'}" data-a="gear" data-g="${id}" aria-pressed="${on}"><img src="${IMG(img)}" alt=""><b>${n}</b><span>${on ? 'À bord' : own ? 'Poser' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div></section>`;
+    <h3 class="yh">Ornements</h3><p class="sub" style="margin:0">Une figure de proue, un canon doré, des fanaux, un sillage d’écume sur la carte. Touche un ornement acheté pour le poser ou le retirer.</p>
+    <div class="paints gear">${GEAR.map(([id, n, price, img]) => { const own = S.gear.includes(id), on = own && (id === 'canon' ? S.gcan : id === 'fanaux' ? lamps() : id === 'sillage' ? wakeOn() : S.fig === id), can = own || wallet() >= price;
+      return `<button class="paint${on ? ' on' : ''}${can ? '' : ' cant'}" data-a="gear" data-g="${id}" aria-pressed="${on}">${img ? `<img src="${IMG(img)}" alt="">` : GEARSVG[id]}<b>${n}</b><span>${on ? 'À bord' : own ? 'Poser' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div></section>`;
 }
 function renderCrew() {
   app.innerHTML = `<div class="screen" style="background:radial-gradient(ellipse at 50% 0%,#16384a,#0b2230 60%)">${hudHTML()}<div class="tabpage">
@@ -3220,12 +3356,13 @@ function renderPrime() {
 }
 function show(t) { tab = t; R = null; music('carte'); if (t !== 'map' && t !== 'journal' && !S.seenTab[t]) { S.seenTab[t] = 1; save(); setTimeout(() => voice(t === 'crew' ? 'equipage' : 'pirate', true), 300); } ({ map: renderMap, journal: renderJournal, crew: renderCrew, prime: renderPrime })[t](); }
 // Journal de bord : quêtes de la semaine, histoire de l'archipel, compétences
-const journalNew = () => false;
+const jHash = () => `${quests().wk}:${quests().list.filter(q => q.done).length}:${sagaCount()}`;
+const journalNew = () => { try { return P().jseen !== jHash(); } catch (e) { return false; } };
 function renderJournal() {
   app.innerHTML = `<div class="screen" style="background:radial-gradient(ellipse at 50% 0%,#16384a,#0b2230 60%)">${hudHTML()}<div class="tabpage journal">
     <h1>Journal de bord</h1><p class="sub">Tes quêtes, l’histoire de l’archipel et tout ce que tu sais faire.</p>
-    ${skillsHTML()}</div>${dockHTML()}</div>`;
-  bindCog();
+    ${questsHTML()}${sagaHTML()}${skillsHTML()}</div>${dockHTML()}</div>`;
+  bindCog(); P().jseen = jHash(); save(); { const d = $('.dock .di.new'); d && d.classList.remove('new'); }
 }
 // Proposé une fois, au premier passage sur la carte d'une classe encore vierge
 function offerPlacement() {
@@ -3254,6 +3391,8 @@ function openParents() {
     ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
       return `<div class="prow"><img src="${IMG(i.img)}" alt=""><div><b>${i.notion}${badge}</b><span>Niveau ${Math.min(s.node, NODES)}/10 · ${s.tot} questions${s.tot ? ` · ${(s.ms / s.tot / 1000).toFixed(1).replace('.', ',')} s par réponse` : ''}</span></div><span class="pct">${p == null ? '–' : p + ' %'}</span></div>`; }).join('')}</div>` : ''; }).join('')}
     <div class="pcard"><h3>Minutes de jeu, 7 derniers jours</h3><div class="days">${last7.map(([x, s]) => `<div class="day"><span>${s ? Math.round(s / 60) : ''}</span><i style="height:${Math.max(2, s / maxS * 70)}px"></i><span>${x.toLocaleDateString('fr-FR', { weekday: 'short' }).slice(0, 3)}</span></div>`).join('')}</div></div>
+    <div class="pcard"><h3>Compétences « Je sais… »</h3>${(() => { const all = playable().flatMap(i => range(1, 5).map(L => ({ i, L, st: skillState(i.id, L) }))), ok = all.filter(x => x.st === 'ok').length, rv = all.filter(x => x.st === 'rev');
+      return `<p style="margin:0 0 6px">${ok} acquise${ok > 1 ? 's' : ''} sur ${all.length} en ${GRADES[GR()].n}${P().placed ? ` · test du capitaine passé le ${P().placed.split('-').reverse().join('/')}` : ''}.</p>${rv.length ? `<p style="margin:0 0 4px;color:#ffb9ad">À revoir :</p><ul class="errs">${rv.slice(0, 8).map(x => `<li><b>${esc(x.i.n)}</b> · ${esc(skillName(x.i.id, x.L))}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Rien à revoir pour l’instant.</p>'}<p class="note" style="margin:8px 0 0">Le détail est dans l’onglet Journal de l’enfant.</p>`; })()}</div>
     <div class="pcard"><h3>Dernières erreurs</h3>${P().errors.length ? `<ul class="errs">${P().errors.slice(0, 12).map(e => `<li><b>${esc(e.q)}</b> · a répondu <span style="color:#ffb9ad">${esc(e.a)}</span>, bonne réponse <span style="color:#a6e3bf">${esc(e.c)}</span>${e.d ? `<br><small style="color:var(--mist)">${esc(e.d)}</small>` : ''}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Aucune erreur enregistrée.</p>'}</div>
     <div class="pcard"><h3>Bêta-test</h3><p class="note">Merci de tester l’Archipel ! Votre avis, même court, aide à améliorer le jeu.</p>
       <div class="gap"><button class="brass-btn" data-a="fb" style="min-height:50px;font-size:16px">Donner mon avis</button><button class="ghost-btn" data-a="guide">Guide pour les parents</button></div></div>
@@ -3352,6 +3491,9 @@ app.addEventListener('click', e => {
     case 'tide': case 'tidenext': { const t = ensureTide(); const id = t.stops[t.i]; ac(); if (a === 'tide' && !t.i) voice('depart', true); startEscale(id, VIRT[id] ? 1 : Math.min(IS(id).node, NODES), true); break; }
     case 'placetest': SND.tap(); { const m = $('.modal.place'); m && m.remove(); } startEscale('test', 1, false); break;
     case 'placelater': { const m = $('.modal.place'); m && m.remove(); SND.tap(); break; }
+    case 'saga': SND.tap(); openSaga(el.dataset.c); break;
+    case 'sagasay': { const m = el.closest('.modal.saga'), c = m && SAGA.find(x => x.id === m.dataset.c); if (c) speak(`${c.t}. ${c.x.join(' ')}`); break; }
+    case 'sagaclose': { if (window.speechSynthesis) speechSynthesis.cancel(); const m = $('.modal.saga'); m && m.remove(); if (tab === 'journal' && !R) { const y = $('.tabpage') ? $('.tabpage').scrollTop : 0; renderJournal(); $('.tabpage').scrollTop = y; } break; }
     case 'free': toast('Choisis une île sur la carte.'); voice('libre', true); break;
     case 'quit': { if ($('.quitm')) break; const m = document.createElement('div'); m.className = 'modal quitm';
       m.innerHTML = `<div class="box paper" role="alertdialog" aria-label="Quitter l’escale ?"><img src="${IMG('crew-perroquet')}" alt="" style="width:96px;margin:-58px auto 0;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))"><div class="disp" style="font-size:26px">Quitter l’escale ?</div><p style="margin:0;color:var(--ink-2);font-size:16px">Tes réponses de cette escale seront perdues.</p><button class="brass-btn" data-a="quitno">Continuer à jouer</button><button class="ghost-btn dark" data-a="quityes">Quitter</button></div>`;
@@ -3362,8 +3504,8 @@ app.addEventListener('click', e => {
     case 'tuto': { if ($('.coach') || !R || R.locked) break; const key = TK[R.q.kind]; key && startTuto(key); break; }
     case 'gear': { const g = GEAR.find(x => x[0] === el.dataset.g); if (!g) break; const id = g[0];
       if (!S.gear.includes(id)) { if (wallet() < g[2]) { toast(`Il te manque ${fmt(g[2] - wallet())} doublons.`); break; }
-        S.spent += g[2]; S.gear.push(id); if (id === 'canon') S.gcan = true; else S.fig = id; sfx('coins') || SND.coin(); voice('navire', true); toast(`${g[1]} : installé sur ton navire !`); }
-      else { SND.tap(); if (id === 'canon') S.gcan = !S.gcan; else S.fig = S.fig === id ? '' : id; }
+        S.spent += g[2]; S.gear.push(id); if (id === 'canon') S.gcan = true; else if (id === 'fanaux') S.lamps = true; else if (id === 'sillage') S.wake = true; else S.fig = id; sfx('coins') || SND.coin(); voice('navire', true); toast(`${g[1]} : installé sur ton navire !`); checkShipwright(); }
+      else { SND.tap(); if (id === 'canon') S.gcan = !S.gcan; else if (id === 'fanaux') S.lamps = !lamps(); else if (id === 'sillage') S.wake = !wakeOn(); else S.fig = S.fig === id ? '' : id; }
       save(); const y = $('.tabpage').scrollTop; renderCrew(); $('.tabpage').scrollTop = y; break; }
     case 'avatar': if (!AVATARS.includes(el.dataset.v)) break; S.avatar = el.dataset.v; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
     case 'flag': if (!FLAGS.some(f => f[0] === el.dataset.f)) break; S.flag = el.dataset.f; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
@@ -3371,7 +3513,7 @@ app.addEventListener('click', e => {
     case 'lair': SND.tap(); toast(IS('canons').node > BOSS ? 'Le repaire du Kraken. Tu l’as vaincu, capitaine !' : 'Une île mystérieuse se cache dans le brouillard… Bats le boss de l’Île des Canons pour la découvrir.'); break;
     case 'paint': { const pt = PAINTS.find(x => x[0] === el.dataset.p); if (!pt) break;
       if (S.paints.includes(pt[0])) { S.paint = pt[0]; SND.tap(); }
-      else if (wallet() >= pt[2]) { S.spent += pt[2]; S.paints.push(pt[0]); S.paint = pt[0]; sfx('coins') || SND.coin(); voice('navire', true); toast(`${pt[1]} : ton navire est repeint !`); }
+      else if (wallet() >= pt[2]) { S.spent += pt[2]; S.paints.push(pt[0]); S.paint = pt[0]; sfx('coins') || SND.coin(); voice('navire', true); toast(`${pt[1]} : ton navire est repeint !`); checkShipwright(); }
       else { toast(`Il te manque ${fmt(pt[2] - wallet())} doublons.`); break; }
       save(); const y = $('.tabpage').scrollTop; renderCrew(); $('.tabpage').scrollTop = y; break; }
     case 'start': FX.sparkles(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, 26, 240); ac(); { const st = $('.title'); st && st.remove(); } show('map'); if (!S.intro) { onboarding(); welcome(true); } else welcome(false); break;

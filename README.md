@@ -43,7 +43,21 @@ En CP, le bouton haut-parleur lit aussi les réponses proposées, sauf quand l�
 
 Les contenus du CP et du CE1 ont été relus par rapport aux programmes de l’arrêté du 22 octobre 2024 (BO n° 41 du 31 octobre 2024).
 
-Un bouton en haut de la carte passe de la Mer des Chiffres à la Mer des Lettres. Dès qu’une île de français est ouverte, la marée du jour propose deux escales de maths et une de français.
+Un bouton en haut de la carte passe de la Mer des Chiffres à la Mer des Lettres. La marée du jour propose trois escales choisies selon les points à travailler ; dès que trois îles sont ouvertes, la troisième est une **escale mélangée** (une question de chaque île ouverte), parce que mélanger les notions aide à les retenir.
+
+### Ce qui aide l’enfant à apprendre
+
+- **Correction selon l’erreur** : quand l’enfant se trompe, Pi explique pourquoi cette réponse-là est fausse (addition au lieu de multiplication, retenue oubliée, aiguilles échangées, dénominateurs additionnés, autre personne du verbe, -nt sur un nom…), puis la bonne réponse.
+- **Rappel libre** : à partir du niveau 4 (sauf au CP), une partie des calculs se tape au clavier au lieu d’être choisie ; au CE2 et au CM1, certains verbes et pluriels s’écrivent avec un clavier de lettres (accents compris).
+- **Compétences « Je sais… »** : cinq par île et par classe, avec leur état (acquise, en cours, à revoir) dans l’onglet Journal et dans l’espace parents.
+- **Test du capitaine** : proposé au premier lancement d’une classe, il fait démarrer chaque île au bon niveau (1, 3 ou 5) en 5 minutes environ.
+- **Seconde chance et revanches** : une question ratée revient deux questions plus loin, puis le lendemain, trois jours et une semaine plus tard. Les boss reprennent ces questions et les niveaux les moins réussis de l’île.
+
+### Ce qui donne envie de revenir
+
+- **Quêtes de la semaine** : trois quêtes du lundi au dimanche (dont une sur l’île la moins réussie), 60 doublons chacune et un coffre de 150 doublons pour les trois.
+- **L’histoire de l’archipel** : chaque coffre d’île débloque un chapitre et un morceau de la carte au trésor ; les douze morceaux mènent au chapitre final. Le haut-parleur lit les chapitres.
+- **Plan du navire** : coque (victoires), voiles, figures de proue, canon doré, fanaux et sillage d’écume (doublons). Le pourcentage de construction suit toute la saison.
 
 ## Organisation du dépôt
 
