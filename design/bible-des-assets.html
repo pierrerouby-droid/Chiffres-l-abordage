@@ -94,7 +94,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
       <p class="lead">Tout ce qu’il faut générer pour construire l’appli, avec un prompt prêt à copier pour chaque élément. Les textes, chiffres, boutons et animations restent en code : je m’en occupe.</p>
     </div>
     <div class="meter" aria-live="polite">
-      <div><b id="m-p1">0 / 0</b> <span>du lot 6</span></div>
+      <div><b id="m-p1">0 / 0</b> <span>du lot 7</span></div>
       <div class="bar"><i id="m-bar"></i></div>
       <div class="sub"><span id="m-all">0 / 0 au total</span><span>coche au fur et à mesure</span></div>
     </div>
@@ -104,7 +104,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
     <h2>Mode d’emploi</h2>
     <div class="steps">
       <div class="step"><span class="n">1</span><p><b>Une seule conversation</b> dans ton générateur. Colle le bloc de style, puis joins les références indiquées sur chaque fiche (« Joindre : … ») : <code>hero-canons</code> pour les décors, <code>boss-kraken</code> et <code>crew-perroquet</code> pour les personnages, <code>ship-player-3</code> pour les navires.</p></div>
-      <div class="step"><span class="n">2</span><p><b>Lots 1 à 5 reçus et intégrés.</b> <b>Lot 6 à générer</b> (8 images) : l’histoire de l’archipel du journal (5 scènes), la carte au trésor et deux nouvelles poses de Pi. Chaque fiche indique quelles images validées joindre comme références.</p></div>
+      <div class="step"><span class="n">2</span><p><b>Lots 1 à 5 reçus et intégrés.</b> <b>Lot 7 à générer</b> (30 images) : la garde-robe du capitaine (7a), le navire (7b) et le port d’attache (7c). Le lot 6 (histoire et journal) reste disponible. Chaque fiche indique quelles images joindre comme références ; une référence pas encore générée est à joindre dès qu’elle existe.</p></div>
       <div class="step"><span class="n">3</span><p><b>Copie le prompt de chaque fiche</b> : il contient déjà le style, le sujet, le fond et le format. Commence par les fiches <b>Indispensable</b>.</p></div>
       <div class="step"><span class="n">4</span><p><b>Fond transparent</b> : demande un PNG transparent. Si l’outil ne sait pas, il doit mettre un fond magenta uni <code>#FF00FF</code>, je le découpe moi-même.</p></div>
       <div class="step"><span class="n">5</span><p><b>Nomme chaque fichier</b> avec son identifiant (<code>isle-canons.png</code>), en plus grande taille possible. Je redimensionne et je compresse.</p></div>
@@ -173,6 +173,8 @@ const STORY = `Storybook illustration for a chapter of the game's story, same pa
 const ISLE = `Small tropical island seen from above at a three-quarter isometric angle (about 45 degrees, the same angle as the reference island isle-canons). The island ends at its golden sandy beach and shoreline rocks: NO surrounding sea, no turquoise water ring, no base or platform, nothing beyond the beach (the ocean is added separately). On the island:`;
 const CREW = `Creature mascot for a pirate crew, matching the reference parrot (crew-perroquet) in rendering: same level of detail, same soft golden lighting, same proportions with a big head and big expressive eyes. Cute but cool, chunky readable silhouette, full body, three-quarter view:`;
 const ISO = `Isometric view, same angle and same lighting as the other blocks of the set,`;
+const LAYER = `Game asset layer, to be placed on top of the full-body kid captain of the reference image capt-body-a. Draw ONLY the item, at the exact scale and the same three-quarter angle it would have on that character, with nothing else: no head, no body, no hands.`;
+const BLD = `Building for the player's home port island, seen from above at the same three-quarter isometric angle and in the same rendering as the reference island isle-port, sized to stand on a small plot of that island. Only the building on a small patch of ground, no sea, no other buildings:`;
 
 const CATS = [
   ['base', 'Fondations', 'Icône de l’appli, textures de matières et brouillard. Ils servent sur tous les écrans.'],
@@ -184,6 +186,8 @@ const CATS = [
   ['games', 'Mini-jeux', 'Objets propres à chaque jeu. Pièces et billets vierges : j’écris les valeurs moi-même.'],
   ['fx', 'Effets', 'Images fixes que j’anime en code (échelle, rotation, fondu, particules).'],
   ['story', 'Histoire', 'Illustrations de l’histoire de l’archipel, dans le journal : une scène pour les chapitres clés et la carte au trésor à reconstituer. Personnages repris des images déjà validées.'],
+  ['outfit', 'Garde-robe du capitaine', 'Le capitaine en pied, sans chapeau, et les objets à acheter : je les pose en calques sur lui. Même angle et même échelle pour tout, sinon les objets flotteront à côté.'],
+  ['port', 'Port d’attache', 'L’île du port vue de près et les bâtiments à construire avec les doublons. Même angle que l’île du port de la carte.'],
   ['video', 'Boucles vidéo', 'Optionnel, seulement si ton outil sait faire de la vidéo. Sinon je les anime en code.'],
 ];
 
@@ -333,6 +337,37 @@ const A = [
   { id: 'boss-conjug', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'Le Forgeron des Temps', u: 'Boss de la Forge des Verbes (conjugaison).', s: 'A sturdy walrus blacksmith with a leather apron and a big hammer, a small brass hourglass hanging from his belt, a few sparks around him. Grumpy but funny, kid-friendly.' },
   { id: 'boss-gram', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'La Murène des Phrases', u: 'Boss du Récif des Phrases (grammaire).', s: 'A long cheeky moray eel wearing round reading glasses and a tiny pirate hat, coiled around a stack of blank wooden tiles. Theatrical and funny, not scary. No letters.' },
   { id: 'boss-accords', c: 'chars', p: 1, bg: 'alpha', r: '1:1', n: 'Le Troll du Pont', u: 'Boss du Pont des Accords (accords).', s: 'A chubby mossy stone troll with a pirate hat, holding a big brass balance scale with one pan in each hand, standing as if guarding a bridge. Grumpy but funny, kid-friendly.' },
+  // Lot 7 : garde-robe du capitaine, navire, port d'attache
+  { id: 'capt-body-a', c: 'outfit', p: 1, bg: 'alpha', r: '2:3', ref: ['capt-a'], n: 'Capitaine en pied (A)', u: 'Base du capitaine habillable. À générer en premier : elle sert de référence à tout le lot.', s: 'Full-body standing pose of the same kid pirate captain as the reference portrait capt-a (same face, hair, skin tone, navy coat with brass buttons), but WITHOUT any hat: the hair is fully visible. Three-quarter view facing slightly right, standing straight, feet slightly apart, left hand on the hip, right arm relaxed along the body with the hand half open and empty, ready to hold an object. Boots, a belt with a brass buckle. The whole body visible from the top of the head to the boots, centered, with free space above the head for a hat.' },
+  { id: 'capt-body-b', c: 'outfit', p: 1, bg: 'alpha', r: '2:3', ref: ['capt-body-a', 'capt-b'], n: 'Capitaine en pied (B)', u: 'Même pose que la base A.', s: 'Exactly the same pose, framing, scale and lighting as the reference capt-body-a, but the kid captain of the reference portrait capt-b (curly black hair, dark brown skin, teal coat). No hat, hair fully visible.' },
+  { id: 'capt-body-c', c: 'outfit', p: 1, bg: 'alpha', r: '2:3', ref: ['capt-body-a', 'capt-c'], n: 'Capitaine en pied (C)', u: 'Même pose que la base A.', s: 'Exactly the same pose, framing, scale and lighting as the reference capt-body-a, but the kid captain of the reference portrait capt-c (red hair, freckles, burgundy coat). No hat and no bandana, hair fully visible.' },
+  { id: 'capt-body-d', c: 'outfit', p: 1, bg: 'alpha', r: '2:3', ref: ['capt-body-a', 'capt-d'], n: 'Capitaine en pied (D)', u: 'Même pose que la base A.', s: 'Exactly the same pose, framing, scale and lighting as the reference capt-body-a, but the kid captain of the reference portrait capt-d (tan skin, long dark braid, golden coat). No hat, hair fully visible.' },
+  { id: 'hat-tricorne', c: 'outfit', p: 1, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Tricorne (offert)', u: 'Chapeau de départ, porté par défaut.', s: `${LAYER} A classic black pirate tricorne hat with a thin gold trim.` },
+  { id: 'hat-bandana', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Bandana', u: 'Chapeau · 250 doublons.', s: `${LAYER} A red pirate bandana with white polka dots, knotted at the back with two short tails, shaped as if worn on the head.` },
+  { id: 'hat-bicorne', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Bicorne d’amiral', u: 'Chapeau · 600 doublons.', s: `${LAYER} A navy blue admiral bicorne hat with gold braid and a red-white-blue cockade.` },
+  { id: 'hat-plume', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Chapeau à plume', u: 'Chapeau · 1 200 doublons.', s: `${LAYER} A wide-brimmed brown pirate hat with a giant curly white-and-red ostrich feather.` },
+  { id: 'hat-couronne', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Couronne du roi des pirates', u: 'Chapeau · 4 000 doublons.', s: `${LAYER} A small golden pirate king crown with red and teal gems, slightly tilted, shining.` },
+  { id: 'acc-patch', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Cache-œil', u: 'Accessoire · 200 doublons.', s: `${LAYER} A black leather eye patch with its thin strap, shaped as if worn over the left eye.` },
+  { id: 'acc-spyglass', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Longue-vue', u: 'Accessoire tenu en main · 350 doublons.', s: `${LAYER} A brass and leather spyglass, extended, held at an angle as if in the right hand of the character (the grip at the bottom).` },
+  { id: 'acc-compass', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Boussole de ceinture', u: 'Accessoire · 500 doublons.', s: `${LAYER} A small golden compass hanging from a short chain, as if clipped to the belt.` },
+  { id: 'acc-monkey', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a', 'crew-perroquet'], n: 'Singe d’épaule', u: 'Accessoire · 1 500 doublons.', s: `${LAYER} A small cheeky capuchin monkey wearing a tiny red bandana, sitting as if on the left shoulder of the character, same creature style as crew-perroquet.` },
+  { id: 'wpn-wood', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Sabre de bois', u: 'Arme tenue en main · 300 doublons.', s: `${LAYER} A cartoon wooden practice saber with a rope-wrapped handle, pointing up diagonally as if held in the right hand (handle at the bottom left). Kid-friendly toy look.` },
+  { id: 'wpn-cutlass', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Sabre d’abordage', u: 'Arme tenue en main · 900 doublons.', s: `${LAYER} A cartoon pirate cutlass with a curved, blunt-looking steel blade and a brass hand guard, same position as a saber held in the right hand. Kid-friendly, no blood.` },
+  { id: 'wpn-gold', c: 'outfit', p: 2, bg: 'alpha', r: '1:1', ref: ['capt-body-a'], n: 'Sabre doré', u: 'Arme tenue en main · 2 500 doublons.', s: `${LAYER} A cartoon golden saber with a gem on the pommel and a soft magical glow, same position as a saber held in the right hand. Kid-friendly.` },
+  { id: 'fig-aigle', c: 'ships', p: 2, bg: 'alpha', r: '1:1', ref: ['fig-dragon'], n: 'Proue aigle', u: 'Navire · 900 doublons.', s: 'A carved wooden ship figurehead shaped like an eagle with spread wings, painted bronze with gold leaf, same style, size and angle as the reference figurehead fig-dragon. Isolated object.' },
+  { id: 'fig-licorne', c: 'ships', p: 2, bg: 'alpha', r: '1:1', ref: ['fig-dragon'], n: 'Proue licorne de mer', u: 'Navire · 1 200 doublons.', s: 'A carved wooden ship figurehead shaped like a sea unicorn (horse head with a spiral horn and a fish tail), white and teal with gold leaf, same style, size and angle as the reference figurehead fig-dragon. Isolated object.' },
+  { id: 'fig-kraken', c: 'ships', p: 2, bg: 'alpha', r: '1:1', ref: ['fig-dragon'], n: 'Proue kraken', u: 'Navire · 1 800 doublons.', s: 'A carved wooden ship figurehead shaped like a small friendly kraken with curling tentacles, painted purple with gold leaf, same style, size and angle as the reference figurehead fig-dragon. Isolated object.' },
+  { id: 'cannon-silver', c: 'ships', p: 2, bg: 'alpha', r: '1:1', ref: ['cannon-gold'], n: 'Canons d’argent', u: 'Navire · 700 doublons.', s: 'The same cannon as the reference cannon-gold, but polished silver with a dark wooden carriage, same angle and size. Isolated object.' },
+  { id: 'anchor-gold', c: 'ships', p: 2, bg: 'alpha', r: '1:1', ref: ['ship-player-3', 'cannon-gold'], n: 'Ancre dorée', u: 'Navire · 800 doublons. Accrochée sur le flanc de la coque.', s: 'A golden ship anchor with a short coil of rope, side view, as it would hang on the hull of the reference galleon ship-player-3, same scale. Isolated object.' },
+  { id: 'rowboat', c: 'ships', p: 2, bg: 'alpha', r: '3:2', ref: ['ship-player-3'], n: 'Chaloupe', u: 'Navire · 1 000 doublons. Remorquée derrière le navire.', s: 'A small wooden rowboat with two oars resting inside, side view facing right, same rendering and scale as the reference galleon ship-player-3 (much smaller than the galleon). Whole boat visible, no water.' },
+  { id: 'port-base', c: 'port', p: 1, bg: 'scene', r: '2:3', ref: ['isle-port', 'bg-sea-golden'], n: 'Port d’attache vu de près', u: 'Fond de l’écran du port. Les bâtiments achetés viennent s’y poser.', s: 'The home port island of the reference isle-port seen from above at the same three-quarter isometric angle but much closer, filling the middle of a portrait frame, surrounded by calm golden-hour sea. A stone quay with a moored rowboat, two small colorful houses, palm trees, and SIX empty flat building plots (sandy or grassy clearings bordered by small stones) spread around the island, clearly separated. Keep the top 15% and the bottom 25% of the image as calm sea for the interface.' },
+  { id: 'bld-jardin', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port'], n: 'Jardin tropical', u: 'Port · 600 doublons.', s: `${BLD} a small tropical garden with palm trees, flowers and a little stone fountain.` },
+  { id: 'bld-drapeau', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port', 'flag-blank'], n: 'Grand mât à pavillon', u: 'Port · 800 doublons. J’y dessine le pavillon de l’enfant.', s: `${BLD} a tall wooden flagpole on a stone base with a large blank black flag waving (no symbol on the flag).` },
+  { id: 'bld-marche', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port'], n: 'Marché aux épices', u: 'Port · 1 200 doublons.', s: `${BLD} a colorful spice market stall with a striped awning, baskets of spices and barrels.` },
+  { id: 'bld-taverne', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port'], n: 'Taverne', u: 'Port · 1 500 doublons.', s: `${BLD} a cozy two-storey wooden pirate tavern with warm lit windows, a hanging sign with no text, and a few barrels.` },
+  { id: 'bld-phare', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port'], n: 'Phare', u: 'Port · 2 000 doublons. S’allume la nuit sur la carte.', s: `${BLD} a red-and-white striped lighthouse on rocks, with a glowing lantern room.` },
+  { id: 'bld-chantier', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port'], n: 'Chantier naval', u: 'Port · 2 500 doublons.', s: `${BLD} a small shipyard with a ship hull under construction on a slipway, a wooden crane, stacks of planks and coils of rope.` },
+  { id: 'bld-statue', c: 'port', p: 2, bg: 'alpha', r: '1:1', ref: ['isle-port'], n: 'Statue du capitaine', u: 'Port · 5 000 doublons. Le grand objectif.', s: `${BLD} a golden statue of a kid pirate captain raising a spyglass, on a carved stone pedestal with laurels, a few flowers around. Generic face.` },
   // Lot 6 : histoire de l'archipel (journal), carte au trésor, poses de Pi
   { id: 'saga-prologue', c: 'story', p: 1, bg: 'scene', r: '3:2', ref: ['boss-kraken', 'guide-capitaine', 'crew-perroquet'], n: 'Prologue : la carte déchirée', u: 'En tête du prologue, dans le journal.', s: `${STORY} Stormy night at a small pirate harbor: the giant purple kraken of the reference rises from the waves and tears a large parchment treasure map in two with its tentacles, a dozen torn map pieces flying away on the wind toward faint islands on the horizon. On the wooden dock, the old grey-bearded captain and his green-and-red parrot look up, surprised and determined, not afraid. Distant lightning and rain, warm lantern light on the dock. Dramatic but kid-friendly. The map shows only drawn islands and a dotted line, no writing.` },
   { id: 'saga-croco', c: 'story', p: 2, bg: 'scene', r: '3:2', ref: ['crew-croco', 'hero-jungle'], n: 'Chapitre 4 : le crocodile qui compte', u: 'En tête du chapitre de la Jungle des Créatures.', s: `${STORY} A lush jungle with parrots and monkeys: the small smug crocodile with a monocle of the reference walks along a huge fallen tree trunk carved with evenly spaced notches like a ruler (notches only, no numbers), looking back with a friendly smile as if saying "follow me". At the end of the trunk, a wooden treasure chest half hidden under hanging lianas; a waterfall and a tall palm tree in the background, warm light through the leaves.` },
@@ -348,6 +383,12 @@ const A = [
 const PRIO = { 1: 'Indispensable', 2: 'Important', 3: 'Plus tard' };
 const RECU = new Set(['app-icon','tex-parchment','tex-wood','tex-sea','bg-ocean-a','bg-ocean-b','fx-fog-a','lagoon-round','lagoon-oval','lagoon-rocks','isle-canons','isle-stade','isle-mine','isle-jungle','isle-marche','isle-cuisine','bg-sea-golden','fg-waves','hero-canons','ship-player-3','ship-player-top','ship-requin','capt-a','crew-perroquet','crew-tortue','crew-calmar','crew-crabe','boss-kraken','chest-closed','chest-open','coin-doublon','poster-blank','fx-explosion','fx-smoke','fx-splash','hero-stade','hero-mine','hero-jungle','hero-marche','hero-cuisine','boss-crabe','boss-golem','boss-serpent','boss-marchand','boss-chef','ship-player-1','ship-player-2','ship-requin-hit','crew-poisson','crew-phoque','crew-grenouille','crew-pieuvre','crew-requin','crew-croco','bg-port-dusk','isle-lecture','hero-lecture','boss-lecture','isle-conjug','hero-conjug','boss-conjug','isle-gram','hero-gram','boss-gram','isle-accords','hero-accords','boss-accords','isle-vocab','hero-vocab','boss-vocab','isle-horloge','hero-horloge','boss-horloge','guide-capitaine','foot-ball','foot-goal','block-1000','block-100','block-10','block-1','coin-copper','coin-gold','coin-bimetal','bill-green','bill-red','bill-blue','food-pizza','food-cake','guide-perroquet-bravo','guide-perroquet-hmm','jungle-frame','capt-b','capt-c','capt-d','capt-victory','fig-dragon','fig-sirene','cannon-gold','flag-blank','ship-meduse','bg-storm','bg-title','isle-port','isle-kraken','fx-fog-b','deco-compass','coin-pile','wax-seal','cannonball','fx-sparkle','fx-coins']);
 const LOTS = {
+  7: { t: 'Lot 7a · garde-robe du capitaine · à générer', d: 'Le capitaine en pied et sans chapeau (4 bases, même pose), puis les chapeaux, accessoires et sabres à acheter. Commence par capt-body-a : toutes les autres fiches la prennent comme référence.',
+       ids: ['capt-body-a', 'capt-body-b', 'capt-body-c', 'capt-body-d', 'hat-tricorne', 'hat-bandana', 'hat-bicorne', 'hat-plume', 'hat-couronne', 'acc-patch', 'acc-spyglass', 'acc-compass', 'acc-monkey', 'wpn-wood', 'wpn-cutlass', 'wpn-gold'] },
+  8: { t: 'Lot 7b · navire · à générer', d: 'Trois nouvelles proues, des canons d’argent, une ancre dorée et une chaloupe remorquée. Les sillages et les fanaux de couleur se font en code, sans image.',
+       ids: ['fig-aigle', 'fig-licorne', 'fig-kraken', 'cannon-silver', 'anchor-gold', 'rowboat'] },
+  9: { t: 'Lot 7c · port d’attache · à générer', d: 'L’île du port vue de près, avec six terrains vides, et les sept bâtiments à construire. Commence par port-base.',
+       ids: ['port-base', 'bld-jardin', 'bld-drapeau', 'bld-marche', 'bld-taverne', 'bld-phare', 'bld-chantier', 'bld-statue'] },
   6: { t: 'Lot 6 · histoire et journal · à générer', d: 'Les images des nouveautés de la version 1.6 : cinq scènes de l’histoire de l’archipel (le début, la fin et trois chapitres drôles), la vraie carte au trésor à reconstituer, et deux poses de Pi pour les tutoriels et le journal. Commence par les fiches Indispensable.',
        ids: ['saga-prologue', 'saga-final', 'tmap-full', 'saga-croco', 'saga-tarte', 'saga-lunettes', 'guide-perroquet-montre', 'guide-perroquet-lit'] },
   2: { t: 'Lot 2 · reçu et intégré', d: 'Ce qui change le plus l’appli actuelle : un décor et un boss pour chaque île, le navire qui grandit, le Requin Noir qui coule, les équipiers à collectionner et l’écran de fin de session.',
@@ -359,9 +400,9 @@ const LOTS = {
   4: { t: 'Lot 4 · reçu et intégré', d: 'Dans le jeu depuis la version 1.0 : choix du portrait, proues et canon doré, pavillon à décorer, port d’attache et repaire du Kraken, La Méduse, tempête des boss, écran titre et petits effets.',
        ids: ['capt-b','capt-c','capt-d','capt-victory','fig-dragon','fig-sirene','cannon-gold','flag-blank','ship-meduse','bg-storm','bg-title','isle-port','isle-kraken','fx-fog-b','deco-compass','coin-pile','wax-seal','cannonball','fx-sparkle','fx-coins'] },
 };
-const lotOf = id => { for (const k of [2, 3, 4, 5, 6]) if (LOTS[k].ids.includes(id)) return k; return 0; };
+const refsOf = a => a.ref ? a.ref.filter(x => x !== a.id) : REFS(a).filter(x => RECU.has(x) && x !== a.id);
+const lotOf = id => { for (const k of [2, 3, 4, 5, 6, 7, 8, 9]) if (LOTS[k].ids.includes(id)) return k; return 0; };
 const REFS = a => {
-  if (a.ref) return a.ref;
   if (a.id.startsWith('hero-')) return ['hero-canons'];
   if (a.id.startsWith('boss-')) return ['boss-kraken', 'crew-perroquet'];
   if (a.id.startsWith('crew-') || a.id.startsWith('guide-') || a.id.startsWith('capt-')) return a.id.startsWith('capt-') && a.id !== 'capt-a' ? ['capt-a'] : ['crew-perroquet'];
@@ -375,11 +416,11 @@ const KEY = 'archipel-assets-done';
 let done = new Set();
 try { done = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch (e) {} };
-let view = 'lot6', fC = 'all';
-try { view = localStorage.getItem('archipel-assets-view7') || 'lot6'; } catch (e) {}
+let view = 'lot7', fC = 'all';
+try { view = localStorage.getItem('archipel-assets-view8') || 'lot7'; } catch (e) {}
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const full = a => { const r = REFS(a).filter(x => RECU.has(x) && x !== a.id); return [STYLE, r.length ? `REFERENCE: match the attached reference image${r.length > 1 ? 's' : ''} (${r.join(', ')}) exactly in rendering style, lighting, level of detail and scale.` : '', `SUBJECT: ${a.s}`, BG[a.bg], RATIO[a.r]].filter(Boolean).join('\n\n'); };
+const full = a => { const r = refsOf(a); return [STYLE, r.length ? `REFERENCE: match the attached reference image${r.length > 1 ? 's' : ''} (${r.join(', ')}) exactly in rendering style, lighting, level of detail and scale.` : '', `SUBJECT: ${a.s}`, BG[a.bg], RATIO[a.r]].filter(Boolean).join('\n\n'); };
 
 document.getElementById('style-text').textContent = STYLE;
 
@@ -395,7 +436,7 @@ function copy(text, btn, label) {
 }
 document.getElementById('copy-style').addEventListener('click', e => copy(STYLE, e.currentTarget, 'Copier le bloc de style'));
 
-const VIEWS = [['lot6', 'Lot 6'], ['recu', 'Reçus'], ['lot4', 'Lot 4'], ['lot5', 'Lot 5'], ['lot3', 'Lot 3'], ['lot2', 'Lot 2'], ['later', 'Plus tard'], ['all', 'Tout']];
+const VIEWS = [['lot7', '7a Capitaine'], ['lot8', '7b Navire'], ['lot9', '7c Port'], ['lot6', 'Lot 6'], ['recu', 'Reçus'], ['lot4', 'Lot 4'], ['lot5', 'Lot 5'], ['lot3', 'Lot 3'], ['lot2', 'Lot 2'], ['later', 'Plus tard'], ['all', 'Tout']];
 const inView = a => view === 'all' ? true : view === 'recu' ? RECU.has(a.id) : view === 'later' ? !RECU.has(a.id) && !lotOf(a.id) : lotOf(a.id) === +view.slice(3);
 function chips() {
   document.getElementById('f-prio').innerHTML = VIEWS.map(([v, l]) => `<button class="chip" type="button" data-v="${v}" aria-pressed="${view === v}">${l} · ${A.filter(a => { const o = view; view = v; const r = inView(a); view = o; return r; }).length}</button>`).join('');
@@ -403,7 +444,7 @@ function chips() {
     `<button class="chip" type="button" data-c="${v}" aria-pressed="${fC === v}">${l}</button>`).join('');
 }
 function card(a, n) {
-  const got = RECU.has(a.id), r = REFS(a).filter(x => RECU.has(x) && x !== a.id);
+  const got = RECU.has(a.id), r = refsOf(a);
   return `<article class="card${got || done.has(a.id) ? ' is-done' : ''}">
     <div class="card-top"><div style="min-width:0"><div class="id">${n ? n + '. ' : ''}${a.id}.png</div><h3>${esc(a.n)}</h3></div>${got ? '<span class="tag" style="background:rgba(92,191,134,.22);color:#a6e3bf">Reçu ✓</span>' : `<span class="tag p${a.p}">${PRIO[a.p]}</span>`}</div>
     <div class="meta"><span class="tag">${BGLABEL[a.bg]}</span><span class="tag">${a.r === '1:1' ? 'Carré 1:1' : a.r === '2:3' ? 'Portrait 2:3' : 'Paysage ' + a.r}</span>${r.length && !got ? `<span class="tag" style="background:rgba(243,213,140,.14);color:var(--brass-hi);white-space:normal">Joindre : ${r.join(' + ')}</span>` : ''}</div>
@@ -432,14 +473,14 @@ function render() {
   meter();
 }
 function meter() {
-  const L = LOTS[6].ids, d2 = L.filter(id => RECU.has(id) || done.has(id)).length;
+  const L = [...LOTS[7].ids, ...LOTS[8].ids, ...LOTS[9].ids], d2 = L.filter(id => RECU.has(id) || done.has(id)).length;
   document.getElementById('m-p1').textContent = `${d2} / ${L.length}`;
   document.getElementById('m-bar').style.width = `${d2 / L.length * 100}%`;
   document.getElementById('m-all').textContent = `${RECU.size} reçus · ${A.filter(a => !RECU.has(a.id)).length} à faire`;
 }
 document.addEventListener('click', e => {
   const v = e.target.closest('[data-v]'), c = e.target.closest('[data-c]'), cp = e.target.closest('[data-copy]');
-  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view7', view); } catch (er) {} chips(); render(); }
+  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view8', view); } catch (er) {} chips(); render(); }
   else if (c) { fC = c.dataset.c; chips(); render(); }
   else if (cp) { const a = A.find(x => x.id === cp.dataset.copy); copy(full(a), cp, 'Copier le prompt'); }
 });
@@ -451,6 +492,6 @@ document.addEventListener('change', e => {
 });
 
 chips(); render();
-window.__assets = A.map(a => ({ ...a, recu: RECU.has(a.id), lot: RECU.has(a.id) ? 1 : lotOf(a.id) || null, refs: RECU.has(a.id) ? [] : REFS(a).filter(x => RECU.has(x) && x !== a.id) }));
+window.__assets = A.map(a => ({ ...a, recu: RECU.has(a.id), lot: RECU.has(a.id) ? 1 : lotOf(a.id) || null, refs: RECU.has(a.id) ? [] : refsOf(a) }));
 })();
 </script>
