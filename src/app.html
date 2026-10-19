@@ -758,7 +758,11 @@ textarea.fld{min-height:76px}
 .chap{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--glass-line);color:#fffaf0}
 .chap .cn{display:block;font:700 11px var(--f-u);letter-spacing:.12em;text-transform:uppercase;color:var(--brass-hi)}.chap b{display:block;font:400 21px var(--f-p)}.chap small{color:var(--mist);font-size:13px}
 .chap.lk{opacity:.55}.chap.lk b{letter-spacing:.2em}.chap.unread{box-shadow:inset 0 0 0 2px var(--brass),0 0 16px rgba(243,213,140,.25)}.chap.unread small{color:var(--brass-hi)}
-.modal.saga .box{max-height:86vh;overflow-y:auto}.stxt{text-align:left;font:400 17px/1.55 var(--f-u);color:var(--ink)}.stxt p{margin:0 0 10px}
+/* Le texte défile, pas le cadre : l'illustration qui dépasse au-dessus du cadre n'est plus coupée */
+.modal.saga .box{max-height:calc(86vh - 60px);overflow:visible}.modal.saga .box>img,.modal.saga .errbtns{flex:none}
+.modal.saga .stxt{flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.modal.saga .stxt.more{padding-bottom:22px;-webkit-mask:linear-gradient(#000 calc(100% - 34px),transparent);mask:linear-gradient(#000 calc(100% - 34px),transparent)}
+.stxt{text-align:left;font:400 17px/1.55 var(--f-u);color:var(--ink)}.stxt p{margin:0 0 10px}
 .plan{border-radius:18px;padding:12px 14px;margin:14px 0 6px}.plan .ph{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .plan .ph b{display:block;font:400 21px var(--f-p);color:#fffaf0}.plan .ph small{color:var(--mist);font-size:13px}.plan .ph .smallcaps{color:var(--brass-hi)}
 .ring{--p:0;position:relative;width:64px;height:64px;flex:none;display:grid;place-items:center}
@@ -828,6 +832,10 @@ textarea.fld{min-height:76px}
 @keyframes mgflap{0%,8%,16%,24%,32%,100%{transform:scaleY(1)}4%,12%,20%,28%{transform:scaleY(.42) translateX(1.5px)}}
 @media (prefers-reduced-motion:reduce){.mstorm .bolt,.mstorm .flash,.key.fire.ready,.brass-btn .play svg{animation:none}.mstorm .bolt,.mstorm .flash{display:none}}
 
+/* Carte : une marge en haut, pour que les îles du haut puissent descendre sous le bandeau et le choix de la mer.
+   L'océan de secours (sans WebGL) remonte dans cette marge ; l'océan WebGL suit déjà le défilement. */
+.map{--mtop:calc(var(--st) + 160px);margin-top:var(--mtop)}
+.map>.ocean,.map>.glints{top:calc(-1 * var(--mtop))}
 /* ---------- Retours v1.8 : écran de jeu, doublons, onglets du bas ---------- */
 /* Réponses un peu plus bas : moins de vide sous les boutons, la scène gagne la place */
 .g-bottom{padding-bottom:calc(var(--sbm) + 5vh)}
@@ -933,7 +941,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.8 bêta · octobre 2026';
+const VERSION = '1.8.1 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -2710,6 +2718,8 @@ function openSaga(id) {
     <div class="stxt">${c.x.map(t => `<p>${esc(typo(t))}</p>`).join('')}</div>
     <div class="errbtns">${canSay() ? `<button class="say" data-a="sagasay" aria-label="Écouter">${ico('iSound')}</button>` : ''}<button class="brass-btn" data-a="sagaclose">Fermer</button></div></div>`;
   m.dataset.c = id; app.appendChild(m);
+  // Texte plus long que la fenêtre (petit écran) : un fondu en bas montre qu'il y a une suite, il disparaît à la fin du texte
+  const tx = $('.stxt', m), fade = () => tx.classList.toggle('more', tx.scrollHeight - tx.scrollTop - tx.clientHeight > 4); fade(); tx.addEventListener('scroll', fade, { passive: true });
 }
 
 /* ================= Plan du navire ================= */
@@ -2804,7 +2814,7 @@ function renderMap() {
   bindCog();
   const sc = $('#mapScroll');
   const hb = $('.seas').getBoundingClientRect().bottom, tt = $('.tide').getBoundingClientRect().top;
-  sc.scrollTop = mapScroll != null ? mapScroll : Math.max(0, cur.y - (hb + tt) / 2 + 10);
+  sc.scrollTop = mapScroll != null ? mapScroll : Math.max(0, $('.map', sc).offsetTop + cur.y - (hb + tt) / 2 + 10);
   sc.addEventListener('scroll', () => { mapScroll = sc.scrollTop; }, { passive: true });
   setTimeout(offerPlacement, 900);
 }
@@ -3814,7 +3824,7 @@ function decorate(kind) {
       const fresh = sea.filter(i => !P0.seen.includes(i.id))[0];
       if (fresh) { P0.seen.push(fresh.id); save(); const el = $(`.isle[data-i="${fresh.id}"]`, sc), ms = $('#mapScroll', sc);
         if (el && ms) { el.classList.add('hidden-new'); const fog = document.createElement('img'); fog.className = 'fogpatch lift'; fog.src = IMG('fx-fog-a'); fog.alt = ''; fog.style.cssText = `left:${el.style.left};top:${parseFloat(el.style.top) - 10}px;width:420px`; el.after(fog);
-          setTimeout(() => { const hb = $('.seas') ? $('.seas').getBoundingClientRect().bottom : 0, tt = $('.tide') ? $('.tide').getBoundingClientRect().top : ms.clientHeight; ms.scrollTo({ top: Math.max(0, fresh.y - (hb + tt) / 2 + 10), behavior: calm() ? 'auto' : 'smooth' });
+          setTimeout(() => { const hb = $('.seas') ? $('.seas').getBoundingClientRect().bottom : 0, tt = $('.tide') ? $('.tide').getBoundingClientRect().top : ms.clientHeight; ms.scrollTo({ top: Math.max(0, $('.map', sc).offsetTop + fresh.y - (hb + tt) / 2 + 10), behavior: calm() ? 'auto' : 'smooth' });
           setTimeout(() => { if (!el.isConnected) return; el.classList.remove('hidden-new'); el.classList.add('reveal'); fog.classList.add('go'); setTimeout(() => fog.remove(), 1800); const [x, y] = ctr($('.land', el) || el); FX.ring(x, y, 170); FX.sparkles(x, y, 40, 280); FX.confetti(60);
             sfx('unlock') || SND.fanfare(); toast(`Nouvelle île découverte : ${fresh.n}\u00a0!`); }, 900); }, 500); } } }
     FX.ambient('glint', () => { const a = $('.seas'), b = $('.tide'); if (!a || !b) return null; const z = zone(sc); if (!z) return null; const top = a.getBoundingClientRect().bottom - app.getBoundingClientRect().top, bot = b.getBoundingClientRect().top - app.getBoundingClientRect().top; return { x: 0, y: top, w: z.w, h: Math.max(0, bot - top) }; }, .22);
