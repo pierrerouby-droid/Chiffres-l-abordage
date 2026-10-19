@@ -941,9 +941,20 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.8.1 bêta · octobre 2026';
+const VERSION = '1.8.2 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
+// Appli installée sur l'écran d'accueil d'un iPhone (viewport-fit=cover) : la zone « plein écran » de Safari s'arrête
+// une hauteur de barre d'état trop tôt en bas (bogue WebKit 237961), d'où une bande sombre sous les onglets.
+// On donne alors à l'appli la hauteur réelle de l'écran. Écart plus grand (clavier ouvert) : on ne touche à rien.
+function fitStandalone() {
+  if (!isIOS || !standalone) return;
+  app.style.height = ''; app.style.bottom = ''; // hauteur mesurée sur la zone elle-même : window.innerHeight peut aussi être faux (bogue WebKit 210009)
+  const h = app.getBoundingClientRect().height, portrait = innerHeight >= innerWidth;
+  const H = portrait ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height), gap = H - h;
+  if (gap > 0 && gap <= 80) { app.style.height = H + 'px'; app.style.bottom = 'auto'; }
+}
+fitStandalone(); addEventListener('resize', fitStandalone); addEventListener('orientationchange', () => setTimeout(fitStandalone, 350));
 function copyText(text) {
   const fb = () => { const t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); return ok; };
   try { if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, fb); } catch (e) {}
