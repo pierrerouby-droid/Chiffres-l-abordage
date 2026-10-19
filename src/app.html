@@ -375,7 +375,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .port .card{position:absolute;left:16px;right:16px;bottom:calc(var(--sbm) + 18px);border-radius:24px;padding:18px 16px 16px}
 .modal{position:absolute;inset:0;z-index:100;display:grid;place-items:safe center;overflow-y:auto;padding:max(16px,calc(var(--st) + 60px)) 16px 16px;background:rgba(6,20,28,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .modal .box{width:100%;max-width:400px;border-radius:26px;padding:20px 18px 18px;text-align:center;display:flex;flex-direction:column;gap:12px}
-.grades{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .grades button{min-height:64px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.45);color:var(--ink)}
 .grades b{font:800 24px/1 var(--f-d)}.grades span{font-size:14px;color:var(--ink-2)}
 .grades button[aria-pressed="true"]{background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 4px 0 var(--brass-lo)}
@@ -779,7 +779,7 @@ const ADMIN = /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.
 const KEY = ADMIN ? 'archipel-nombres-admin' : 'archipel-nombres-v2';
 // La progression (îles, marée, revanches, erreurs, victoires par mer) est rangée par classe dans S.g ; le reste (nom, doublons, équipage, navire) est commun.
 const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false });
-const GRADES = { ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' } };
+const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' } };
 const PDEF = () => ({ isl: {}, tide: null, rev: [], errors: [], wins: { m: 0, f: 0 } });
 function migrate(o) {
   if (!o.g || typeof o.g !== 'object') o.g = {};
@@ -798,7 +798,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '1.2.2 bêta · octobre 2026';
+const VERSION = '1.3 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
 function copyText(text) {
@@ -956,7 +956,10 @@ const ISLES = [
   { id: 'accords', sea: 'f', hero: 'hero-accords', boss: { img: 'boss-accords', n: 'Le Troll du Pont' }, chestCrew: null, art: 'le Pont des Accords', n: 'Pont des Accords', notion: 'Accords et homophones', img: 'isle-accords', lag: 'lagoon-oval', x: 72, y: 790, gen: genAccords, ep: 'Gardien des Accords', unlock: 5, sfx: ['ACCORDÉ !', 'BIEN ACCORDÉ !'] },
   { id: 'vocab', sea: 'f', hero: 'hero-vocab', boss: { img: 'boss-vocab', n: 'La Baleine Dictionnaire' }, chestCrew: null, art: 'la Baie des Mots', n: 'Baie des Mots', notion: 'Vocabulaire', img: 'isle-vocab', lag: 'lagoon-round', x: 28, y: 570, gen: genVocab, ep: 'Mille-Mots', unlock: 8, sfx: ['QUEL MOT !', 'BIEN TROUVÉ !'] },
 ];
-ISLES.forEach(i => { i.ce2 = i.notion; });
+// Notions affichées en CP (les îles restent les mêmes, le contenu change)
+const CPN = { canons: 'Additions jusqu’à 20', stade: 'Calcul mental', mine: 'Dizaines et unités', jungle: 'Droite graduée jusqu’à 100', marche: 'Pièces et billets', cuisine: 'Moitiés, doubles et problèmes', horloge: 'Heures, jours et mois',
+  lecture: 'Lire de petites phrases', conjug: 'Sons et syllabes', gram: 'Mots et phrases', accords: 'Le, la, un, une', vocab: 'Mots et catégories' };
+ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; });
 const SEAS = { m: { n: 'Mer des Chiffres', s: 'Maths', ic: '123' }, f: { n: 'Mer des Lettres', s: 'Français', ic: 'Abc' } };
 function applyGrade() { ISLES.forEach(i => { i.notion = i[GR()] || i.ce2; }); }
 applyGrade();
@@ -1095,13 +1098,214 @@ function ce2Cuisine(l) {
 }
 
 /* ================= Maths de CM1 (BO n° 16 du 17 avril 2025) ================= */
-function genCanon(l) { return CM1() ? cm1Canon(l) : ce2Canon(l); }
-function genFoot(l) { return CM1() ? cm1Foot(l) : ce2Foot(l); }
-function genMine(l) { return CM1() ? cm1Mine(l) : ce2Mine(l); }
-function genChasse(l) { return CM1() ? cm1Chasse(l) : ce2Chasse(l); }
-function genMarche(l) { return CM1() ? cm1Marche(l) : ce2Marche(l); }
-function genHorloge(l) { return CM1() ? cm1Horloge(l) : ce2Horloge(l); }
-function genCuisine(l) { return CM1() ? cm1Cuisine(l) : ce2Cuisine(l); }
+
+/* ================= CP (6 ans) ================= */
+// Nombres jusqu'à 100, additions et soustractions jusqu'à 20, compléments à 10, doubles et moitiés, petits problèmes,
+// euros entiers, heures piles, jours et mois ; en français : phrases courtes, sons et syllabes, le / la / un / une, catégories de mots.
+// Beaucoup de choix sont lus à voix haute (sayChoices) : à 6 ans, la lecture ne doit pas empêcher de faire des maths.
+const CP = () => GR() === 'cp';
+const surc = (a, b) => `Pars de ${a} et avance de ${b} : ${range(1, b).map(i => a + i).join(', ')}.`;
+function cpCanon(l) {
+  let a, b, prompt, ans, log, explain, hint;
+  if (l <= 2) { const mx = l === 1 ? 5 : 10; do { a = rnd(1, mx - 1); b = rnd(1, mx - a); } while (l === 2 && a + b < 5);
+    ans = a + b; log = `${a} + ${b}`; prompt = `${log} = ${SLOT}`; const [g, k] = a >= b ? [a, b] : [b, a];
+    explain = `${a} + ${b} = ${ans}. ${surc(g, k)}`; hint = `Garde ${g} dans ta tête et compte encore ${k} sur tes doigts.`; }
+  else if (l === 3) { a = rnd(1, 9); ans = 10 - a; log = `${a} + … = 10`; prompt = `${a} + ${SLOT} = 10`;
+    explain = `${a} + ${ans} = 10. Pour aller de ${a} à 10, il faut encore ${ans}.`; hint = 'Montre tes 10 doigts et baisses-en ' + a + ' : combien en reste-t-il levés ?'; }
+  else if (l === 4) { const u = rnd(0, 8); a = 10 + u; b = rnd(1, 9 - u); ans = a + b; log = `${a} + ${b}`; prompt = `${log} = ${SLOT}`;
+    explain = `${a}, c’est 10 et ${u}. ${u} + ${b} = ${u + b}, donc ${a} + ${b} = ${ans}.`; hint = 'Garde la dizaine de côté et ajoute les unités.'; }
+  else { a = rnd(6, 9); b = rnd(11 - a, 9); ans = a + b; log = `${a} + ${b}`; prompt = `${log} = ${SLOT}`;
+    explain = `${a} + ${b} : d’abord ${a} + ${10 - a} = 10, puis 10 + ${b - (10 - a)} = ${ans}.`; hint = `Fais d’abord 10 avec ${a}, puis ajoute ce qui reste.`; }
+  return { kind: 'keypad', ask: 'Charge le canon avec la bonne réponse !', prompt, answer: ans, answerText: fmt(ans), explain, hint, log };
+}
+function cpFoot(l) {
+  let q, ans, explain, log, hint, extra = [];
+  if (l === 1) { const n = rnd(2, 29), after = Math.random() < .6; ans = after ? n + 1 : n - 1; q = `Quel nombre vient juste ${after ? 'après' : 'avant'} ${n} ?`; log = `${after ? 'après' : 'avant'} ${n}`;
+    explain = `On compte : ${n - 1}, ${n}, ${n + 1}. Juste ${after ? 'après' : 'avant'} ${n}, il y a ${ans}.`; hint = `Compte à voix haute jusqu’à ${n}.`; extra = [after ? n - 1 : n + 1, ans + 10]; }
+  else if (l === 2) { const a = rnd(3, 10), b = rnd(1, a - 1); ans = a - b; log = `${a} − ${b}`; q = `${log} = ?`;
+    explain = `Si on enlève ${b} à ${a}, il en reste ${ans}. On vérifie : ${ans} + ${b} = ${a}.`; hint = `Montre ${a} doigts, puis baisses-en ${b}.`; extra = [a + b]; }
+  else if (l === 3) { const n = rnd(1, 10); ans = 2 * n; log = `double de ${n}`; q = `Le double de ${n} ?`;
+    explain = `Le double, c’est deux fois le même nombre : ${n} + ${n} = ${ans}.`; hint = `Le double de ${n}, c’est ${n} + ${n}.`; extra = [n + 1, ans + 2]; }
+  else if (l === 4) { const n = rnd(11, 89), up = Math.random() < .6; ans = up ? n + 10 : n - 10; log = `${n} ${up ? '+' : '−'} 10`; q = `${log} = ?`;
+    explain = `${up ? 'Ajouter' : 'Enlever'} 10, c’est ${up ? 'ajouter' : 'enlever'} une dizaine : ${n} ${up ? '+' : '−'} 10 = ${ans}. Le chiffre des unités ne change pas.`; hint = 'Seul le chiffre des dizaines change.'; extra = [up ? n + 1 : n - 1, up ? n + 11 : n - 9]; }
+  else { const a = rnd(1, 8), b = rnd(1, 9 - a), add = Math.random() < .6; ans = add ? (a + b) * 10 : a * 10;
+    log = add ? `${a * 10} + ${b * 10}` : `${(a + b) * 10} − ${b * 10}`; q = `${log} = ?`;
+    explain = add ? `${a} dizaines + ${b} dizaines = ${a + b} dizaines, donc ${ans}.` : `${a + b} dizaines − ${b} dizaines = ${a} dizaines, donc ${ans}.`; hint = 'Compte en dizaines : 10, 20, 30…'; extra = [ans + 10, ans - 10]; }
+  return { kind: 'choices', ask: 'Tire dans la bonne case !', prompt: q, answer: ans, answerText: fmt(ans), explain, hint, log, choices: opts(ans, extra), sayChoices: true };
+}
+function cpMine(l) {
+  if (l <= 2) { const n = l === 1 ? rnd(11, 30) : rnd(31, 99), d = Math.floor(n / 10), u = n % 10;
+    return { kind: 'mine', cols: 2, target: n, showTotal: true, answer: n, answerText: fmt(n), prompt: fmt(n), ask: 'Construis ce nombre avec les blocs :', log: fmt(n),
+      explain: `${n}, c’est ${pl(d, 'dizaine')} et ${pl(u, 'unité')} : ${d} barre${d > 1 ? 's' : ''} de 10 et ${u} petit${u > 1 ? 's' : ''} cube${u > 1 ? 's' : ''}.`, hint: 'Le premier chiffre dit combien de barres de 10, le second combien de petits cubes.' }; }
+  if (l === 3) { const d = rnd(1, 9), u = rnd(0, 9), n = d * 10 + u;
+    return { kind: 'mineRead', cols: 2, counts: [0, 0, d, u], answer: n, answerText: fmt(n), ask: 'Quel nombre forment ces blocs ?', prompt: SLOT, log: `${d} dizaines et ${u} unités`,
+      explain: `${pl(d, 'dizaine')} et ${pl(u, 'unité')}, ça fait ${n}.`, hint: 'Compte les barres de 10 : 10, 20, 30… puis ajoute les petits cubes.' }; }
+  if (l === 4) { const n = rnd(21, 98), d = Math.floor(n / 10), u = n % 10, askD = Math.random() < .5;
+    if (u === 0 || u === d) return cpMine(4);
+    return { kind: 'choices', ask: `Dans ${n}, combien y a-t-il de ${askD ? 'dizaines' : 'unités'} ?`, prompt: '', answer: askD ? d : u, answerText: fmt(askD ? d : u), choices: shuffle([d, u, askD ? d + 1 : u + 1]).filter((v, k, a) => a.indexOf(v) === k).map(v => ({ v, html: fmt(v) })),
+      log: `${askD ? 'dizaines' : 'unités'} de ${n}`, explain: `${n}, c’est ${pl(d, 'dizaine')} et ${pl(u, 'unité')}. Le chiffre de gauche donne les dizaines, celui de droite les unités.`, hint: 'Le chiffre de gauche, ce sont les dizaines.', sayChoices: true }; }
+  let a, b; do { a = rnd(12, 98); b = Math.random() < .5 ? (a % 10) * 10 + Math.floor(a / 10) : a + pick([-9, -1, 1, 9, 10]); } while (b === a || b < 10 || b > 99 || a % 10 === 0);
+  const c = pick([a, b]) + pick([-20, 20, -11, 11]), list = [...new Set([a, b, c].filter(x => x >= 10 && x <= 99))], ans = Math.max(...list);
+  if (list.length < 3) return cpMine(5);
+  return { kind: 'choices', ask: 'Quel est le plus grand nombre ?', prompt: '', answer: ans, answerText: fmt(ans), choices: list.map(v => ({ v, html: fmt(v) })), log: `plus grand : ${list.join(', ')}`,
+    explain: `On regarde d’abord les dizaines : le nombre qui a le plus de dizaines est le plus grand. Ici, c’est ${ans}.`, hint: 'Compare d’abord le chiffre des dizaines.', sayChoices: true };
+}
+function cpChasse(l) {
+  const cfgs = [null, { s: 0, st: 1 }, { s: 10, st: 1 }, { s: 0, st: 10 }, { s: rnd(2, 8) * 10, st: 1 }];
+  const cfg = l <= 4 ? cfgs[l] : pick(cfgs.slice(2)), k = rnd(1, 9), v = cfg.s + k * cfg.st;
+  const base = { start: cfg.s, step: cfg.st, k, mid: true, answer: v, answerText: fmt(v), explain: `Chaque trait avance de ${cfg.st}. On compte depuis ${cfg.s} : ${range(1, k).map(i => cfg.s + i * cfg.st).join(', ')}.`, hint: `Compte les traits de ${cfg.st} en ${cfg.st} depuis ${cfg.s}.` };
+  if (Math.random() < .55) return { ...base, kind: 'line', ask: 'Une créature se cache à ce nombre. Touche son trait !', prompt: fmt(v), log: `placer ${v} (de ${cfg.s} en ${cfg.st})` };
+  const wrong = shuffle([v + cfg.st, v - cfg.st, v + 2 * cfg.st]).filter(x => x >= cfg.s && x <= cfg.s + 10 * cfg.st && x !== v);
+  return { ...base, kind: 'lineRead', ask: 'Quel nombre montre la flèche ?', prompt: '', log: `lire la flèche (de ${cfg.s} en ${cfg.st})`, choices: shuffle([v, ...wrong.slice(0, 2)]).map(x => ({ v: x, html: fmt(x) })), sayChoices: true };
+}
+function cpMarche(l) {
+  const denoms = l === 1 ? [200, 100] : l === 2 || l === 5 ? [500, 200, 100] : [1000, 500, 200, 100];
+  const greedy = c => { const o = []; for (const d of denoms) while (c >= d) { o.push(coinLabel(d)); c -= d; } return o.join(' + '); };
+  let target, ask, price = '', explain, log, hint = 'Commence par le plus gros billet ou la plus grosse pièce, puis complète.';
+  if (l <= 3) { target = (l === 1 ? rnd(2, 5) : l === 2 ? rnd(3, 10) : rnd(6, 20)) * 100; ask = `Le cuistot achète ${pick(ITEMS)}. Paye :`; price = fmtE(target); log = `payer ${fmtE(target)}`; explain = `Il fallait ${fmtE(target)}, par exemple : ${greedy(target)}.`; }
+  else if (l === 4) { const a = rnd(1, 8), b = rnd(1, 9), [i1, i2] = shuffle(ITEMS); target = (a + b) * 100; ask = `Le cuistot achète ${i1} à ${a} € et ${i2} à ${b} €. Paye le tout :`; log = `payer ${a} € + ${b} €`; explain = `${a} € + ${b} € = ${a + b} €, par exemple : ${greedy(target)}.`; }
+  else { const pr = rnd(2, 9); target = (10 - pr) * 100; ask = `Un client achète ${pick(ITEMS)} à ${pr} € et paye avec un billet de 10 €. Rends-lui la monnaie :`; log = `rendre sur 10 € pour ${pr} €`;
+    explain = `De ${pr} € à 10 €, on compte : ${range(pr + 1, 10).join(', ')}. Il manque ${10 - pr} € : on rend ${fmtE(target)}, par exemple : ${greedy(target)}.`; hint = `Compte de ${pr} jusqu’à 10 sur tes doigts : ce que tu ajoutes, c’est la monnaie.`; }
+  return { kind: 'money', denoms, target, showTotal: true, ask, price, answer: target, answerText: fmtE(target), explain, hint, log };
+}
+function cpCuisine(l) {
+  if (l <= 2) { const parts = l === 1 ? pick([2, 4]) : pick([6, 8]), h = parts / 2;
+    return { kind: 'pizza', parts, n: 1, d: 2, ask: `Le cuistot a coupé la pizza en ${parts} parts. Colore :`, prompt: '<span class="words">la moitié</span>', promptClass: 'mid', answer: '1/2', answerText: `${h} part${h > 1 ? 's' : ''} sur ${parts}`, log: `moitié d’une pizza en ${parts}`,
+      explain: `La moitié, c’est couper en deux parts pareilles et en prendre une. Ici : ${h} part${h > 1 ? 's' : ''} sur ${parts}.`, hint: 'Colore les parts d’un seul côté de la pizza.' }; }
+  if (l === 3) { const k = rnd(1, 10), n = 2 * k, w = pick(['biscuits', 'poissons', 'bananes', 'billes']);
+    return { kind: 'choices', ask: `Pi partage ${n} ${w} avec son ami. Chacun en a autant. Combien chacun ?`, prompt: '', answer: k, answerText: fmt(k), choices: opts(k, [n, k + 2]), log: `moitié de ${n}`,
+      explain: `On partage ${n} en deux parts égales : ${k} et ${k}, car ${k} + ${k} = ${n}. La moitié de ${n}, c’est ${k}.`, hint: 'Cherche le nombre qui, ajouté à lui-même, donne ' + n + '.', sayChoices: true }; }
+  if (l === 4) { const n = rnd(2, 10), w = pick(['œufs', 'pommes', 'poissons', 'carottes']);
+    return { kind: 'choices', ask: `Le cuistot a ${n} ${w}. Il en achète encore autant. Combien en a-t-il maintenant ?`, prompt: '', answer: 2 * n, answerText: fmt(2 * n), choices: opts(2 * n, [n + 1, n]), log: `double de ${n} (problème)`,
+      explain: `Encore autant, c’est le double : ${n} + ${n} = ${2 * n}.`, hint: 'Encore autant, c’est le même nombre une deuxième fois.', sayChoices: true }; }
+  const add = Math.random() < .5, a = add ? rnd(3, 12) : rnd(6, 20), b = add ? rnd(2, 20 - a) : rnd(2, a - 1), ans = add ? a + b : a - b;
+  const [w, verb] = add ? pick([['poissons', 'en pêche'], ['pommes', 'en cueille'], ['coquillages', 'en trouve']]) : pick([['bananes', 'en mange'], ['biscuits', 'en donne'], ['œufs', 'en casse']]);
+  return { kind: 'keypad', ask: add ? `Le cuistot a ${a} ${w}. Il ${verb} encore ${b}. Combien en a-t-il maintenant ?` : `Le cuistot a ${a} ${w}. Il ${verb} ${b}. Combien lui en reste-t-il ?`, prompt: SLOT, answer: ans, answerText: fmt(ans), log: `problème ${a} ${add ? '+' : '−'} ${b}`,
+    explain: add ? `Il en a de plus en plus : on ajoute. ${a} + ${b} = ${ans}.` : `Il en a de moins en moins : on enlève. ${a} − ${b} = ${ans}.`, hint: add ? 'Il en a plus qu’avant : faut-il ajouter ou enlever ?' : 'Il en a moins qu’avant : faut-il ajouter ou enlever ?' };
+}
+const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'], MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+function cpSuite(list, mode, word) {
+  const k = rnd(0, list.length - 1), dir = mode === 'apres' ? 1 : -1, ans = list[(k + dir + list.length) % list.length], others = shuffle(list.filter(x => x !== ans && x !== list[k])).slice(0, 2);
+  return { kind: 'choices', ask: mode === 'apres' ? `Quel ${word} vient juste après ${list[k]} ?` : `Aujourd’hui, c’est ${list[k]}. Hier, c’était quel jour ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `${word} ${mode === 'apres' ? 'après' : 'avant'} ${list[k]}`,
+    explain: `Dans l’ordre : ${[-1, 0, 1].map(i => list[(k + i + list.length) % list.length]).join(', ')}.`, hint: `Récite les ${word}s dans l’ordre depuis le début.`, sayChoices: true };
+}
+// Heure pile : les pièges sont d'autres heures piles (les quarts et les demies ne sont pas au programme du CP)
+function cpClock() {
+  const h = rnd(1, 12), key = a => `${a}:0`, wrong = shuffle([h % 12 + 1, (h + 10) % 12 + 1, h === 6 ? 12 : (h + 6) % 12 || 12]).filter((x, k, a) => x !== h && a.indexOf(x) === k).slice(0, 2);
+  return { kind: 'choices', clock: { h, m: 0 }, ask: 'Quelle heure indique l’horloge ?', prompt: '', answer: key(h), answerText: hm(h, 0), choices: [h, ...wrong].map(a => ({ v: key(a), html: hm(a, 0) })), log: `lire ${h} h`,
+    explain: `La petite aiguille montre l’heure : elle est sur le ${h}. La grande aiguille est sur le 12 : c’est l’heure pile. Il est ${h} heure${h > 1 ? 's' : ''}.`, hint: 'Regarde où pointe la petite aiguille.', sayChoices: true };
+}
+function cpHorloge(l) {
+  if (l === 1) return cpClock();
+  if (l === 2) return cpSuite(JOURS, 'apres', 'jour');
+  if (l === 3) return cpSuite(JOURS, 'hier', 'jour');
+  if (l === 4) return cpSuite(MOIS, 'apres', 'mois');
+  return pick([cpClock, () => cpSuite(JOURS, pick(['apres', 'hier']), 'jour'), () => cpSuite(MOIS, 'apres', 'mois'),
+    () => ({ kind: 'choices', ask: 'Combien y a-t-il de jours dans une semaine ?', prompt: '', answer: 7, answerText: '7', choices: [7, 5, 10].map(v => ({ v, html: String(v) })), log: 'jours dans une semaine', explain: 'Une semaine a 7 jours : lundi, mardi, mercredi, jeudi, vendredi, samedi et dimanche.', hint: 'Compte les jours de lundi à dimanche.', sayChoices: true })])();
+}
+// Lecture : [texte, question, bonne réponse, [deux autres], niveau 1 à 3]
+const CPL = [
+  ['Pi est un perroquet vert.', 'De quelle couleur est Pi ?', 'vert', ['rouge', 'bleu'], 1], ['Le chat dort sur le mât.', 'Où dort le chat ?', 'sur le mât', ['dans l’eau', 'sous la table'], 1],
+  ['Tom mange une pomme.', 'Que mange Tom ?', 'une pomme', ['une poire', 'du pain'], 1], ['Lila a un petit bateau.', 'Qui a un petit bateau ?', 'Lila', ['Tom', 'Pi'], 1],
+  ['La mer est calme ce matin.', 'Comment est la mer ?', 'calme', ['grosse', 'froide'], 1], ['Le pirate a une jambe de bois.', 'Qu’a le pirate ?', 'une jambe de bois', ['un chapeau rouge', 'un chat noir'], 1],
+  ['Le cuistot fait une soupe.', 'Que fait le cuistot ?', 'une soupe', ['un gâteau', 'une salade'], 1], ['Il y a trois poissons dans le seau.', 'Combien de poissons y a-t-il ?', 'trois', ['deux', 'cinq'], 1],
+  ['Tom monte sur le pont. Il voit une île au loin.', 'Que voit Tom ?', 'une île', ['un requin', 'une baleine'], 2], ['Lila range sa cabine. Elle trouve une vieille carte.', 'Que trouve Lila ?', 'une vieille carte', ['une pièce d’or', 'un livre'], 2],
+  ['Le vent souffle fort. Les voiles se gonflent.', 'Qu’est-ce qui se gonfle ?', 'les voiles', ['les tonneaux', 'les cordes'], 2], ['Pi a faim. Il picore une banane.', 'Pourquoi Pi picore-t-il une banane ?', 'il a faim', ['il a froid', 'il est triste'], 2],
+  ['Le capitaine sonne la cloche. C’est l’heure du repas.', 'Pourquoi le capitaine sonne-t-il la cloche ?', 'pour le repas', ['pour dormir', 'pour jouer'], 2], ['Un dauphin saute près du bateau. Tom rit très fort.', 'Qui saute près du bateau ?', 'un dauphin', ['Tom', 'un requin'], 2],
+  ['La nuit tombe. Lila allume la lanterne.', 'Que fait Lila ?', 'elle allume la lanterne', ['elle va dormir', 'elle mange'], 2], ['Le mousse lave le pont. Il a un seau et une brosse.', 'Avec quoi lave-t-il le pont ?', 'un seau et une brosse', ['une pelle', 'un balai'], 2],
+  ['Tom et Lila nagent près de l’île. L’eau est chaude. Ils voient des poissons jaunes.', 'De quelle couleur sont les poissons ?', 'jaunes', ['rouges', 'verts'], 3],
+  ['Le ciel devient noir. Le tonnerre gronde. Le capitaine crie : « Rentrez les voiles ! »', 'Quel temps fait-il ?', 'il y a un orage', ['il fait beau', 'il neige'], 3],
+  ['Pi vole jusqu’au mât. Il regarde la mer. Soudain, il crie : « Terre ! Terre ! »', 'Qu’a vu Pi ?', 'une terre', ['un poisson', 'un nuage'], 3],
+  ['Le cuistot casse trois œufs. Il ajoute du lait et de la farine. Ce soir, il y a des crêpes !', 'Que prépare le cuistot ?', 'des crêpes', ['une soupe', 'du poisson'], 3],
+  ['Lila a perdu sa clé. Elle cherche sous le lit. La clé est dans sa poche !', 'Où était la clé ?', 'dans sa poche', ['sous le lit', 'sur la table'], 3],
+  ['Tom pêche depuis le matin. Il n’a rien attrapé. Il est un peu triste.', 'Pourquoi Tom est-il triste ?', 'il n’a rien pêché', ['il a froid', 'il a perdu son chapeau'], 3]];
+function cpLecture(l) {
+  const it = pick(CPL.filter(x => x[4] === (l <= 2 ? 1 : l <= 4 ? 2 : 3)));
+  return { kind: 'choices', ask: it[1], prompt: esc(it[0]), promptClass: 'sent', answer: it[2], answerText: it[2], choices: [it[2], ...it[3]].map(v => ({ v, html: esc(v) })), log: `${it[0]} · ${it[1]}`,
+    explain: `Relis le texte : « ${it[0]} » La réponse est : ${it[2]}.`, hint: 'Relis la phrase doucement, mot après mot.' };
+}
+// Sons et syllabes : les mots choisis n’ont pas de « e » muet final, pour que les syllabes à l’oral et à l’écrit soient les mêmes
+const SYL = [['bateau', 'ba-teau'], ['canon', 'ca-non'], ['chapeau', 'cha-peau'], ['requin', 're-quin'], ['poisson', 'pois-son'], ['perroquet', 'per-ro-quet'], ['lapin', 'la-pin'], ['domino', 'do-mi-no'],
+  ['chocolat', 'cho-co-lat'], ['pantalon', 'pan-ta-lon'], ['éléphant', 'é-lé-phant'], ['kangourou', 'kan-gou-rou'], ['soleil', 'so-leil'], ['cadeau', 'ca-deau'], ['moto', 'mo-to'], ['vélo', 'vé-lo'],
+  ['hibou', 'hi-bou'], ['robot', 'ro-bot'], ['trésor', 'tré-sor'], ['matelot', 'ma-te-lot'], ['chat', 'chat'], ['lit', 'lit'], ['pain', 'pain'], ['ananas', 'a-na-nas'], ['dauphin', 'dau-phin'], ['crayon', 'cra-yon']];
+const RIMES = [['bateau', 'château', 'gâteau', 'râteau'], ['lapin', 'sapin', 'matin', 'jardin'], ['souris', 'radis', 'tapis', 'lit'], ['hibou', 'loup', 'bijou', 'genou'], ['ballon', 'bouchon', 'canon', 'savon'], ['chat', 'rat', 'plat', 'chocolat']];
+const GRAPH = { ou: ['loup', 'poule', 'soupe', 'roue', 'hibou'], on: ['ballon', 'bonbon', 'lion', 'savon', 'canon'], an: ['maman', 'banc', 'pantalon', 'orange', 'gant'], oi: ['roi', 'poisson', 'noix', 'étoile', 'voile'], ch: ['chat', 'cheval', 'vache', 'niche', 'chapeau'] };
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function cpSons(l) {
+  if (l === 1) { const pool = shuffle(SYL.map(x => x[0])), w = pool[0], L = w[0], ans = w, others = pool.filter(x => x[0] !== L).slice(0, 2);
+    const LU = ({ é: 'E' })[L] || L.toUpperCase();
+    return { kind: 'choices', ask: `Quel mot commence par la lettre ${LU} ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `commence par ${LU} : ${ans}`, explain: `« ${ans} » commence par la lettre ${LU}.`, hint: 'Regarde la première lettre de chaque mot.' }; }
+  if (l === 2) { const [w, sy] = pick(SYL), n = sy.split('-').length;
+    return { kind: 'choices', ask: `Combien de syllabes dans « ${w} » ?`, prompt: '', answer: n, answerText: String(n), choices: [...new Set([n, n === 1 ? 2 : n - 1, n + 1])].map(v => ({ v, html: String(v) })), log: `syllabes de ${w}`,
+      explain: `On tape dans les mains : ${sy.split('-').join(' · ')}. Il y a ${n} syllabe${n > 1 ? 's' : ''}.`, hint: 'Dis le mot en tapant dans tes mains à chaque morceau.', sayChoices: true }; }
+  if (l === 3) { const [w, sy] = pick(SYL.filter(x => x[1].includes('-'))), parts = sy.split('-'), k = rnd(0, parts.length - 1), ans = parts[k];
+    const others = shuffle([...new Set(SYL.flatMap(x => x[1].split('-')))].filter(x => x !== ans && x.length <= 4)).slice(0, 2);
+    return { kind: 'choices', ask: `Quelle syllabe manque pour écrire « ${w} » ?`, prompt: parts.map((x, j) => j === k ? '…' : x).join(' · '), promptClass: 'mid', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `syllabe de ${w}`,
+      explain: `${w} : ${parts.join(' · ')}. Il manquait « ${ans} ».`, hint: `Dis « ${w} » doucement, syllabe par syllabe.` }; }
+  if (l === 4) { const fam = pick(RIMES), [w, ans] = shuffle(fam), others = shuffle(RIMES.filter(f => f !== fam).flat()).slice(0, 2);
+    return { kind: 'choices', ask: `Quel mot rime avec « ${w} » ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `rime avec ${w}`, explain: `« ${w} » et « ${ans} » finissent par le même son.`, hint: 'Écoute la fin des mots : elle doit sonner pareil.', sayChoices: true }; }
+  const g = pick(Object.keys(GRAPH)), ans = pick(GRAPH[g]), others = shuffle(Object.values(GRAPH).flat().filter(x => !x.includes(g))).slice(0, 2);
+  return { kind: 'choices', ask: `Quel mot s’écrit avec « ${g} » ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `graphème ${g} : ${ans}`, explain: `« ${ans} » s’écrit avec « ${g} ».`, hint: `Cherche les lettres « ${g} », l’une à côté de l’autre.` };
+}
+const CPS = ['Le chat dort.', 'Pi mange une banane.', 'Tom lave le pont.', 'La mer est bleue.', 'Lila lit un livre.', 'Le pirate a un chapeau.', 'Le bateau part ce matin.', 'Le cuistot fait la soupe.', 'Un requin nage près du bateau.', 'Le mousse range les cordes.', 'Pi vole sur le mât.', 'Tom a une carte.'];
+function cpGram(l) {
+  const sent = pick(CPS), ws = sent.replace(/\.$/, '').split(' ');
+  if (l === 1 || (l === 5 && Math.random() < .3)) { const cands = ws.filter((w, k) => w.length > 2 && ws.indexOf(w) === k && ws.lastIndexOf(w) === k), t = pick(cands), k = ws.indexOf(t);
+    return { kind: 'words', ask: `Touche le mot « ${t} ».`, prompt: '', promptClass: 'sent', chips: ws.map((w, j) => j === ws.length - 1 ? w + '.' : w), ans: [k], multi: false, answer: String(k), answerText: t, log: `mot ${t} : ${sent}`,
+      explain: `Le mot « ${t} » est le ${['premier', 'deuxième', 'troisième', 'quatrième', 'cinquième', 'sixième'][k]} mot de la phrase.`, hint: `Cherche le mot qui commence par la lettre « ${t[0]} ».` }; }
+  if (l === 2) { const n = ws.length;
+    return { kind: 'choices', ask: 'Combien de mots dans cette phrase ?', prompt: esc(sent), promptClass: 'sent', answer: n, answerText: String(n), choices: [...new Set([n, n - 1, n + 1])].map(v => ({ v, html: String(v) })), log: `mots : ${sent}`,
+      explain: `${ws.join(' / ')} : il y a ${n} mots. Les espaces séparent les mots.`, hint: 'Compte les espaces entre les mots, puis ajoute 1.', sayChoices: true }; }
+  if (l === 3 || (l === 5 && Math.random() < .5)) { const low = sent[0].toLowerCase() + sent.slice(1), nop = sent.replace(/\.$/, '');
+    return { kind: 'choices', ask: 'Quelle phrase est bien écrite ?', prompt: '', answer: sent, answerText: sent, choices: [sent, low, nop].map(v => ({ v, html: esc(v) })), log: `majuscule et point : ${sent}`,
+      explain: `« ${sent} » : une phrase commence par une majuscule et se termine par un point.`, hint: 'Regarde le début et la fin de chaque phrase.' }; }
+  // Une phrase mélangée doit séparer au moins un petit mot (le, la, un…) de son nom : « Ce matin le bateau part » ne doit jamais sortir comme mauvaise réponse
+  const fixed = pick(CPS.filter(x => !/ce matin|près du|sur le mât/.test(x))), fw = fixed.replace(/\.$/, '').split(' '), lw = fw.map(w => w.toLowerCase()), DET = ['le', 'la', 'les', 'un', 'une'];
+  const pairs = new Set(lw.map((w, k) => DET.includes(w) ? w + ' ' + lw[k + 1] : '').filter(Boolean));
+  const mk = arr => { const t = arr.join(' '); return t[0].toUpperCase() + t.slice(1).toLowerCase().replace(/\b(pi|tom|lila)\b/g, m => m[0].toUpperCase() + m.slice(1)) + '.'; }, wrong = new Set();
+  for (let t = 0; t < 80 && wrong.size < 2; t++) { const sh = shuffle(lw), broken = sh.some((w, k) => DET.includes(w) && !pairs.has(w + ' ' + sh[k + 1])); const x = mk(sh); if (broken && x !== fixed) wrong.add(x); }
+  if (wrong.size < 2) return cpGram(3);
+  return { kind: 'choices', ask: 'Quelle phrase veut dire quelque chose ?', prompt: '', answer: fixed, answerText: fixed, choices: [fixed, ...wrong].map(v => ({ v, html: esc(v) })), log: `ordre des mots : ${fixed}`,
+    explain: `« ${fixed} » : les mots sont dans le bon ordre, la phrase a du sens.`, hint: 'Lis chaque phrase : laquelle raconte quelque chose ?' };
+}
+const CPNOUNS = [['chat', 'm', 'chats'], ['poule', 'f', 'poules'], ['bateau', 'm', 'bateaux'], ['voile', 'f', 'voiles'], ['pomme', 'f', 'pommes'], ['lapin', 'm', 'lapins'], ['maison', 'f', 'maisons'], ['poisson', 'm', 'poissons'],
+  ['table', 'f', 'tables'], ['canon', 'm', 'canons'], ['carte', 'f', 'cartes'], ['trésor', 'm', 'trésors'], ['lune', 'f', 'lunes'], ['cheval', 'm', 'chevaux'], ['banane', 'f', 'bananes'], ['requin', 'm', 'requins']];
+function cpAccords(l) {
+  const [w, g, p] = pick(CPNOUNS);
+  if (l <= 2 || (l === 5 && Math.random() < .3)) { const def = l !== 2 && (l !== 5 || Math.random() < .5), ans = def ? (g === 'm' ? 'le' : 'la') : (g === 'm' ? 'un' : 'une');
+    return { kind: 'choices', ask: def ? 'Choisis le bon petit mot : le ou la ?' : 'Choisis le bon petit mot : un ou une ?', prompt: `${SLOT} ${w}`, promptClass: 'sent', answer: ans, answerText: `${ans} ${w}`, choices: (def ? ['le', 'la'] : ['un', 'une']).map(v => ({ v, html: v })), log: `${ans} ${w}`,
+      explain: `On dit « ${ans} ${w} » : « ${w} » est un mot ${g === 'm' ? 'masculin, comme « le chat »' : 'féminin, comme « la poule »'}.`, hint: 'Dis les deux à voix haute : lequel sonne bien ?', sayChoices: true }; }
+  if (l === 3) return { kind: 'choices', ask: `Quand il y en a plusieurs : ${g === 'm' ? 'un' : 'une'} ${w}, des… ?`, prompt: '', answer: p, answerText: `des ${p}`, choices: [p, w].map(v => ({ v, html: v })), log: `pluriel de ${w}`,
+    explain: `Quand il y en a plusieurs, on ajoute souvent un « s » à la fin : des ${p}.${p.endsWith('x') ? ' Attention, ici c’est un « x » !' : ''}`, hint: 'Plusieurs : regarde la dernière lettre du mot.' };
+  if (l === 4) { const others = shuffle(CPNOUNS.filter(x => x[0] !== w)).slice(0, 2).map(x => x[0]);
+    return { kind: 'choices', ask: 'Quel mot va avec « des » ?', prompt: '', answer: p, answerText: `des ${p}`, choices: [p, ...others].map(v => ({ v, html: v })), log: `des + ${p}`,
+      explain: `« des » veut dire plusieurs : on écrit « des ${p} », avec ${p.endsWith('x') ? 'un x' : 'un s'} à la fin.`, hint: 'Cherche le mot qui finit par un s ou un x.' }; }
+  const ans = g === 'm' ? 'il' : 'elle', det = g === 'm' ? 'Le' : 'La';
+  return { kind: 'choices', ask: `${det} ${w} est sur le pont. Pour ne pas répéter, on dit : … est sur le pont.`, prompt: '', answer: ans, answerText: ans, choices: ['il', 'elle'].map(v => ({ v, html: v })), log: `il/elle : ${w}`,
+    explain: `« ${det.toLowerCase()} ${w} » est ${g === 'm' ? 'masculin : on dit « il »' : 'féminin : on dit « elle »'}.`, hint: '« le » va avec « il », « la » va avec « elle ».', sayChoices: true };
+}
+const CPCAT = { animal: ['un animal', ['chat', 'lapin', 'poule', 'requin', 'dauphin', 'cheval', 'vache', 'lion'], 'des animaux'], fruit: ['un fruit', ['pomme', 'poire', 'banane', 'fraise', 'cerise', 'orange'], 'des fruits'],
+  couleur: ['une couleur', ['rouge', 'bleu', 'vert', 'jaune', 'noir', 'blanc'], 'des couleurs'], vetement: ['un vêtement', ['pull', 'pantalon', 'chapeau', 'robe', 'chaussette', 'manteau'], 'des vêtements'], objet: ['un objet de la maison', ['table', 'chaise', 'lampe', 'lit', 'fourchette', 'tasse'], 'des objets de la maison'] };
+const CONTR = [['grand', 'petit'], ['chaud', 'froid'], ['jour', 'nuit'], ['haut', 'bas'], ['plein', 'vide'], ['rapide', 'lent'], ['ouvert', 'fermé'], ['propre', 'sale'], ['lourd', 'léger'], ['dedans', 'dehors']];
+function cpVocab(l) {
+  const keys = Object.keys(CPCAT);
+  if (l <= 2) { const c = l === 1 ? pick(['animal', 'fruit']) : pick(keys), ans = pick(CPCAT[c][1]), others = shuffle(keys.filter(k => k !== c)).slice(0, 2).map(k => pick(CPCAT[k][1]));
+    return { kind: 'choices', ask: `Lequel est ${CPCAT[c][0]} ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `${c} : ${ans}`, explain: `« ${ans} » est ${CPCAT[c][0]}.`, hint: 'Imagine chaque mot dans ta tête.', sayChoices: true }; }
+  if (l === 3) { const [a, b] = shuffle(pick(CONTR)), others = shuffle(CONTR.flat().filter(x => x !== a && x !== b)).slice(0, 2);
+    return { kind: 'choices', ask: `Quel est le contraire de « ${a} » ?`, prompt: '', answer: b, answerText: b, choices: [b, ...others].map(v => ({ v, html: v })), log: `contraire de ${a}`, explain: `Le contraire de « ${a} », c’est « ${b} ».`, hint: 'Le contraire, c’est le mot qui dit l’inverse.', sayChoices: true }; }
+  if (l === 4) { const k = rnd(0, 24), ans = LETTERS[k + 1], others = shuffle(LETTERS.split('').filter(x => x !== ans && x !== LETTERS[k])).slice(0, 2);
+    return { kind: 'choices', ask: `Quelle lettre vient juste après ${LETTERS[k]} ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...others].map(v => ({ v, html: v })), log: `après ${LETTERS[k]}`, explain: `Dans l’alphabet : ${LETTERS.slice(Math.max(0, k - 1), k + 3).split('').join(', ')}…`, hint: 'Chante l’alphabet doucement.', sayChoices: true }; }
+  const c = pick(keys), two = shuffle(CPCAT[c][1]).slice(0, 2), other = pick(keys.filter(k => k !== c)), ans = pick(CPCAT[other][1]);
+  return { kind: 'choices', ask: `Quel mot n’est pas ${CPCAT[c][0]} ?`, prompt: '', answer: ans, answerText: ans, choices: [ans, ...two].map(v => ({ v, html: v })), log: `intrus (${c}) : ${ans}`, explain: `« ${two[0]} » et « ${two[1]} » sont ${CPCAT[c][2]}. « ${ans} » n’est pas ${CPCAT[c][0]}.`, hint: 'Cherche le mot qui ne va pas avec les autres.', sayChoices: true };
+}
+
+function genCanon(l) { return CP() ? cpCanon(l) : CM1() ? cm1Canon(l) : ce2Canon(l); }
+function genFoot(l) { return CP() ? cpFoot(l) : CM1() ? cm1Foot(l) : ce2Foot(l); }
+function genMine(l) { return CP() ? cpMine(l) : CM1() ? cm1Mine(l) : ce2Mine(l); }
+function genChasse(l) { return CP() ? cpChasse(l) : CM1() ? cm1Chasse(l) : ce2Chasse(l); }
+function genMarche(l) { return CP() ? cpMarche(l) : CM1() ? cm1Marche(l) : ce2Marche(l); }
+function genHorloge(l) { return CP() ? cpHorloge(l) : CM1() ? cm1Horloge(l) : ce2Horloge(l); }
+function genCuisine(l) { return CP() ? cpCuisine(l) : CM1() ? cm1Cuisine(l) : ce2Cuisine(l); }
 // Décimaux : on calcule en centièmes entiers, on affiche avec une virgule (3.5 → « 3,5 »)
 const fmtD = (x, d = 2) => { const [a, b = ''] = (Math.round(x * 100) / 100).toFixed(d).split('.'); const t = b.replace(/0+$/, ''); return fmt(+a) + (t ? ',' + t : ''); };
 function dch(ans, cands) { const a = typeof ans === 'number' ? fmtD(ans) : ans, out = [];
@@ -1368,6 +1572,7 @@ function qMark(cm1) {
     explain: `${cap(ch[0])} : présent. ${cap(ch[1])} : futur (on entend le « r » avant -${END.fu[s.p]}). ${cap(ch[2])} : imparfait (marque ${s.p === 3 || s.p === 4 ? '-i-' : '-ai-'}).`, hint: 'Imparfait : -ai- ou -i-. Futur : on entend le « r » de l’infinitif.' };
 }
 function genConjug(l) {
+  if (CP()) return cpSons(l);
   const cm1 = CM1();
   if (!cm1) {
     if (l === 1) return Math.random() < .3 ? qPron(pick(['chanter', 'jouer', 'danser', 'regarder', 'être', 'avoir']), 'pr') : qFill(pick(['être', 'avoir', 'chanter', 'jouer', 'ramer', 'danser', 'regarder', 'chercher', 'trouver', 'grimper']), 'pr', false);
@@ -1498,6 +1703,7 @@ function qFonction() {
     explain: `« ${unp(g.i.map(j => wd(sp.T[j])).join(' '))} » est ${L[g.f]}. ${GFN[g.f][2]}`, hint: 'Sujet : qui fait l’action ? Complément du verbe : quoi ou qui après le verbe ? Complément de phrase : on peut le déplacer.' };
 }
 function genGram(l) {
+  if (CP()) return cpGram(l);
   const r = Math.random();
   if (!CM1()) {
     if (l === 1) return r < .5 ? qType() : qVerb();
@@ -1620,6 +1826,7 @@ function qHomo(cm1) {
   return { kind: 'choices', ask: 'Complète avec le bon mot :', prompt: sent, promptClass: 'sent', answer: it[1], answerText: it[0].replace('___', it[1]), choices: shuffle([it[1], it[2]]).map(v => ({ v, html: v })), log: it[0], explain: it[3], hint: homoHint(it[1], it[2]) };
 }
 function genAccords(l) {
+  if (CP()) return cpAccords(l);
   const cm1 = CM1(), r = Math.random();
   if (!cm1) { if (l === 1) return r < .6 ? qPlur(false) : qDet(); if (l === 2) return qAdj(false); if (l === 3) return r < .4 ? qHomo(false) : qSV(false); if (l === 4) return r < .3 ? qHomo(false) : r < .7 ? qGN(false) : qAdj(false); return r < .5 ? qHomo(false) : r < .7 ? qSV(false) : r < .85 ? qGN(false) : qPlur(false); }
   if (l === 1) return qPlur(true); if (l === 2) return r < .6 ? qAdj(true) : qGN(true); if (l === 3) return qSV(true); if (l === 4) return qPPetre();
@@ -1707,6 +1914,7 @@ function qBank(key) {
   return { kind: 'choices', ask: q, prompt: '', answer: a, answerText: a, choices: shuffle([a, ...w]).map(v => ({ v, html: v })), log: q, explain: e, hint: 'Lis bien chaque proposition. Pi te conseille de les essayer une par une dans la question.' };
 }
 function genVocab(l) {
+  if (CP()) return cpVocab(l);
   const r = Math.random();
   if (!CM1()) { if (l === 1) return qAlpha(false); if (l === 2) return r < .7 ? qBank('fam2') : qAlpha(false); if (l === 3) return qBank('pre2'); if (l === 4) return qBank('syn2'); return r < .6 ? qBank('fig2') : r < .8 ? qBank('syn2') : qBank('pre2'); }
   if (l === 1) return r < .5 ? qAlpha(true) : qBank('pre4'); if (l === 2) return qBank('pre4'); if (l === 3) return qBank('syn4'); if (l === 4) return qBank('fig4');
@@ -1894,6 +2102,7 @@ const TXT = {
 const QHINT = { e: 'La réponse est écrite dans le texte : relis-le en cherchant le mot important de la question.', i: 'La réponse n’est pas écrite mot pour mot : réfléchis à ce que le texte laisse comprendre.',
   a: 'Relis la phrase d’avant : qui ou quoi est remplacé ?', v: 'Relis la phrase où se trouve le mot : elle t’aide à comprendre son sens.', g: 'Pense au texte en entier : de quoi parle-t-il ? à quoi sert-il ?' };
 function genLecture(l) {
+  if (CP()) return cpLecture(l);
   const B = TXT[GR()], set = l === 1 ? B.m : l === 5 ? B.l : B.p, types = l === 2 ? ['e'] : l === 3 ? ['i', 'e'] : l === 4 ? ['a', 'v'] : null;
   const fresh = T => T.q.filter(q => (!types || types.includes(q[0])) && !(R && R.seen && R.seen.has(`${T.t} · ${q[1]}`)));
   // On reste sur le même texte tant qu'il a des questions : l'enfant ne relit pas un nouveau texte à chaque fois
@@ -2105,7 +2314,8 @@ function inputHTML(q) {
     case 'words': return `<button class="brass-btn" data-a="validate" ${R.wsel && R.wsel.size ? '' : 'disabled'}>Valider</button>`;
     case 'mine': { const c = R.counts || (R.counts = [0, 0, 0, 0]); const v = c[0] * 1000 + c[1] * 100 + c[2] * 10 + c[3];
       const pick = R.dig != null ? `<div class="digpick" role="dialog" aria-label="Choisis un chiffre"><b>Combien de ${COLS[R.dig].toLowerCase()} ?</b><div class="digs">${range(0, 9).map(d => `<button data-a="digset" data-d="${d}" aria-pressed="${c[R.dig] === d}">${d}</button>`).join('')}</div></div>` : '';
-      return `<div class="mine-wrap"><div class="mine-cols">${COLS.map((h, k) => `<div class="mcol"><span class="mcol-h">${h}</span><div class="pile">${pileHTML(k, c[k])}</div><button class="cnt" data-a="digpick" data-k="${k}" aria-label="Choisir le nombre de ${h.toLowerCase()}">${c[k]}</button><div class="pm"><button data-a="blk" data-k="${k}" data-d="-1" aria-label="Enlever un bloc">−</button><button class="plus" data-a="blk" data-k="${k}" data-d="1" aria-label="Ajouter un bloc">+</button></div></div>`).join('')}</div>${pick}</div>
+      const c0 = 4 - (q.cols || 4);
+      return `<div class="mine-wrap"><div class="mine-cols" style="grid-template-columns:repeat(${4 - c0},1fr)">${COLS.map((h, k) => k < c0 ? '' : `<div class="mcol"><span class="mcol-h">${h}</span><div class="pile">${pileHTML(k, c[k])}</div><button class="cnt" data-a="digpick" data-k="${k}" aria-label="Choisir le nombre de ${h.toLowerCase()}">${c[k]}</button><div class="pm"><button data-a="blk" data-k="${k}" data-d="-1" aria-label="Enlever un bloc">−</button><button class="plus" data-a="blk" data-k="${k}" data-d="1" aria-label="Ajouter un bloc">+</button></div></div>`).join('')}</div>${pick}</div>
         <button class="brass-btn" data-a="validate">Valider${q.showTotal ? ` <small>· tes blocs font ${fmt(v)}</small>` : ''}</button>`; }
     case 'line': return `<button class="brass-btn" data-a="validate" ${R.pick == null ? 'disabled' : ''}>Valider</button>`;
     case 'money': { const tr = R.tray || (R.tray = []), sum = tr.reduce((a, b) => a + b, 0);
@@ -2136,7 +2346,7 @@ function speak(text) {
 }
 function qcardHTML(q) {
   let body = '';
-  if (q.kind === 'mineRead') body = `<div class="mine-cols" style="margin:6px 0 0">${q.counts.map((n, k) => `<div class="mcol"><span class="mcol-h">${COLS[k]}</span><div class="pile">${pileHTML(k, n)}</div><span class="cnt">${n}</span></div>`).join('')}</div>`;
+  if (q.kind === 'mineRead') body = `<div class="mine-cols" style="margin:6px 0 0;grid-template-columns:repeat(${q.cols || 4},1fr)">${q.counts.map((n, k) => k < 4 - (q.cols || 4) ? '' : `<div class="mcol"><span class="mcol-h">${COLS[k]}</span><div class="pile">${pileHTML(k, n)}</div><span class="cnt">${n}</span></div>`).join('')}</div>`;
   if (q.kind === 'line') body = lineSVG(q, R.pick);
   if (q.kind === 'lineRead') body = lineSVG(q, null, q.k);
   if (q.kind === 'money') { const tr = R.tray || []; body = `${q.price ? `<div style="text-align:center"><span class="pricetag">${q.price}</span></div>` : ''}<div class="tray">${tr.map((c, k) => `<button class="${c >= 500 ? `bill b${c / 100}` : `coin ${c >= 100 ? 'bi' : c >= 10 ? 'au' : 'cu'}`}" data-a="untray" data-i="${k}" aria-label="Reprendre">${coinLabel(c)}</button>`).join('')}</div>`; }
@@ -2527,7 +2737,7 @@ function onboarding() {
   app.appendChild(m);
   $$('.avs button', m).forEach(b => b.addEventListener('click', () => { S.avatar = b.dataset.v; SND.tap(); $$('.avs button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
   $$('.grades button', m).forEach(b => b.addEventListener('click', () => { gr = b.dataset.g; SND.tap(); $$('.grades button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
-  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CE2 ou CM1.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
+  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CP, CE2 ou CM1.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
     S.name = $('#nm').value.trim().slice(0, 14) || 'Capitaine'; S.intro = true; if (ask) setGrade(gr); save(); m.remove(); ac(); SND.fanfare(); show('map'); setTimeout(() => voice('carte', true), 600); });
 }
 function setGrade(g) { if (!GRADES[g]) return; S.grade = g; P(); applyGrade(); mapScroll = null; save(); }
@@ -2584,7 +2794,7 @@ app.addEventListener('click', e => {
     case 'slice': { const k = +el.dataset.i; R.sel.has(k) ? R.sel.delete(k) : R.sel.add(k); SND.tap(); refreshBottom(); break; }
     case 'validate': { if (!R || R.locked) break; const [ok, g] = check(); answer(ok, g); break; }
     case 'say': { if (!R || !R.q) break; const q = R.q; SND.tap();
-      speak(el.dataset.w === 'e' ? `La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' ? '' : q.prompt || ''} ${q.price || ''}`)); break; }
+      speak(el.dataset.w === 'e' ? `La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' ? '' : q.prompt || ''} ${q.price || ''}`) + (q.sayChoices && q.choices ? ' ' + q.choices.map(c => speakable(c.html)).join(', ou ') + ' ?' : '')); break; }
     case 'next': if (window.speechSynthesis) speechSynthesis.cancel(); if (R) { $$('.sheet-err').forEach(x => x.remove()); R.k++; nextQ(); } break;
     case 'power': { const p = el.dataset.p; if (!R || R.locked || R.used[p]) break; R.used[p] = true; SND.tap();
       if (p === 'perroquet') { const sc = $('#scene'); const h = document.createElement('div'); h.className = 'pi-tip paper'; h.setAttribute('role', 'note'); h.innerHTML = `<img src="${IMG('crew-perroquet')}" alt=""><div><b>Pi :</b> ${R.q.hint}</div><button class="x" data-a="tipclose" aria-label="Fermer l’indice">${ico('iClose')}</button>`; sc && sc.appendChild(h); el.disabled = true; voice('indice'); }
