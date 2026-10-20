@@ -2312,7 +2312,7 @@ const gPath = (P, cls, close = true) => `<path class="${cls}" d="M${P.map(gp).jo
 const gRight = (A, B, C, s = 11) => { const u = gu(B, A), v = gu(B, C); return `<path class="gc" d="M${gp(gAt(B, u, s))}L${gp([B[0] + (u[0] + v[0]) * s, B[1] + (u[1] + v[1]) * s])}L${gp(gAt(B, v, s))}"/>`; };
 const gTick = (A, B, n = 1) => { const u = gu(A, B), q = [-u[1], u[0]], m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2]; let d = ''; for (let k = 0; k < n; k++) { const c = gAt(m, u, (k - (n - 1) / 2) * 5); d += `M${gp(gAt(c, q, -6))}L${gp(gAt(c, q, 6))}`; } return `<path class="gc" d="${d}"/>`; };
 const gText = (p, t) => `<text class="gt" x="${p[0].toFixed(1)}" y="${(p[1] + 5).toFixed(1)}" text-anchor="middle">${t}</text>`;
-const gLab = (p, from, t, d = 15) => gText(gAt(p, gu(from, p), d), t);
+const gLab = (p, from, t, d = 15) => { const q = gAt(p, gu(from, p), d); return gText([Math.min(GW - 12, Math.max(12, q[0])), Math.min(GH - 8, Math.max(12, q[1]))], t); };
 // Arc qui montre l'angle de sommet B
 const gArc = (A, B, C, r = 22) => { const u = gu(B, A), v = gu(B, C), cr = u[0] * v[1] - u[1] * v[0]; return `<path class="gc" d="M${gp(gAt(B, u, r))}A${r} ${r} 0 0 ${cr > 0 ? 1 : 0} ${gp(gAt(B, v, r))}"/>`; };
 const gDot = (p, r = 3.2) => `<circle class="gpt" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r}"/>`;
@@ -2325,7 +2325,7 @@ function gq(q) {
   if (q.prompt) q.prompt = fig ? q.prompt.replace(/<\/svg>([\s\S]*)$/, (m, t) => '</svg>' + gnb(t)) : gnb(q.prompt);
   (q.choices || []).forEach(c => { if (typeof c.v === 'string') { const v = gnb(c.v); if (c.v === q.answer) q.answer = v; c.v = v; } c.html = gnb(c.html); if (c.why) c.why = gnb(c.why); });
   if (q.dg && q.dg.m) Object.keys(q.dg.m).forEach(k => { q.dg.m[k] = gnb(q.dg.m[k]); });
-  return Object.assign(q, { promptClass: q.promptClass != null ? q.promptClass : fig ? (q.kind === 'keypad' ? 'geo kp' : 'geo') : 'mid', readAlone: fig });
+  return Object.assign(q, { promptClass: q.promptClass != null ? q.promptClass : fig ? (q.kind === 'keypad' ? 'geo kp' : 'geo') : 'mid', readAlone: !!q.readAlone || fig });
 }
 
 /* --- Quadrillages --- */
@@ -2343,6 +2343,8 @@ function gHole(S, W, H) { const out = new Set(['-1,-1']), st = [[-1, -1]];
   return (W + 2) * (H + 2) - out.size - S.size > 0; }
 const gPerim = cells => { const S = new Set(cells.map(gKey)); return cells.reduce((a, [x, y]) => a + GDIR.filter(([dx, dy]) => !S.has(gKey([x + dx, y + dy]))).length, 0); };
 const gNorm = cells => { const mx = Math.min(...cells.map(c => c[0])), my = Math.min(...cells.map(c => c[1])); return cells.map(([x, y]) => gKey([x - mx, y - my])).sort().join(' '); };
+// Même forme à rotation ou retournement près
+const gCanon = cells => [c => c, ([x, y]) => [-y, x], ([x, y]) => [-x, -y], ([x, y]) => [y, -x], ([x, y]) => [-x, y], ([x, y]) => [y, x], ([x, y]) => [x, -y], ([x, y]) => [-y, -x]].map(f => gNorm(cells.map(f))).sort()[0];
 const gSame = (a, b) => a.map(gKey).sort().join(' ') === b.map(gKey).sort().join(' ');
 const gGrid = (W, H, s, ox, oy) => { let d = ''; for (let x = 0; x <= W; x++) d += `M${ox + x * s} ${oy}V${oy + H * s}`; for (let y = 0; y <= H; y++) d += `M${ox} ${oy + y * s}H${ox + W * s}`; return `<path class="gg" d="${d}"/>`; };
 // Carreaux remplis et contour : les côtés communs à deux morceaux sont intérieurs, les autres forment le bord
@@ -2365,9 +2367,9 @@ function gFigName() {
     wrong = [['carré', 'Un carré a quatre côtés de même longueur. Ici, les codages montrent deux longueurs différentes.'], ['losange', 'Un losange a quatre côtés de même longueur : ce n’est pas le cas ici.']]; }
   else if (t === 'los') { const w = pick([1.5, 1.7, 2]); pts = [[0, -1], [w, 0], [0, 1], [-w, 0]]; ticks = all4(1); ans = 'losange'; def = 'un quadrilatère qui a quatre côtés de même longueur';
     wrong = [['carré', 'Un carré a quatre angles droits : ici, aucun angle n’est droit.'], ['rectangle', 'Un rectangle a quatre angles droits : ici, aucun angle n’est droit.']]; }
-  else if (t === 'trap') { const top = pick([1.8, 2.2, 2.6]), off = rnd(3, 12) / 10; pts = [[0, 1.8], [4, 1.8], [off + top, 0], [off, 0]]; par = true; ans = 'trapèze'; def = 'un quadrilatère qui a deux côtés opposés parallèles, ici (AB) et (DC)';
+  else if (t === 'trap') { const top = pick([1.8, 2.2, 2.6]), off = rnd(5, 12) / 10; pts = [[0, 1.8], [4, 1.8], [off + top, 0], [off, 0]]; par = true; ans = 'trapèze'; def = 'un quadrilatère qui a deux côtés opposés parallèles : ici, les côtés [AB] et [DC]';
     wrong = [['losange', 'Un losange a quatre côtés de même longueur : ce n’est pas le cas ici.'], ['rectangle', 'Un rectangle a quatre angles droits : ici, aucun angle n’est droit.']]; }
-  else if (t === 'trapr') { const top = pick([1.8, 2.4, 2.8]); pts = [[0, 1.8], [4, 1.8], [top, 0], [0, 0]]; right = [0, 3]; par = true; ans = 'trapèze rectangle'; def = 'un trapèze (deux côtés opposés parallèles) qui a deux angles droits';
+  else if (t === 'trapr') { const top = pick([1.8, 2.4, 2.8]); pts = [[0, 1.8], [4, 1.8], [top, 0], [0, 0]]; right = [0, 3]; par = true; ans = 'trapèze rectangle'; def = 'un trapèze (deux côtés opposés parallèles, ici [AB] et [DC]) qui a deux angles droits';
     wrong = [['rectangle', 'Un rectangle a quatre angles droits : celui-ci n’en a que deux.'], ['trapèze', 'C’est bien un trapèze, mais il a aussi deux angles droits : le nom le plus précis est « trapèze rectangle ».']]; }
   else if (t === 'trir') { const h = pick([1.3, 1.6]), w = pick([2.2, 2.6]); pts = [[0, 0], [0, h], [w, h]]; right = [1]; ans = 'triangle rectangle'; def = 'un triangle qui a un angle droit';
     wrong = [['triangle isocèle', 'Un triangle isocèle a deux côtés de même longueur : aucun codage ne l’indique ici.'], ['triangle équilatéral', 'Un triangle équilatéral a trois côtés de même longueur, et aucun angle droit.']]; }
@@ -2377,9 +2379,9 @@ function gFigName() {
     wrong = [['triangle isocèle', 'Il est bien isocèle, mais ses trois côtés ont la même longueur : le nom le plus précis est « triangle équilatéral ».'], ['triangle rectangle', 'Un triangle rectangle a un angle droit : il n’y en a pas ici.']]; }
   const P = gfit(pts, Math.random() < .35 ? 0 : rnd(-40, 40), GW, par ? GH - 16 : GH), n = P.length, at = k => P[(k + n) % n], c = gctr(P);
   let s = gPath(P, 'gl') + right.map(k => gRight(at(k - 1), at(k), at(k + 1))).join('') + ticks.map(([a, b, m]) => gTick(P[a], P[b], m)).join('');
-  if (par) s += P.map((p, k) => gLab(p, c, 'ABCD'[k])).join('') + gText([GW / 2, GH - 7], '(AB) // (DC)');
+  if (par) s += P.map((p, k) => gLab(p, c, 'ABCD'[k])).join('') + gText([GW / 2, GH - 7], 'côtés [AB] et [DC] parallèles');
   return gq({ kind: 'choices', ask: 'Quel est le nom le plus précis de cette figure ?', prompt: gsvg(s, 'une figure codée'), answer: ans, answerText: ans, choices: gch(ans, wrong), log: `nommer : ${ans}`,
-    explain: `C’est un ${ans} : ${def}.`, hint: 'Regarde les codages : un petit carré montre un angle droit, de petits traits montrent des côtés de même longueur.' });
+    explain: `C’est un ${ans} : ${def}.`, hint: par ? 'Sous la figure, on te dit quels côtés sont parallèles ; un petit carré montre un angle droit.' : 'Regarde les codages : un petit carré montre un angle droit, de petits traits montrent des côtés de même longueur.' });
 }
 function gPolyName() {
   const n = pick([4, 5, 6]), N = { 4: 'quadrilatère', 5: 'pentagone', 6: 'hexagone' }, a0 = rnd(0, 359);
@@ -2409,7 +2411,7 @@ function gCercle() {
     diamètre: { 'un rayon': 'Un rayon va du centre jusqu’au cercle. Ce segment traverse tout le cercle en passant par le centre O : c’est un diamètre.', 'un arc de cercle': 'Un arc de cercle est un morceau du cercle lui-même, une ligne courbe. Ici, c’est un segment qui passe par le centre O.' },
     corde: { 'un rayon': 'Un rayon part du centre O. Ce segment relie deux points du cercle sans passer par le centre : c’est une corde.', 'un diamètre': 'Un diamètre passe par le centre O. Ce segment n’y passe pas : c’est une corde.' } }[k];
   return gq({ kind: 'choices', ask: 'Le segment rouge est :', prompt: gsvg(s, 'un cercle de centre O et un segment rouge'), answer: ans, answerText: ans, choices: ['un rayon', 'un diamètre', third].map(v => v === ans ? { v, html: v } : { v, html: v, why: W[v] }), log: `cercle : ${k}`,
-    explain: { rayon: 'C’est un rayon : un segment qui va du centre O jusqu’à un point du cercle.', diamètre: 'C’est un diamètre : il relie deux points du cercle en passant par le centre O. Il mesure deux rayons.', corde: 'C’est une corde : un segment qui relie deux points du cercle sans passer par le centre.' }[k],
+    explain: { rayon: 'C’est un rayon : un segment qui va du centre O jusqu’à un point du cercle.', diamètre: 'C’est un diamètre : il relie deux points du cercle en passant par le centre O. Il mesure deux rayons.', corde: 'C’est une corde : un segment qui relie deux points du cercle. Elle ne passe pas par le centre O : ce n’est pas un diamètre.' }[k],
     hint: 'Regarde si le segment passe par le centre O, s’il s’y arrête, ou s’il ne le touche pas.' });
 }
 // Droite qui passe par p, de direction u, coupée aux bords du cadre
@@ -2417,17 +2419,18 @@ function gLine(p, u, w = GW, h = GH, m = 12) { let t0 = -1e4, t1 = 1e4;
   [[0, m, w - m], [1, m, h - m]].forEach(([k, lo, hi]) => { if (Math.abs(u[k]) < 1e-9) return; const a = (lo - p[k]) / u[k], b = (hi - p[k]) / u[k]; t0 = Math.max(t0, Math.min(a, b)); t1 = Math.min(t1, Math.max(a, b)); });
   return [gAt(p, u, t0), gAt(p, u, t1)]; }
 function gDroites() {
-  const N = { par: 'parallèles', perp: 'perpendiculaires', sec: 'sécantes, pas perpendiculaires' };
+  const N = { par: 'parallèles', perp: 'perpendiculaires', sec: 'sécantes mais pas perpendiculaires' };
   if (Math.random() < .3) { const sym = pick(['⊥', '//']), ans = sym === '⊥' ? N.perp : N.par;
-    return gq({ kind: 'choices', ask: 'Ce symbole veut dire que les droites (d) et (d’) sont :', prompt: `(d) ${sym} (d’)`, promptClass: '', answer: ans, answerText: ans,
-      choices: gch(ans, [[sym === '⊥' ? N.par : N.perp, `Le symbole ${sym === '⊥' ? '// veut dire « parallèles »' : '⊥ veut dire « perpendiculaires »'}. Ici, le symbole est ${sym}.`], [N.sec, 'Le symbole indique une position précise des deux droites, pas seulement qu’elles se coupent.']]), log: `symbole ${sym}`,
+    return gq({ kind: 'choices', ask: 'Ce symbole veut dire que les droites (d) et (d’) sont :', prompt: `(d) ${sym} (d’)`, promptClass: '', readAlone: true, answer: ans, answerText: ans,
+      choices: gch(ans, [[sym === '⊥' ? N.par : N.perp, `Le symbole ${sym === '⊥' ? '// veut dire « parallèles »' : '⊥ veut dire « perpendiculaires »'}. Ici, le symbole est ${sym}.`], [N.sec, sym === '//' ? 'Le symbole // veut dire que les droites sont parallèles : elles ne se coupent jamais.' : 'Le symbole ⊥ ne dit pas seulement que les droites se coupent : elles se coupent en formant un angle droit.']]), log: `symbole ${sym}`,
       explain: sym === '⊥' ? 'Le symbole ⊥ veut dire « est perpendiculaire à » : les deux droites se coupent en formant un angle droit.' : 'Le symbole // veut dire « est parallèle à » : les deux droites ne se coupent jamais.', hint: 'Le symbole ⊥ ressemble à un angle droit ; le symbole // ressemble à deux traits parallèles.' }); }
   const t = pick(['par', 'perp', 'sec']), a = rnd(0, 179) * Math.PI / 180, u = [Math.cos(a), Math.sin(a)], q = [-u[1], u[0]], C = [GW / 2 + rnd(-30, 30), GH / 2 + rnd(-12, 12)];
   let L1, L2, code = '';
   if (t === 'par') { const o = rnd(36, 50) / 2; L1 = gLine(gAt(C, q, -o), u); L2 = gLine(gAt(C, q, o), u); }
   else { const b = t === 'perp' ? Math.PI / 2 : (Math.random() < .5 ? 1 : -1) * rnd(30, 60) * Math.PI / 180, v = [Math.cos(a + b), Math.sin(a + b)]; L1 = gLine(C, u); L2 = gLine(C, v); if (t === 'perp') code = gRight(gAt(C, u, 20), C, gAt(C, v, 20), 12); }
-  const lab = (L, nm) => { const d = gu(L[0], L[1]), p = gAt(gAt(L[0], d, 26), [-d[1], d[0]], 13); return gText([Math.min(GW - 16, Math.max(16, p[0])), Math.min(GH - 8, Math.max(10, p[1]))], nm); };
-  const s = `<path class="gs" d="M${gp(L1[0])}L${gp(L1[1])}M${gp(L2[0])}L${gp(L2[1])}"/>${code}${lab(L1, '(d)')}${lab(L2, '(d’)')}`;
+  // Étiquettes : parallèles, au même bout et chacune du côté extérieur ; sécantes, aux deux bouts opposés
+  const lab = (L, nm, sg = 1) => { const d = gu(L[0], L[1]), p = gAt(gAt(L[0], d, 26), [-d[1], d[0]], 15 * sg); return gText([Math.min(GW - 16, Math.max(16, p[0])), Math.min(GH - 8, Math.max(10, p[1]))], nm); };
+  const s = `<path class="gs" d="M${gp(L1[0])}L${gp(L1[1])}M${gp(L2[0])}L${gp(L2[1])}"/>${code}${t === 'par' ? lab(L1, '(d)', -1) + lab(L2, '(d’)') : lab(L1, '(d)') + lab([L2[1], L2[0]], '(d’)')}`;
   const W = { par: { perp: 'Ces droites ne se coupent pas : elles sont parallèles.', sec: 'Ces droites ne se coupent pas : elles sont parallèles.' },
     perp: { par: 'Des droites parallèles ne se coupent jamais. Celles-ci se coupent.', sec: 'Elles se coupent en formant un angle droit (regarde le codage) : elles sont perpendiculaires.' },
     sec: { par: 'Des droites parallèles ne se coupent jamais. Celles-ci se coupent.', perp: 'Elles se coupent, mais sans former d’angle droit : elles ne sont pas perpendiculaires.' } }[t];
@@ -2446,7 +2449,7 @@ function gAngleType() {
   const D = { aigu: 'Un angle aigu est plus petit qu’un angle droit.', droit: 'Un angle droit mesure 90°, comme le coin d’une feuille.', obtus: 'Un angle obtus est plus grand qu’un angle droit.' };
   const here = { aigu: 'Celui-ci est moins ouvert qu’un angle droit.', droit: 'Celui-ci est exactement un angle droit : vérifie avec ton équerre.', obtus: 'Celui-ci est plus ouvert qu’un angle droit.' }[t];
   return gq({ kind: 'choices', ask: 'Cet angle est :', prompt: gsvg(s, 'un angle'), answer: t, answerText: t, choices: ['aigu', 'droit', 'obtus'].map(x => x === t ? { v: x, html: x } : { v: x, html: x, why: `${D[x]} ${here}` }), log: `angle ${t} (${al}°)`,
-    explain: t === 'droit' ? 'C’est un angle droit : il mesure 90°. Tu peux le vérifier avec le coin de ton équerre.' : `Cet angle est ${t === 'aigu' ? 'plus petit' : 'plus grand'} qu’un angle droit : il est ${t}.`, hint: 'Compare avec le coin d’une équerre ou d’une feuille : c’est un angle droit.' });
+    explain: t === 'droit' ? 'C’est un angle droit : il mesure 90°. Tu peux le vérifier avec le coin de ton équerre.' : `Cet angle est ${t === 'aigu' ? 'plus petit' : 'plus grand'} qu’un angle droit : il est ${t}.`, hint: 'Compare avec le coin d’une équerre ou d’une feuille : ce coin est un angle droit.' });
 }
 function gAngleCmp() {
   const eq = Math.random() < .25, sm = rnd(25, 60), bg = eq ? sm : sm + rnd(25, 50), bigA = Math.random() < .5, bait = Math.random() < .7;
@@ -2462,12 +2465,12 @@ function gAngleCmp() {
   const why = v => eq ? 'Les deux angles ont la même ouverture. Leurs côtés n’ont pas la même longueur, mais cela ne change pas la grandeur d’un angle.'
     : v === ch[2] ? 'Regarde l’écartement entre les côtés : l’un des deux angles est nettement plus ouvert.'
     : bait ? 'Ses côtés sont plus longs, mais il est moins ouvert. La grandeur d’un angle ne dépend pas de la longueur de ses côtés.' : 'Il est moins ouvert que l’autre : c’est le plus petit des deux.';
-  return gq({ kind: 'choices', ask: 'Quel angle est le plus grand ?', prompt: gsvg(s, 'deux angles'), answer: ans, answerText: ans, choices: ch.map(v => v === ans ? { v, html: v } : { v, html: v, why: why(v) }), log: eq ? `angles égaux (${sm}°)` : `comparer ${sm}° et ${bg}°${bait ? ' (côtés trompeurs)' : ''}`,
+  return gq({ kind: 'choices', ask: 'Quel angle est le plus grand ? Ou sont-ils égaux ?', prompt: gsvg(s, 'deux angles'), answer: ans, answerText: ans, choices: ch.map(v => v === ans ? { v, html: v } : { v, html: v, why: why(v) }), log: eq ? `angles égaux (${sm}°)` : `comparer ${sm}° et ${bg}°${bait ? ' (côtés trompeurs)' : ''}`,
     explain: eq ? 'Les deux angles ont la même ouverture : ils sont égaux. Allonger ou raccourcir les côtés ne change pas un angle.' : `${ans === ch[0] ? 'L’angle â' : 'L’angle b̂'} est le plus ouvert : c’est le plus grand. On compare l’écartement des côtés, pas leur longueur.`,
     hint: 'Pour comparer deux angles, regarde l’écartement entre leurs côtés, pas la longueur des côtés.' });
 }
 const GDEG = [ // [question, réponse en degrés, explication, erreurs fréquentes, journal]
-  ['Combien de degrés mesure un angle droit ?', 90, 'Un angle droit mesure 90°.', { 100: 'Les angles ne se comptent pas par 100 : un angle droit mesure 90°.', 45: '45°, c’est la moitié d’un angle droit.', 180: '180°, c’est deux angles droits. Un seul angle droit mesure 90°.' }, 'angle droit en degrés'],
+  ['Combien de degrés mesure un angle droit ?', 90, 'Un angle droit mesure 90°.', { 100: 'Un angle droit mesure 90°, pas 100°.', 45: '45°, c’est la moitié d’un angle droit.', 180: '180°, c’est deux angles droits. Un seul angle droit mesure 90°.' }, 'angle droit en degrés'],
   ['On plie un angle droit en deux, bord contre bord. Combien de degrés mesure chaque moitié ?', 45, 'La moitié de 90°, c’est 45° : 45 + 45 = 90.', { 90: 'C’est l’angle droit entier. Plié en deux, chaque moitié mesure 90 ÷ 2 = 45°.', 50: 'La moitié de 90 n’est pas 50 : 45 + 45 = 90.' }, 'moitié d’un angle droit'],
   ['Un angle mesure 45°. Combien mesure un angle deux fois plus grand ?', 90, '45° × 2 = 90° : c’est un angle droit.', { 47: 'Deux fois plus grand, c’est multiplier par 2, pas ajouter 2.' }, 'double de 45°'],
   ['Un angle mesure 45°. Combien mesure un angle trois fois plus grand ?', 135, '45° × 3 = 135° : c’est un angle obtus, plus grand qu’un angle droit.', { 90: '90°, c’est deux fois 45°. Trois fois : 45 + 45 + 45 = 135°.', 48: 'Trois fois plus grand, c’est multiplier par 3, pas ajouter 3.' }, 'triple de 45°'],
@@ -2487,8 +2490,8 @@ function gAngleNom() {
   const bad = [0, 1, 2].filter(j => j !== k).map(j => { const r = [0, 1, 2].filter(x => x !== j).map(x => Ls[x]); return r[0] + Ls[j] + r[1]; });
   const s = gPath(P, 'gl') + gArc(P[(k + 1) % 3], P[k], P[(k + 2) % 3], 24) + P.map((p, j) => gLab(p, c, Ls[j], 16)).join('');
   const html = x => `l’angle <span class="ang">${x}</span>`;
-  return gq({ kind: 'choices', ask: 'Comment s’appelle l’angle marqué en rouge ?', prompt: gsvg(s, `un triangle ${Ls}`), answer: ok, answerText: `l’angle ${ok}`, choices: [{ v: ok, html: html(ok) }, ...bad.map(b => ({ v: b, html: html(b), why: `Dans « l’angle ${b} », la lettre du milieu, ${b[1]}, est le sommet. Or l’angle marqué a pour sommet ${mid}.` }))],
-    log: `nommer l’angle de sommet ${mid} (${Ls})`, explain: `L’angle marqué a pour sommet ${mid} : on écrit ${mid} au milieu. C’est l’angle ${ok}, qu’on peut aussi écrire ${ok[2]}${ok[1]}${ok[0]}.`, hint: 'Le sommet de l’angle s’écrit toujours au milieu des trois lettres.' });
+  return gq({ kind: 'choices', ask: 'Comment s’appelle l’angle marqué en rouge ?', prompt: gsvg(s, `un triangle ${Ls}`), answer: ok, answerText: `l’angle ${ok}`, choices: [{ v: ok, html: html(ok) }, ...bad.map(b => ({ v: b, html: html(b), why: `Dans « l’angle <span class="ang">${b}</span> », la lettre du milieu, ${b[1]}, est le sommet. Or l’angle marqué a pour sommet ${mid}.` }))],
+    log: `nommer l’angle de sommet ${mid} (${Ls})`, explain: `L’angle marqué a pour sommet ${mid} : on écrit ${mid} au milieu. C’est l’angle <span class="ang">${ok}</span>, qu’on peut aussi écrire <span class="ang">${ok[2]}${ok[1]}${ok[0]}</span>.`, hint: 'Le sommet de l’angle s’écrit toujours au milieu des trois lettres.' });
 }
 
 /* --- Niveau 3 : aires et périmètres sur quadrillage --- */
@@ -2511,23 +2514,24 @@ function gDemi() {
     const sh = sq.filter(([px, py]) => dx === 1 ? px === x + 1 : dx === -1 ? px === x : dy === 1 ? py === y + 1 : py === y), far = sq.filter(p => !sh.includes(p));
     tris.push([sh[0], sh[1], pick(far)]); });
   const h = tris.length, n = base.length, a = fmtD(n + h / 2, 1), fig = gsvg(gGrid(8, 5, 28, 38, 15) + gShape(base, 28, 38, 15, 'gf', tris), 'une figure faite de carreaux et de demi-carreaux');
-  return gq({ kind: 'choices', ask: 'Chaque carreau mesure 1 cm². Quelle est l’aire de la figure ?', prompt: fig, answer: `${a} cm²`, answerText: `${a} cm²`,
+  return gq({ kind: 'choices', ask: 'Chaque carreau a une aire de 1 cm². Quelle est l’aire de la figure ?', prompt: fig, answer: `${a} cm²`, answerText: `${a} cm²`,
     choices: gch(`${a} cm²`, [[`${n + h} cm²`, 'Tu as compté chaque demi-carreau comme un carreau entier. Deux demi-carreaux font un seul carreau.'], [`${n} cm²`, 'Tu as oublié les demi-carreaux : chacun vaut la moitié d’un carreau.']]), log: `aire avec demi-carreaux (${n} et ${h} demis)`,
     explain: `La figure contient ${n} carreaux entiers et ${h} demi-carreaux. ${h} demi-carreaux font ${fmtD(h / 2, 1)} carreau${h / 2 >= 2 ? 'x' : ''}. Aire : ${n} + ${fmtD(h / 2, 1)} = ${a} cm².`, hint: 'Deux demi-carreaux font un carreau entier.' });
 }
 function gCmpAB() {
-  const nA = rnd(5, 9), eq = Math.random() < .5, nB = eq ? nA : rnd(5, 9), A = gPolyo(nA, 5, 5), B0 = gPolyo(nB, 5, 5);
+  const nA = rnd(5, 9), eq = Math.random() < .5, nB = eq ? nA : rnd(5, 9), A = gPolyo(nA, 5, 5); let B0 = gPolyo(nB, 5, 5);
+  for (let t = 0; eq && A && B0 && gCanon(B0) === gCanon(A) && t < 30; t++) B0 = gPolyo(nB, 5, 5); // même aire, mais pas la même forme
   if (!A || !B0) return gCarreaux();
   const B = B0.map(([x, y]) => [x + 6, y]), pA = gPerim(A), pB = gPerim(B0), t = pick(['aire', 'per']), vA = t === 'aire' ? nA : pA, vB = t === 'aire' ? nB : pB;
   const same = t === 'aire' ? 'les deux ont la même aire' : 'les deux ont le même périmètre', ch = ['la figure A', 'la figure B', same], ans = vA > vB ? ch[0] : vA < vB ? ch[1] : same;
   const fig = gsvg(gGrid(11, 5, 24, 18, 30) + gShape(A, 24, 18, 30) + gShape(B, 24, 18, 30) + gText([18 + 2.5 * 24, 16], 'A') + gText([18 + 8.5 * 24, 16], 'B'), 'deux figures A et B sur un quadrillage');
   const why = v => { const X = v === ch[0] ? 'A' : v === ch[1] ? 'B' : null, nX = X === 'A' ? nA : nB, nY = X === 'A' ? nB : nA, pX = X === 'A' ? pA : pB, pY = X === 'A' ? pB : pA;
     if (t === 'aire') return X && pX > pY && nX <= nY ? `La figure ${X} a le plus long tour (le périmètre), mais l’aire, c’est le nombre de carreaux : A en a ${nA}, B en a ${nB}.` : `Compte les carreaux : la figure A en a ${nA}, la figure B en a ${nB}.`;
-    return X && nX > nY && pX <= pY ? `La figure ${X} a plus de carreaux (une plus grande aire), mais le périmètre, c’est la longueur du tour : A mesure ${pA} côtés de carreau, B en mesure ${pB}.` : `Fais le tour de chaque figure : A mesure ${pA} côtés de carreau, B en mesure ${pB}.`; };
-  const verdict = ans === same ? (t === 'aire' ? 'Elles ont la même aire, même si leurs formes sont différentes.' : 'Elles ont le même périmètre.') : `C’est la figure ${ans === ch[0] ? 'A' : 'B'} qui a ${t === 'aire' ? 'la plus grande aire' : 'le plus grand périmètre'}.`;
+    return X && nX > nY && pX <= pY ? `La figure ${X} a plus de carreaux (une plus grande aire), mais le périmètre, c’est la longueur du tour : celui de A mesure ${pA} côtés de carreau, celui de B en mesure ${pB}.` : `Fais le tour de chaque figure : celui de A mesure ${pA} côtés de carreau, celui de B en mesure ${pB}.`; };
+  const verdict = ans === same ? (t === 'aire' ? (gCanon(A) === gCanon(B0) ? 'Elles ont la même aire.' : 'Elles ont la même aire, même si leurs formes sont différentes.') : 'Elles ont le même périmètre.') : `C’est la figure ${ans === ch[0] ? 'A' : 'B'} qui a ${t === 'aire' ? 'la plus grande aire' : 'le plus grand périmètre'}.`;
   return gq({ kind: 'choices', ask: t === 'aire' ? 'Quelle figure a la plus grande aire ?' : 'Quelle figure a le plus grand périmètre ?', prompt: fig, answer: ans, answerText: ans, choices: ch.map(v => v === ans ? { v, html: v } : { v, html: v, why: why(v) }),
     log: `comparer les ${t === 'aire' ? 'aires' : 'périmètres'} (A ${nA}/${pA}, B ${nB}/${pB})`,
-    explain: t === 'aire' ? `Aire : la figure A a ${nA} carreaux, la figure B en a ${nB}. ${verdict}` : `Périmètre : la figure A mesure ${pA} côtés de carreau, la figure B en mesure ${pB}. ${verdict}${nA === nB && pA !== pB ? ' Elles ont pourtant la même aire !' : ''}`,
+    explain: t === 'aire' ? `Aire : la figure A a ${nA} carreaux, la figure B en a ${nB}. ${verdict}` : `Périmètre : le tour de la figure A mesure ${pA} côtés de carreau, celui de la figure B en mesure ${pB}. ${verdict}${nA === nB && pA !== pB ? ' Elles ont pourtant la même aire !' : ''}`,
     hint: 'L’aire se trouve en comptant les carreaux ; le périmètre en faisant le tour.' });
 }
 
@@ -2541,13 +2545,14 @@ function gRectFig(L, l, lb, lr, sq = false, inner = '') {
 }
 function gRectMes() {
   const t = pick(['airR', 'airR', 'perR', 'airC', 'perC', 'cote']);
-  if (t === 'airC' || t === 'perC') { const c = rnd(2, 12), air = t === 'airC', ans = air ? c * c : 4 * c;
-    return gq({ kind: 'keypad', ask: `Ce carré a des côtés de ${c} cm. ${air ? 'Quelle est son aire' : 'Quel est son périmètre'} ?`, prompt: `${gRectFig(1, 1, `${c} cm`, '', true)}<div class="gans">${air ? 'Aire' : 'Périmètre'} = ${SLOT} ${air ? 'cm²' : 'cm'}</div>`,
+  if (t === 'airC' || t === 'perC') { let c; do { c = rnd(3, 12); } while (c === 4); const air = t === 'airC', ans = air ? c * c : 4 * c;
+    return gq({ kind: 'keypad', ask: `Le côté de ce carré mesure ${c} cm. ${air ? 'Quelle est son aire' : 'Quel est son périmètre'} ?`, prompt: `${gRectFig(1, 1, `${c} cm`, '', true)}<div class="gans">${air ? 'Aire' : 'Périmètre'} = ${SLOT} ${air ? 'cm²' : 'cm'}</div>`,
       answer: ans, answerText: `${ans} ${air ? 'cm²' : 'cm'}`, log: `${air ? 'aire' : 'périmètre'} d’un carré de ${c} cm`,
       dg: { t: 'geo', m: air ? { [2 * c]: `Tu as fait ${c} × 2. L’aire d’un carré, c’est côté × côté : ${c} × ${c}.`, [4 * c]: `${4 * c} cm, c’est le périmètre (le tour). L’aire, c’est côté × côté : ${c} × ${c}.` } : { [2 * c]: 'Tu n’as compté que deux côtés : un carré en a quatre.', [c * c]: `${c * c}, c’est l’aire (${c} × ${c}). Le périmètre, c’est le tour : 4 côtés de ${c} cm.` } },
       explain: air ? `Aire du carré = côté × côté = ${c} × ${c} = ${c * c} cm². C’est comme ${c} rangées de ${c} carreaux de 1 cm².` : `Le périmètre, c’est le tour : 4 côtés de ${c} cm. ${c} × 4 = ${4 * c} cm.`,
       hint: air ? 'L’aire d’un carré : côté × côté.' : 'Un carré a quatre côtés de même longueur.' }); }
-  const l = rnd(2, 8), L = rnd(l + 1, 12), A = L * l;
+  let l, L; do { l = rnd(2, 8); L = rnd(l + 1, 12); } while (L * l === 2 * (L + l));
+  const A = L * l;
   if (t === 'cote') { const m = { [A - l]: `Tu as soustrait. L’aire, c’est longueur × largeur : cherche le nombre qui, multiplié par ${l}, donne ${A}.` }; if (A % 2 === 0 && A / 2 - l > 0 && A / 2 - l !== L) m[A / 2 - l] = `Ce serait la longueur si ${A} cm était le périmètre. Ici, ${A} cm² est l’aire : longueur × ${l} = ${A}.`;
     return gq({ kind: 'keypad', ask: `Ce rectangle a une aire de ${A} cm². Sa largeur mesure ${l} cm. Combien mesure sa longueur ?`, prompt: `${gRectFig(L, l, '? cm', `${l} cm`, false, `${A} cm²`)}<div class="gans">Longueur = ${SLOT} cm</div>`, answer: L, answerText: `${L} cm`, log: `longueur d’un rectangle d’aire ${A} cm² et de largeur ${l} cm`,
       dg: { t: 'geo', m }, explain: `L’aire, c’est longueur × largeur : longueur × ${l} = ${A}. Donc longueur = ${A} ÷ ${l} = ${L} cm.`, hint: `Cherche dans la table de ${l} : ${l} × … = ${A}.` }); }
@@ -2575,7 +2580,7 @@ function gConv() {
 }
 function gQuelRect() {
   for (let t = 0; t < 60; t++) { const l = rnd(2, 6), L = rnd(l + 1, 9), A = L * l;
-    const per = range(1, A).filter(b => A % 2 === 0 && A / 2 - b > b && (A / 2 - b) * b !== A).map(b => [A / 2 - b, b]), sum = range(2, A).filter(b => A - b > b && (A - b) * b !== A).map(b => [A - b, b]);
+    const per = range(1, A).filter(b => A % 2 === 0 && A / 2 - b > b && (A / 2 - b) * b !== A).map(b => [A / 2 - b, b]), sum = range(2, A).filter(b => A - b > b && A - b <= 20 && (A - b) * b !== A).map(b => [A - b, b]);
     if (!per.length || !sum.length) continue; const P = pick(per), Sm = pick(sum);
     if (gKey(P) === gKey(Sm) || gKey(P) === gKey([L, l]) || gKey(Sm) === gKey([L, l])) continue;
     const nm = ([a, b]) => `${a} cm sur ${b} cm`, ans = nm([L, l]);
@@ -2586,13 +2591,13 @@ function gQuelRect() {
 }
 
 /* --- Niveau 5 : solides, patron du cube, symétrie, déplacements --- */
-// Solides à faces planes : sommets en 3D (x vers la droite, y vers le haut, z vers nous), faces tournées dans le sens direct vu de l'extérieur.
-// On les voit un peu de côté et d'en haut ; une arête est cachée (en pointillés) quand aucune de ses faces n'est tournée vers nous.
-function gPoly3([V, F], yaw = 32, pitch = 22) {
-  const r = Math.PI / 180, cy = Math.cos(yaw * r), sy = Math.sin(yaw * r), cp = Math.cos(pitch * r), sp = Math.sin(pitch * r);
-  const R = V.map(([x, y, z]) => { const x1 = x * cy + z * sy, z1 = -x * sy + z * cy; return [x1, y * cp - z1 * sp, y * sp + z1 * cp]; });
-  const vis = F.map(f => { const [a, b, c] = f.map(k => R[k]); return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]) > 1e-9; });
-  const P = gfit(R.map(p => [p[0], -p[1]]), 0, GW, GH, 16, 200), E = new Map();
+// Solides à faces planes, en perspective cavalière comme dans les manuels : face avant en vraie grandeur, fuyantes vers le haut à droite
+// (angle al, coefficient k). Sommets en 3D (x vers la droite, y vers le haut, z vers nous), faces tournées dans le sens direct vu de l'extérieur :
+// une face est vue si son dessin garde ce sens ; une arête est cachée (en pointillés) quand aucune de ses faces n'est vue.
+function gPoly3([V, F], al = 38, k = .5) {
+  const c = Math.cos(al * Math.PI / 180) * k, sn = Math.sin(al * Math.PI / 180) * k, Q = V.map(([x, y, z]) => [x - z * c, y - z * sn]);
+  const vis = F.map(f => f.reduce((a, j, i) => { const u = Q[j], v = Q[f[(i + 1) % f.length]]; return a + u[0] * v[1] - v[0] * u[1]; }, 0) > 1e-9);
+  const P = gfit(Q.map(p => [p[0], -p[1]]), 0, GW, GH, 16, 200), E = new Map();
   F.forEach((f, k) => f.forEach((a, j) => { const b = f[(j + 1) % f.length], key = a < b ? `${a}-${b}` : `${b}-${a}`; E.set(key, !!E.get(key) || vis[k]); }));
   const seg = (on, cls) => `<path class="${cls}" d="${[...E].filter(([, v]) => v === on).map(([k]) => { const [a, b] = k.split('-').map(Number); return `M${gp(P[a])}L${gp(P[b])}`; }).join('')}"/>`;
   const faces = F.filter((f, k) => vis[k]).map(f => `<path class="gsf" d="M${f.map(k => gp(P[k])).join('L')}Z"/>`).join('');
@@ -2600,7 +2605,7 @@ function gPoly3([V, F], yaw = 32, pitch = 22) {
 }
 const gBox = (a, b, c) => [[[0, 0, 0], [a, 0, 0], [a, b, 0], [0, b, 0], [0, 0, c], [a, 0, c], [a, b, c], [0, b, c]], [[4, 5, 6, 7], [0, 3, 2, 1], [1, 2, 6, 5], [0, 4, 7, 3], [3, 7, 6, 2], [0, 1, 5, 4]]];
 const gPyr = (s, h) => [[[0, 0, 0], [s, 0, 0], [s, 0, s], [0, 0, s], [s / 2, h, s / 2]], [[0, 1, 2, 3], [3, 2, 4], [2, 1, 4], [1, 0, 4], [0, 3, 4]]];
-const gPrism = (s, h) => [[[0, 0, s], [s, 0, s], [s / 2, 0, 0], [0, h, s], [s, h, s], [s / 2, h, 0]], [[0, 2, 1], [3, 4, 5], [0, 1, 4, 3], [1, 2, 5, 4], [2, 0, 3, 5]]];
+const gPrism = (w, h, L) => [[[0, 0, 0], [w, 0, 0], [w / 2, h, 0], [0, 0, L], [w, 0, L], [w / 2, h, L]], [[3, 4, 5], [0, 2, 1], [0, 1, 4, 3], [1, 2, 5, 4], [2, 0, 3, 5]]];
 // Solides ronds : la moitié arrière des contours est cachée (pointillés)
 function gRound(t) {
   const half = (x, y, rx, ry, front, cls) => `<path class="${cls}" d="M${x - rx} ${y}A${rx} ${ry} 0 0 ${front ? 0 : 1} ${x + rx} ${y}"/>`, x = 150;
@@ -2617,10 +2622,10 @@ const GSOL = { // [nom, démonstratif, explication, pièges, faits]
   pyramide: ['pyramide', 'cette pyramide', 'C’est une pyramide : sa base est un polygone (ici un carré) et ses faces latérales sont des triangles qui se rejoignent en un même sommet.', [['prisme droit', 'Un prisme droit a deux bases identiques reliées par des rectangles. Ici, les faces triangulaires se rejoignent en un seul sommet.'], ['cône', 'Un cône a une base en forme de disque et une surface courbe. Ici, toutes les faces sont plates.']], 'Cette pyramide a une base carrée et 4 faces triangulaires : 5 faces, 8 arêtes et 5 sommets.'],
   prisme: ['prisme droit', 'ce prisme droit', 'C’est un prisme droit : il a deux bases identiques (ici des triangles), reliées par des faces rectangulaires.', [['pyramide', 'Une pyramide se termine en pointe. Ici, deux bases triangulaires identiques sont reliées par des rectangles.'], ['pavé', 'Un pavé a 6 faces rectangulaires. Ici, deux faces sont des triangles.']], 'Ce prisme droit a 2 bases triangulaires et 3 faces rectangulaires : 5 faces, 9 arêtes et 6 sommets.'],
   cylindre: ['cylindre', 'ce cylindre', 'C’est un cylindre : deux disques identiques reliés par une surface courbe.', [['cône', 'Un cône n’a qu’un seul disque et se termine en pointe.'], ['prisme droit', 'Un prisme droit n’a que des faces plates. Le cylindre a une surface courbe.']]],
-  cone: ['cône', 'ce cône', 'C’est un cône : une base en forme de disque et une surface courbe qui se termine en pointe.', [['cylindre', 'Un cylindre a deux disques identiques, en haut et en bas. Ici, le solide se termine en pointe.'], ['pyramide', 'Une pyramide a une base polygonale et des faces plates. Ici, la base est un disque et la surface est courbe.']]],
+  cone: ['cône', 'ce cône', 'C’est un cône : une base en forme de disque et une surface courbe qui se termine en pointe.', [['cylindre', 'Un cylindre a deux disques identiques, en haut et en bas. Ici, le solide se termine en pointe.'], ['pyramide', 'Une pyramide a une base en forme de polygone et des faces plates. Ici, la base est un disque et la surface est courbe.']]],
   boule: ['boule', 'cette boule', 'C’est une boule : un solide tout rond, sans face plate ni arête.', [['cylindre', 'Un cylindre a deux disques plats. La boule n’a aucune face plate.'], ['cône', 'Un cône a une pointe et une base plate. La boule est toute ronde.']]] };
-const gSolid = t => t === 'cube' ? gPoly3(gBox(2, 2, 2), rnd(26, 38), rnd(18, 26)) : t === 'pave' ? gPoly3(gBox(rnd(26, 32) / 10, rnd(12, 16) / 10, rnd(14, 19) / 10), rnd(26, 38), rnd(18, 26))
-  : t === 'pyramide' ? gPoly3(gPyr(2, pick([1.8, 2.4])), rnd(26, 38), rnd(16, 24)) : t === 'prisme' ? gPoly3(gPrism(2, pick([2.2, 2.8])), rnd(26, 38), rnd(16, 24)) : { svg: gRound(t) };
+const gSolid = t => t === 'cube' ? gPoly3(gBox(2, 2, 2), rnd(32, 45)) : t === 'pave' ? gPoly3(gBox(rnd(28, 34) / 10, rnd(12, 16) / 10, rnd(18, 24) / 10), rnd(32, 45))
+  : t === 'pyramide' ? gPoly3(gPyr(2, pick([1.8, 2.4])), rnd(32, 45), .6) : t === 'prisme' ? gPoly3(gPrism(2, 1.7, pick([2.4, 3])), rnd(32, 45)) : { svg: gRound(t) };
 function gSolNom() {
   const t = pick(Object.keys(GSOL)), [nm, , ex, wrong] = GSOL[t];
   return gq({ kind: 'choices', ask: 'Quel est le nom le plus précis de ce solide ?', prompt: gsvg(gSolid(t).svg, 'un solide'), answer: nm, answerText: nm, choices: gch(nm, wrong), log: `nommer un solide : ${nm}`,
@@ -2630,15 +2635,15 @@ function gSolCompte() {
   const t = pick(['cube', 'pave', 'pyramide', 'prisme']), S = gSolid(t), it = pick(['faces', 'arêtes', 'sommets']), [, dem, , , facts] = GSOL[t];
   const tot = { faces: S.nF, arêtes: S.nE, sommets: S.nV }[it], vis = { faces: S.vF, arêtes: S.vE, sommets: S.vV }[it];
   const m = vis !== tot ? { [vis]: `Tu as compté seulement ce qu’on voit sur le dessin. ${it === 'faces' ? 'Les faces de derrière sont cachées' : it === 'arêtes' ? 'Les arêtes cachées sont dessinées en pointillés' : 'Des sommets sont cachés derrière, au bout des pointillés'} : ${dem} a ${tot} ${it}.` } : {};
-  return gq({ kind: 'keypad', ask: `Combien de ${it} a ${dem} ?`, prompt: `${gsvg(S.svg, 'un solide')}<div class="gans">${SLOT} ${it}</div>`, answer: tot, answerText: `${tot} ${it}`, log: `${it} : ${GSOL[t][0]}`, dg: { t: 'geo', m },
-    explain: `Il faut aussi compter ce qui est caché derrière (les pointillés). ${facts}`, hint: 'Pense aux faces, aux arêtes et aux sommets cachés derrière le solide.' });
+  return gq({ kind: 'keypad', ask: `Combien ${it === 'arêtes' ? 'd’' : 'de '}${it} a ${dem} ?`, prompt: `${gsvg(S.svg, 'un solide')}<div class="gans">${SLOT} ${it}</div>`, answer: tot, answerText: `${tot} ${it}`, log: `${it} : ${GSOL[t][0]}`, dg: { t: 'geo', m },
+    explain: `${vis !== tot ? 'Il faut aussi compter ce qui est caché derrière (les pointillés). ' : `Ici, ${it === 'sommets' ? 'tous' : 'toutes'} les ${it} se voient sur le dessin. `}${facts}`, hint: 'Pense aux faces, aux arêtes et aux sommets cachés derrière le solide.' });
 }
 function gSolFaces() {
   const t = pick(['prisme', 'pyramide', 'cube']), S = gSolid(t);
-  const [ask, ans, wrong, ex] = t === 'prisme' ? ['Quelle est la forme des faces latérales de ce prisme droit ?', 'des rectangles', [['des triangles', 'Les triangles sont les deux bases du prisme, en haut et en bas. Les faces latérales, sur les côtés, sont des rectangles.'], ['des disques', 'Un prisme droit n’a que des faces plates en forme de polygones.']], 'Les faces latérales d’un prisme droit sont des rectangles ; ses deux bases sont des polygones identiques (ici des triangles). Sur le dessin, la perspective déforme un peu les rectangles.']
-    : t === 'pyramide' ? ['Quelle est la forme des faces latérales de cette pyramide ?', 'des triangles', [['des rectangles', 'Les faces latérales d’une pyramide montent jusqu’au même sommet : ce sont des triangles.'], ['des carrés', 'La base de cette pyramide est un carré, mais ses faces latérales sont des triangles.']], 'Les faces latérales d’une pyramide sont des triangles qui se rejoignent au sommet. Ici, la base est un carré.']
-    : ['Quelle est la forme des faces de ce cube ?', 'des carrés', [['des triangles', 'Un cube n’a aucune face triangulaire.'], ['des disques', 'Un cube n’a que des faces plates à quatre côtés.']], 'Les 6 faces d’un cube sont des carrés identiques. Sur le dessin, certaines paraissent penchées à cause de la perspective.'];
-  return gq({ kind: 'choices', ask, prompt: gsvg(S.svg, 'un solide'), answer: ans, answerText: ans, choices: gch(ans, wrong), log: `forme des faces : ${GSOL[t][0]}`, explain: ex, hint: 'Les faces latérales sont celles des côtés, entre les bases.' });
+  const [ask, ans, wrong, ex, hint] = t === 'prisme' ? ['Quelle est la forme des faces latérales de ce prisme droit ?', 'des rectangles', [['des triangles', 'Les triangles sont les deux bases du prisme, devant et derrière. Les faces latérales, qui les relient, sont des rectangles.'], ['des disques', 'Un prisme droit n’a que des faces plates en forme de polygones.']], 'Les faces latérales d’un prisme droit sont des rectangles ; ses deux bases sont des polygones identiques (ici des triangles). Sur le dessin, la perspective déforme un peu les rectangles.', 'Les faces latérales relient les deux bases triangulaires, devant et derrière.']
+    : t === 'pyramide' ? ['Quelle est la forme des faces latérales de cette pyramide ?', 'des triangles', [['des rectangles', 'Les faces latérales d’une pyramide montent jusqu’au même sommet : ce sont des triangles.'], ['des carrés', 'La base de cette pyramide est un carré, mais ses faces latérales sont des triangles.']], 'Les faces latérales d’une pyramide sont des triangles qui se rejoignent au sommet. Ici, la base est un carré.', 'Les faces latérales partent des côtés de la base et montent jusqu’au sommet de la pyramide.']
+    : ['Quelle est la forme des faces de ce cube ?', 'des carrés', [['des triangles', 'Un cube n’a aucune face triangulaire.'], ['des disques', 'Un cube n’a que des faces plates à quatre côtés.']], 'Les 6 faces d’un cube sont des carrés identiques. Sur le dessin, certaines paraissent penchées à cause de la perspective.', 'Regarde la face de devant : elle est dessinée sans être déformée.'];
+  return gq({ kind: 'choices', ask, prompt: gsvg(S.svg, 'un solide'), answer: ans, answerText: ans, choices: gch(ans, wrong), log: `forme des faces : ${GSOL[t][0]}`, explain: ex, hint });
 }
 // Un patron se plie en cube si, en faisant rouler un cube sur le patron, chaque carré touche une face différente
 function gNet(cells) {
@@ -2655,7 +2660,7 @@ function gPatron() {
   const sq = Math.min(30, 260 / w, 146 / h), ox = (GW - w * sq) / 2 - mx * sq, oy = (GH - h * sq) / 2 - my * sq;
   const has22 = cells.some(([x, y]) => S.has(gKey([x + 1, y])) && S.has(gKey([x, y + 1])) && S.has(gKey([x + 1, y + 1]))), line5 = cells.some(([x, y]) => [1, 2, 3, 4].every(k => S.has(gKey([x + k, y]))) || [1, 2, 3, 4].every(k => S.has(gKey([x, y + k]))));
   const why = ok ? 'Oui : en pliant le long des traits, les six carrés viennent former les six faces du cube, sans se superposer.'
-    : has22 ? 'Non : quatre carrés qui forment un grand carré ne peuvent pas se plier, ils restent à plat. Deux carrés se superposent et une face du cube reste ouverte.'
+    : has22 ? 'Non : ici, quatre carrés forment un grand carré. Sur un cube, seulement trois faces se touchent à chaque coin : en pliant, deux carrés se superposent et une face du cube reste ouverte.'
     : line5 ? 'Non : avec cinq carrés en ligne, en pliant, le cinquième revient sur le premier. Deux carrés se superposent et une face du cube reste ouverte.'
     : 'Non : en pliant, deux carrés viennent se poser au même endroit, et une face du cube reste ouverte.';
   const s = cells.map(([x, y]) => `<rect class="gl" x="${(ox + x * sq).toFixed(1)}" y="${(oy + y * sq).toFixed(1)}" width="${sq.toFixed(1)}" height="${sq.toFixed(1)}"/>`).join('');
@@ -2684,9 +2689,9 @@ function gSym() {
     order.forEach(([cs], j) => { const x0 = 6 + j * 102, y0 = 4, a = ax === 'v' ? `M${x0 + 3 * s0} ${y0 - 3}V${y0 + N * s0 + 3}` : ax === 'h' ? `M${x0 - 3} ${y0 + 3 * s0}H${x0 + N * s0 + 3}` : `M${x0 - 2} ${y0 - 2}L${x0 + N * s0 + 2} ${y0 + N * s0 + 2}`;
       s += gGrid(N, N, s0, x0, y0) + gShape(org, s0, x0, y0, 'gf') + gShape(cs, s0, x0, y0, 'go') + `<path class="gax" d="${a}"/>` + gText([x0 + N * s0 / 2, y0 + N * s0 + 10], String(j + 1)); });
     const k = order.findIndex(o => o[0] === img), ans = String(k + 1), nm = { v: 'verticale', h: 'horizontale', d: 'en diagonale' }[ax];
-    return gq({ kind: 'choices', keep: true, ask: 'Quelle case montre la symétrique de la figure bleue par rapport à la droite rouge ?', prompt: gsvg(s, `trois cases avec une droite ${nm}`, 312, 112).replace('class="gfig"', 'class="gfig wide"'), answer: ans, answerText: `la case ${ans}`,
+    return gq({ kind: 'choices', keep: true, ask: 'Quel dessin (1, 2 ou 3) montre la figure symétrique de la figure bleue par rapport à la droite rouge ?', prompt: gsvg(s, `trois cases avec une droite ${nm}`, 312, 112).replace('class="gfig"', 'class="gfig wide"'), answer: ans, answerText: `le dessin ${ans}`,
       choices: order.map((o, j) => j === k ? { v: String(j + 1), html: String(j + 1) } : { v: String(j + 1), html: String(j + 1), why: o[1] }), log: `symétrie, droite ${nm} (${gNorm(org)})`,
-      explain: `Case ${ans} : si on plie le long de la droite rouge, la figure orange se pose exactement sur la figure bleue : c’est sa symétrique. Chaque carreau est à la même distance de la droite, de l’autre côté.`, hint: 'Imagine que tu plies la feuille le long de la droite rouge : les deux figures doivent se superposer.' });
+      explain: `Dessin ${ans} : si on plie le long de la droite rouge, la figure orange se pose exactement sur la figure bleue : c’est sa symétrique. Chaque carreau est à la même distance de la droite, de l’autre côté.`, hint: 'Imagine que tu plies la feuille le long de la droite rouge : les deux figures doivent se superposer.' });
   }
   return gSolNom();
 }
@@ -2706,7 +2711,8 @@ function gDepl() {
     const deg = Math.random() < .5, step = ([o, v]) => o === 'F' ? `Avance de ${v} case${v > 1 ? 's' : ''}` : deg ? `Tourne de 90° à ${v === 'd' ? 'droite' : 'gauche'}` : `Tourne d’un quart de tour à ${v === 'd' ? 'droite' : 'gauche'}`;
     let h = h0; const walk = [`Au départ, le navire regarde vers ${HN[h0]}.`];
     prog.forEach(([o, v]) => { if (o === 'T') { h = (h + (v === 'd' ? 1 : 3)) % 4; walk.push(`Il tourne à ${v === 'd' ? 'droite' : 'gauche'} : il regarde maintenant vers ${HN[h]}.`); } else walk.push(`Il avance de ${v} case${v > 1 ? 's' : ''} vers ${HN[h]}.`); });
-    const ans = L[0], why = { [L[1]]: 'Tu as tourné du mauvais côté. « À droite », c’est la droite du navire : imagine-toi à la barre, tourné dans le sens de la flèche.', [L[2]]: 'Compte bien les cases à la fin : le navire avance d’une case à chaque pas.' };
+    const tv = new Set(prog.filter(([o]) => o === 'T').map(([, v]) => v)), side = tv.size > 1 ? '« À droite » et « à gauche », c’est la droite et la gauche du navire' : tv.has('d') ? '« À droite », c’est la droite du navire' : '« À gauche », c’est la gauche du navire';
+    const ans = L[0], why = { [L[1]]: `Tu as tourné du mauvais côté. ${side} : imagine-toi à la barre, tourné dans le sens de la flèche.`, [L[2]]: 'Compte bien les cases à la fin : le navire avance d’une case à chaque pas.' };
     return gq({ kind: 'choices', keep: true, ask: 'Le navire (la flèche rouge) suit ce programme. Sur quel point arrive-t-il ?', prompt: `${gsvg(gGrid(W, Ht, s0, ox, oy) + pts + ship, 'un quadrillage avec le navire et trois points')}<div class="gprog">${prog.map(step).join(' → ')}</div>`,
       answer: ans, answerText: `le point ${ans}`, choices: ['A', 'B', 'C'].map(v => v === ans ? { v, html: v } : { v, html: v, why: why[v] }), log: `déplacement : ${prog.map(([o, v]) => o === 'F' ? v : v === 'd' ? 'D' : 'G').join(' ')}`,
       explain: `${walk.join(' ')} Il arrive au point ${ans}.`, hint: 'Suis la flèche du doigt, case par case, et tourne comme le navire.' });
