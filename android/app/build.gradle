@@ -24,8 +24,8 @@ def twaManifest = [
     applicationId: 'io.github.pierrerouby_droid.chiffres',
     hostName: 'pierrerouby-droid.github.io', // The domain being opened in the TWA.
     launchUrl: '/Chiffres-l-abordage/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Chiffres à l’abordage !', // The application name.
-    launcherName: 'À l’abordage', // The name shown on the Android Launcher.
+    name: 'Moussaillon : l’école pirate', // The application name.
+    launcherName: 'Moussaillon', // The name shown on the Android Launcher.
     themeColor: '#0B2230', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#0B2230', // The color used for the navigation bar.
@@ -58,7 +58,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 36
         versionCode 1
-        versionName "2.2.1"
+        versionName "2.3"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
