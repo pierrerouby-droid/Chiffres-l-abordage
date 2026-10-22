@@ -1,8 +1,8 @@
 {
   "packageId": "io.github.pierrerouby_droid.chiffres",
   "host": "pierrerouby-droid.github.io",
-  "name": "Chiffres à l’abordage !",
-  "launcherName": "À l’abordage",
+  "name": "Moussaillon : l’école pirate",
+  "launcherName": "Moussaillon",
   "display": "standalone",
   "themeColor": "#0B2230",
   "themeColorDark": "#000000",
@@ -20,7 +20,7 @@
     "path": "./chiffres-upload.keystore",
     "alias": "upload"
   },
-  "appVersionName": "2.2.1",
+  "appVersionName": "2.3",
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "unknown",

@@ -1,4 +1,4 @@
-<title>Chiffres à l'abordage !</title>
+<title>Moussaillon : l’école pirate</title>
 <link rel="preload" href="assets/fonts/lexend.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* Polices hébergées avec le jeu (licence SIL OFL, voir assets/fonts) : elles marchent hors connexion et aucune requête ne part vers un service tiers */
@@ -465,6 +465,8 @@ textarea.fld{min-height:76px}
 .smallcaps{font-size:13px;letter-spacing:.14em}
 .lvl-pill{font-size:14px;letter-spacing:0;text-transform:none;padding:3px 10px}
 .hud .rk{font-size:14px}
+/* Petits écrans (moins de 360 px) : le grade « Moussaillon » passe en entier ; la classe reste visible dans Mon pirate et l'espace parents */
+@media (max-width:359px){.hud{gap:6px}.hud .rk .gradeb{display:none}}
 .dock button{font-size:14px}
 .stat span{font-size:13px}
 .rstars{font-size:15px}
@@ -1051,7 +1053,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.2.2 bêta · octobre 2026';
+const VERSION = '2.3 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
 const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -1177,7 +1179,7 @@ const SND = {
 };
 
 /* ================= Univers ================= */
-const RANKS = [[0, 'Mousse'], [150, 'Matelot'], [500, 'Canonnier'], [1200, 'Navigateur'], [2500, 'Second du navire'], [5000, 'Capitaine'], [10000, 'Terreur des Mers'], [20000, 'Légende de l’Archipel']];
+const RANKS = [[0, 'Moussaillon'], [150, 'Matelot'], [500, 'Canonnier'], [1200, 'Navigateur'], [2500, 'Second du navire'], [5000, 'Capitaine'], [10000, 'Terreur des Mers'], [20000, 'Légende de l’Archipel']];
 const rankIdx = g => { let i = 0; RANKS.forEach((r, k) => { if (g >= r[0]) i = k; }); return i; };
 const CREW = [
   { id: 'perroquet', n: 'Perroquet Pi', r: 'Guide', p: 'Indice : il t’explique la question', how: 'Déjà à bord' },
@@ -4720,7 +4722,7 @@ function openParents() {
       <div style="margin-bottom:12px"><div style="font-size:13px;color:var(--mist);margin-bottom:6px">Voix des personnages</div><div class="seg"><button data-a="vox" data-v="1" aria-pressed="${S.voice}">Oui</button><button data-a="vox" data-v="0" aria-pressed="${!S.voice}">Non</button></div></div>
       <div id="resetbox"><button class="ghost-btn" data-a="reset1" style="color:#ffb9ad">Tout effacer…</button></div>
       <p style="font-size:12.5px;color:var(--mist);margin:10px 0 0">Les données restent dans le navigateur de cet appareil. Aucune publicité, aucun compte.</p></div>
-    <div class="vers">Chiffres à l’abordage ! · version ${VERSION}</div>`;
+    <div class="vers">Moussaillon · version ${VERSION}</div>`;
   app.appendChild(el);
 }
 
@@ -4740,7 +4742,7 @@ function openFeedback() {
   app.appendChild(el);
 }
 function feedbackText() {
-  const v = id => ($('#' + id) || {}).value || '', L = [`Avis bêta · Chiffres à l’abordage ! (version ${VERSION})`, ''];
+  const v = id => ($('#' + id) || {}).value || '', L = [`Avis bêta · Moussaillon (version ${VERSION})`, ''];
   L.push('Enfant : ' + (v('fb-age').trim() || '—'));
   FBQ.forEach(([k, l]) => L.push(`${l} : ${FB[k] ? (k === 'note' ? FB[k] + '/5' : FB[k]) : '—'}`));
   L.push('', 'Préféré : ' + (v('fb-top').trim() || '—'), 'Problèmes : ' + (v('fb-pb').trim() || '—'));
@@ -4757,7 +4759,7 @@ function feedbackText() {
 function sendFeedback() {
   const text = feedbackText(), out = $('#fbout');
   const showText = msg => { out.innerHTML = `<p class="note" style="margin:14px 0 6px">${msg}</p><textarea class="fld" readonly style="min-height:160px">${esc(text)}</textarea>`; };
-  if (navigator.share) navigator.share({ title: 'Avis sur Chiffres à l’abordage !', text }).then(() => { toast('Merci pour votre avis !'); showText('Merci ! Voici le texte envoyé :'); }, () => showText('Partage annulé. Vous pouvez aussi copier ce texte :'));
+  if (navigator.share) navigator.share({ title: 'Avis sur Moussaillon', text }).then(() => { toast('Merci pour votre avis !'); showText('Merci ! Voici le texte envoyé :'); }, () => showText('Partage annulé. Vous pouvez aussi copier ce texte :'));
   else copyText(text).then(ok => { toast(ok ? 'Avis copié : collez-le dans un message' : 'Copiez le texte ci-dessous'); showText(ok ? 'Le texte est copié. Collez-le dans un message ou un e-mail :' : 'Copiez ce texte et envoyez-le par message ou e-mail :'); });
 }
 const BKP = 'ARCHIPEL1:';
@@ -5086,7 +5088,7 @@ function decorate(kind) {
   if (kind !== 'game' && kind !== 'title') sc.classList.add('enter');
   const put = (host, o, first = true) => { if (!host) return; const t = document.createElement('div'); t.innerHTML = ambHTML(o); const e = t.firstElementChild; first && host.firstElementChild ? host.firstElementChild.after(e) : host.appendChild(e); return e; };
   if (kind === 'title') {
-    const d = $('.tlogo .disp', sc); if (d) d.innerHTML = [['Chiffres', 0], ['<br>'], ['à', 1], ['l’abordage', 2], ['!', 3]].map(([w, k]) => w === '<br>' ? w : `<span class="w" style="animation-delay:${.15 + k * .16}s,${2 + k * .12}s">${w}</span>`).join(' ');
+    const d = $('.tlogo .disp', sc); if (d) d.innerHTML = [['Moussaillon', 0]].map(([w, k]) => w === '<br>' ? w : `<span class="w" style="animation-delay:${.15 + k * .16}s,${2 + k * .12}s">${w}</span>`).join(' ');
     const bg = $('img.bg', sc); put(sc, { sun: sunAt(sc, 1024, 1536, .2, .36), gods: 1, clouds: 4, gulls: 3, gy: 20 });
     sc.addEventListener('pointermove', e => { const r = sc.getBoundingClientRect(); sc.style.setProperty('--px', ((e.clientX - r.left) / r.width - .5).toFixed(3)); sc.style.setProperty('--py', ((e.clientY - r.top) / r.height - .5).toFixed(3)); });
     FX.ambient('magic', () => zone(sc), .07); bg && 0;
@@ -5142,7 +5144,7 @@ const after = (fn, kind) => function () { const r = fn.apply(this, arguments); t
 
 function titleScreen() {
   app.innerHTML = `<div class="screen title" data-a="start" role="button" tabindex="0" aria-label="Toucher pour embarquer"><img class="bg" src="${IMG('bg-title')}" alt="">
-    <div class="tlogo"><div class="smallcaps">Une aventure de pirates</div><div class="disp">Chiffres<br>à l’abordage !</div></div>
+    <div class="tlogo"><div class="smallcaps">L’école pirate</div><div class="disp">Moussaillon</div></div>
     <div class="tgo"><span>Touche pour embarquer</span><div class="trow" aria-hidden="true"><img class="tcomp" id="tcomp" src="${IMG('deco-compass')}" alt=""><div class="tload"><i id="tload"></i></div></div></div><div class="vers2">v${VERSION.split(' ')[0]}${ADMIN ? ' · admin' : ''}</div></div>`;
   const list = ['tex-sea', 'lagoon-round', 'lagoon-oval', 'lagoon-rocks', 'fx-fog-a', 'fx-fog-b', 'isle-port', 'isle-kraken', 'deco-compass', 'ship-player-top', capt(), 'coin-doublon', 'tex-parchment', 'guide-capitaine', ...ISLES.filter(i => !i.soon).map(i => i.img), 'crew-perroquet'];
   let done = 0; list.forEach(n => { const im = new Image(); im.onload = im.onerror = () => { done++; const b = $('#tload'); if (b) b.style.width = Math.round(done / list.length * 100) + '%'; if (done === list.length) { const c = $('#tcomp'); c && c.classList.add('done'); } }; im.src = IMG(n); });

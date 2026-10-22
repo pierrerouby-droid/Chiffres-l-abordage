@@ -1,8 +1,8 @@
 {
   "name": "chiffres-ios",
   "private": true,
-  "version": "2.2.2",
-  "description": "Application iPhone de Chiffres à l'abordage ! (Capacitor : les fichiers du jeu sont embarqués dans l'app)",
+  "version": "2.3.0",
+  "description": "Application iPhone de Moussaillon, l’école pirate (Capacitor : les fichiers du jeu sont embarqués dans l'app)",
   "scripts": {
     "web": "node copy-web.js",
     "sync": "node copy-web.js && cap sync ios"

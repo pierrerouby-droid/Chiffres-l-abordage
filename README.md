@@ -1,4 +1,6 @@
-# Chiffres à l’abordage !
+# Moussaillon : l’école pirate
+
+Anciennement « Chiffres à l’abordage ! » : le jeu a changé de nom en octobre 2026, quand il est devenu un jeu de maths et de français. L’adresse du site ne change pas.
 
 Un jeu de mathématiques et de français pour les enfants du CP au CM2, pensé pour l’iPhone et l’iPad. L’enfant navigue d’île en île avec le Capitaine Barbe-Grise et son perroquet Pi. Chaque île travaille une notion du programme de sa classe (CP, CE1, CE2 : BO n° 41 du 31 octobre 2024 ; CM1 et CM2 : programmes du cycle 3, BO n° 16 du 17 avril 2025, applicables au CM1 à la rentrée 2025 et au CM2 à la rentrée 2026), et la difficulté s’adapte toute seule à son niveau.
 
