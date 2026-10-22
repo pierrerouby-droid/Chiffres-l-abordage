@@ -1067,7 +1067,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.3.4 bêta · octobre 2026';
+const VERSION = '2.3.5 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
 const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -1097,16 +1097,28 @@ function audioSession() { try { if (navigator.audioSession) navigator.audioSessi
 // « interrupted » (Safari) : après un appel, une mise en arrière-plan ou une autre app audio, le son doit être relancé.
 function ac() { if (!document.hidden) audioSession(); if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } setTimeout(loadAudio, 0); } if (AC.state !== 'running' && AC.resume && !document.hidden) { const r = AC.resume(); r && r.catch && r.catch(() => {}); } return AC; }
 // Appli quittée (écran d'accueil, autre app) : tout se tait, sinon iOS laisse la musique jouer en arrière-plan avec le type « playback ».
-// Au retour, le son reprend là où il en était.
+// Au retour, iOS peut refuser de relancer le son sans geste : le premier toucher recrée alors un contexte audio neuf
+// (les sons déjà décodés servent tels quels) et relance la musique.
+let audioStale = false;
 function audioAway(away) {
   if (!AC) return;
-  if (!away) { if (AC.state !== 'running') ac(); return; }
+  if (!away) { wakeAudio(false); return; }
+  if (voSrc) { try { voSrc.stop(); } catch (e) {} voSrc = null; }
+  if (musSrc) { try { musSrc.src.stop(); } catch (e) {} musSrc = null; musName = null; }
   try { if (navigator.audioSession) navigator.audioSession.type = 'auto'; } catch (e) {}
   if (AC.state === 'running' && AC.suspend) { const r = AC.suspend(); r && r.catch && r.catch(() => {}); }
+  audioStale = true;
+}
+function wakeAudio(gesture) {
+  if (!AC || !audioStale || document.hidden) return;
+  if (gesture && AC.state !== 'running') { const old = AC; AC = null; BUS = null; setTimeout(() => { try { old.close(); } catch (e) {} }, 10000); }
+  const back = () => { if (audioStale && AC && AC.state === 'running') { audioStale = false; if (musWant) music(musWant); } };
+  if (ac()) { back(); setTimeout(back, 400); }
 }
 document.addEventListener('visibilitychange', () => audioAway(document.hidden));
 addEventListener('pagehide', () => audioAway(true));
 addEventListener('pageshow', () => { if (!document.hidden) audioAway(false); });
+['pointerup', 'touchend', 'click'].forEach(ev => document.addEventListener(ev, () => wakeAudio(true), true));
 function beep(notes, { type = 'triangle', dur = .13, gap = .09, vol = .18 } = {}) {
   if (!S.sound) return; const a = ac(); if (!a) return; let t = a.currentTime + .01;
   notes.forEach(f => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f;
