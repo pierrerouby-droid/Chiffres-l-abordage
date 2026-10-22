@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2230">
+<title>Confidentialité · Chiffres à l’abordage !</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>@font-face{font-family:'Fraunces';font-weight:600 900;font-display:swap;src:url(assets/fonts/fraunces.woff2) format('woff2')}@font-face{font-family:'Lexend';font-weight:400 800;font-display:swap;src:url(assets/fonts/lexend.woff2) format('woff2')}</style>
+<style>
+:root{--abyss:#0B2230;--foam:#E9F3EE;--mist:#9fb9bb;--parch:#F4E8CC;--ink:#2A1C12;--ink2:#5b4636;--brass:#C9973F;--brass-hi:#f3d58c;--line:rgba(233,243,238,.14)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(ellipse at 50% -10%,#174052,#0b2230 55%) fixed,#0b2230;color:var(--foam);font:400 16px/1.55 Lexend,system-ui,sans-serif;padding:calc(env(safe-area-inset-top,0px) + 28px) 16px calc(env(safe-area-inset-bottom,0px) + 40px)}
+main{max-width:640px;margin:0 auto}
+.top{display:flex;gap:16px;align-items:center}
+.top img{width:64px;height:64px;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.kick{font:600 12px Lexend;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-hi)}
+h1{font:900 32px/1.05 Fraunces,serif;margin:4px 0 0}
+.lead{color:#cfe0df;margin:18px 0 6px}
+section{background:rgba(255,255,255,.045);box-shadow:inset 0 0 0 1px var(--line);border-radius:22px;padding:18px 18px 16px;margin-top:16px}
+section.paper{background:var(--parch);color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+section.paper p,section.paper li{color:var(--ink2)}
+section.paper b{color:var(--ink)}
+h2{font:800 21px/1.2 Fraunces,serif;margin:0 0 10px}
+p{margin:0 0 10px}
+ul,ol{margin:0;padding-left:20px}
+li{margin:6px 0}
+b{color:#fff;font-weight:600}
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding-left:42px;margin:12px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--brass-hi);color:#2a1a07;font:700 14px Lexend}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+.grid div{background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.35}
+.grid b{display:block;font-size:14.5px}
+.grid span{color:var(--mist)}
+.note{font-size:14px;color:var(--mist)}
+.foot{text-align:center;font-size:13px;color:#5f7f86;margin-top:22px}
+@media (max-width:380px){.grid{grid-template-columns:1fr}h1{font-size:28px}}
+@media print{body{background:#fff;color:#000}section{box-shadow:none;border:1px solid #ccc;background:#fff}b,h1,h2{color:#000}.grid div{background:#f4f4f4}.note,.grid span{color:#444}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><img src="icon-192.png" alt=""><div><div class="kick">Politique de confidentialité</div><h1>Chiffres à l’abordage !</h1></div></div>
+  <p class="lead">Ce jeu est fait pour les enfants de 6 à 11 ans. Il ne collecte aucune donnée personnelle et n’envoie rien à un serveur. Cette page explique ce qui est enregistré, où, et comment l’effacer.</p>
+
+  <section class="paper">
+    <h2>En résumé</h2>
+    <ul>
+      <li><b>Aucune donnée n’est collectée</b> par l’éditeur du jeu ni par un tiers.</li>
+      <li>Pas de compte, pas de publicité, pas d’achat, pas de statistiques d’utilisation, pas de traceur, pas de cookie.</li>
+      <li>La progression de l’enfant reste <b>sur l’appareil</b>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ce qui est enregistré sur l’appareil</h2>
+    <p>Pour que l’enfant retrouve sa partie, le jeu garde dans la mémoire de l’appareil (stockage local de l’application) :</p>
+    <ul>
+      <li>le prénom ou le surnom choisi à la première ouverture, et la classe (du CP au CM2) ;</li>
+      <li>la progression : niveaux, étoiles, réussite par notion, dernières erreurs, doublons gagnés, objets achetés dans le jeu avec ces doublons ;</li>
+      <li>les minutes jouées par jour, pour le tableau de bord des parents ;</li>
+      <li>les réglages : son, musique, voix, durée des sessions.</li>
+    </ul>
+    <p>Ces informations ne quittent jamais l’appareil. L’éditeur du jeu n’y a pas accès.</p>
+  </section>
+
+  <section>
+    <h2>Ce qui peut sortir de l’appareil, seulement si un parent le décide</h2>
+    <ul>
+      <li><b>Votre avis</b> : dans l’espace parents, le bouton « Donner mon avis » prépare un texte que vous envoyez vous-même avec l’application de votre choix (Messages, e-mail…). Il contient vos réponses et, si vous laissez la case cochée, un résumé de jeu : niveaux et réussite par notion, minutes jouées, modèle de téléphone. Il ne contient pas le prénom de l’enfant. Rien n’est envoyé sans votre geste.</li>
+      <li><b>Le code de sauvegarde</b> : il est créé sur l’appareil et copié par vous, pour retrouver la progression sur un autre appareil. Il n’est envoyé nulle part.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Hébergement du jeu</h2>
+    <p>Les fichiers du jeu (pages, images, sons) sont hébergés par GitHub Pages. Quand un appareil les télécharge, GitHub enregistre son adresse IP pour des raisons de sécurité, comme pour tout site qu’il héberge. L’éditeur du jeu n’a pas accès à ces données. Pour en savoir plus : la déclaration de confidentialité de GitHub, sur docs.github.com.</p>
+    <p class="note">La version pour iPhone et iPad contient les fichiers du jeu : elle n’a pas besoin de les télécharger.</p>
+  </section>
+
+  <section>
+    <h2>Effacer les données</h2>
+    <ul>
+      <li>Dans l’espace parents, « Tout effacer… » supprime la progression et les réglages.</li>
+      <li>Désinstaller l’application supprime aussi toutes ses données de l’appareil.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Enfants</h2>
+    <p>Le jeu ne demande aux enfants aucune information de contact et ne permet pas de discuter avec d’autres personnes. L’espace parents, d’où partent l’avis et la sauvegarde, est protégé par une question réservée aux adultes.</p>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>Pour toute question sur cette politique, écrivez à l’adresse e-mail du développeur indiquée sur la fiche de l’application dans Google Play ou dans l’App Store.</p>
+    <p class="note">Si cette politique change, la nouvelle version sera publiée sur cette page, avec sa date.</p>
+  </section>
+
+  <p class="foot">Chiffres à l’abordage ! · politique de confidentialité mise à jour le 22 octobre 2026</p>
+</main>
+</body>
+</html>
