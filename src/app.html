@@ -1053,7 +1053,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.3.2 bêta · octobre 2026';
+const VERSION = '2.3.3 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
 const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -1106,10 +1106,16 @@ function bus() { const a = ac(); if (!a) return null; if (!BUS) { BUS = { sfx: a
 // Les longues boucles de musique (2 à 4 min, 60 à 90 Mo une fois décodées) sont chargées quand elles doivent jouer,
 // et une seule reste en mémoire. Tout le reste (voix, bruitages, fanfare) est chargé au lancement.
 const MUS_LOOPS = ['carte', 'escale', 'boss', 'port'], HAVE = new Set(), musLoading = {};
-const decode = n => fetch(AUDIO + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)));
+// App iPhone (Capacitor) : les fichiers MP3 de l'app arrivent sans code HTTP (statut 0) ; ce n'est pas une erreur.
+// Si fetch échoue malgré tout, XMLHttpRequest sert de second chemin.
+const fileOk = r => r.ok || r.status === 0;
+const xhrBuf = url => new Promise((res, rej) => { const x = new XMLHttpRequest(); x.open('GET', url); x.responseType = 'arraybuffer';
+  x.onload = () => (x.status === 200 || x.status === 0) && x.response && x.response.byteLength ? res(x.response) : rej(); x.onerror = rej; x.send(); });
+const fileBuf = url => fetch(url).then(r => fileOk(r) ? r.arrayBuffer() : Promise.reject()).then(b => b.byteLength ? b : Promise.reject()).catch(() => xhrBuf(url));
+const decode = n => fileBuf(AUDIO + n + '.mp3').then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)));
 function loadAudio() {
   if (audioAsked || !AC || location.protocol === 'file:') return; audioAsked = true;
-  fetch(AUDIO + 'manifest.json').then(r => r.ok ? r.json() : []).then(list => { list = Array.isArray(list) ? list : []; list.forEach(n => HAVE.add(n));
+  fetch(AUDIO + 'manifest.json').then(r => fileOk(r) ? r.json() : []).then(list => { list = Array.isArray(list) ? list : []; list.forEach(n => HAVE.add(n));
     if (musWant) music(musWant);
     list.filter(n => !MUS_LOOPS.some(x => n === 'mus-' + x)).forEach(n => decode(n).then(buf => { BUF[n] = buf; }).catch(() => {})); }).catch(() => {});
 }
@@ -1153,7 +1159,7 @@ function sagaVoice(id, fallback) {
   if (!S.sound || !S.voice || !AC || location.protocol === 'file:') return fallback();
   const req = ++sagaReq, open = () => req === sagaReq && $('.modal.saga');
   if (BUF[n]) { say(n) || fallback(); return; }
-  fetch(AUDIO + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej)))
+  decode(n)
     .then(buf => { BUF[n] = buf; if (open()) say(n) || fallback(); }).catch(() => { if (open()) fallback(); });
 }
 function freeSaga() { sagaReq++; if (voSrc && /^vo-saga-/.test(voSrc.n || '')) stopVoice(); Object.keys(BUF).filter(k => k.startsWith('vo-saga-')).forEach(k => delete BUF[k]); }
