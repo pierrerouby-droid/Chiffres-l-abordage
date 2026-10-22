@@ -1067,7 +1067,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.3.1 bêta · octobre 2026';
+const VERSION = '2.3.2 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
 const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -1091,7 +1091,12 @@ const IS = id => P().isl[id] || (P().isl[id] = { node: 1, stars: {}, ok: 0, tot:
 
 /* ================= Sons ================= */
 let AC = null;
-function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } setTimeout(loadAudio, 0); } if (AC.state === 'suspended') AC.resume(); return AC; }
+// iPhone : en mode silencieux, iOS coupe les sons web (voix, musique, bruitages) mais pas la voix de synthèse.
+// Le type « playback » (iOS 17 et plus) les fait jouer comme dans une app de jeu ; il suit le réglage Son de l'espace parents.
+function audioSession() { try { if (navigator.audioSession) navigator.audioSession.type = S.sound ? 'playback' : 'auto'; } catch (e) {} }
+// « interrupted » (Safari) : après un appel, une mise en arrière-plan ou une autre app audio, le son doit être relancé.
+function ac() { audioSession(); if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return null; } setTimeout(loadAudio, 0); } if (AC.state !== 'running' && AC.resume) { const r = AC.resume(); r && r.catch && r.catch(() => {}); } return AC; }
+document.addEventListener('visibilitychange', () => { if (!document.hidden && AC && AC.state !== 'running') ac(); });
 function beep(notes, { type = 'triangle', dur = .13, gap = .09, vol = .18 } = {}) {
   if (!S.sound) return; const a = ac(); if (!a) return; let t = a.currentTime + .01;
   notes.forEach(f => { const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f;
@@ -4901,7 +4906,7 @@ app.addEventListener('click', e => {
     case 'grade': if (el.dataset.v !== GR()) { setGrade(el.dataset.v); toast(`Programme de ${GRADES[GR()].n} : chaque classe garde sa progression.`); } $('.parents').remove(); openParents(); break;
     case 'limit': S.limit = +el.dataset.v; save(); $('.parents').remove(); openParents(); break;
     case 'extend': extraMs += 5 * 60000; $('.parents').remove(); openParents(); toast('5 minutes de plus accordées.'); break;
-    case 'snd': S.sound = el.dataset.v === '1'; save(); S.sound ? music(musWant || 'carte') : stopMusic(); $('.parents').remove(); openParents(); break;
+    case 'snd': S.sound = el.dataset.v === '1'; save(); audioSession(); S.sound ? music(musWant || 'carte') : stopMusic(); $('.parents').remove(); openParents(); break;
     case 'mus': S.music = el.dataset.v === '1'; save(); S.music ? music(musWant || 'carte') : stopMusic(); $('.parents').remove(); openParents(); break;
     case 'vox': S.voice = el.dataset.v === '1'; save(); $('.parents').remove(); openParents(); break;
     case 'reset1': $('#resetbox').innerHTML = `<div class="seg"><button data-a="reset2" style="background:#5a2420;color:#ffb9ad">Oui, tout effacer</button><button data-a="reset0">Annuler</button></div>`; break;
