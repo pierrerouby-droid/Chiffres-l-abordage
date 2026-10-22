@@ -1065,10 +1065,12 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.2.1 bêta · octobre 2026';
+const VERSION = '2.2.2 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
-const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
-if (isIOS && standalone) document.documentElement.classList.add('ios-app');
+// Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
+const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent), standalone = nativeApp || !!(navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches));
+if (isIOS && standalone && !nativeApp) document.documentElement.classList.add('ios-app');
 function copyText(text) {
   const fb = () => { const t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); return ok; };
   try { if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, fb); } catch (e) {}
@@ -4762,7 +4764,7 @@ function feedbackText() {
     L.push('', '— Résumé de jeu —', `${Object.keys(S.days).length} jour(s) de jeu · ${Math.round(secs / 60)} min · ${S.wins} escales gagnées · ${S.crew.length} équipiers`);
     L.push(`Classe choisie : ${GRADES[GR()].n}`);
     playable().forEach(i => { const s = IS(i.id); L.push(`${i.notion} : niveau ${Math.min(s.node, NODES)}/10${s.tot ? ` · ${Math.round(s.ok / s.tot * 100)} % sur ${s.tot} questions` : ' · pas encore joué'}`); });
-    L.push(`Appareil : ${isIOS ? 'iOS ' + (os || '?').replace(/_/g, '.') : navigator.platform || '?'} · ${standalone ? 'écran d’accueil' : 'navigateur'}`);
+    L.push(`Appareil : ${isIOS ? 'iOS ' + (os || '?').replace(/_/g, '.') : navigator.platform || '?'} · ${nativeApp ? 'appli App Store' : standalone ? 'écran d’accueil' : 'navigateur'}`);
   }
   return L.join('\n');
 }

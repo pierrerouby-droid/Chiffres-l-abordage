@@ -1,0 +1,3 @@
+node_modules/
+# Copie des fichiers du jeu, refaite à chaque compilation (npm run sync)
+www/

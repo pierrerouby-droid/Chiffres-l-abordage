@@ -1,0 +1,17 @@
+{
+  "name": "chiffres-ios",
+  "private": true,
+  "version": "2.2.2",
+  "description": "Application iPhone de Chiffres à l'abordage ! (Capacitor : les fichiers du jeu sont embarqués dans l'app)",
+  "scripts": {
+    "web": "node copy-web.js",
+    "sync": "node copy-web.js && cap sync ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3"
+  }
+}

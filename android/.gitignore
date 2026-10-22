@@ -1,0 +1,11 @@
+# Clé de signature et mots de passe : jamais dans le dépôt (il est public)
+*.keystore
+*.jks
+# Sorties de compilation
+*.apk
+*.aab
+*.idsig
+.gradle/
+build/
+app/build/
+local.properties

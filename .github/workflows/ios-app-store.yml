@@ -1,0 +1,91 @@
+# Compile l'application iPhone sur un Mac de GitHub et l'envoie à App Store Connect (pas besoin de Mac personnel).
+# À lancer à la main : onglet Actions > « iOS · envoi à App Store Connect » > Run workflow.
+# Secrets du dépôt nécessaires (Settings > Secrets and variables > Actions) :
+#   APPLE_TEAM_ID  identifiant d'équipe Apple (10 caractères, page Membership du compte développeur)
+#   ASC_KEY_ID     identifiant de la clé d'API App Store Connect (rôle Admin)
+#   ASC_ISSUER_ID  identifiant de l'émetteur (Issuer ID), affiché au-dessus de la liste des clés
+#   ASC_KEY_P8     contenu complet du fichier AuthKey_XXXX.p8 téléchargé à la création de la clé
+name: iOS · envoi à App Store Connect
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Vérifier les secrets
+        run: |
+          for v in APPLE_TEAM_ID ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
+            if [ -z "${!v}" ]; then echo "::error::Le secret $v est manquant (Settings > Secrets and variables > Actions)"; exit 1; fi
+          done
+          xcodebuild -version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Embarquer les fichiers du jeu dans le projet iOS
+        working-directory: ios-app
+        run: |
+          npm ci
+          npm run sync
+
+      - name: Clé d'API App Store Connect
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
+
+      - name: Compiler l'application (archive)
+        working-directory: ios-app/ios/App
+        run: |
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            archive
+
+      - name: Signer et envoyer à App Store Connect
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>${APPLE_TEAM_ID}</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict>
+          </plist>
+          PLIST
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+          echo "Build ${{ github.run_number }} envoyé : il apparaît dans App Store Connect (TestFlight) après quelques minutes de traitement."
+
+      - name: Effacer la clé
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/keys"
