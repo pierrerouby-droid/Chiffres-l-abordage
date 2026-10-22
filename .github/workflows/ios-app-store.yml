@@ -47,17 +47,17 @@ jobs:
           mkdir -p "$RUNNER_TEMP/keys"
           printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
 
+      # L'archive est compilée sans signature : signer ici demanderait un certificat de développement
+      # (un nouveau à chaque compilation) et un iPhone enregistré dans le compte. La signature de
+      # distribution est faite à l'étape suivante, par Apple, avec la clé d'API.
       - name: Compiler l'application (archive)
         working-directory: ios-app/ios/App
         run: |
           xcodebuild -project App.xcodeproj -scheme App -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8" \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
-            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
             CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
             archive
 
