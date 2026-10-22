@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..'), out = path.join(__dirname, 'www');
 fs.rmSync(out, { recursive: true, force: true }); fs.mkdirSync(out);
-for (const f of ['index.html', 'aide.html', 'confidentialite.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'])
+for (const f of ['index.html', 'aide.html', 'confidentialite.html', 'support.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'])
   fs.copyFileSync(path.join(root, f), path.join(out, f));
 fs.cpSync(path.join(root, 'assets'), path.join(out, 'assets'), { recursive: true });
 console.log('Fichiers du jeu copiés dans www/');

@@ -1,0 +1,10 @@
+{
+  "appId": "io.github.pierreroubydroid.chiffres",
+  "appName": "Moussaillon",
+  "webDir": "www",
+  "backgroundColor": "#0B2230",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#0B2230"
+  }
+}
