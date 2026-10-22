@@ -88,6 +88,13 @@ tr:last-child td{border-bottom:0}
     <p>Je ne peux pas vérifier si des fichiers audio générés une fois puis intégrés à ton appli entrent dans ce cadre. Avant de diffuser la bêta à d’autres familles, le plus sûr est d’écrire au support d’ElevenLabs pour obtenir leur accord écrit. Pour un usage avec ton fils uniquement, la question se pose moins, mais je ne peux pas l’affirmer.</p>
   </section>
 
+  <section class="sec" aria-labelledby="t-nom">
+    <h2 id="t-nom">Nouveau nom · 3 répliques à enregistrer</h2>
+    <p class="sub">Le jeu s’appelle désormais « Moussaillon : l’école pirate ». Les anciennes répliques de l’écran titre disaient « Chiffres à l’abordage » : en attendant les nouvelles, le jeu joue les anciennes, coupées avant ce nom. Même voix (Capitaine Barbe-Grise), même modèle (Eleven v3). Nomme les fichiers exactement comme indiqué : ils remplacent les anciens.</p>
+    <div class="row"><button class="btn" type="button" data-all="vn">Copier les 3 répliques</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="vn"></span></div>
+    <div id="linesn"></div>
+  </section>
+
   <section class="sec" aria-labelledby="t-l6">
     <h2 id="t-l6">Lot 6 en un coup d’œil</h2>
     <p class="sub">Tous les bruitages qui restent sont déjà branchés dans le code : ils jouent dès que je les ajoute à la liste.</p>
@@ -221,9 +228,9 @@ tr:last-child td{border-bottom:0}
   </section>
 
   <section class="sec" aria-labelledby="t-l">
-    <h2 id="t-l">7. Les 76 répliques reçues</h2>
+    <h2 id="t-l">7. Les répliques reçues</h2>
     <p class="sub">Déjà dans l’appli. Gardées ici pour référence, ou pour régénérer une réplique si besoin.</p>
-    <div class="row"><button class="btn" type="button" data-all="v">Copier les 76 répliques</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="v"></span></div>
+    <div class="row"><button class="btn" type="button" data-all="v">Copier ces répliques</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="v"></span></div>
     <div id="lines"></div>
   </section>
 
@@ -252,10 +259,6 @@ tr:last-child td{border-bottom:0}
 <script>
 (() => {
   const EV = [
-    ['titre', 'Écran titre', 'Au toucher de l’écran titre ; au premier lancement, juste avant la présentation', [
-      'Ho ho ! Salut, moussaillon ! Bienvenue à l’école des pirates !',
-      '[laughs heartily] Ha ha ha ! Sortez les canons et vos têtes bien pleines : l’école pirate commence !',
-      '[whispers] Approche, moussaillon… un trésor de savoirs nous attend. [shouts] À l’abordage !']],
     ['intro', 'Présentation', 'Quand l’enfant touche la case de son nom, au tout premier lancement', [
       'Ohé ! Moi, c’est le Capitaine Barbe-Grise ! [laughs] Écris ton nom de pirate, moussaillon !']],
     ['carte', 'Découverte de la carte', 'Juste après la création du capitaine', [
@@ -361,6 +364,12 @@ tr:last-child td{border-bottom:0}
       'Puis lis bien la question.',
       'Touche la bonne réponse. Tu peux relire le texte avant de répondre !']],
   ];
+  const EVN = [
+    ['titre', 'Écran titre', 'Au toucher de l’écran titre ; au premier lancement, juste avant la présentation', [
+      'Ho ho ! Salut, moussaillon ! Bienvenue à l’école des pirates !',
+      '[laughs heartily] Ha ha ha ! Sortez les canons et vos têtes bien pleines : l’école pirate commence !',
+      '[whispers] Approche, moussaillon… un trésor de savoirs nous attend. [shouts] À l’abordage !']],
+  ];
   const EV6 = [
     ['test', 'Test du capitaine', 'Quand la fenêtre du test s’ouvre, au premier passage sur la carte', [
       'Avant de lever l’ancre, je veux voir ce que tu sais déjà faire ! Quelques questions sur chaque île, et tu commenceras au bon niveau.',
@@ -418,10 +427,11 @@ tr:last-child td{border-bottom:0}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const fmt = s => esc(s).replace(/\[([a-z ]+)\]/g, '<i>[$1]</i>');
-  const all = [], sets = { v: [], v6: [], saga: [] };
-  const lineHTML = (f, t, set, cls = '') => { all.push([f, t]); sets[set].push(all.length - 1); const k = all.length - 1; if (RECU) done[f] = true;
+  const all = [], sets = { v: [], v6: [], saga: [], vn: [] };
+  const lineHTML = (f, t, set, cls = '') => { all.push([f, t]); sets[set].push(all.length - 1); const k = all.length - 1; if (RECU && set !== 'vn') done[f] = true;
     return `<div class="line"><input type="checkbox" id="c-${k}" data-f="${f}" data-set="${set}" ${done[f] ? 'checked' : ''} aria-label="${f} fait"><label class="t" for="c-${k}"><div class="f">${f}</div><div class="s${cls}">${fmt(t)}</div></label><button class="cp" type="button" data-line="${k}">Copier</button></div>`; };
   const evHTML = (list, set, badge) => list.map(([id, name, when, lines]) => `<section class="ev" aria-label="${esc(name)}"><header><h3>${esc(name)}${badge ? ' <span class="tag6">Lot 6</span>' : ''}</h3><span>${esc(when)}</span></header>${lines.map((t, k) => lineHTML(`vo-${id}-${k + 1}.mp3`, t, set)).join('')}</section>`).join('');
+  document.getElementById('linesn').innerHTML = evHTML(EVN, 'vn', false);
   document.getElementById('lines6').innerHTML = evHTML(EV6, 'v6', true);
   document.getElementById('saga').innerHTML = `<section class="ev" aria-label="Chapitres">${SAGA.map(([id, title, x]) => lineHTML(`vo-saga-${id}.mp3`, `${title}\n\n${x.join('\n\n')}`, 'saga', ' story')).join('')}</section>`;
   document.getElementById('lines').innerHTML = evHTML(EV, 'v', false);
