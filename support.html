@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2230">
+<title>Assistance · Moussaillon</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>@font-face{font-family:'Fraunces';font-weight:600 900;font-display:swap;src:url(assets/fonts/fraunces.woff2) format('woff2')}@font-face{font-family:'Lexend';font-weight:400 800;font-display:swap;src:url(assets/fonts/lexend.woff2) format('woff2')}</style>
+<style>
+:root{--abyss:#0B2230;--foam:#E9F3EE;--mist:#9fb9bb;--parch:#F4E8CC;--ink:#2A1C12;--ink2:#5b4636;--brass:#C9973F;--brass-hi:#f3d58c;--line:rgba(233,243,238,.14)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(ellipse at 50% -10%,#174052,#0b2230 55%) fixed,#0b2230;color:var(--foam);font:400 16px/1.55 Lexend,system-ui,sans-serif;padding:calc(env(safe-area-inset-top,0px) + 28px) 16px calc(env(safe-area-inset-bottom,0px) + 40px)}
+main{max-width:640px;margin:0 auto}
+.top{display:flex;gap:16px;align-items:center}
+.top img{width:64px;height:64px;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.kick{font:600 12px Lexend;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-hi)}
+h1{font:900 32px/1.05 Fraunces,serif;margin:4px 0 0}
+.lead{color:#cfe0df;margin:18px 0 6px}
+section{background:rgba(255,255,255,.045);box-shadow:inset 0 0 0 1px var(--line);border-radius:22px;padding:18px 18px 16px;margin-top:16px}
+section.paper{background:var(--parch);color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+section.paper p,section.paper li{color:var(--ink2)}
+section.paper b{color:var(--ink)}
+h2{font:800 21px/1.2 Fraunces,serif;margin:0 0 10px}
+p{margin:0 0 10px}
+ul,ol{margin:0;padding-left:20px}
+li{margin:6px 0}
+b{color:#fff;font-weight:600}
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding-left:42px;margin:12px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--brass-hi);color:#2a1a07;font:700 14px Lexend}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+.grid div{background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.35}
+.grid b{display:block;font-size:14.5px}
+.grid span{color:var(--mist)}
+.note{font-size:14px;color:var(--mist)}
+.foot{text-align:center;font-size:13px;color:#5f7f86;margin-top:22px}
+@media (max-width:380px){.grid{grid-template-columns:1fr}h1{font-size:28px}}
+@media print{body{background:#fff;color:#000}section{box-shadow:none;border:1px solid #ccc;background:#fff}b,h1,h2{color:#000}.grid div{background:#f4f4f4}.note,.grid span{color:#444}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><img src="icon-192.png" alt=""><div><div class="kick">Assistance</div><h1>Moussaillon</h1></div></div>
+  <p class="lead">Une question, un problème, une idée pour le jeu ? Écrivez au développeur, il vous répondra dès que possible.</p>
+
+  <section class="paper">
+    <h2>Nous contacter</h2>
+    <p>Par e-mail : <a href="mailto:pierrerouby@gmail.com?subject=Moussaillon" target="_top" style="color:#7a3f20;font-weight:700">pierrerouby@gmail.com</a></p>
+    <p class="note">Pour un problème, indiquez si possible le modèle de l’appareil et la version du jeu, écrite en bas de l’espace parents.</p>
+  </section>
+
+  <section>
+    <h2>Questions fréquentes</h2>
+    <ul>
+      <li><b>Ouvrir l’espace parents :</b> sur la carte, gardez le doigt 2 secondes sur la roue dentée en haut à droite, puis écrivez le résultat du calcul demandé.</li>
+      <li><b>Changer de classe :</b> dans l’espace parents, « Classe de l’enfant ». Chaque classe garde sa propre progression.</li>
+      <li><b>Limiter le temps de jeu :</b> dans l’espace parents, « Réglages », choisissez la durée des sessions.</li>
+      <li><b>Couper le son, la musique ou la voix :</b> dans l’espace parents, « Réglages ».</li>
+      <li><b>Retrouver la progression sur un autre appareil :</b> dans l’espace parents, « Copier le code de sauvegarde », puis « Restaurer depuis un code » sur l’autre appareil.</li>
+      <li><b>Tout effacer :</b> dans l’espace parents, « Tout effacer… ». Désinstaller l’application efface aussi ses données.</li>
+      <li><b>Compte, achats, publicité :</b> il n’y en a pas. Le jeu ne collecte aucune donnée.</li>
+    </ul>
+  </section>
+
+  <p class="foot"><a href="aide.html" style="color:var(--brass-hi)">Guide pour les parents</a> · <a href="confidentialite.html" style="color:var(--brass-hi)">Politique de confidentialité</a></p>
+  <p class="foot" style="margin-top:6px">Moussaillon, l’école pirate · version 2.3.1 bêta · octobre 2026</p>
+</main>
+</body>
+</html>

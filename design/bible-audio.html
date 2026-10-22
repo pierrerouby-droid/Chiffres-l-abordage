@@ -89,8 +89,8 @@ tr:last-child td{border-bottom:0}
   </section>
 
   <section class="sec" aria-labelledby="t-nom">
-    <h2 id="t-nom">Nouveau nom · 3 répliques à enregistrer</h2>
-    <p class="sub">Le jeu s’appelle désormais « Moussaillon : l’école pirate ». Les anciennes répliques de l’écran titre disaient « Chiffres à l’abordage » : en attendant les nouvelles, le jeu joue les anciennes, coupées avant ce nom. Même voix (Capitaine Barbe-Grise), même modèle (Eleven v3). Nomme les fichiers exactement comme indiqué : ils remplacent les anciens.</p>
+    <h2 id="t-nom">Nouveau nom · 3 répliques reçues ✓</h2>
+    <p class="sub">Le jeu s’appelle désormais « Moussaillon : l’école pirate ». Les anciennes répliques de l’écran titre disaient « Chiffres à l’abordage ». Les nouvelles sont reçues et intégrées (version 2.3.1), avec la même voix.</p>
     <div class="row"><button class="btn" type="button" data-all="vn">Copier les 3 répliques</button><span class="st" role="status" style="color:var(--brass-hi)"></span><span class="sub" data-prog="vn"></span></div>
     <div id="linesn"></div>
   </section>
@@ -428,7 +428,7 @@ tr:last-child td{border-bottom:0}
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const fmt = s => esc(s).replace(/\[([a-z ]+)\]/g, '<i>[$1]</i>');
   const all = [], sets = { v: [], v6: [], saga: [], vn: [] };
-  const lineHTML = (f, t, set, cls = '') => { all.push([f, t]); sets[set].push(all.length - 1); const k = all.length - 1; if (RECU && set !== 'vn') done[f] = true;
+  const lineHTML = (f, t, set, cls = '') => { all.push([f, t]); sets[set].push(all.length - 1); const k = all.length - 1; if (RECU) done[f] = true;
     return `<div class="line"><input type="checkbox" id="c-${k}" data-f="${f}" data-set="${set}" ${done[f] ? 'checked' : ''} aria-label="${f} fait"><label class="t" for="c-${k}"><div class="f">${f}</div><div class="s${cls}">${fmt(t)}</div></label><button class="cp" type="button" data-line="${k}">Copier</button></div>`; };
   const evHTML = (list, set, badge) => list.map(([id, name, when, lines]) => `<section class="ev" aria-label="${esc(name)}"><header><h3>${esc(name)}${badge ? ' <span class="tag6">Lot 6</span>' : ''}</h3><span>${esc(when)}</span></header>${lines.map((t, k) => lineHTML(`vo-${id}-${k + 1}.mp3`, t, set)).join('')}</section>`).join('');
   document.getElementById('linesn').innerHTML = evHTML(EVN, 'vn', false);

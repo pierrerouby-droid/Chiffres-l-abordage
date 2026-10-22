@@ -1,6 +1,6 @@
 import os, json, sys
 root=sys.argv[2] if len(sys.argv) > 2 else '.'; ver=sys.argv[1]
-files=['./', './index.html', './aide.html', './confidentialite.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png']
+files=['./', './index.html', './aide.html', './confidentialite.html', './support.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png']
 files += ['./assets/' + f for f in sorted(os.listdir(root + '/assets')) if f.endswith('.webp')]
 files += ['./assets/fonts/' + f for f in sorted(os.listdir(root + '/assets/fonts')) if f.endswith('.woff2')]
 aud = sorted(os.listdir(root + '/assets/audio'))
