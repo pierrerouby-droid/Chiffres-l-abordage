@@ -104,7 +104,7 @@ code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:6px;color:va
     <h2>Mode d’emploi</h2>
     <div class="steps">
       <div class="step"><span class="n">1</span><p><b>Une seule conversation</b> dans ton générateur. Colle le bloc de style, puis joins les références indiquées sur chaque fiche (« Joindre : … ») : <code>hero-canons</code> pour les décors, <code>boss-kraken</code> et <code>crew-perroquet</code> pour les personnages, <code>ship-player-3</code> pour les navires.</p></div>
-      <div class="step"><span class="n">2</span><p><b>Lots 1 à 5 et 7 à 9 reçus et intégrés.</b> Le lot 7 (30 images) est dans la version 2.0 : la garde-robe du capitaine (7a), le navire (7b) et le port d’attache (7c). Le lot 9 (8 images) est dans la version 2.4 : la côte du port, la pierre précieuse, l’Île des Perroquets et l’Île des Curiosités. Le lot 8 (3 images) est aussi dans la version 2.4 : l’Île des Formes, son décor et le Colosse des Formes. <b>Reste aussi le lot 6</b> (histoire et journal, 8 images). Chaque fiche indique quelles images joindre comme références ; une référence pas encore générée est à joindre dès qu’elle existe.</p></div>
+      <div class="step"><span class="n">2</span><p><b>Lots 1 à 5 et 7 à 9 reçus et intégrés.</b> Le lot 7 (30 images) est dans la version 2.0 : la garde-robe du capitaine (7a), le navire (7b) et le port d’attache (7c). Le lot 9 (8 images) est dans la version 2.4 : la côte du port, la pierre précieuse, l’Île des Perroquets et l’Île des Curiosités. Le lot 8 (3 images) est aussi dans la version 2.4 : l’Île des Formes, son décor et le Colosse des Formes. <b>À générer maintenant : le lot 6</b> (histoire et journal, 8 images) : cinq scènes de l’histoire de l’archipel, la vraie carte au trésor et deux poses de Pi. C’est le dernier lot en attente. Chaque fiche indique quelles images joindre comme références ; une référence pas encore générée est à joindre dès qu’elle existe.</p></div>
       <div class="step"><span class="n">3</span><p><b>Copie le prompt de chaque fiche</b> : il contient déjà le style, le sujet, le fond et le format. Commence par les fiches <b>Indispensable</b>.</p></div>
       <div class="step"><span class="n">4</span><p><b>Fond transparent</b> : demande un PNG transparent. Si l’outil ne sait pas, il doit mettre un fond magenta uni <code>#FF00FF</code>, je le découpe moi-même.</p></div>
       <div class="step"><span class="n">5</span><p><b>Nomme chaque fichier</b> avec son identifiant (<code>isle-canons.png</code>), en plus grande taille possible. Je redimensionne et je compresse.</p></div>
@@ -406,7 +406,7 @@ const LOTS = {
        ids: ['fig-aigle', 'fig-licorne', 'fig-kraken', 'cannon-silver', 'anchor-gold', 'rowboat'] },
   9: { t: 'Lot 7c · port d’attache · reçu', d: 'L’île du port vue de près, avec six terrains vides, et les sept bâtiments à construire. Commence par port-base.',
        ids: ['port-base', 'bld-jardin', 'bld-drapeau', 'bld-marche', 'bld-taverne', 'bld-phare', 'bld-chantier', 'bld-statue'] },
-  6: { t: 'Lot 6 · histoire et journal · à générer', d: 'Les images des nouveautés de la version 1.6 : cinq scènes de l’histoire de l’archipel (le début, la fin et trois chapitres drôles), la vraie carte au trésor à reconstituer, et deux poses de Pi pour les tutoriels et le journal. Commence par les fiches Indispensable.',
+  6: { t: 'Lot 6 · histoire et journal · à générer maintenant', d: 'Le dernier lot en attente : cinq scènes de l’histoire de l’archipel (le prologue, la fin et trois chapitres drôles), la vraie carte au trésor à reconstituer morceau par morceau, et deux poses de Pi pour les tutoriels et le journal. Aujourd’hui, le journal les remplace par des dessins en code : je brancherai les images dès réception. Commence par les fiches Indispensable. Huit PNG : les scènes et la carte en plein cadre, les deux poses de Pi sur fond transparent ; joins les références indiquées sur chaque fiche pour garder le même style.',
        ids: ['saga-prologue', 'saga-final', 'tmap-full', 'saga-croco', 'saga-tarte', 'saga-lunettes', 'guide-perroquet-montre', 'guide-perroquet-lit'] },
   2: { t: 'Lot 2 · reçu et intégré', d: 'Ce qui change le plus l’appli actuelle : un décor et un boss pour chaque île, le navire qui grandit, le Requin Noir qui coule, les équipiers à collectionner et l’écran de fin de session.',
        ids: ['hero-stade','hero-mine','hero-jungle','hero-marche','hero-cuisine','boss-crabe','boss-golem','boss-serpent','boss-marchand','boss-chef','ship-player-1','ship-player-2','ship-requin-hit','crew-poisson','crew-phoque','crew-grenouille','crew-pieuvre','crew-requin','crew-croco','bg-port-dusk'] },
@@ -433,8 +433,8 @@ const KEY = 'archipel-assets-done';
 let done = new Set();
 try { done = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch (e) {} };
-let view = 'lot10', fC = 'all';
-try { view = localStorage.getItem('archipel-assets-view12') || 'lot10'; } catch (e) {}
+let view = 'lot6', fC = 'all';
+try { view = localStorage.getItem('archipel-assets-view13') || 'lot6'; } catch (e) {}
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const full = a => { const r = refsOf(a); return [STYLE, r.length ? `REFERENCE: match the attached reference image${r.length > 1 ? 's' : ''} (${r.join(', ')}) exactly in rendering style, lighting, level of detail and scale.` : '', `SUBJECT: ${a.s}`, BG[a.bg], RATIO[a.r]].filter(Boolean).join('\n\n'); };
@@ -453,7 +453,7 @@ function copy(text, btn, label) {
 }
 document.getElementById('copy-style').addEventListener('click', e => copy(STYLE, e.currentTarget, 'Copier le bloc de style'));
 
-const VIEWS = [['lot10', 'Lot 8 Formes'], ['lot11', 'Lot 9 · 2.4'], ['lot6', 'Lot 6'], ['lot7', '7a Capitaine'], ['lot8', '7b Navire'], ['lot9', '7c Port'], ['recu', 'Reçus'], ['lot4', 'Lot 4'], ['lot5', 'Lot 5'], ['lot3', 'Lot 3'], ['lot2', 'Lot 2'], ['later', 'Plus tard'], ['all', 'Tout']];
+const VIEWS = [['lot6', 'Lot 6 · histoire'], ['lot10', 'Lot 8 Formes'], ['lot11', 'Lot 9 · 2.4'], ['lot7', '7a Capitaine'], ['lot8', '7b Navire'], ['lot9', '7c Port'], ['recu', 'Reçus'], ['lot4', 'Lot 4'], ['lot5', 'Lot 5'], ['lot3', 'Lot 3'], ['lot2', 'Lot 2'], ['later', 'Plus tard'], ['all', 'Tout']];
 const inView = a => view === 'all' ? true : view === 'recu' ? RECU.has(a.id) : view === 'later' ? !RECU.has(a.id) && !lotOf(a.id) : lotOf(a.id) === +view.slice(3);
 function chips() {
   document.getElementById('f-prio').innerHTML = VIEWS.map(([v, l]) => `<button class="chip" type="button" data-v="${v}" aria-pressed="${view === v}">${l} · ${A.filter(a => { const o = view; view = v; const r = inView(a); view = o; return r; }).length}</button>`).join('');
@@ -497,7 +497,7 @@ function meter() {
 }
 document.addEventListener('click', e => {
   const v = e.target.closest('[data-v]'), c = e.target.closest('[data-c]'), cp = e.target.closest('[data-copy]');
-  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view12', view); } catch (er) {} chips(); render(); }
+  if (v) { view = v.dataset.v; try { localStorage.setItem('archipel-assets-view13', view); } catch (er) {} chips(); render(); }
   else if (c) { fC = c.dataset.c; chips(); render(); }
   else if (cp) { const a = A.find(x => x.id === cp.dataset.copy); copy(full(a), cp, 'Copier le prompt'); }
 });
