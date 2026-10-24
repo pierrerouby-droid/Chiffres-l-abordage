@@ -7,5 +7,6 @@ Nouveautés de la version 2.4
 • Plusieurs enfants peuvent jouer sur le même appareil, chacun avec sa progression.
 • Le navire grandit avec les étoiles gagnées, et les pierres précieuses des coffres et des boss servent à bâtir le port. Une première pierre est offerte, et le compteur s’affiche à côté des doublons.
 • La carte s’arrête désormais sur la côte du port d’attache.
+• L’histoire de l’archipel est illustrée : des scènes en tête des chapitres et une vraie carte au trésor peinte, qui se dévoile morceau par morceau.
 • Version iPad.
 • La question qui protège l’espace parents est plus simple : un petit calcul à faire de tête.

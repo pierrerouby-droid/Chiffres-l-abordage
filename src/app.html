@@ -839,6 +839,9 @@ textarea.fld{min-height:76px}
 .chap.lk{opacity:.55}.chap.lk b{letter-spacing:.2em}.chap.unread{box-shadow:inset 0 0 0 2px var(--brass),0 0 16px rgba(243,213,140,.25)}.chap.unread small{color:var(--brass-hi)}
 /* Le texte défile, pas le cadre : l'illustration qui dépasse au-dessus du cadre n'est plus coupée */
 .modal.saga .box{max-height:calc(86vh - 60px);overflow:visible}.modal.saga .box>img,.modal.saga .errbtns{flex:none}
+.modal.saga .sscene{display:block;width:100%;max-height:34vh;aspect-ratio:3/2;object-fit:cover;border-radius:16px;box-shadow:0 8px 18px rgba(0,0,0,.28),inset 0 0 0 1px rgba(0,0,0,.1)}
+@media (max-height:700px){.modal.saga .sscene{max-height:24vh}} /* petits écrans : la scène laisse de la place au texte */
+.sagahead{display:flex;gap:10px;align-items:center}.sagahead img{width:76px;flex:none;margin:-6px 0 0 -4px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}.sagahead>div{min-width:0}
 .modal.saga .stxt{flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .modal.saga .stxt.more{padding-bottom:22px;-webkit-mask:linear-gradient(#000 calc(100% - 34px),transparent);mask:linear-gradient(#000 calc(100% - 34px),transparent)}
 .stxt{text-align:left;font:400 17px/1.55 var(--f-u);color:var(--ink)}.stxt p{margin:0 0 10px}
@@ -4900,26 +4903,23 @@ const pieces = () => { const n = sagaIsles().filter(i => chestDone(IS(i.id))).le
 // La carte au trésor se reconstitue : un morceau par île, dans l'ordre des îles
 function treasureMap() {
   const isl = sagaIsles(), W = 400, H = 300, cw = 100, ch = 100;
-  const pts = isl.map((i, k) => k === 0 ? [66, 68] : [(k % 4) * cw + 50 + ((k * 37) % 23) - 11, Math.floor(k / 4) * ch + 50 + ((k * 53) % 25) - 12]); // la première île laisse la place à la rose des vents
-  const route = pts.map((p, k) => `${k ? 'L' : 'M'}${p[0]},${p[1]}`).join(' ');
-  const blob = ([x, y], k) => `<path d="M${x - 22},${y} q4,-16 22,-15 q18,-1 21,12 q3,14 -14,17 q-12,6 -22,-1 q-10,-4 -7,-13z" fill="${['#c9a463', '#b9a05a', '#c7a86b'][k % 3]}" stroke="#7a5a2a" stroke-width="1.6"/><circle cx="${x + 2}" cy="${y - 2}" r="4" fill="#5f8a4a"/>`;
-  const art = `<rect width="${W}" height="${H}" fill="url(#tmg)"/>${pts.map(blob).join('')}<path d="${route}" fill="none" stroke="#8a2f1f" stroke-width="2.4" stroke-dasharray="5 6" stroke-linecap="round"/>
-    <g transform="translate(24,24)" stroke="#6b4a1f" fill="none" stroke-width="1.2"><circle r="13"/><path d="M0-18L3.5 0 0 18-3.5 0Z" fill="#a8382a"/><path d="M-18 0L0 3 18 0 0-3Z" fill="#6b4a1f"/></g>
-    <g transform="translate(${pts[pts.length - 1][0] + 28},${pts[pts.length - 1][1] + 26})" stroke="#a8241a" stroke-width="4.5" stroke-linecap="round"><path d="M-9-9L9 9M9-9L-9 9"/></g>`;
+  // Carte peinte (lot 6) : douze cases de 4 × 3, une île par case, dans l'ordre des îles ; le brouillard cache les morceaux pas encore trouvés
   const fog = isl.map((i, k) => chapterOpen(SAGA.find(c => c.id === i.id)) ? '' : `<g><rect x="${(k % 4) * cw}" y="${Math.floor(k / 4) * ch}" width="${cw}" height="${ch}" fill="#22343b" opacity=".92"/><text x="${(k % 4) * cw + 50}" y="${Math.floor(k / 4) * ch + 62}" text-anchor="middle" font-family="Georgia,serif" font-size="34" fill="#4d6a73">?</text></g>`).join('');
-  return `<svg class="tmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Carte au trésor : ${pieces()} sur 12"><defs><radialGradient id="tmg" cx="50%" cy="50%" r="70%"><stop offset="0" stop-color="#f1e0b6"/><stop offset=".8" stop-color="#dcc28c"/><stop offset="1" stop-color="#b8955a"/></radialGradient></defs>${art}${fog}<g stroke="rgba(90,60,25,.35)" stroke-width="1">${[100, 200, 300].map(x => `<path d="M${x} 0V${H}"/>`).join('')}${[100, 200].map(y => `<path d="M0 ${y}H${W}"/>`).join('')}</g></svg>`;
+  return `<svg class="tmap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Carte au trésor : ${pieces()} sur 12"><image href="${IMG('tmap-full')}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/>${fog}</svg>`;
 }
 function sagaHTML() {
   const read = P().sagaRead || [];
-  return `<section class="jsec"><h2>L’histoire de l’archipel</h2><p class="sub" style="margin:0 0 10px">Le Kraken a déchiré la carte au trésor. Chaque coffre d’île cache un morceau et un chapitre de l’histoire.</p>
+  return `<section class="jsec"><div class="sagahead"><img src="${IMG('guide-perroquet-lit')}" alt=""><div><h2>L’histoire de l’archipel</h2><p class="sub" style="margin:0 0 10px">Le Kraken a déchiré la carte au trésor. Chaque coffre d’île cache un morceau et un chapitre de l’histoire.</p></div></div>
     <div class="tmapw">${treasureMap()}<span>${pieces()} sur 12</span></div>
     ${SAGA.map((c, k) => { const open = chapterOpen(c), i = isleById(c.id); return `<button class="chap${open ? '' : ' lk'}${open && !read.includes(c.id) ? ' unread' : ''}" ${open ? `data-a="saga" data-c="${c.id}"` : 'disabled'}><span class="cn">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Final' : 'Chapitre ' + k}</span><b>${open ? typo(c.t) : '???'}</b><small>${open ? (read.includes(c.id) ? 'Relire' : 'Nouveau ! Touche pour lire') : c.id === 'final' ? 'Retrouve les douze morceaux' : `Ouvre le coffre ${i.art.replace(/^(l’|le |la )/, m => ({ 'l’': 'de l’', 'le ': 'du ', 'la ': 'de la ' })[m])}`}</small></button>`; }).join('')}</section>`;
 }
+// Chapitres illustrés (lot 6) ; les autres gardent l'île du chapitre en médaillon
+const SAGA_ART = { prologue: 'saga-prologue', jungle: 'saga-croco', cuisine: 'saga-tarte', lecture: 'saga-lunettes', final: 'saga-final' };
 function openSaga(id) {
   const c = SAGA.find(x => x.id === id); if (!c || !chapterOpen(c)) return; const k = SAGA.indexOf(c), i = isleById(id);
   P().sagaRead = [...new Set([...(P().sagaRead || []), id])]; save();
   const m = document.createElement('div'); m.className = 'modal saga';
-  m.innerHTML = `<div class="box paper" role="dialog" aria-label="${esc(c.t)}"><img src="${IMG(i ? i.img : id === 'final' ? 'chest-open' : 'guide-capitaine')}" alt="" style="width:${i ? 150 : 130}px;margin:-74px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
+  m.innerHTML = `<div class="box paper" role="dialog" aria-label="${esc(c.t)}">${SAGA_ART[id] ? `<img class="sscene" src="${IMG(SAGA_ART[id])}" alt="">` : `<img src="${IMG(i ? i.img : id === 'final' ? 'chest-open' : 'guide-capitaine')}" alt="" style="width:${i ? 150 : 130}px;margin:-74px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">`}
     <div class="smallcaps" style="color:var(--ink-2)">${k === 0 ? 'Prologue' : k === SAGA.length - 1 ? 'Chapitre final' : 'Chapitre ' + k}</div><div class="disp" style="font-size:28px">${typo(c.t)}</div>
     <div class="stxt">${c.x.map(t => `<p>${esc(typo(t))}</p>`).join('')}</div>
     <div class="errbtns">${canSay() ? `<button class="say" data-a="sagasay" aria-label="Écouter">${ico('iSound')}</button>` : ''}<button class="brass-btn" data-a="sagaclose">Fermer</button></div></div>`;
@@ -5907,7 +5907,7 @@ app.addEventListener('click', e => {
       speak(el.dataset.w === 'e' ? `${R && R.dg ? speakable(R.dg) + ' ' : ''}La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' || q.readAlone ? '' : q.prompt || ''} ${q.price || ''}`) + (q.sayChoices && q.choices ? ' ' + q.choices.map(c => speakable(c.html)).join(', ou ') + ' ?' : '')); break; }
     case 'next': if (window.speechSynthesis) speechSynthesis.cancel(); if (R) { $$('.sheet-err').forEach(x => x.remove()); advance(); } break;
     case 'power': { const p = el.dataset.p; if (!R || R.locked || R.used[p]) break; R.used[p] = true; SND.tap();
-      if (p === 'perroquet') { const sc = $('#scene'); const h = document.createElement('div'); h.className = 'pi-tip paper'; h.setAttribute('role', 'note'); h.innerHTML = `<img src="${IMG('crew-perroquet')}" alt=""><div><b>Pi :</b> ${R.q.hint}</div><button class="x" data-a="tipclose" aria-label="Fermer l’indice">${ico('iClose')}</button>`; sc && sc.appendChild(h); el.disabled = true; voice('indice'); }
+      if (p === 'perroquet') { const sc = $('#scene'); const h = document.createElement('div'); h.className = 'pi-tip paper'; h.setAttribute('role', 'note'); h.innerHTML = `<img src="${IMG('guide-perroquet-montre')}" alt=""><div><b>Pi :</b> ${R.q.hint}</div><button class="x" data-a="tipclose" aria-label="Fermer l’indice">${ico('iClose')}</button>`; sc && sc.appendChild(h); el.disabled = true; voice('indice'); }
       if (p === 'crabe') { R.seen.add(R.q.log); nextQ(); toast('Le Crabe Compteur te donne une autre question.'); }
       if (p === 'calmar') { el.disabled = true; toast('Le Calmar Calcul doublera ton butin à la fin de l’escale !'); }
       break; }
