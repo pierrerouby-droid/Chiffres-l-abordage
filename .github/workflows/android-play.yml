@@ -1,0 +1,88 @@
+# Fabrique le paquet Android (.aab pour Google Play, .apk pour l'essayer) et le signe avec la clé d'importation.
+# À lancer à la main : onglet Actions > « Android · paquet pour Google Play » > Run workflow.
+# Le paquet est à télécharger en bas de la page de la compilation (section Artifacts), puis à importer dans la Play Console.
+# Secrets du dépôt nécessaires (Settings > Secrets and variables > Actions) :
+#   ANDROID_KEYSTORE_BASE64    contenu du fichier cle-android-base64.txt (la clé chiffres-upload.keystore encodée en base64)
+#   ANDROID_KEYSTORE_PASSWORD  mot de passe de la clé (fichier mot-de-passe.txt)
+# Le numéro de version Android (versionCode) augmente tout seul à chaque lancement ; le nom affiché (versionName)
+# vient de android/app/build.gradle. L'app affiche le jeu en ligne : un nouveau paquet ne sert que pour changer
+# le nom, l'icône ou les réglages Android, ou suivre la version d'Android exigée par Google.
+name: Android · paquet pour Google Play
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      # Empreinte de la clé d'importation : le paquet signé doit porter celle-ci (la même que dans assetlinks.json)
+      UPLOAD_SHA256: "51:28:00:02:3B:87:36:DD:64:C7:7F:36:2F:9E:24:0B:DC:69:7F:31:AB:7F:A1:75:05:FE:82:28:A8:56:8D:75"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Vérifier les secrets
+        run: |
+          [ -n "$KS_B64" ] || { echo "::error::Le secret ANDROID_KEYSTORE_BASE64 est manquant (Settings > Secrets and variables > Actions)"; exit 1; }
+          [ -n "$KS_PASS" ] || { echo "::error::Le secret ANDROID_KEYSTORE_PASSWORD est manquant (Settings > Secrets and variables > Actions)"; exit 1; }
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Numéro de version Android
+        working-directory: android
+        run: |
+          # Le paquet 2.3 fabriqué à la main porte le numéro 1 : les paquets d'ici commencent à 2
+          sed -i "s/versionCode [0-9]*/versionCode $(( ${{ github.run_number }} + 1 ))/" app/build.gradle
+          grep -E "versionCode|versionName" app/build.gradle
+
+      - name: Compiler
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon bundleRelease assembleRelease
+
+      - name: Signer avec la clé d'importation
+        working-directory: android
+        run: |
+          printf '%s' "$KS_B64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          mkdir -p out
+          cp app/build/outputs/bundle/release/app-release.aab out/moussaillon.aab
+          jarsigner -keystore "$RUNNER_TEMP/upload.keystore" -storepass "$KS_PASS" -keypass "$KS_PASS" \
+            -sigalg SHA256withRSA -digestalg SHA-256 out/moussaillon.aab upload
+          "$BT/zipalign" -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk out/aligne.apk
+          "$BT/apksigner" sign --ks "$RUNNER_TEMP/upload.keystore" --ks-key-alias upload \
+            --ks-pass env:KS_PASS --key-pass env:KS_PASS --out out/moussaillon.apk out/aligne.apk
+          rm -f out/aligne.apk out/*.idsig
+
+      - name: Vérifier le paquet
+        working-directory: android/out
+        run: |
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          jarsigner -verify moussaillon.aab | grep -q 'jar verified' || { echo "::error::Le paquet .aab n'est pas signé"; exit 1; }
+          GOT=$("$BT/apksigner" verify --print-certs moussaillon.apk | grep -m1 "SHA-256 digest" | awk '{print $NF}' | tr 'a-f' 'A-F')
+          WANT=$(echo "$UPLOAD_SHA256" | tr -d ':')
+          echo "Empreinte du paquet : $GOT"
+          [ "$GOT" = "$WANT" ] || { echo "::error::Le paquet n'est pas signé avec la clé d'importation attendue"; exit 1; }
+          "$BT/aapt2" dump badging moussaillon.apk | grep -E "^package|^launchable-activity|^targetSdkVersion"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moussaillon-android-${{ github.run_number }}
+          path: |
+            android/out/moussaillon.aab
+            android/out/moussaillon.apk
+          retention-days: 30
+
+      - name: Effacer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.keystore"
