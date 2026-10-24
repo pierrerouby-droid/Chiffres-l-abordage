@@ -1169,7 +1169,7 @@ function boom(vol = .5, dur = .55) {
 }
 /* Fichiers audio (musique, bruitages, voix) : listés dans assets/audio/manifest.json ; sinon les sons synthétiques ci-dessous servent de repli. */
 const AUDIO = 'assets/audio/';
-const VO = { titre: 3, intro: 1, carte: 1, accueil: 3, depart: 3, combo: 3, rire: 3, victoire: 3, parfait: 2, 'boss-debut': 2, boss: 3, coffre: 2, equipier: 2, ile: 2, navire: 2, presque: 3, indice: 2, revanche: 2, libre: 1, equipage: 1, pirate: 1, port: 3,
+const VO = { parents: 1, titre: 3, intro: 1, carte: 1, accueil: 3, depart: 3, combo: 3, rire: 3, victoire: 3, parfait: 2, 'boss-debut': 2, boss: 3, coffre: 2, equipier: 2, ile: 2, navire: 2, presque: 3, indice: 2, revanche: 2, libre: 1, equipage: 1, pirate: 1, port: 3,
   'tuto-keypad': 3, 'tuto-choices': 2, 'tuto-mine': 4, 'tuto-line': 2, 'tuto-money': 4, 'tuto-pizza': 2, 'tuto-words': 3, 'tuto-read': 3, lettres: 2,
   test: 2, 'test-fin': 2, melange: 2, 'boss-cible': 2, quete: 2, chapitre: 2, journal: 1, 'tuto-type': 3 };
 const BUF = {}; let audioAsked = false, BUS = null, musSrc = null, musName = null, musWant = null, lastVo = 0;
@@ -5698,7 +5698,8 @@ function parentGate(then) {
     <input class="fld" id="pgin" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" aria-label="Résultat">
     <div class="gap"><button class="ghost-btn" data-a="pgno">Annuler</button><button class="brass-btn" data-a="pgok" style="min-height:48px">Valider</button></div><p class="pgerr" id="pgerr" hidden>Ce n’est pas le bon résultat.</p></div>`;
   el._then = then; el._ans = a * b; app.appendChild(el);
-  if (S.sound && S.voice) speak('Cette partie est pour les parents. Demande à un adulte de t’aider.');
+  // Réplique enregistrée du pirate ; sans le fichier, la voix de synthèse dit la même phrase
+  if (!voice('parents', true) && S.sound && S.voice) speak('Cette partie est pour les parents. Demande à un adulte de t’aider.');
   const inp = $('#pgin', el); inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); gateCheck(); } }); setTimeout(() => inp.focus(), 60);
 }
 function gateCheck() {
