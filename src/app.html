@@ -249,7 +249,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .enplay svg{width:30px;height:30px}.prompt.enq .enplay{display:flex;width:max-content}
 .enline{font:700 clamp(19px,5.4vw,24px)/1.3 var(--f-u);color:var(--ink);text-align:center;margin:6px 4px 0}
 .enbig .emo{font-size:72px}.enbig{text-align:center;line-height:1.1}
-.emo{font-size:40px;line-height:1;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}.emo.sm{font-size:28px;letter-spacing:4px}
+.emo{font-size:40px;line-height:1;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;filter:drop-shadow(0 1px 1.5px rgba(42,28,18,.45))} /* les emoji clairs (nuage, neige) restent visibles sur le crème */.emo.sm{font-size:28px;letter-spacing:4px}
 .sw{display:inline-block;width:44px;height:44px;border-radius:50%;border:3px solid #2a1c12;vertical-align:middle;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
 .ennum{font:800 30px var(--f-u)}
 .gfig .gship{fill:var(--wax);stroke:#5e170f;stroke-width:1.5;stroke-linejoin:round}
@@ -5141,7 +5141,7 @@ function nextQ() {
 }
 // Recadrage horizontal des décors d'île : dans un écran en hauteur, on ne voit qu'environ la moitié de l'image.
 // Ces valeurs gardent le sujet (fort, forge, grotte…) dans le cadre plutôt que le centre de l'image.
-const HERO_X = { culture: 58, anglais: 75, formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
+const HERO_X = { culture: 58, anglais: 75, formes: 62, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
 function sceneHTML() {
   const { i, boss } = R;
   if (i.v) return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="">${i.id === 'mix' ? shipArt('ship me sail', 'role="img" aria-label="Ton navire"') : `<img class="guidefig" src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise">`}<div class="waves"></div>${powersHTML()}</div>`;
