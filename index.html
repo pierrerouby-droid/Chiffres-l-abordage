@@ -693,9 +693,14 @@ textarea.fld{min-height:76px}
 @keyframes pulse2{50%{transform:scale(1.05);box-shadow:inset 0 0 0 1.5px rgba(243,213,140,.9),0 0 24px rgba(243,213,140,.35)}}
 .tload{width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.15);overflow:hidden}.tload i{display:block;height:100%;width:0;background:var(--brass-hi);transition:width .3s}
 .title.who{cursor:default}.whob{border-radius:22px;padding:14px 12px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;width:min(92vw,360px)}
-.whob b{font:700 20px var(--f-u);color:#fff3d0}.whol{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.whol button{display:flex;flex-direction:column;align-items:center;gap:3px;width:96px;padding:8px 4px;border-radius:16px;background:rgba(8,26,36,.55);box-shadow:inset 0 0 0 1.5px rgba(243,213,140,.45);color:#fff3d0;font:700 14px var(--f-u)}
-.whol img{width:62px;height:62px;border-radius:50%;object-fit:cover;object-position:50% 20%;box-shadow:0 0 0 2px #f3d58c}.whol small{font:600 11px var(--f-u);color:var(--mist)}
+.whob b{font:700 20px var(--f-u);color:#fff3d0}
+/* « Qui joue ? » : un enfant par ligne (portrait, prénom, classe), quel que soit le nombre d'enfants et la longueur des prénoms */
+.whol{display:flex;flex-direction:column;gap:8px;width:100%}
+.whol button{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:7px 14px 7px 8px;border-radius:16px;background:rgba(8,26,36,.55);box-shadow:inset 0 0 0 1.5px rgba(243,213,140,.45);color:#fff3d0;text-align:left}
+.whol img{width:48px;height:48px;flex:none;border-radius:50%;object-fit:cover;object-position:50% 20%;box-shadow:0 0 0 2px #f3d58c}
+.tgo .whol span{flex:1;min-width:0;padding:0;border-radius:0;background:none;box-shadow:none;animation:none;text-align:left;font:700 18px var(--f-u);color:#fff3d0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.whol small{flex:none;padding:3px 9px;border-radius:10px;background:rgba(243,213,140,.16);font:700 12px var(--f-u);color:#f3d58c}
+#ob{position:relative}.obx{position:absolute;top:10px;right:10px;z-index:2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink);background:rgba(42,28,18,.08);box-shadow:inset 0 0 0 1.5px rgba(42,28,18,.25)}.obx svg{width:20px;height:20px}
 .kid{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(243,213,140,.15)}.kid:first-of-type{border-top:0}.kid img{width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:50% 20%}
 .kid>div:nth-child(2){flex:1;display:flex;flex-direction:column}.kid span{font-size:12.5px;color:var(--mist)}.kidx{display:flex;gap:6px}
 .title .vers2{position:absolute;right:14px;bottom:calc(var(--sbm) + 12px);font-size:12px;color:rgba(255,255,255,.5);z-index:1}
@@ -1117,12 +1122,22 @@ let S;
 try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '{}'))); } catch (e) { S = DEF(); }
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} if (!ADMIN) syncProf(); };
+let dropped = false; // profil abandonné : plus rien n'est écrit pour lui, même à la fermeture de la page
+const save = () => { if (dropped) return; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} if (!ADMIN) syncProf(); };
 // Le sélecteur « Qui joue ? » montre le prénom, le portrait et la classe de chaque enfant, recopiés ici à chaque sauvegarde
 function syncProf() { const p = PROFS.list.find(x => x.id === ME); if (!p) return; const m = { name: S.name || '', avatar: S.avatar || 'a', grade: S.grade || '' };
   if (p.name !== m.name || p.avatar !== m.avatar || p.grade !== m.grade) { Object.assign(p, m); saveProfs(); } }
 function switchProf(id) { if (!PROFS.list.some(x => x.id === id)) return; save(); PROFS.cur = id; saveProfs(); try { sessionStorage.setItem('mous-go', '1'); } catch (e) {} location.reload(); }
-function addProf() { if (PROFS.list.length >= PMAX) return toast(`${PMAX} enfants au maximum sur cet appareil.`); const id = 'p' + (Math.max(...PROFS.list.map(x => +x.id.slice(1) || 1)) + 1); PROFS.list.push({ id }); switchProf(id); }
+function addProf() { if (PROFS.list.length >= PMAX) return toast(`${PMAX} enfants au maximum sur cet appareil.`); const id = 'p' + (Math.max(...PROFS.list.map(x => +x.id.slice(1) || 1)) + 1); PROFS.list.push({ id });
+  try { sessionStorage.setItem('mous-new', id); sessionStorage.setItem('mous-prev', ME); } catch (e) {} switchProf(id); }
+// Enfant tout juste ajouté depuis l'espace parents : la croix du formulaire d'accueil annule l'ajout et revient à l'enfant d'avant
+const justAdded = () => { try { return sessionStorage.getItem('mous-new') === ME && !S.intro && PROFS.list.length > 1; } catch (e) { return false; } };
+function cancelNewProf() {
+  let prev = null; try { prev = sessionStorage.getItem('mous-prev'); sessionStorage.removeItem('mous-new'); } catch (e) {}
+  const back = PROFS.list.find(x => x.id === prev && x.id !== ME) || PROFS.list.find(x => x.id !== ME); if (!back) return;
+  dropped = true; PROFS.list = PROFS.list.filter(x => x.id !== ME); try { localStorage.removeItem(KEY); } catch (e) {}
+  PROFS.cur = back.id; saveProfs(); try { sessionStorage.setItem('mous-go', '1'); } catch (e) {} location.reload();
+}
 function delProf(id) { if (id === ME || PROFS.list.length < 2) return; PROFS.list = PROFS.list.filter(x => x.id !== id); try { localStorage.removeItem(profKey(id)); } catch (e) {} saveProfs(); }
 const profName = p => p.name || 'Nouveau moussaillon';
 const VERSION = '2.4 bêta · octobre 2026';
@@ -5040,7 +5055,7 @@ function renderMap() {
   sc.scrollTop = mapScroll != null ? mapScroll : Math.max(0, $('.map', sc).offsetTop + cur.y - (hb + tt) / 2 + 10);
   sc.addEventListener('scroll', () => { mapScroll = sc.scrollTop; }, { passive: true });
   if (S.refund) { const r = S.refund; delete S.refund; save(); setTimeout(() => toast(`Les sillages ont quitté le chantier naval : ${fmt(r)} doublons te sont rendus.`), 900); }
-  if (S.giftNote) { delete S.giftNote; save(); setTimeout(() => toast('Cadeau de bienvenue : une pierre précieuse pour bâtir ton port d’attache !'), 1600); }
+  if (S.giftNote && S.intro) { delete S.giftNote; save(); setTimeout(() => toast('Cadeau de bienvenue : une pierre précieuse pour bâtir ton port d’attache !'), 1600); }
   setTimeout(offerPlacement, 900);
 }
 function tideHTML(t) {
@@ -5828,9 +5843,11 @@ function restoreFrom(code) {
 }
 
 /* ================= Onboarding ================= */
-function onboarding() {
+// oldName : on vient de « Changer de nom » (la croix garde l'ancien nom) ; sinon la croix n'existe que pour un enfant tout juste ajouté
+function onboarding(oldName) {
   const m = document.createElement('div'); m.className = 'modal'; const ask = !S.grade; let gr = S.grade;
-  m.innerHTML = `<form class="box paper" id="ob" autocomplete="off"><img src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise" style="width:${ask ? 130 : 160}px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
+  const closable = oldName != null || justAdded();
+  m.innerHTML = `<form class="box paper" id="ob" autocomplete="off">${closable ? `<button type="button" class="obx" data-a="obclose" aria-label="${oldName != null ? 'Annuler' : 'Annuler l’ajout de cet enfant'}">${ico('iClose')}</button>` : ''}<img src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise" style="width:${ask ? 130 : 160}px;margin:-70px auto 0;filter:drop-shadow(0 10px 10px rgba(0,0,0,.3))">
     <div class="disp" style="font-size:28px">Bienvenue à bord !</div><p style="margin:0;color:var(--ink-2)">Le capitaine Barbe-Grise et son perroquet Pi vont t’accompagner d’île en île. Comment s’appelle le capitaine ?</p>
     <label for="nm" class="smallcaps" style="color:var(--ink-2)">Ton nom de pirate</label><input id="nm" maxlength="14" placeholder="Ex. : Léo" value="${esc(S.name)}">
     <div class="smallcaps" style="color:var(--ink-2)">Ton portrait</div><div class="avs ob" role="group" aria-label="Ton portrait">${AVATARS.map(a => `<button type="button" data-v="${a}" aria-pressed="${capt() === 'capt-' + a}" aria-label="Portrait ${a.toUpperCase()}"><img src="${IMG('capt-' + a)}" alt=""></button>`).join('')}</div>
@@ -5840,7 +5857,8 @@ function onboarding() {
   app.appendChild(m);
   $$('.avs button', m).forEach(b => b.addEventListener('click', () => { S.avatar = b.dataset.v; SND.tap(); $$('.avs button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
   $$('.grades button', m).forEach(b => b.addEventListener('click', () => { gr = b.dataset.g; SND.tap(); $$('.grades button', m).forEach(x => x.setAttribute('aria-pressed', x === b)); }));
-  $('#ob').addEventListener('submit', e => { e.preventDefault(); if (!gr) { toast('Choisis ta classe : CP, CE1, CE2, CM1 ou CM2.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
+  m.dataset.old = oldName != null ? oldName : '';
+  $('#ob').addEventListener('submit', e => { e.preventDefault(); try { sessionStorage.removeItem('mous-new'); } catch (err) {} if (!gr) { toast('Choisis ta classe : CP, CE1, CE2, CM1 ou CM2.'); $('.grades').classList.add('nudge'); setTimeout(() => { const g = $('.grades'); g && g.classList.remove('nudge'); }, 600); return; }
     S.name = $('#nm').value.trim().slice(0, 14) || 'Capitaine'; S.intro = true; if (ask) setGrade(gr); save(); m.remove(); ac(); SND.fanfare(); show('map'); setTimeout(() => voice('carte', true), 600); });
 }
 function setGrade(g) { if (!GRADES[g]) return; S.grade = g; P(); applyGrade(); mapScroll = null; save(); }
@@ -5931,7 +5949,8 @@ app.addEventListener('click', e => {
     case 'port': renderPort(); break;
     case 'ep': S.epithet = el.dataset.e; save(); SND.tap(); renderPrime(); break;
     case 'eptip': toast(`Pour le gagner : ${el.dataset.h}.`); break;
-    case 'rename': S.name = ''; onboarding(); break;
+    case 'rename': { const old = S.name; S.name = ''; onboarding(old); break; }
+    case 'obclose': { const m = el.closest('.modal'); if (m && m.dataset.old) { S.name = m.dataset.old; save(); m.remove(); break; } cancelNewProf(); break; }
     case 'who': { const id = el.dataset.p; if (id === ME) { FX.sparkles(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, 26, 240); ac(); { const st = $('.title'); st && st.remove(); } show('map'); if (!S.intro) { onboarding(); welcome(true); } else welcome(false); } else switchProf(id); break; }
     case 'kidplay': switchProf(el.dataset.p); break;
     case 'kidadd': addProf(); break;
