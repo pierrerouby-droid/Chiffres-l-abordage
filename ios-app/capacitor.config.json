@@ -5,6 +5,7 @@
   "backgroundColor": "#0B2230",
   "ios": {
     "contentInset": "never",
-    "backgroundColor": "#0B2230"
+    "backgroundColor": "#0B2230",
+    "preferredContentMode": "mobile"
   }
 }
