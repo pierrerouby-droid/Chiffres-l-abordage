@@ -258,6 +258,13 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .gfig .gpt{fill:var(--ink)}
 .gfig .gpo{fill:#fbf3df;stroke:var(--ink);stroke-width:2}
 .glet{font:800 34px/1 var(--f-u)}
+.prompt.enq{margin:4px 0 0}.enplay{display:inline-flex;align-items:center;gap:10px;margin:6px auto 2px;padding:10px 22px 10px 16px;border-radius:30px;background:linear-gradient(#f7dc93,#c9973f);color:#2a1a07;font:700 18px var(--f-u);box-shadow:0 3px 0 var(--brass-lo)}
+.enplay svg{width:30px;height:30px}.prompt.enq .enplay{display:flex;width:max-content}
+.enline{font:700 clamp(19px,5.4vw,24px)/1.3 var(--f-u);color:var(--ink);text-align:center;margin:6px 4px 0}
+.enbig .emo{font-size:72px}.enbig{text-align:center;line-height:1.1}
+.emo{font-size:40px;line-height:1;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}.emo.sm{font-size:28px;letter-spacing:4px}
+.sw{display:inline-block;width:44px;height:44px;border-radius:50%;border:3px solid #2a1c12;vertical-align:middle;box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.ennum{font:800 30px var(--f-u)}
 .gfig .gship{fill:var(--wax);stroke:#5e170f;stroke-width:1.5;stroke-linejoin:round}
 .prompt.geo .gans{font:800 clamp(24px,7vw,30px)/1.2 var(--f-d);margin-top:4px;font-variant-numeric:tabular-nums}
 .prompt.geo .gprog{font:700 15px/1.35 var(--f-u);color:#7a3f20;margin-top:4px;text-wrap:balance}
@@ -1354,7 +1361,7 @@ const portOwned = () => S.blds;
 const portBuilt = () => S.port.filter(b => b && BLDS.some(x => x[0] === b)).length;
 const FLAGS = [['crane', 'Crâne'], ['ancre', 'Ancre'], ['etoile', 'Étoile'], ['coeur', 'Cœur'], ['eclair', 'Éclair'], ['couronne', 'Couronne'], ['lettre', 'Initiale']];
 // « l’Île des Canons » → « de l’Île des Canons », « le Stade » → « du Stade »
-const deArt = a => a.replace(/^(l’|le |la )/, m => ({ 'l’': 'de l’', 'le ': 'du ', 'la ': 'de la ' })[m]);
+const deArt = a => a.replace(/^(l’|les |le |la )/, m => ({ 'l’': 'de l’', 'les ': 'des ', 'le ': 'du ', 'la ': 'de la ' })[m]);
 // Pavillon exclusif de chaque île, gagné au rang or (dans n'importe quelle classe)
 const ISYM = {
   canons: (b, d) => `<g fill="${b}"><rect x="16" y="36" width="60" height="20" rx="9" transform="rotate(-18 46 46)"/><circle cx="38" cy="66" r="15"/><circle cx="84" cy="26" r="6"/></g><circle cx="38" cy="66" r="5" fill="${d}"/>`,
@@ -1390,7 +1397,7 @@ const EPITHETS = [ // [surnom, comment le gagner, île : masqué tant que l'île
   ['Calcul-Éclair', '5 bonnes réponses de suite en moins de 5 s'], ['Canonnier d’Élite', '6 sur 6 à l’Île des Canons'], ['Tête Froide', '6 sur 6 au Stade des Vagues'],
   ['Bâtisseur', '6 sur 6 à la Mine aux Blocs'], ['Œil-de-Lynx', '6 sur 6 dans la Jungle'], ['Main-d’Or', '6 sur 6 au Marché du Port'], ['Fine Lame', '6 sur 6 à la Cuisine'], ['Vainqueur du Kraken', 'Bats le boss de l’Île des Canons'], ['Maître du Temps', '6 sur 6 à l’Île de l’Horloge', 'horloge'], ['Grand Géomètre', '6 sur 6 à l’Île des Formes', 'formes'],
   ['Chasseur de Trésor', 'Retrouve les douze morceaux de la carte'], ['Maître Charpentier', 'Termine le plan de ton navire'], ['Gouverneur du Port', 'Construis les six parcelles de ton port d’attache'],
-  ['Grand Liseur', '6 sur 6 à la Grotte aux Histoires', 'lecture'], ['Maître des Verbes', '6 sur 6 à la Forge des Verbes', 'conjug'], ['Chef de Phrase', '6 sur 6 au Récif des Phrases', 'gram'], ['Gardien des Accords', '6 sur 6 au Pont des Accords', 'accords'], ['Mille-Mots', '6 sur 6 à la Baie des Mots', 'vocab'],
+  ['Grand Liseur', '6 sur 6 à la Grotte aux Histoires', 'lecture'], ['Globe-Trotter', '6 sur 6 à l’Île des Perroquets', 'anglais'], ['Maître des Verbes', '6 sur 6 à la Forge des Verbes', 'conjug'], ['Chef de Phrase', '6 sur 6 au Récif des Phrases', 'gram'], ['Gardien des Accords', '6 sur 6 au Pont des Accords', 'accords'], ['Mille-Mots', '6 sur 6 à la Baie des Mots', 'vocab'],
 ];
 const ISLES = [
   { id: 'canons', sea: 'm', cm1: 'Tables, multiples et divisions', hero: 'hero-canons', boss: { img: 'boss-kraken', n: 'Le Kraken des Tables' }, chestCrew: 'tortue', art: 'l’Île des Canons', n: 'Île des Canons', notion: 'Tables de multiplication', img: 'isle-canons', lag: 'lagoon-round', x: 28, y: 1450, gen: genCanon, ep: 'Canonnier d’Élite', unlock: 0, sfx: ['BOUM !', 'TOUCHÉ !', 'EN PLEIN DANS LE MILLE !'] },
@@ -1405,6 +1412,8 @@ const ISLES = [
   // Mer des Lettres (lot 5 d'illustrations reçu le 18 octobre 2026)
   { id: 'lecture', sea: 'f', hero: 'hero-lecture', boss: { img: 'boss-lecture', n: 'La Sirène des Contes' }, chestCrew: null, art: 'la Grotte aux Histoires', n: 'Grotte aux Histoires', notion: 'Lecture et compréhension', img: 'isle-lecture', lag: 'lagoon-round', x: 28, y: 1450, gen: genLecture, ep: 'Grand Liseur', unlock: 0, sfx: ['BIEN LU !', 'QUEL LECTEUR !'] },
   { id: 'conjug', sea: 'f', hero: 'hero-conjug', boss: { img: 'boss-conjug', n: 'Le Forgeron des Temps' }, chestCrew: null, art: 'la Forge des Verbes', n: 'Forge des Verbes', notion: 'Conjugaison', img: 'isle-conjug', lag: 'lagoon-oval', x: 72, y: 1230, gen: genConjug, ep: 'Maître des Verbes', unlock: 0, sfx: ['BIEN FORGÉ !', 'VERBE PARFAIT !'] },
+  // Île des Perroquets : anglais du CE2 au CM2 (2.4 ; images provisoires en attendant le lot 9)
+  { id: 'anglais', sea: 'f', only: ['ce2', 'cm1', 'cm2'], cm1: 'Anglais : nombres, dates et petits échanges', hero: 'hero-anglais', boss: { img: 'boss-anglais', n: 'Le Capitaine Ara' }, chestCrew: null, art: 'l’Île des Perroquets', n: 'Île des Perroquets', notion: 'Anglais : mots, consignes et petites phrases', img: 'isle-anglais', lag: 'lagoon-oval', x: 72, y: 900, gen: genAnglais, ep: 'Globe-Trotter', unlock: 3, sfx: ['WELL DONE!', 'GREAT!', 'BRILLIANT!'] },
   { id: 'gram', sea: 'f', hero: 'hero-gram', boss: { img: 'boss-gram', n: 'La Murène des Phrases' }, chestCrew: null, art: 'le Récif des Phrases', n: 'Récif des Phrases', notion: 'Grammaire', img: 'isle-gram', lag: 'lagoon-rocks', x: 28, y: 1010, gen: genGram, ep: 'Chef de Phrase', unlock: 2, sfx: ['BIEN VU !', 'PHRASE DOMPTÉE !'] },
   { id: 'accords', sea: 'f', hero: 'hero-accords', boss: { img: 'boss-accords', n: 'Le Troll du Pont' }, chestCrew: null, art: 'le Pont des Accords', n: 'Pont des Accords', notion: 'Accords et homophones', img: 'isle-accords', lag: 'lagoon-oval', x: 72, y: 790, gen: genAccords, ep: 'Gardien des Accords', unlock: 5, sfx: ['ACCORDÉ !', 'BIEN ACCORDÉ !'] },
   { id: 'vocab', sea: 'f', hero: 'hero-vocab', boss: { img: 'boss-vocab', n: 'La Baleine Dictionnaire' }, chestCrew: null, art: 'la Baie des Mots', n: 'Baie des Mots', notion: 'Vocabulaire', img: 'isle-vocab', lag: 'lagoon-round', x: 28, y: 570, gen: genVocab, ep: 'Mille-Mots', unlock: 8, sfx: ['QUEL MOT !', 'BIEN TROUVÉ !'] },
@@ -1414,7 +1423,7 @@ const CPN = { canons: 'Additions jusqu’à 20', stade: 'Calcul mental', mine: '
   lecture: 'Lire de petites phrases', conjug: 'Sons et syllabes', gram: 'Mots et phrases', accords: 'Le, la, un, une, des', vocab: 'Mots et catégories' };
 const CE1N = { canons: 'Additions et premières tables', stade: 'Calcul mental', mine: 'Nombres jusqu’à 1 000', jungle: 'Droite graduée jusqu’à 1 000', marche: 'Euros et centimes', cuisine: 'Fractions et problèmes', horloge: 'Heures, quarts d’heure et durées', formes: 'Figures, solides et longueurs',
   lecture: 'Lecture et compréhension', conjug: 'Présent, futur, imparfait, passé composé', gram: 'Phrase, verbe et nom', accords: 'Pluriel, féminin et accords', vocab: 'Alphabet, familles, synonymes' };
-const CM2N = { canons: 'Multiples, diviseurs et calculs', stade: 'Calcul mental et décimaux', mine: 'Grands nombres et millièmes', jungle: 'Droite graduée et fractions', marche: 'Prix et proportionnalité', cuisine: 'Fractions', horloge: 'Heures, minutes, secondes', formes: 'Géométrie, angles et aires',
+const CM2N = { anglais: 'Anglais : heure, chemins et dialogues', canons: 'Multiples, diviseurs et calculs', stade: 'Calcul mental et décimaux', mine: 'Grands nombres et millièmes', jungle: 'Droite graduée et fractions', marche: 'Prix et proportionnalité', cuisine: 'Fractions', horloge: 'Heures, minutes, secondes', formes: 'Géométrie, angles et aires',
   lecture: 'Lecture et compréhension', conjug: 'Passé simple et plus-que-parfait', gram: 'Fonctions et phrase complexe', accords: 'Accords et participe passé', vocab: 'Dictionnaire, sens et formation des mots' };
 ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; i.cm2 = CM2N[i.id]; i.x0 = i.x; i.y0 = i.y; });
 ISLES.forEach(i => EPITHETS.push([`Maître ${deArt(i.art)}`, `termine le rang or ${deArt(i.art)}`, i.id, 'm']));
@@ -1425,6 +1434,8 @@ function applyGrade() {
   ISLES.forEach(i => { i.notion = i[GR()] || i.ce2; i.soon = i.hide = !!i.only && !i.only.includes(GR()); });
   const m = ISLES.filter(i => i.sea === 'm' && !i.hide);
   m.forEach((i, k) => { if (m.length > 7) { i.x = (k + 1) % 2 ? 72 : 28; i.y = 1470 - k * 188; } else { i.x = i.x0; i.y = i.y0; } });
+  const f = ISLES.filter(i => i.sea === 'f' && !i.hide);
+  f.forEach((i, k) => { i.x = k % 2 ? 72 : 28; i.y = f.length > 7 ? 1470 - k * 188 : 1450 - k * 220; });
 }
 applyGrade();
 // Escales sans île : chaque question y vient d'une vraie île (escale mélangée : révisions entrelacées ; test du capitaine : placement)
@@ -3076,6 +3087,340 @@ function genFormes(l) {
   return r < .2 ? gSolNom() : r < .35 ? gSolCompte() : r < .4 ? gSolFaces() : r < .6 ? gPatron() : r < .85 ? gSym() : gDepl();
 }
 
+/* ================= Île des Perroquets : anglais du CE2 au CM2 ================= */
+// Programmes en 2026-2027 : CE2 et CM2, programme de langues vivantes de 2020 (BO n° 31 du 30 juillet 2020) ; CM1, nouveau programme
+// (arrêté du 26 février 2026, BO n° 12 du 19 mars 2026), qui s'étendra au CE2 et au CM2 à la rentrée 2027. Niveau visé : pré-A1 vers A1 au CE2,
+// A1 au CM1 et au CM2. L'oral d'abord : l'anglais est lu par une voix anglaise du téléphone (britannique si possible), lentement, et se réécoute ;
+// l'écrit porte sur des mots déjà connus à l'oral. Ni saisie libre, ni prétérit ou futur, ni homophones (two/too, pear/pair…) en pièges.
+// Les images sont des émojis du téléphone ; les couleurs, des pastilles. Anglais britannique : colour, favourite, mum.
+const ENV = { // [anglais, français, image, classe minimale (2 = CE2, 4 = CM1, 5 = CM2)]
+  col: [['red', 'rouge', '#d63a2f'], ['blue', 'bleu', '#2f6fd6'], ['green', 'vert', '#2fa34a'], ['yellow', 'jaune', '#f2cf2e'], ['orange', 'orange', '#f08a24'], ['purple', 'violet', '#8a46c2'], ['pink', 'rose', '#f07aa8'], ['black', 'noir', '#1d1712'], ['white', 'blanc', '#ffffff'], ['brown', 'marron', '#8a5a2b'], ['grey', 'gris', '#8d9499']],
+  ani: [['cat', 'chat', '🐱'], ['dog', 'chien', '🐶'], ['bird', 'oiseau', '🐦'], ['fish', 'poisson', '🐟'], ['horse', 'cheval', '🐴'], ['cow', 'vache', '🐮'], ['pig', 'cochon', '🐷'], ['sheep', 'mouton', '🐑'], ['duck', 'canard', '🦆'], ['rabbit', 'lapin', '🐰'], ['mouse', 'souris', '🐭'], ['lion', 'lion', '🦁'], ['tiger', 'tigre', '🐯'], ['elephant', 'éléphant', '🐘'], ['monkey', 'singe', '🐒'], ['frog', 'grenouille', '🐸'], ['snake', 'serpent', '🐍'], ['bear', 'ours', '🐻'], ['giraffe', 'girafe', '🦒'], ['parrot', 'perroquet', '🦜'], ['shark', 'requin', '🦈'], ['whale', 'baleine', '🐳'], ['turtle', 'tortue', '🐢'], ['octopus', 'pieuvre', '🐙'], ['crab', 'crabe', '🦀'], ['bee', 'abeille', '🐝'], ['butterfly', 'papillon', '🦋'], ['owl', 'hibou', '🦉']],
+  food: [['apple', 'pomme', '🍎'], ['banana', 'banane', '🍌'], ['strawberry', 'fraise', '🍓'], ['grapes', 'raisin', '🍇'], ['lemon', 'citron', '🍋'], ['cherries', 'cerises', '🍒'], ['carrot', 'carotte', '🥕'], ['tomato', 'tomate', '🍅'], ['bread', 'pain', '🍞'], ['cheese', 'fromage', '🧀'], ['egg', 'œuf', '🥚'], ['milk', 'lait', '🥛'], ['cake', 'gâteau', '🍰'], ['pizza', 'pizza', '🍕'], ['chocolate', 'chocolat', '🍫'], ['ice cream', 'glace', '🍦'], ['sandwich', 'sandwich', '🥪'], ['sweets', 'bonbons', '🍬'], ['honey', 'miel', '🍯']],
+  body: [['eye', 'œil', '👁️'], ['ear', 'oreille', '👂'], ['nose', 'nez', '👃'], ['mouth', 'bouche', '👄'], ['hand', 'main', '✋'], ['foot', 'pied', '🦶'], ['leg', 'jambe', '🦵'], ['arm', 'bras', '💪'], ['tooth', 'dent', '🦷']],
+  school: [['pen', 'stylo', '🖊️'], ['pencil', 'crayon', '✏️'], ['book', 'livre', '📕'], ['ruler', 'règle', '📏'], ['scissors', 'ciseaux', '✂️'], ['schoolbag', 'cartable', '🎒'], ['computer', 'ordinateur', '💻']],
+  clothes: [['T-shirt', 'tee-shirt', '👕'], ['trousers', 'pantalon', '👖'], ['dress', 'robe', '👗'], ['cap', 'casquette', '🧢'], ['shoes', 'chaussures', '👟'], ['socks', 'chaussettes', '🧦'], ['coat', 'manteau', '🧥'], ['scarf', 'écharpe', '🧣'], ['gloves', 'gants', '🧤']],
+  family: [['mum', 'maman', '👩'], ['dad', 'papa', '👨'], ['sister', 'sœur', '👧'], ['brother', 'frère', '👦'], ['grandma', 'grand-mère', '👵'], ['grandpa', 'grand-père', '👴'], ['baby', 'bébé', '👶']],
+  weather: [['sunny', 'il fait beau', '☀️'], ['rainy', 'il pleut', '🌧️'], ['cloudy', 'c’est nuageux', '☁️'], ['snowy', 'il neige', '🌨️'], ['windy', 'il y a du vent', '💨'], ['stormy', 'il y a de l’orage', '⛈️']],
+  feel: [['happy', 'content', '😀'], ['sad', 'triste', '😢'], ['angry', 'en colère', '😠'], ['tired', 'fatigué', '😴'], ['scared', 'effrayé', '😨'], ['surprised', 'surpris', '😮']],
+  move: [['by bike', 'à vélo', '🚲'], ['by bus', 'en bus', '🚌'], ['by car', 'en voiture', '🚗'], ['by train', 'en train', '🚆'], ['by boat', 'en bateau', '⛵'], ['on foot', 'à pied', '🚶']],
+  sport: [['football', 'le football', '⚽'], ['tennis', 'le tennis', '🎾'], ['basketball', 'le basket', '🏀'], ['swimming', 'la natation', '🏊'], ['dancing', 'la danse', '💃'], ['judo', 'le judo', '🥋']],
+  rooms: [['kitchen', 'cuisine', '🍳'], ['bedroom', 'chambre', '🛏️'], ['bathroom', 'salle de bains', '🛁'], ['garden', 'jardin', '🌳'], ['living room', 'salon', '🛋️']] };
+const ENTH = { col: 'les couleurs', ani: 'les animaux', food: 'la nourriture', body: 'le corps', school: 'l’école', clothes: 'les vêtements', family: 'la famille', weather: 'la météo', feel: 'les émotions', move: 'les transports', sport: 'les sports', rooms: 'la maison' };
+const ENDAY = [['Monday', 'lundi'], ['Tuesday', 'mardi'], ['Wednesday', 'mercredi'], ['Thursday', 'jeudi'], ['Friday', 'vendredi'], ['Saturday', 'samedi'], ['Sunday', 'dimanche']];
+const ENMON = [['January', 'janvier'], ['February', 'février'], ['March', 'mars'], ['April', 'avril'], ['May', 'mai'], ['June', 'juin'], ['July', 'juillet'], ['August', 'août'], ['September', 'septembre'], ['October', 'octobre'], ['November', 'novembre'], ['December', 'décembre']];
+const EN1 = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const EN10 = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const enNum = n => n < 20 ? EN1[n] : n < 100 ? EN10[Math.floor(n / 10)] + (n % 10 ? '-' + EN1[n % 10] : '') : n === 1000 ? 'one thousand' : EN1[Math.floor(n / 100)] + ' hundred' + (n % 100 ? ' and ' + enNum(n % 100) : '');
+const ENORD = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth'];
+const enOrd = d => d <= 20 ? ENORD[d] : d === 30 ? 'thirtieth' : (d < 30 ? 'twenty-' : 'thirty-') + ENORD[d % 10];
+// Mots de la même famille de nombres (13 et 30, 14 et 40…) : trop proches pour une voix de synthèse, jamais proposés ensemble
+const teenTy = (a, b) => [[a, b], [b, a]].some(([x, y]) => x >= 13 && x <= 19 && y === (x - 10) * 10);
+const enEsc = s => esc(String(s).replace(/'/g, '’'));
+const emo = p => p.startsWith('#') ? `<span class="sw" style="background:${p}"></span>` : `<span class="emo">${p}</span>`;
+const enTxt = t => `<div class="enline" lang="en">${enEsc(t)}</div>`;
+const enPlay = () => `<button class="enplay" data-a="enplay" aria-label="Écouter en anglais">${ico('iSound')}<span>Écouter</span></button>`;
+const enG = () => GR() === 'cm2' ? 5 : GR() === 'cm1' ? 4 : 2;
+// Finitions : typographie française pour le français seulement ; l'anglais garde ses espaces (« Stand up! »)
+function enq(q) {
+  const ap = t => t.replace(/'/g, '’');
+  ['ask', 'explain', 'hint'].forEach(k => { if (q[k]) q[k] = typo(ap(q[k])); });
+  (q.choices || []).forEach(c => { if (c.why) c.why = typo(ap(c.why)); if (q.fr) { const v = typo(c.v); if (c.v === q.answer) q.answer = v; c.v = v; c.html = typo(c.html); } });
+  q.answerText = ap(q.fr ? typo(q.answerText) : q.answerText);
+  return Object.assign(q, { kind: q.kind || 'choices', typo: 1, sayChoices: false, promptClass: q.promptClass != null ? q.promptClass : 'enq' });
+}
+// Trois choix d'un même thème : la bonne réponse et deux pièges
+function enPick(th, n = 3) { const L = shuffle(ENV[th].slice()); return L.slice(0, n); }
+// Écouter un mot, toucher l'image
+function enListenPic(themes) {
+  const th = pick(themes), [a, ...w] = enPick(th);
+  return enq({ ask: 'Écoute et touche la bonne image.', prompt: enPlay(), en: a[0], listen: 1, answer: a[0], answerText: `${a[2].startsWith('#') ? '' : a[2] + ' '}« ${a[0]} »`,
+    choices: shuffle([{ v: a[0], html: emo(a[2]) }, ...w.map(x => ({ v: x[0], html: emo(x[2]), why: `Ça, c’est « ${x[0]} » (${x[1]}). On a entendu « ${a[0]} » : ${a[1]}.` }))]), log: `anglais, écoute : ${a[0]}`,
+    explain: `« ${a[0]} » veut dire « ${a[1]} ».`, hint: `Un mot sur ${ENTH[th]}. Touche le haut-parleur pour réécouter, autant de fois que tu veux.` });
+}
+// Lire un mot, toucher l'image (lecture de mots connus à l'oral)
+function enReadPic(themes) {
+  const th = pick(themes), [a, ...w] = enPick(th);
+  return enq({ ask: 'Lis le mot et touche la bonne image.', prompt: enTxt(a[0]), en: a[0], readOnly: 1, answer: a[0], answerText: `« ${a[0]} »`,
+    choices: shuffle([{ v: a[0], html: emo(a[2]) }, ...w.map(x => ({ v: x[0], html: emo(x[2]), why: `Ça, c’est « ${x[0]} » (${x[1]}). Le mot écrit est « ${a[0]} » : ${a[1]}.` }))]), log: `anglais, lecture : ${a[0]}`,
+    explain: `« ${a[0]} » veut dire « ${a[1]} ».`, hint: 'Lis le mot à voix basse : tu l’as déjà entendu.' });
+}
+// Voir une image, choisir le mot anglais
+function enPicWord(themes) {
+  const th = pick(themes), [a, ...w] = enPick(th);
+  return enq({ ask: 'Comment dit-on en anglais ?', prompt: `<div class="enbig">${emo(a[2])}</div>`, en: a[0], readOnly: 1, answer: a[0], answerText: `« ${a[0]} »`,
+    choices: shuffle([{ v: a[0], html: `<span lang="en">${enEsc(a[0])}</span>` }, ...w.map(x => ({ v: x[0], html: `<span lang="en">${enEsc(x[0])}</span>`, why: `« ${x[0]} » veut dire « ${x[1]} ». L’image montre : ${a[1]}, « ${a[0]} ».` }))]), log: `anglais, mot : ${a[0]}`,
+    explain: `${a[1].charAt(0).toUpperCase() + a[1].slice(1)}, c’est « ${a[0]} » en anglais.`, hint: `Un mot sur ${ENTH[th]}.` });
+}
+// Écouter un nombre
+function enListenNum(lo, hi) {
+  const n = rnd(lo, hi), ws = new Set();
+  for (let t = 0; t < 60 && ws.size < 2; t++) { const c = t < 30 && n >= 21 && n % 10 && Math.floor(n / 10) !== n % 10 && n < 100 ? (n % 10) * 10 + Math.floor(n / 10) : n + pick([-1, 1]) * rnd(1, n > 100 ? 30 : 6); if (c !== n && c >= lo && c <= hi && !teenTy(n, c) && ![...ws].some(x => teenTy(x, c))) ws.add(c); }
+  return enq({ ask: 'Écoute le nombre et touche-le.', prompt: enPlay(), en: enNum(n), listen: 1, answer: String(n), answerText: `${n}, « ${enNum(n)} »`,
+    choices: shuffle([n, ...ws].map(x => x === n ? { v: String(x), html: `<b class="ennum">${x}</b>` } : { v: String(x), html: `<b class="ennum">${x}</b>`, why: `${x}, c’est « ${enNum(x)} ». On a entendu « ${enNum(n)} » : ${n}.` })), log: `anglais, nombre : ${n}`,
+    explain: `« ${enNum(n)} », c’est ${n}.`, hint: n >= 20 ? 'Écoute d’abord les dizaines (twenty, thirty…), puis les unités.' : 'Compte dans ta tête en anglais : one, two, three…' });
+}
+// Jours et mois entendus
+function enListenCal(mon) {
+  const L = mon ? ENMON : ENDAY, k = rnd(0, L.length - 1), w = shuffle(range(0, L.length - 1).filter(j => j !== k)).slice(0, 2);
+  return enq({ ask: `Écoute et trouve ${mon ? 'le mois' : 'le jour'}.`, prompt: enPlay(), en: L[k][0], listen: 1, answer: L[k][1], answerText: `${L[k][1]}, « ${L[k][0]} »`, fr: 1,
+    choices: shuffle([k, ...w].map(j => j === k ? { v: L[j][1], html: L[j][1] } : { v: L[j][1], html: L[j][1], why: `${L[j][1].charAt(0).toUpperCase() + L[j][1].slice(1)}, c’est « ${L[j][0]} ». On a entendu « ${L[k][0]} ».` })), log: `anglais, ${mon ? 'mois' : 'jour'} : ${L[k][0]}`,
+    explain: `« ${L[k][0]} », c’est ${L[k][1]}. En anglais, ${mon ? 'les mois' : 'les jours'} s’écrivent avec une majuscule.`, hint: mon ? 'January, February, March… comme janvier, février, mars.' : 'Monday, Tuesday, Wednesday… comme lundi, mardi, mercredi.' });
+}
+// Date entendue (CM1) : « Friday, the fourteenth of May »
+function enListenDate() {
+  const d = rnd(1, 28), m = rnd(0, 11), wd = rnd(0, 6), ans = `${ENDAY[wd][1]} ${d === 1 ? '1er' : d} ${ENMON[m][1]}`;
+  const w1 = `${ENDAY[(wd + rnd(1, 6)) % 7][1]} ${d === 1 ? '1er' : d} ${ENMON[m][1]}`, w2 = `${ENDAY[wd][1]} ${d === 1 ? '1er' : d} ${ENMON[(m + rnd(1, 11)) % 12][1]}`;
+  return enq({ ask: 'Écoute la date et trouve-la.', prompt: enPlay(), en: `${ENDAY[wd][0]}, the ${enOrd(d)} of ${ENMON[m][0]}`, listen: 1, answer: ans, answerText: ans, fr: 1,
+    choices: shuffle([{ v: ans, html: ans }, { v: w1, html: w1, why: `Le jour n’est pas le bon : on a entendu « ${ENDAY[wd][0]} », ${ENDAY[wd][1]}.` }, { v: w2, html: w2, why: `Le mois n’est pas le bon : on a entendu « ${ENMON[m][0]} », ${ENMON[m][1]}.` }]), log: `anglais, date : ${d} ${ENMON[m][0]}`,
+    explain: `« ${ENDAY[wd][0]}, the ${enOrd(d)} of ${ENMON[m][0]} » : ${ans}.`, hint: 'Écoute le jour, puis le nombre, puis le mois.' });
+}
+// Consignes de la classe
+const ENCMD = [['Stand up!', 'Lève-toi !', '🧍'], ['Sit down!', 'Assieds-toi !', '🪑'], ['Clap your hands!', 'Tape dans tes mains !', '👏'], ['Open your book!', 'Ouvre ton livre !', '📖'], ['Be quiet!', 'Silence !', '🤫'],
+  ['Raise your hand!', 'Lève la main !', '🙋'], ['Listen!', 'Écoute !', '👂'], ['Look!', 'Regarde !', '👀'], ['Wave goodbye!', 'Fais au revoir de la main !', '👋'], ['Close the door!', 'Ferme la porte !', '🚪'], ['Draw a picture!', 'Fais un dessin !', '🎨'], ['Write your name!', 'Écris ton prénom !', '✍️']];
+function enCommand() {
+  const [a, ...w] = shuffle(ENCMD.slice());
+  return enq({ ask: 'Écoute la consigne et touche le bon geste.', prompt: enPlay(), en: a[0], listen: 1, answer: a[0], answerText: `« ${a[0]} » (${a[1]})`,
+    choices: shuffle([{ v: a[0], html: emo(a[2]) }, ...w.slice(0, 2).map(x => ({ v: x[0], html: emo(x[2]), why: `Ce geste, c’est « ${x[0]} » (${x[1]}). On a entendu « ${a[0]} ».` }))]), log: `anglais, consigne : ${a[0]}`,
+    explain: `« ${a[0]} » veut dire « ${a[1]} ».`, hint: 'Touche le haut-parleur pour réécouter la consigne.' });
+}
+// Petites phrases sur quelqu'un (CE2)
+const ENMY = { mum: 'ma maman', dad: 'mon papa', sister: 'ma sœur', brother: 'mon frère', grandma: 'ma grand-mère', grandpa: 'mon grand-père' };
+const ENPET = [['cat', 'un chat'], ['dog', 'un chien'], ['rabbit', 'un lapin'], ['fish', 'un poisson'], ['bird', 'un oiseau'], ['mouse', 'une souris'], ['parrot', 'un perroquet'], ['turtle', 'une tortue']];
+const ENLIKE = [['apples', 'les pommes', '🍎'], ['bananas', 'les bananes', '🍌'], ['strawberries', 'les fraises', '🍓'], ['carrots', 'les carottes', '🥕'], ['tomatoes', 'les tomates', '🍅'], ['grapes', 'le raisin', '🍇'], ['cheese', 'le fromage', '🧀'], ['chocolate', 'le chocolat', '🍫'], ['pizza', 'la pizza', '🍕'], ['ice cream', 'la glace', '🍦'], ['milk', 'le lait', '🥛'], ['cake', 'le gâteau', '🍰']];
+function enSentence() {
+  const t = pick(['pet', 'pet', 'like', 'like', 'weather', 'family', 'feel', 'move']);
+  if (t === 'pet') { const age = rnd(6, 11), [p, ...op] = shuffle(ENPET.slice()), ans = `L’enfant a ${age} ans et ${p[1]}.`, w1 = `L’enfant a ${age === 11 ? 10 : age + 1} ans et ${p[1]}.`, w2 = `L’enfant a ${age} ans et ${op[0][1]}.`;
+    return enq({ ask: 'Écoute l’enfant. Que dit-il ?', prompt: enPlay(), en: `I'm ${enNum(age)}. I've got a ${p[0]}.`, listen: 1, answer: ans, answerText: ans, fr: 1,
+      choices: shuffle([{ v: ans, html: ans }, { v: w1, html: w1, why: `L’âge n’est pas le bon : on a entendu « I'm ${enNum(age)} », ${age} ans.` }, { v: w2, html: w2, why: `L’animal n’est pas le bon : on a entendu « a ${p[0]} », ${p[1]}.` }]), log: `anglais, phrase : ${age} ${p[0]}`,
+      explain: `« I'm ${enNum(age)}. I've got a ${p[0]}. » : j’ai ${age} ans, j’ai ${p[1]}.`, hint: '« I’m… » donne l’âge ; « I’ve got… » dit ce qu’on a.' }); }
+  if (t === 'like') { const [a, b, c] = shuffle(ENLIKE.slice());
+    return enq({ ask: 'Écoute. Qu’est-ce que l’enfant aime ?', prompt: enPlay(), en: `I like ${a[0]}. I don't like ${b[0]}.`, listen: 1, answer: a[0], answerText: `${a[2]} ${a[1]}`,
+      choices: shuffle([{ v: a[0], html: emo(a[2]) }, { v: b[0], html: emo(b[2]), why: `« I don't like ${b[0]} » : l’enfant n’aime pas ${b[1]}. « Don't » veut dire « ne… pas ».` }, { v: c[0], html: emo(c[2]), why: `On n’a pas parlé ${deArt(c[1])} (« ${c[0]} »).` }]), log: `anglais, phrase : like ${a[0]}`,
+      explain: `« I like ${a[0]} » : j’aime ${a[1]}. « I don't like ${b[0]} » : je n’aime pas ${b[1]}.`, hint: '« I like » : j’aime. « I don’t like » : je n’aime pas.' }); }
+  const th = t, [a, ...w] = t === 'family' ? shuffle(ENV.family.filter(x => x[0] !== 'baby')) : enPick(th);
+  const en = t === 'weather' ? `It's ${a[0]} today.` : t === 'family' ? `This is my ${a[0]}.` : t === 'feel' ? `I'm ${a[0]}.` : `I go to school ${a[0]}.`;
+  const ask = t === 'weather' ? 'Écoute. Quel temps fait-il ?' : t === 'family' ? 'Écoute. Qui est-ce ?' : t === 'feel' ? 'Écoute. Comment se sent l’enfant ?' : 'Écoute. Comment l’enfant va-t-il à l’école ?';
+  return enq({ ask, prompt: enPlay(), en, listen: 1, answer: a[0], answerText: `${a[2]} « ${a[0]} »`,
+    choices: shuffle([{ v: a[0], html: emo(a[2]) }, ...w.slice(0, 2).map(x => ({ v: x[0], html: emo(x[2]), why: `Ça, c’est « ${x[0]} » (${x[1]}). On a entendu « ${a[0]} ».` }))]), log: `anglais, phrase : ${t} ${a[0]}`,
+    explain: `« ${en} » : ${t === 'weather' ? `aujourd’hui, ${a[1]}` : t === 'family' ? `voici ${ENMY[a[0]]}` : t === 'feel' ? `je suis ${a[1]}` : `je vais à l’école ${a[1]}`}.`, hint: 'Touche le haut-parleur pour réécouter la phrase.' });
+}
+// Questions et réponses : [question, bonne réponse, pièges, explication, classe minimale]
+const ENQA = [
+  ['How old are you?', "I'm nine.", ["I'm fine.", "I'm Tom."], 'On demande l’âge : « I’m nine », j’ai neuf ans.', 2],
+  ['How are you?', "I'm fine, thank you.", ["I'm eight.", "It's Monday."], 'On demande comment ça va : « I’m fine », je vais bien.', 2],
+  ["What's your name?", 'My name is Lucy.', ["I'm fine.", "It's red."], 'On demande le prénom : « My name is… », je m’appelle…', 2],
+  ['What colour is it?', "It's blue.", ["It's Monday.", "I'm nine."], 'On demande la couleur : « It’s blue », c’est bleu.', 2],
+  ['What day is it today?', "It's Monday.", ["It's sunny.", "I'm fine."], 'On demande le jour : « It’s Monday », c’est lundi.', 2],
+  ["What's the weather like?", "It's sunny.", ["It's Tuesday.", "It's a dog."], 'On demande le temps qu’il fait : « It’s sunny », il fait beau.', 2],
+  ['Have you got a pet?', "Yes, I've got a dog.", ['Yes, I am.', "It's blue."], 'On demande si tu as un animal : « I’ve got a dog », j’ai un chien.', 2],
+  ['Do you like apples?', 'Yes, I do.', ['Yes, I am.', 'Yes, I can.'], 'À « Do you like… ? », on répond « Yes, I do » ou « No, I don’t ».', 2],
+  ['Where is the cat?', "It's in the kitchen.", ["It's a cat.", 'Yes, it is.'], 'On demande où est le chat : « in the kitchen », dans la cuisine.', 2],
+  ['Is it a dog?', "No, it isn't.", ["No, I don't.", "No, I can't."], 'À « Is it… ? », on répond « Yes, it is » ou « No, it isn’t ».', 2],
+  ['Good morning!', 'Good morning!', ['Good night!', 'Goodbye!'], 'Le matin, on répond « Good morning! » : bonjour.', 2],
+  ['Can you swim?', 'Yes, I can.', ['Yes, I do.', 'Yes, I am.'], 'À « Can you… ? », on répond « Yes, I can » ou « No, I can’t ».', 4],
+  ['Where do you live?', 'I live in Lyon.', ["I'm nine.", 'I like pizza.'], 'On demande où tu habites : « I live in Lyon », j’habite à Lyon.', 4],
+  ['Thank you!', "You're welcome.", ['Goodbye!', "I'm fine."], 'Après « Thank you », on dit « You’re welcome » : de rien.', 4],
+  ['Have you got a brother?', "No, I haven't.", ["No, I don't.", "No, it isn't."], 'À « Have you got… ? », on répond « Yes, I have » ou « No, I haven’t ».', 4],
+  ['What time is it?', "It's three o'clock.", ["It's Monday.", "It's red."], 'On demande l’heure : « It’s three o’clock », il est trois heures.', 4],
+  ["When is your birthday?", "It's in June.", ["I'm ten.", "It's sunny."], 'On demande la date d’anniversaire : « It’s in June », c’est en juin.', 4],
+  ['Would you like some cake?', 'Yes, please.', ['Yes, I am.', "Yes, it's blue."], 'On te propose du gâteau : « Yes, please », oui, s’il te plaît.', 5],
+  ["What's your favourite colour?", 'Green.', ['Ten.', 'Monday.'], 'On demande ta couleur préférée : « Green », le vert.', 5],
+  ['Where are you from?', "I'm from France.", ["I'm fine.", "It's Friday."], 'On demande d’où tu viens : « I’m from France », je viens de France.', 5]];
+function enQA() {
+  const g = enG(), [qn, ans, w, ex] = pick(ENQA.filter(x => x[4] <= g));
+  return enq({ ask: 'Écoute la question et choisis la bonne réponse.', prompt: enPlay(), en: qn, listen: 1, answer: ans, answerText: `« ${ans} »`,
+    choices: shuffle([{ v: ans, html: `<span lang="en">${enEsc(ans)}</span>` }, ...w.map(x => ({ v: x, html: `<span lang="en">${enEsc(x)}</span>`, why: `Cette réponse ne va pas avec la question « ${qn} ». ${ex}` }))]), log: `anglais, échange : ${qn}`,
+    explain: `« ${qn} » ${ex}`, hint: 'Écoute bien le premier mot de la question : how, what, where, can, do…' });
+}
+// L'heure sur une horloge
+const enTime = (h, m) => m === 0 ? `It's ${EN1[h]} o'clock.` : m === 30 ? `It's half past ${EN1[h]}.` : m === 15 ? `It's quarter past ${EN1[h]}.` : `It's quarter to ${EN1[h % 12 + 1]}.`;
+function enClock() {
+  const full = enG() >= 5, h = rnd(1, 12), m = full ? pick([0, 30, 15, 45]) : 0, ans = enTime(h, m), ws = new Set();
+  for (let t = 0; t < 40 && ws.size < 2; t++) { const c = enTime(full && Math.random() < .5 ? h : rnd(1, 12), full ? pick([0, 30, 15, 45]) : 0); if (c !== ans) ws.add(c); }
+  const fr = `${m === 45 ? h % 12 + 1 : h} h${m === 0 ? '' : m === 30 ? ' et demie' : m === 15 ? ' et quart' : ' moins le quart'}`;
+  return enq({ ask: 'Quelle heure est-il ? Lis et choisis.', prompt: '', clock: { h: h % 12, m }, en: ans, readOnly: 1, answer: ans, answerText: `« ${ans} »`,
+    choices: shuffle([ans, ...ws].map(x => x === ans ? { v: x, html: `<span lang="en">${enEsc(x)}</span>` } : { v: x, html: `<span lang="en">${enEsc(x)}</span>`, why: `Regarde bien les aiguilles : il est ${fr}, « ${ans} ».` })), log: `anglais, heure : ${h} ${m}`,
+    explain: `Il est ${fr} : « ${ans} »${m === 30 ? ' (half past : et demie)' : m === 15 ? ' (quarter past : et quart)' : m === 45 ? ' (quarter to : moins le quart)' : ' (o’clock : heure pile)'}.`, hint: 'La petite aiguille donne l’heure, la grande les minutes.' });
+}
+// Compléter une suite ou une formule connue (CE2)
+function enComplete() {
+  const t = pick(['day', 'day', 'num', 'greet']);
+  if (t === 'day') { const k = rnd(0, 4), ans = ENDAY[k + 2][0], w = shuffle(ENDAY.filter((d, j) => j !== k + 2 && j !== k && j !== k + 1).map(d => d[0])).slice(0, 2);
+    return enq({ ask: 'Quel jour vient ensuite ?', prompt: enTxt(`${ENDAY[k][0]}, ${ENDAY[k + 1][0]}, …`), en: `${ENDAY[k][0]}, ${ENDAY[k + 1][0]}`, readOnly: 1, answer: ans, answerText: `« ${ans} » (${ENDAY[k + 2][1]})`,
+      choices: shuffle([ans, ...w].map(x => x === ans ? { v: x, html: `<span lang="en">${x}</span>` } : { v: x, html: `<span lang="en">${x}</span>`, why: `« ${x} », c’est ${ENDAY.find(d => d[0] === x)[1]}. Après ${ENDAY[k + 1][1]}, il y a ${ENDAY[k + 2][1]} : « ${ans} ».` })), log: `anglais, suite : ${ans}`,
+      explain: `${ENDAY[k][1]}, ${ENDAY[k + 1][1]}, ${ENDAY[k + 2][1]} : « ${ENDAY[k][0]}, ${ENDAY[k + 1][0]}, ${ans} ».`, hint: 'Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.' }); }
+  if (t === 'num') { const k = rnd(1, 15), ans = EN1[k + 2], w = shuffle([EN1[k + 3], EN1[k + 4], EN1[k - 1] || EN1[k + 5]].filter(x => x && x !== ans)).slice(0, 2);
+    return enq({ ask: 'Quel nombre vient ensuite ?', prompt: enTxt(`${EN1[k]}, ${EN1[k + 1]}, …`), en: `${EN1[k]}, ${EN1[k + 1]}`, readOnly: 1, answer: ans, answerText: `« ${ans} » (${k + 2})`,
+      choices: shuffle([ans, ...w].map(x => x === ans ? { v: x, html: `<span lang="en">${x}</span>` } : { v: x, html: `<span lang="en">${x}</span>`, why: `« ${x} », c’est ${EN1.indexOf(x)}. Après ${k + 1}, il y a ${k + 2} : « ${ans} ».` })), log: `anglais, suite : ${ans}`,
+      explain: `${k}, ${k + 1}, ${k + 2} : « ${EN1[k]}, ${EN1[k + 1]}, ${ans} ».`, hint: 'Compte en anglais : one, two, three…' }); }
+  const G = pick([['☀️', 'Good morning!', 'le matin'], ['🌙', 'Good night!', 'le soir, avant d’aller dormir'], ['👋', 'Goodbye!', 'quand on s’en va']]), all = ['Good morning!', 'Good night!', 'Goodbye!'];
+  return enq({ ask: 'Que dit-on ? Lis et choisis.', prompt: `<div class="enbig">${emo(G[0])}</div>`, en: G[1], readOnly: 1, answer: G[1], answerText: `« ${G[1]} »`,
+    choices: shuffle(all.map(x => x === G[1] ? { v: x, html: `<span lang="en">${x}</span>` } : { v: x, html: `<span lang="en">${x}</span>`, why: `On dit « ${G[1]} » ${G[2]}.` })), log: `anglais, formule : ${G[1]}`,
+    explain: `On dit « ${G[1]} » ${G[2]}.`, hint: 'Morning : le matin. Night : la nuit. Goodbye : au revoir.' });
+}
+// Où sont les choses ? (prépositions, CM1)
+const ENPREP = [['in', 'dans'], ['on', 'sur'], ['under', 'sous'], ['next to', 'à côté de'], ['behind', 'derrière']];
+const ENOBJ = [['box', 'la boîte', 'f', 1], ['table', 'la table', 'f'], ['chair', 'la chaise', 'f'], ['bed', 'le lit', 'm', 1], ['bag', 'le sac', 'm', 1]]; // 1 : on peut être « dedans »
+const frPrep = (p, o) => p === 'next to' ? (o[2] === 'm' ? `à côté du ${o[1].slice(3)}` : `à côté de ${o[1]}`) : `${ENPREP.find(x => x[0] === p)[1]} ${o[1]}`;
+function enWhere() {
+  const o = pick(ENOBJ), [a, ...w] = shuffle(ENPREP.filter(x => x[0] !== 'in' || o[3])), an = pick(ENV.ani.filter(x => ['cat', 'dog', 'mouse', 'rabbit', 'frog'].includes(x[0])));
+  const art = an[0] === 'mouse' ? 'La souris' : an[0] === 'frog' ? 'La grenouille' : `Le ${an[1]}`, ans = `${art} est ${frPrep(a[0], o)}.`;
+  return enq({ ask: 'Écoute. Où est l’animal ?', prompt: enPlay(), en: `The ${an[0]} is ${a[0]} the ${o[0]}.`, listen: 1, answer: ans, answerText: ans, fr: 1,
+    choices: shuffle([{ v: ans, html: ans }, ...w.slice(0, 2).map(x => { const v = `${art} est ${frPrep(x[0], o)}.`; return { v, html: v, why: `« ${x[0]} » veut dire « ${x[1]} ». On a entendu « ${a[0]} » : ${a[1]}.` }; })]), log: `anglais, où : ${a[0]} the ${o[0]}`,
+    explain: `« ${a[0]} » veut dire « ${a[1]} ». « The ${an[0]} is ${a[0]} the ${o[0]} » : ${ans.charAt(0).toLowerCase() + ans.slice(1)}`, hint: 'in : dans · on : sur · under : sous · next to : à côté de · behind : derrière.' });
+}
+// Qui ? he, she, his, her (CM1)
+const ENKIN = [['sister', 'sa sœur', 'f', 'Lucy'], ['brother', 'son frère', 'm', 'Tom'], ['mum', 'sa maman', 'f', 'Emma'], ['dad', 'son papa', 'm', 'Jack'], ['grandma', 'sa grand-mère', 'f', 'Rose'], ['grandpa', 'son grand-père', 'm', 'Sam']];
+function enWho() {
+  const t = pick(['likes', 'likes', 'his', 'got']);
+  if (t === 'his') { const f = Math.random() < .5, nm = f ? pick(['Lucy', 'Emma', 'Mia', 'Zoe']) : pick(['Tom', 'Jack', 'Ben', 'Leo']), it = pick(['cat', 'dog', 'bike', 'bag']), c = pick(ENV.col.slice(0, 9)), ans = f ? 'Her' : 'His';
+    return enq({ ask: 'Lis et complète la phrase.', prompt: enTxt(`This is ${nm}. … ${it} is ${c[0]}.`), en: `This is ${nm}.`, readOnly: 1, answer: ans, answerText: `« ${ans} ${it} is ${c[0]} »`,
+      choices: shuffle(['His', 'Her', 'My'].map(x => x === ans ? { v: x, html: `<span lang="en">${x}</span>` } : { v: x, html: `<span lang="en">${x}</span>`, why: x === 'My' ? '« My » veut dire « mon, ma » : c’est à moi. Ici, on parle de quelqu’un d’autre.' : `${nm} est ${f ? 'une fille' : 'un garçon'} : on dit « ${ans} » (« son, sa » ${f ? 'pour une fille' : 'pour un garçon'}).` })), log: `anglais, possessif : ${nm}`,
+      explain: `${nm} est ${f ? 'une fille' : 'un garçon'} : « ${ans} ${it} » (son ${{ cat: 'chat', dog: 'chien', bike: 'vélo', bag: 'sac' }[it]}). His pour un garçon, her pour une fille.`, hint: 'His : son, sa (à lui). Her : son, sa (à elle).' }); }
+  const [a, b, c] = shuffle(ENKIN.slice());
+  if (t === 'got') { const [x, y, z] = shuffle([['bike', '🚲'], ['scooter', '🛴'], ['skateboard', '🛹'], ['kite', '🪁'], ['ball', '⚽']]), he = a[2] === 'm', ob = b[2] === 'm';
+    if (he === ob) return enWho();
+    return enq({ ask: `Écoute. Qu’a ${he ? 'le garçon' : 'la fille'} ?`, prompt: enPlay(), en: `${he ? "He's" : "She's"} got a ${x[0]}. ${ob ? "He's" : "She's"} got a ${y[0]}.`, listen: 1, answer: x[0], answerText: `${x[1]} « a ${x[0]} »`,
+      choices: shuffle([{ v: x[0], html: emo(x[1]) }, { v: y[0], html: emo(y[1]), why: `« ${ob ? 'He' : 'She'}’s got a ${y[0]} » : c’est l’autre enfant, ${ob ? 'le garçon' : 'la fille'}. He : il ; she : elle.` }, { v: z[0], html: emo(z[1]), why: `On n’a pas parlé de « ${z[0]} ».` }]), log: `anglais, qui : got ${x[0]}`,
+      explain: `« ${he ? 'He' : 'She'}’s got a ${x[0]} » : ${he ? 'il' : 'elle'} a ${x[1]}. He : il ; she : elle.`, hint: 'He : il (un garçon, un homme). She : elle (une fille, une femme).' }); }
+  const sp = pick(ENV.sport.slice(0, 5)), nm = a[3];
+  return enq({ ask: `Écoute. Qui aime ${sp[1]} ?`, prompt: enPlay(), en: `This is my ${a[0]}. ${a[2] === 'f' ? 'Her' : 'His'} name is ${nm}. ${a[2] === 'f' ? 'She' : 'He'} likes ${sp[0]}.`, listen: 1, answer: a[1], answerText: `${a[1]}, ${nm}`, fr: 1,
+    choices: shuffle([a, b, c].map(x => x === a ? { v: x[1], html: x[1] } : { v: x[1], html: x[1], why: `On a entendu « This is my ${a[0]} » : ${a[1].replace(/^s(a|on) /, 'm$1 ')}. C’est ${a[2] === 'f' ? 'elle' : 'lui'} qui aime ${sp[1]}.` })), log: `anglais, qui : ${a[0]} ${sp[0]}`,
+    explain: `« This is my ${a[0]}. ${a[2] === 'f' ? 'Her' : 'His'} name is ${nm}. » : voici ${a[1].replace(/^s(a|on) /, 'm$1 ')}, ${a[2] === 'f' ? 'elle' : 'il'} s’appelle ${nm} et aime ${sp[1]}.`, hint: 'Écoute le premier mot de famille : mum, dad, sister, brother, grandma, grandpa.' });
+}
+// Présent simple : « She plays… » (CM1 au singulier, CM2 à toutes les personnes)
+const ENVB = [['play', 'football on Saturdays', 'jouer'], ['like', 'pizza', 'aimer'], ['live', 'in London', 'habiter'], ['read', 'a book every evening', 'lire'], ['eat', 'an apple every day', 'manger'], ['swim', 'in the sea', 'nager'], ['speak', 'English and French', 'parler']];
+function enPresent() {
+  const [v, x] = pick(ENVB), pl = enG() >= 5 && Math.random() < .4, sub = pl ? pick(['They', 'We', 'My friends']) : pick(['She', 'He', 'Lucy', 'Tom', 'My sister', 'My dad', 'I', 'You']), third = !pl && !['I', 'You'].includes(sub), ans = third ? v + 's' : v;
+  const ing = v === 'swim' ? 'swimming' : v.endsWith('e') ? v.slice(0, -1) + 'ing' : v + 'ing', choices = [v + 's', v, ing];
+  return enq({ ask: 'Lis et complète la phrase.', prompt: enTxt(`${sub} … ${x}.`), en: `${sub} ${ans} ${x}.`, readOnly: 1, answer: ans, answerText: `« ${sub} ${ans} ${x} »`,
+    choices: shuffle(choices.map(c => c === ans ? { v: c, html: `<span lang="en">${c}</span>` } : { v: c, html: `<span lang="en">${c}</span>`, why: c === ing ? `« ${c} » ne va pas ici. ${third ? `Avec « ${sub} », le verbe prend un -s` : `Avec « ${sub} », pas de -s`} : « ${ans} ».` : third ? `Avec « ${sub} » (il ou elle), le verbe prend un -s : « ${ans} ».` : `Avec « ${sub} », pas de -s : le -s, c’est seulement pour he, she, it (il, elle).` })), log: `anglais, présent : ${sub} ${v}`,
+    explain: `« ${sub} ${ans} ${x} ». ${third ? 'Après he, she ou un prénom, le verbe prend un -s.' : 'Le -s ne s’ajoute qu’après he, she, it.'}`, hint: 'He, she, it : le verbe prend un -s. I, you, we, they : pas de -s.' });
+}
+// Comprendre un court texte : carte postale, invitation, « can / can't »
+function enText() {
+  const t = pick(enG() >= 5 ? ['card', 'invite', 'can'] : ['card', 'can']);
+  if (t === 'can') { const [a, b, c] = shuffle([['swim', 'nager', '🏊'], ['ride a bike', 'faire du vélo', '🚴'], ['dance', 'danser', '💃'], ['ride a horse', 'monter à cheval', '🏇'], ['skate', 'faire du patin', '⛸️'], ['ski', 'faire du ski', '⛷️']]);
+    return enq({ ask: 'Lis. Que sait faire l’enfant ?', prompt: enTxt(`I can ${a[0]}, but I can't ${b[0]}.`), en: `I can ${a[0]}, but I can't ${b[0]}.`, readOnly: 1, answer: a[0], answerText: `${a[2]} ${a[1]}`,
+      choices: shuffle([{ v: a[0], html: emo(a[2]) }, { v: b[0], html: emo(b[2]), why: `« I can't ${b[0]} » : l’enfant ne sait pas ${b[1]}. « Can't » veut dire « ne peut pas ».` }, { v: c[0], html: emo(c[2]), why: `Le texte ne parle pas de ${c[1]}.` }]), log: `anglais, can : ${a[0]}`,
+      explain: `« I can ${a[0]} » : je sais ${a[1]}. « I can't ${b[0]} » : je ne sais pas ${b[1]}.`, hint: 'Can : sait faire, peut. Can’t : ne sait pas, ne peut pas.' }); }
+  if (t === 'invite') { const d = rnd(0, 6), h = rnd(2, 6), ask = Math.random() < .5;
+    const txt = `Come to my party on ${ENDAY[d][0]} at ${EN1[h]} o'clock!`, ans = ask ? ENDAY[d][1] : `${h} h`;
+    const ws = ask ? shuffle(ENDAY.filter((x, j) => j !== d)).slice(0, 2).map(x => x[1]) : shuffle([h + 1, h + 2, h - 1].filter(x => x > 0)).slice(0, 2).map(x => `${x} h`);
+    return enq({ ask: ask ? 'Lis l’invitation. Quel jour est la fête ?' : 'Lis l’invitation. À quelle heure est la fête ?', prompt: enTxt(txt), en: txt, readOnly: 1, answer: ans, answerText: ans, fr: 1,
+      choices: shuffle([ans, ...ws].map(x => x === ans ? { v: x, html: x } : { v: x, html: x, why: ask ? `Le texte dit « on ${ENDAY[d][0]} » : ${ENDAY[d][1]}.` : `Le texte dit « at ${EN1[h]} o'clock » : ${h} h.` })), log: `anglais, invitation : ${ENDAY[d][0]} ${h}`,
+      explain: `« Come to my party on ${ENDAY[d][0]} at ${EN1[h]} o'clock! » : viens à ma fête ${ENDAY[d][1]} à ${h} h.`, hint: ask ? 'Cherche le jour après « on ».' : 'Cherche l’heure après « at ».' }); }
+  const [w, ...ow] = enPick('weather'), [p, ...op] = shuffle(ENKIN.slice(0, 4)), city = pick(['London', 'Dublin', 'Edinburgh', 'New York', 'Sydney']), asw = Math.random() < .5;
+  const txt = `Hello from ${city}! It's ${w[0]}. I'm at the museum with my ${p[0]}.`;
+  if (asw) return enq({ ask: 'Lis la carte postale. Quel temps fait-il ?', prompt: enTxt(txt), en: txt, readOnly: 1, answer: w[0], answerText: `${w[2]} « ${w[0]} »`,
+    choices: shuffle([{ v: w[0], html: emo(w[2]) }, ...ow.map(x => ({ v: x[0], html: emo(x[2]), why: `Le texte dit « It's ${w[0]} » : ${w[1]}.` }))]), log: `anglais, carte postale : ${w[0]}`,
+    explain: `« It's ${w[0]} » : ${w[1]}.`, hint: 'Cherche la phrase qui commence par « It’s ».' });
+  const ans = `avec ${ENMY[p[0]]}`;
+  return enq({ ask: 'Lis la carte postale. Avec qui est l’enfant ?', prompt: enTxt(txt), en: txt, readOnly: 1, answer: ans, answerText: ans, fr: 1,
+    choices: shuffle([p, ...op.slice(0, 2)].map(x => { const v = `avec ${ENMY[x[0]]}`; return x === p ? { v, html: v } : { v, html: v, why: `Le texte dit « with my ${p[0]} » : ${ans}.` }; })), log: `anglais, carte postale : ${p[0]}`,
+    explain: `« I'm at the museum with my ${p[0]} » : je suis au musée ${ans}.`, hint: 'Cherche le mot après « with my ».' });
+}
+// Prix entendus (CM2)
+function enPrice() {
+  const lb = rnd(1, 20), p = pick([10, 20, 30, 40, 50, 60, 70, 80, 90]), f = (a, b) => `£${a}.${String(b).padStart(2, '0')}`, ans = f(lb, p);
+  const ws = [f(lb === 20 ? 19 : lb + 1, p), f(lb, pick([10, 20, 30, 40, 50, 60, 70, 80, 90].filter(x => x !== p)))];
+  return enq({ ask: 'Écoute le prix et touche-le.', prompt: enPlay(), en: `${enNum(lb)} pound${lb > 1 ? 's' : ''} ${enNum(p)}`, listen: 1, answer: ans, answerText: ans,
+    choices: shuffle([ans, ...ws].map(x => x === ans ? { v: x, html: `<b class="ennum">${x}</b>` } : { v: x, html: `<b class="ennum">${x}</b>`, why: `On a entendu « ${enNum(lb)} pound${lb > 1 ? 's' : ''} ${enNum(p)} » : ${lb} livre${lb > 1 ? 's' : ''} et ${p} pence.` })), log: `anglais, prix : ${ans}`,
+    explain: `« ${enNum(lb)} pound${lb > 1 ? 's' : ''} ${enNum(p)} », c’est ${ans} : ${lb} livre${lb > 1 ? 's' : ''} sterling et ${p} pence. La livre (£) est la monnaie du Royaume-Uni.`, hint: 'D’abord les livres (pounds), puis les pence.' });
+}
+// Le chemin : « Go straight on, then turn left. » (CM2)
+const ENDIR = [['Go straight on', '⬆️'], ['Turn left', '⬅️'], ['Turn right', '➡️']];
+function enDirections() {
+  const a = pick(ENDIR), b = pick(ENDIR.filter(x => x !== a)), ans = `${a[1]} puis ${b[1]}`, en = `${a[0]}, then ${b[0].toLowerCase()}.`;
+  const ws = shuffle([`${b[1]} puis ${a[1]}`, ...ENDIR.flatMap(x => ENDIR.filter(y => y !== x).map(y => `${x[1]} puis ${y[1]}`))].filter(x => x !== ans)).filter((x, j, A) => A.indexOf(x) === j).slice(0, 2);
+  return enq({ ask: 'Écoute le chemin et choisis les flèches.', prompt: enPlay(), en, listen: 1, answer: ans, answerText: `« ${en} »`,
+    choices: shuffle([ans, ...ws].map(x => x === ans ? { v: x, html: `<span class="emo sm">${x}</span>` } : { v: x, html: `<span class="emo sm">${x}</span>`, why: `On a entendu « ${en} ». Go straight on : tout droit. Turn left : à gauche. Turn right : à droite.` })), log: `anglais, chemin : ${en}`,
+    explain: `« ${en} » : ${a[0] === 'Go straight on' ? 'va tout droit' : a[0] === 'Turn left' ? 'tourne à gauche' : 'tourne à droite'}, puis ${b[0] === 'Go straight on' ? 'va tout droit' : b[0] === 'Turn left' ? 'tourne à gauche' : 'tourne à droite'}.`, hint: 'Go straight on : tout droit. Left : gauche. Right : droite.' });
+}
+const ENSIGN = [['Don’t run!', 'Ne cours pas !', ['Cours vite !', 'Ne parle pas !']], ['Don’t touch!', 'Ne touche pas !', ['Touche !', 'Ne mange pas !']], ['You can’t swim here.', 'On ne peut pas nager ici.', ['On peut nager ici.', 'On ne peut pas manger ici.']],
+  ['Please be quiet.', 'Silence, s’il te plaît.', ['Parle plus fort.', 'Viens vite.']], ['Wash your hands.', 'Lave-toi les mains.', ['Lève la main.', 'Tape dans tes mains.']], ['Close the door, please.', 'Ferme la porte, s’il te plaît.', ['Ouvre la porte.', 'Ferme la fenêtre.']],
+  ['Turn off the light.', 'Éteins la lumière.', ['Allume la lumière.', 'Ferme le livre.']], ['Don’t forget your coat!', 'N’oublie pas ton manteau !', ['Mets ton chapeau !', 'Enlève ton manteau !']]];
+function enSign() {
+  const [en, ans, ws] = pick(ENSIGN);
+  return enq({ ask: 'Écoute. Que veut dire la consigne ?', prompt: enPlay(), en: en.replace(/’/g, "'"), listen: 1, answer: ans, answerText: ans, fr: 1,
+    choices: shuffle([ans, ...ws].map(x => x === ans ? { v: x, html: x } : { v: x, html: x, why: `« ${en} » veut dire : ${ans.charAt(0).toLowerCase() + ans.slice(1)}` })), log: `anglais, consigne : ${en}`,
+    explain: `« ${en} » : ${ans.charAt(0).toLowerCase() + ans.slice(1)}${/don’t|can’t/i.test(en) ? ' « Don’t » et « can’t » disent ce qu’il ne faut pas faire.' : ''}`, hint: 'Don’t… : ne… pas. Please : s’il te plaît.' });
+}
+// Portrait et habitudes (CM2)
+function enPortrait() {
+  const HC = [['black', 'noirs'], ['brown', 'bruns'], ['blond', 'blonds'], ['red', 'roux']], EY = [['blue', 'bleus'], ['brown', 'marron'], ['green', 'verts']];
+  const she = Math.random() < .5, len = pick([['short', 'courts'], ['long', 'longs']]), hc = pick(HC), ey = pick(EY), gl = Math.random() < .5;
+  const fr = (l, h, e, g) => `cheveux ${l[1]} et ${h[1]}, yeux ${e[1]}${g ? ', lunettes' : ''}`, ans = fr(len, hc, ey, gl);
+  const w1 = fr(len, pick(HC.filter(x => x !== hc)), ey, gl), w2 = fr(len, hc, pick(EY.filter(x => x !== ey)), !gl);
+  const en = `${she ? "She's" : "He's"} got ${len[0]} ${hc[0]} hair and ${ey[0]} eyes.${gl ? ` ${she ? 'She' : 'He'} wears glasses.` : ''}`;
+  return enq({ ask: `Écoute. À quoi ${she ? 'ressemble-t-elle' : 'ressemble-t-il'} ?`, prompt: enPlay(), en, listen: 1, answer: ans, answerText: ans, fr: 1,
+    choices: shuffle([ans, w1, w2].filter((x, j, A) => A.indexOf(x) === j).map(x => x === ans ? { v: x, html: x } : { v: x, html: x, why: `On a entendu « ${en} »` })), log: `anglais, portrait : ${en}`,
+    explain: `« ${en} » : ${ans}. En anglais, l’adjectif se place avant le nom : « ${hc[0]} hair », des cheveux ${hc[1]}.`, hint: 'Hair : cheveux. Eyes : yeux. Glasses : lunettes.' });
+}
+function enRoutine() {
+  const nm = pick([['Tom', 'm'], ['Lucy', 'f'], ['Ben', 'm'], ['Mia', 'f']]), h = rnd(6, 8), mv = pick(ENV.move.filter(x => ['by bike', 'by bus', 'by car', 'on foot'].includes(x[0]))), askT = Math.random() < .5;
+  const en = `${nm[0]} gets up at ${EN1[h]} o'clock and goes to school ${mv[0]}.`, il = nm[1] === 'f' ? 'elle' : 'il';
+  if (askT) { const ans = `${h} h`; return enq({ ask: `Écoute. À quelle heure ${nm[0]} se lève-t-${il} ?`, prompt: enPlay(), en, listen: 1, answer: ans, answerText: ans, fr: 1,
+    choices: shuffle([h, h + 2, h === 6 ? 9 : h - 1].map(x => `${x} h`).map(x => x === ans ? { v: x, html: x } : { v: x, html: x, why: `On a entendu « gets up at ${EN1[h]} o'clock » : ${h} h.` })), log: `anglais, habitude : ${nm[0]} ${h}`,
+    explain: `« ${en} » : ${nm[0]} se lève à ${h} h et va à l’école ${mv[1]}.`, hint: 'Gets up : se lève. Écoute le nombre après « at ».' }); }
+  const ws = shuffle(ENV.move.filter(x => ['by bike', 'by bus', 'by car', 'on foot'].includes(x[0]) && x !== mv)).slice(0, 2);
+  return enq({ ask: `Écoute. Comment ${nm[0]} va-t-${il} à l’école ?`, prompt: enPlay(), en, listen: 1, answer: mv[0], answerText: `${mv[2]} « ${mv[0]} »`,
+    choices: shuffle([{ v: mv[0], html: emo(mv[2]) }, ...ws.map(x => ({ v: x[0], html: emo(x[2]), why: `Ça, c’est « ${x[0]} » (${x[1]}). On a entendu « ${mv[0]} ».` }))]), log: `anglais, habitude : ${nm[0]} ${mv[0]}`,
+    explain: `« ${en} » : ${nm[0]} se lève à ${h} h et va à l’école ${mv[1]}. Gets, goes : avec un prénom, le verbe prend un -s.`, hint: 'Écoute la fin de la phrase : by bike, by bus, by car, on foot.' });
+}
+// Dialogues à deux voix et préférences (CM2)
+const ENSUBJ = [['Maths', 'les maths'], ['Art', 'les arts plastiques'], ['Music', 'la musique'], ['Science', 'les sciences'], ['History', 'l’histoire'], ['English', 'l’anglais']];
+function enDialogue() {
+  const t = pick(['prefer', 'prefer', 'subject', 'would']);
+  if (t === 'prefer') { const [a, b, c] = shuffle(ENV.sport.slice()), en = `Do you like ${b[0]}? – No, I don't. I prefer ${a[0]}.`;
+    return enq({ ask: 'Écoute le dialogue. Quel sport l’enfant préfère-t-il ?', prompt: enPlay(), en: en.replace(' – ', ' ... '), listen: 1, answer: a[0], answerText: `${a[2]} ${a[1]}`,
+      choices: shuffle([{ v: a[0], html: emo(a[2]) }, { v: b[0], html: emo(b[2]), why: `« Do you like ${b[0]}? – No, I don't » : l’enfant n’aime pas ${b[1]}.` }, { v: c[0], html: emo(c[2]), why: `On n’a pas parlé ${deArt(c[1])}.` }]), log: `anglais, dialogue : prefer ${a[0]}`,
+      explain: `« No, I don't. I prefer ${a[0]} » : non, je préfère ${a[1]}.`, hint: 'I prefer : je préfère.' }); }
+  if (t === 'subject') { const [a, ...w] = shuffle(ENSUBJ.slice()), en = `What's your favourite subject? – ${a[0]}!`;
+    return enq({ ask: 'Écoute. Quelle est la matière préférée de l’enfant ?', prompt: enPlay(), en: en.replace(' – ', ' ... '), listen: 1, answer: a[1], answerText: `${a[1]}, « ${a[0]} »`, fr: 1,
+      choices: shuffle([a, ...w.slice(0, 2)].map(x => x === a ? { v: x[1], html: x[1] } : { v: x[1], html: x[1], why: `${x[1].charAt(0).toUpperCase() + x[1].slice(1)}, c’est « ${x[0]} ». On a entendu « ${a[0]} ».` })), log: `anglais, dialogue : ${a[0]}`,
+      explain: `« My favourite subject » : ma matière préférée. « ${a[0]} », c’est ${a[1]}.`, hint: 'Favourite : préféré. Subject : matière.' }); }
+  const f = pick(ENLIKE), yes = Math.random() < .5, en = `Would you like some ${f[0]}? – ${yes ? 'Yes, please!' : 'No, thank you.'}`, ans = yes ? 'oui' : 'non';
+  return enq({ ask: `Écoute. L’enfant veut-il ${f[1].replace(/^l(e|a|es) |^l’/, m => ({ 'le ': 'du ', 'la ': 'de la ', 'les ': 'des ', 'l’': 'de l’' })[m])} ?`, prompt: enPlay(), en: en.replace(' – ', ' ... '), listen: 1, answer: ans, answerText: yes ? 'oui : « Yes, please! »' : 'non : « No, thank you. »', fr: 1,
+    choices: ['oui', 'non'].map(x => x === ans ? { v: x, html: x } : { v: x, html: x, why: yes ? '« Yes, please! » : oui, s’il te plaît.' : '« No, thank you » : non, merci.' }), log: `anglais, dialogue : would ${f[0]} ${ans}`,
+    explain: `« Would you like… ? » : veux-tu… ? ${yes ? '« Yes, please! » : oui, s’il te plaît.' : '« No, thank you » : non, merci.'}`, hint: 'Please : s’il te plaît. Thank you : merci.' });
+}
+// Mots de liaison : and, but, or (CM2)
+const ENLINK = [['I like apples … I don’t like bananas.', 'but'], ['I’ve got a cat … a dog.', 'and'], ['Do you want juice … milk?', 'or'], ['She can swim … she can’t ride a bike.', 'but'], ['My favourite colours are blue … green.', 'and'],
+  ['Is it a cat … a dog?', 'or'], ['He likes football … tennis.', 'and'], ['It’s sunny … it’s cold.', 'but'], ['Is your bag red … blue?', 'or'], ['I’m tired … I’m happy.', 'but']];
+const ENLW = { and: 'et', but: 'mais', or: 'ou' };
+function enLink() {
+  const [s, ans] = pick(ENLINK);
+  return enq({ ask: 'Lis et complète avec le bon mot.', prompt: enTxt(s.replace(/’/g, "'")), en: s.replace(' … ', ` ${ans} `).replace(/’/g, "'"), readOnly: 1, answer: ans, answerText: `« ${ans} » (${ENLW[ans]})`,
+    choices: shuffle(['and', 'but', 'or'].map(x => x === ans ? { v: x, html: `<span lang="en">${x}</span>` } : { v: x, html: `<span lang="en">${x}</span>`, why: `« ${x} » veut dire « ${ENLW[x]} ». Ici, il faut « ${ans} » : ${ENLW[ans]}.` })), log: `anglais, liaison : ${s}`,
+    explain: `« ${s.replace(' … ', ` ${ans} `)} » : ${ans === 'but' ? 'les deux idées s’opposent, on dit « but », mais' : ans === 'or' ? 'on propose un choix, on dit « or », ou' : 'on ajoute une idée, on dit « and », et'}.`, hint: 'and : et · but : mais · or : ou.' });
+}
+// Cinq niveaux par classe, du plus simple au plus exigeant
+function genAnglais(l) {
+  const r = Math.random(), g = GR();
+  const base = ['col', 'ani', 'food', 'body', 'school'], more = ['col', 'ani', 'food', 'body', 'school', 'clothes', 'family', 'rooms', 'sport'];
+  if (g === 'cm1') {
+    if (l === 1) return r < .4 ? enListenNum(0, 100) : r < .7 ? enListenCal(Math.random() < .5) : enListenDate();
+    if (l === 2) return r < .3 ? enCommand() : r < .7 ? enWhere() : enListenPic(more);
+    if (l === 3) return enWho();
+    if (l === 4) return r < .8 ? enQA() : enClock();
+    return r < .5 ? enPresent() : enText();
+  }
+  if (g === 'cm2') {
+    if (l === 1) return r < .35 ? enClock() : r < .6 ? enPrice() : r < .8 ? enListenCal(true) : enListenNum(100, 1000);
+    if (l === 2) return r < .5 ? enDirections() : enSign();
+    if (l === 3) return r < .5 ? enPortrait() : enRoutine();
+    if (l === 4) return r < .65 ? enDialogue() : enQA();
+    return r < .4 ? enLink() : r < .7 ? enPresent() : enText();
+  }
+  if (l === 1) return r < .7 ? enListenPic(base) : enListenNum(0, 20);
+  if (l === 2) return r < .55 ? enCommand() : r < .8 ? enListenPic(['clothes', 'family', 'rooms', 'feel']) : enListenNum(20, 100);
+  if (l === 3) return enSentence();
+  if (l === 4) return r < .65 ? enQA() : r < .85 ? enClock() : enListenCal(false);
+  return r < .4 ? enReadPic(more) : r < .75 ? enPicWord(more) : enComplete();
+}
+
 /* ================= Français : conjugaison ================= */
 // Programme : CE2 (BO n° 41 du 31 octobre 2024), CM1 (cycle 3, rentrée 2025). Présent, futur, imparfait, passé composé.
 // Espace insécable entre un nombre et son unité : « 1,73 € » ou « 4 h 45 » ne se coupent jamais en fin de ligne
@@ -4146,6 +4491,7 @@ const SKILLS = {
     conjug: ['conjuguer être, avoir et les verbes en -er au présent', 'conjuguer les verbes irréguliers et le futur', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé', 'conjuguer et reconnaître les quatre temps'],
     gram: ['reconnaître le type de phrase et le verbe', 'trouver les noms et les déterminants', 'trouver les adjectifs, le sujet et les pronoms', 'utiliser la négation, trouver la nature d’un mot', 'trouver la nature d’un mot et le sujet du verbe'],
     accords: ['mettre les noms au pluriel', 'accorder l’adjectif', 'accorder le verbe, choisir a/à, et/est, son/sont', 'accorder le groupe nominal', 'faire les accords et choisir le bon homophone'],
+    anglais: ['reconnaître un mot anglais que j’entends', 'comprendre une consigne en anglais', 'comprendre une petite phrase sur quelqu’un', 'choisir la bonne réponse à une question', 'lire des mots anglais déjà connus'],
     vocab: ['ranger des mots dans l’ordre alphabétique', 'trouver les mots de la même famille', 'comprendre les préfixes et les suffixes', 'trouver un synonyme ou un contraire', 'comprendre le sens figuré'] },
   cm1: { canons: ['utiliser les tables, trouver le nombre caché', 'diviser avec les tables', 'multiplier et diviser des dizaines, des centaines', 'faire une division avec reste', 'multiplier un nombre à 2 chiffres, diviser avec reste'],
     stade: ['multiplier et diviser par 10, 100, 1 000', 'compléter à 1 000, trouver un double ou une moitié', 'ajouter des dixièmes, doubler et partager en deux', 'multiplier ou diviser un décimal par 10', 'prendre une fraction d’un nombre et calculer vite'],
@@ -4159,6 +4505,7 @@ const SKILLS = {
     conjug: ['conjuguer au présent finir, manger, appeler, aller…', 'conjuguer à l’imparfait et au futur', 'conjuguer au passé composé avec être et avoir', 'reconnaître le temps, l’infinitif et le groupe', 'conjuguer au présent, imparfait, futur, passé composé'],
     gram: ['trouver la nature des mots', 'trouver le sujet et le nom noyau', 'trouver les compléments', 'reconnaître les déterminants et les adjectifs épithètes', 'trouver la fonction des groupes'],
     accords: ['écrire les pluriels difficiles', 'accorder les adjectifs dans le groupe nominal', 'accorder le verbe avec un sujet difficile', 'accorder le participe passé avec être', 'faire tous les accords, choisir le bon homophone'],
+    anglais: ['comprendre les nombres, les jours et les dates', 'suivre une consigne, dire où sont les choses', 'savoir qui parle et de qui on parle', 'réagir dans un petit échange', 'lire un court texte et compléter une phrase'],
     vocab: ['ranger des mots, comprendre préfixes et suffixes', 'comprendre préfixes, suffixes et radicaux', 'classer des synonymes, reconnaître les niveaux de langue', 'comprendre les sens d’un mot et les expressions', 'utiliser les mots génériques et les homonymes'] },
   cm2: { canons: ['reconnaître multiples, diviseurs, divisibles par 2, 5, 10', 'trouver des diviseurs et des multiples communs', 'faire une division avec reste au-delà des tables', 'calculer avec des parenthèses', 'multiplier des dizaines, centaines, utiliser la distributivité'],
     stade: ['multiplier et diviser un décimal par 10, 100, 1 000', 'ajouter un entier à un décimal, ajouter 9, 19… 99', 'ajouter des décimaux, doubler et partager en deux', 'multiplier par 5 et 50, diviser par 4 et 8', 'écrire 1/2, 1/4, 3/4 en décimal'],
@@ -4172,6 +4519,7 @@ const SKILLS = {
     conjug: ['conjuguer aux temps du CM1, trouver la marque du temps', 'conjuguer au passé simple (-er, -ir, être, avoir)', 'conjuguer au passé simple faire, dire, venir…', 'conjuguer au plus-que-parfait', 'reconnaître et conjuguer les temps du récit'],
     gram: ['trouver le sujet, même inversé', 'distinguer attribut du sujet et COD', 'distinguer COD, COI et compléments circonstanciels', 'reconnaître complément du nom, épithète et classes de mots', 'distinguer phrase simple et phrase complexe'],
     accords: ['accorder le groupe nominal', 'accorder le verbe avec un sujet inversé', 'accorder l’attribut du sujet', 'accorder le participe passé avec être et avoir', 'faire tous les accords, leur / leurs, la / l’a / là'],
+    anglais: ['repérer l’heure, un prix ou un mois', 'suivre un chemin et des consignes', 'comprendre un portrait ou une habitude', 'comprendre un dialogue et une préférence', 'lire un message et compléter une phrase'],
     vocab: ['utiliser le dictionnaire', 'comprendre les mots polysémiques', 'comprendre un mot grâce à sa formation', 'choisir des synonymes et des antonymes précis', 'maîtriser les sens et la formation des mots'] } };
 const skillName = (id, L) => ((SKILLS[GR()] || SKILLS.ce2)[id] || [])[L - 1] || `niveau ${L}`;
 // État d'une compétence : acquise (80 % sur au moins 4 questions, ou les deux étapes de la route passées), à revoir (moins de 60 %),
@@ -4488,11 +4836,13 @@ function nextQ() {
   // La bonne réponse change de place à chaque question, et jamais trois fois de suite au même endroit (les signes <, =, > gardent leur ordre)
   if (q.choices && q.kind !== 'compare' && !q.keep) { const at = c => c.findIndex(x => x.v === q.answer); let c, t2 = 0; do { c = shuffle(q.choices); t2++; } while (t2 < 10 && R.lastAt && R.lastAt[0] === at(c) && R.lastAt[1] === at(c)); q.choices = c; R.lastAt = [at(c), R.lastAt ? R.lastAt[0] : -1]; }
   if (!q.retry) R.seen.add(q.log); R.q = q; R.input = ''; R.locked = false; R.qt = performance.now(); R.counts = R.tray = R.sel = R.pick = R.dig = R.wsel = null;
+  if (q.listen && !q.enShown && !enOK()) { q.prompt += enTxt(q.en); q.enShown = 1; }
   renderGame();
+  if (q.listen && q.en) setTimeout(() => { if (R && R.q === q && !R.locked) speakEn(q.en); }, 500);
 }
 // Recadrage horizontal des décors d'île : dans un écran en hauteur, on ne voit qu'environ la moitié de l'image.
 // Ces valeurs gardent le sujet (fort, forge, grotte…) dans le cadre plutôt que le centre de l'image.
-const HERO_X = { formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
+const HERO_X = { anglais: 75, formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
 function sceneHTML() {
   const { i, boss } = R;
   if (i.v) return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="">${i.id === 'mix' ? shipArt('ship me sail', 'role="img" aria-label="Ton navire"') : `<img class="guidefig" src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise">`}<div class="waves"></div>${powersHTML()}</div>`;
@@ -4577,6 +4927,16 @@ function speakable(html) {
     .replace(/(\d+),(\d{2}) €/g, (_, e, c) => `${e} euro${e > 1 ? 's' : ''} ${+c}`).replace(/(\d+) €/g, (_, e) => `${e} euro${e > 1 ? 's' : ''}`).replace(/(\d+) c\b/g, (_, c) => `${c} centime${c > 1 ? 's' : ''}`)
     .replace(/(\d+) h (\d+)/g, (_, h, m) => `${h} heure${h > 1 ? 's' : ''} ${m}`).replace(/(\d+) h\b/g, (_, h) => `${h} heure${h > 1 ? 's' : ''}`).replace(/(\d+) min\b/g, '$1 minutes').replace(/\s+/g, ' ').trim();
 }
+const frVoice = () => { const v = speechSynthesis.getVoices(); return v.find(x => /^fr(-|_)FR/i.test(x.lang)) || v.find(x => /^fr/i.test(x.lang)) || null; };
+const enVoice = () => { if (!canSay()) return null; const v = speechSynthesis.getVoices(); return v.find(x => /^en(-|_)GB/i.test(x.lang)) || v.find(x => /^en(-|_)(IE|AU|US|CA|NZ)/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null; };
+// Sans voix anglaise sur l'appareil, la phrase s'affiche aussi par écrit (liste des voix vide : pas encore chargée, on suppose qu'elle existe)
+const enOK = () => canSay() && (!!enVoice() || !speechSynthesis.getVoices().length);
+// Plusieurs morceaux à la suite, chacun dans sa langue : la consigne en français, puis l'anglais
+function sayQ(parts) {
+  if (!canSay()) return; const s = speechSynthesis; s.cancel();
+  parts.filter(x => x && x[0]).forEach(([t, l]) => { const u = new SpeechSynthesisUtterance(t), en = l === 'en', v = en ? enVoice() : frVoice(); u.lang = en ? 'en-GB' : 'fr-FR'; u.rate = en ? .8 : .92; if (v) u.voice = v; s.speak(u); });
+}
+const speakEn = t => sayQ([[t, 'en']]);
 function speak(text) {
   if (!canSay() || !text) return; const s = speechSynthesis; s.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'fr-FR'; u.rate = .92;
   const v = s.getVoices().find(x => /^fr(-|_)FR/i.test(x.lang)) || s.getVoices().find(x => /^fr/i.test(x.lang)); if (v) u.voice = v; s.speak(u);
@@ -4776,7 +5136,7 @@ function answer(ok, givenText, btn) {
     if (R.i.id === 'canons') missFx();
     setTimeout(() => {
       const sh = document.createElement('div'); sh.className = 'sheet-err';
-      sh.innerHTML = `<div class="errcard paper" role="alertdialog" aria-modal="true"><div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.kind === 'money' && R.tray ? (() => { const s = R.tray.reduce((a, b) => a + b, 0), d = R.q.target - s; return `<b>Tu as donné ${fmtE(s)} : ${d > 0 ? `il manque ${fmtC(d)}` : `c’est ${fmtC(-d)} de trop`}.</b><br>`; })() : ''}${R.dg ? `<span class="diag"><b>Ta réponse : ${esc(givenText)}.</b> ${R.dg}</span>` : ''}${R.q.explain}</p><div class="errbtns">${sayBtn('e')}<button class="brass-btn" data-a="next">J’ai compris</button></div></div>`;
+      sh.innerHTML = `<div class="errcard paper" role="alertdialog" aria-modal="true"><div class="who"><img src="${IMG('guide-perroquet-hmm')}" alt=""><div><h3>${nearMiss(givenText) ? 'Raté de peu !' : 'Pas tout à fait !'}</h3><div class="good">La bonne réponse : <span style="color:#2b7a4d">${esc(R.q.answerText)}</span></div></div></div><p class="why">${R.q.kind === 'money' && R.tray ? (() => { const s = R.tray.reduce((a, b) => a + b, 0), d = R.q.target - s; return `<b>Tu as donné ${fmtE(s)} : ${d > 0 ? `il manque ${fmtC(d)}` : `c’est ${fmtC(-d)} de trop`}.</b><br>`; })() : ''}${R.dg ? `<span class="diag"><b>Ta réponse : ${esc(givenText)}${/[.!?…]\s*$/.test(givenText) ? '' : '.'}</b> ${R.dg}</span>` : ''}${R.q.explain}</p><div class="errbtns">${sayBtn('e')}<button class="brass-btn" data-a="next">J’ai compris</button></div></div>`;
       app.firstElementChild.appendChild(sh); $('[data-a="next"]', sh).focus();
     }, R.i.id === 'canons' ? 700 : 350);
   }
@@ -5064,7 +5424,7 @@ function openParents() {
       <a class="ghost-btn" style="display:grid;place-items:center;text-decoration:none" href="${ADMIN ? './' : './?admin'}">${ADMIN ? 'Revenir à la version de l’enfant' : 'Ouvrir la version administrateur'}</a></div>
     <div class="pcard"><h3>Classe de l’enfant</h3><div class="seg">${Object.entries(GRADES).map(([k, g]) => `<button data-a="grade" data-v="${k}" aria-pressed="${GR() === k}">${g.n} · ${g.age}</button>`).join('')}</div>
       <p class="note" style="margin:8px 0 0">Les questions suivent le programme de la classe choisie. Chaque classe garde sa propre progression : on peut changer sans rien perdre.</p></div>
-    ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
+    ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sk === 'f' && l.some(i => i.id === 'anglais') ? 'Français et anglais' : sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
       return `<div class="prow"><img src="${IMG(i.img)}" alt=""><div><b>${i.notion}${badge}</b><span>${capF(rankTxt(s))} · ${s.tot} questions${s.tot ? ` · ${(s.ms / s.tot / 1000).toFixed(1).replace('.', ',')} s par réponse` : ''}</span></div><span class="pct">${p == null ? '–' : p + ' %'}</span></div>`; }).join('')}</div>` : ''; }).join('')}
     <div class="pcard"><h3>Minutes de jeu, 7 derniers jours</h3><div class="days">${last7.map(([x, s]) => `<div class="day"><span>${s ? Math.round(s / 60) : ''}</span><i style="height:${Math.max(2, s / maxS * 70)}px"></i><span>${x.toLocaleDateString('fr-FR', { weekday: 'short' }).slice(0, 3)}</span></div>`).join('')}</div></div>
     <div class="pcard"><h3>Compétences « Je sais… »</h3>${(() => { const all = playable().flatMap(i => range(1, 5).map(L => ({ i, L, st: skillState(i.id, L) }))), ok = all.filter(x => x.st === 'ok').length, rv = all.filter(x => x.st === 'rev');
@@ -5218,7 +5578,10 @@ app.addEventListener('click', e => {
     case 'wchip': { if (!R || R.locked) break; const k = +el.dataset.i; if (!R.q.multi) { const had = R.wsel.has(k); R.wsel.clear(); if (!had) R.wsel.add(k); } else R.wsel.has(k) ? R.wsel.delete(k) : R.wsel.add(k); SND.tap(); refreshBottom(); break; }
     case 'slice': { const k = +el.dataset.i; R.sel.has(k) ? R.sel.delete(k) : R.sel.add(k); SND.tap(); refreshBottom(); break; }
     case 'validate': { if (!R || R.locked) break; const [ok, g] = check(); answer(ok, g); break; }
+    case 'enplay': if (R && R.q && R.q.en) { SND.tap(); speakEn(R.q.en); } break;
     case 'say': { if (!R || !R.q) break; const q = R.q; SND.tap();
+      // Île d'anglais : la consigne en français, puis l'anglais avec la voix anglaise (pas pour une lecture : c'est à l'enfant de lire)
+      if (q.en) { sayQ(el.dataset.w === 'e' ? [[`${R.dg ? speakable(R.dg) + ' ' : ''}${speakable(q.explain)}`, 'fr'], [q.en, 'en']] : [[speakable(q.ask), 'fr'], q.readOnly ? null : [q.en, 'en']]); break; }
       speak(el.dataset.w === 'e' ? `${R && R.dg ? speakable(R.dg) + ' ' : ''}La bonne réponse : ${speakable(q.answerText)}. ${speakable(q.explain)}` : speakable(`${q.ask} ${q.kind === 'read' || q.readAlone ? '' : q.prompt || ''} ${q.price || ''}`) + (q.sayChoices && q.choices ? ' ' + q.choices.map(c => speakable(c.html)).join(', ou ') + ' ?' : '')); break; }
     case 'next': if (window.speechSynthesis) speechSynthesis.cancel(); if (R) { $$('.sheet-err').forEach(x => x.remove()); advance(); } break;
     case 'power': { const p = el.dataset.p; if (!R || R.locked || R.used[p]) break; R.used[p] = true; SND.tap();
@@ -5528,7 +5891,7 @@ renderJournal = after(renderJournal, 'crew'); renderCrew = after(renderCrew, 'cr
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 let goNow = false; try { goNow = !!sessionStorage.getItem('mous-go'); sessionStorage.removeItem('mous-go'); } catch (e) {}
 if (location.hash === '#direct' || goNow) { show('map'); if (!S.intro) onboarding(); else if (goNow) setTimeout(() => toast(`À toi de jouer, ${S.name} !`), 400); } else titleScreen();
-window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, openParents, voice, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge, genFormes }, geo: { gNet, gFigName, gPolyName, gCercle, gDroites, gAngleType, gAngleCmp, gDegres, gAngleNom, gCarreaux, gDemi, gCmpAB, gRectMes, gConv, gQuelRect, gSolNom, gSolCompte, gSolFaces, gPatron, gSym, gDepl }, words, ISLES, setGrade, check, labN };
+window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, openParents, voice, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge, genFormes, genAnglais }, geo: { gNet, gFigName, gPolyName, gCercle, gDroites, gAngleType, gAngleCmp, gDegres, gAngleNom, gCarreaux, gDemi, gCmpAB, gRectMes, gConv, gQuelRect, gSolNom, gSolCompte, gSolFaces, gPatron, gSym, gDepl }, words, ISLES, setGrade, check, labN };
 })();
 </script>
 
