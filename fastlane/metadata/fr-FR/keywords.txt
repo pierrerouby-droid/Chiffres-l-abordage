@@ -1,1 +1,1 @@
-maths,calcul,tables,fractions,géométrie,français,conjugaison,grammaire,lecture,école,primaire
+maths,calcul,tables,fractions,géométrie,français,anglais,culture,conjugaison,grammaire,lecture
