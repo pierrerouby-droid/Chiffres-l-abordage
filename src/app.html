@@ -869,6 +869,7 @@ textarea.fld{min-height:76px}
 .hbcap{position:absolute;left:12px;right:12px;bottom:calc(var(--sbm) + 102px);border-radius:20px;padding:10px 12px 10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:20}
 .hbcap .smallcaps{color:var(--mist)}.hbcap b{font:700 15px/1.25 var(--f-u);color:#fffaf0}
 .hbcap .ghost-btn{width:auto;margin:0;padding:10px 18px;flex:none}
+.gemc{display:inline-flex;align-items:center;gap:3px;color:#c4ffe6;letter-spacing:0}.gemc img{width:16px;height:16px;margin-top:-2px}
 .bsheet .box{max-width:440px}
 .bgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .bopt{border-radius:16px;padding:8px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(75,52,34,.08);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.35);color:var(--ink)}
@@ -1023,7 +1024,7 @@ const decomp = n => { const [m, c, d, u] = digits(n); return `${pl(m, 'millier')
 const ADMIN = /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.hash.slice(1));
 const KEY = ADMIN ? 'archipel-nombres-admin' : 'archipel-nombres-v2';
 // La progression (îles, marée, revanches, erreurs, victoires par mer) est rangée par classe dans S.g ; le reste (nom, doublons, équipage, navire) est commun.
-const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false, ward: ['tricorne'], outfit: { h: 'tricorne' }, port: ['', '', '', '', '', ''], blds: [] });
+const DEF = () => ({ name: '', epithet: '', eps: [], gold: 0, gems: 0, hull: 0, sound: true, music: true, voice: true, tuto: {}, seenTab: {}, spent: 0, paints: ['origine'], paint: 'origine', limit: 5, wins: 0, rounds: 0, crew: ['perroquet'], days: {}, fastStreak: 0, intro: false, grade: null, sea: 'm', g: {}, avatar: 'a', flag: 'crane', gear: [], fig: '', gcan: false, ward: ['tricorne'], outfit: { h: 'tricorne' }, port: ['', '', '', '', '', ''], blds: [] });
 const GRADES = { cp: { n: 'CP', age: '6 ans' }, ce1: { n: 'CE1', age: '7 ans' }, ce2: { n: 'CE2', age: '8 ans' }, cm1: { n: 'CM1', age: '9 ans' }, cm2: { n: 'CM2', age: '10 ans' } };
 const PDEF = () => ({ isl: {}, tide: null, rev: [], errors: [], wins: { m: 0, f: 0 } });
 function migrate(o) {
@@ -1231,17 +1232,22 @@ const CREW = [
   { id: 'pieuvre', n: 'Pieuvre Produit', r: 'Épique', p: 'Prime de boss doublée : +300 au lieu de +150', how: 'Bats un boss sur une autre île' },
 ];
 const has = id => S.crew.includes(id);
-const SHIPS = [[0, 'ship-player-1', 'sloop'], [5, 'ship-player-2', 'brigantin'], [15, 'ship-player-3', 'galion']];
-const shipLv = (w = S.wins) => { let k = 0; SHIPS.forEach((x, j) => { if (w >= x[0]) k = j; }); return k; };
+// Navires gagnés aux étoiles des îles, toutes classes confondues (2.4 ; avant : 5 et 15 victoires). S.hull garde le navire déjà gagné.
+const SHIPS = [[0, 'ship-player-1', 'sloop'], [60, 'ship-player-2', 'brigantin'], [200, 'ship-player-3', 'galion']];
+const starTotal = () => Object.values(S.g).reduce((a, p) => a + Object.values(p.isl || {}).reduce((b, s) => b + Object.values(s.stars || {}).reduce((c, x) => c + (+x || 0), 0), 0), 0);
+const shipLv = () => { const w = starTotal(); let k = 0; SHIPS.forEach((x, j) => { if (w >= x[0]) k = j; }); return Math.max(k, Math.min(S.hull || 0, SHIPS.length - 1)); };
+// Pierres précieuses : seule monnaie du port d'attache
+const gems = () => Math.max(0, S.gems || 0);
+const gemTxt = n => `${n} pierre${n > 1 ? 's' : ''} précieuse${n > 1 ? 's' : ''}`;
 const shipImg = () => SHIPS[shipLv()][1];
 const PAINTS = [
   ['origine', 'Bois d’origine', 0, 'none'],
-  ['emeraude', 'Voiles d’émeraude', 150, 'hue-rotate(95deg) saturate(1.1)'],
-  ['royal', 'Bleu royal', 300, 'hue-rotate(200deg) saturate(1.25)'],
-  ['corail', 'Corail', 500, 'hue-rotate(320deg) saturate(1.35)'],
-  ['or', 'Navire d’or', 900, 'sepia(.65) saturate(2.3) hue-rotate(-12deg) brightness(1.08)'],
-  ['fantome', 'Navire fantôme', 1500, 'grayscale(1) brightness(1.2) contrast(.85) drop-shadow(0 0 10px rgba(150,240,225,.85))'],
-  ['nuit', 'Nuit étoilée', 2500, 'hue-rotate(230deg) brightness(.78) saturate(1.5) drop-shadow(0 0 6px rgba(243,213,140,.6))'],
+  ['emeraude', 'Voiles d’émeraude', 250, 'hue-rotate(95deg) saturate(1.1)'],
+  ['royal', 'Bleu royal', 700, 'hue-rotate(200deg) saturate(1.25)'],
+  ['corail', 'Corail', 1500, 'hue-rotate(320deg) saturate(1.35)'],
+  ['or', 'Navire d’or', 3000, 'sepia(.65) saturate(2.3) hue-rotate(-12deg) brightness(1.08)'],
+  ['fantome', 'Navire fantôme', 5000, 'grayscale(1) brightness(1.2) contrast(.85) drop-shadow(0 0 10px rgba(150,240,225,.85))'],
+  ['nuit', 'Nuit étoilée', 8000, 'hue-rotate(230deg) brightness(.78) saturate(1.5) drop-shadow(0 0 6px rgba(243,213,140,.6))'],
 ];
 const shipFx = () => { const p = PAINTS.find(x => x[0] === S.paint); return p && p[3] !== 'none' ? `filter:${p[3]};` : ''; };
 const AVATARS = ['a', 'b', 'c', 'd'];
@@ -1255,10 +1261,10 @@ const BODY = {
   c: { h: [531, 150, 410], e: [632, 244], m: [296, 882], c: [530, 716], s: [690, 540], f: [582, 230] },
   d: { h: [552, 160, 420], e: [652, 256], m: [322, 892], c: [540, 730], s: [700, 560], f: [600, 240] } };
 // [id, nom, prix, place, image] : une seule chose par place (tête, œil, main, ceinture, épaule). Le tricorne est offert.
-const WARD = [['tricorne', 'Tricorne', 0, 'h', 'hat-tricorne'], ['bandana', 'Bandana', 250, 'h', 'hat-bandana'], ['bicorne', 'Bicorne d’amiral', 600, 'h', 'hat-bicorne'],
-  ['plume', 'Chapeau à plume', 1200, 'h', 'hat-plume'], ['couronne', 'Couronne de roi', 4000, 'h', 'hat-couronne'],
-  ['cacheoeil', 'Cache-œil', 200, 'e', 'acc-patch'], ['longuevue', 'Longue-vue', 350, 'm', 'acc-spyglass'], ['boussole', 'Boussole', 500, 'c', 'acc-compass'], ['singe', 'Singe d’épaule', 1500, 's', 'acc-monkey'],
-  ['sabre-bois', 'Sabre de bois', 300, 'm', 'wpn-wood'], ['sabre', 'Sabre d’abordage', 900, 'm', 'wpn-cutlass'], ['sabre-or', 'Sabre doré', 2500, 'm', 'wpn-gold']];
+const WARD = [['tricorne', 'Tricorne', 0, 'h', 'hat-tricorne'], ['bandana', 'Bandana', 250, 'h', 'hat-bandana'], ['bicorne', 'Bicorne d’amiral', 2000, 'h', 'hat-bicorne'],
+  ['plume', 'Chapeau à plume', 4000, 'h', 'hat-plume'], ['couronne', 'Couronne de roi', 10000, 'h', 'hat-couronne'],
+  ['cacheoeil', 'Cache-œil', 300, 'e', 'acc-patch'], ['longuevue', 'Longue-vue', 800, 'm', 'acc-spyglass'], ['boussole', 'Boussole', 1200, 'c', 'acc-compass'], ['singe', 'Singe d’épaule', 5000, 's', 'acc-monkey'],
+  ['sabre-bois', 'Sabre de bois', 400, 'm', 'wpn-wood'], ['sabre', 'Sabre d’abordage', 2500, 'm', 'wpn-cutlass'], ['sabre-or', 'Sabre doré', 7000, 'm', 'wpn-gold']];
 const WGROUPS = [['Chapeaux', w => w[3] === 'h'], ['Accessoires', w => w[3] !== 'h' && !w[0].startsWith('sabre')], ['Armes', w => w[0].startsWith('sabre')]];
 // Pose de chaque image : [largeur, point d'accroche x, y (fractions de l'image), décalage x, y (px du corps), rotation]
 const WEAR = { 'hat-tricorne': [560, .55, .82, 0, 0, 0], 'hat-bandana': [540, .55, .5, 0, 30, 0], 'hat-bicorne': [580, .5, .85, 0, 14, 0], 'hat-plume': [600, .45, .85, 0, 0, 0], 'hat-couronne': [420, .5, .85, 0, 0, 0],
@@ -1276,10 +1282,10 @@ function captHTML(cls = '') {
 // Gros plan sur le visage (médaillon, onglet, avis de recherche)
 const captBust = (cls = '') => `<span class="cbust ${cls}" aria-hidden="true">${captHTML()}</span>`;
 // [id, nom, prix, image (ou dessin en code), groupe] : un seul ornement actif par groupe (proue, canon, ancre, chaloupe, lanternes)
-const GEAR = [['dragon', 'Proue dragon', 600, 'fig-dragon', 'fig'], ['sirene', 'Proue sirène', 600, 'fig-sirene', 'fig'], ['aigle', 'Proue aigle', 900, 'fig-aigle', 'fig'],
-  ['licorne', 'Proue licorne de mer', 1200, 'fig-licorne', 'fig'], ['kraken', 'Proue kraken', 1800, 'fig-kraken', 'fig'],
-  ['canon', 'Canon doré', 1000, 'cannon-gold', 'canon'], ['canon-argent', 'Canon d’argent', 700, 'cannon-silver', 'canon'], ['ancre', 'Ancre dorée', 800, 'anchor-gold', 'ancre'], ['chaloupe', 'Chaloupe', 1000, 'rowboat', 'chaloupe'],
-  ['fanaux', 'Lanternes dorées', 350, null, 'lamp'], ['fanaux-emeraude', 'Lanternes émeraude', 500, null, 'lamp'], ['fanaux-lune', 'Lanternes de lune', 700, null, 'lamp']];
+const GEAR = [['dragon', 'Proue dragon', 3000, 'fig-dragon', 'fig'], ['sirene', 'Proue sirène', 3000, 'fig-sirene', 'fig'], ['aigle', 'Proue aigle', 5000, 'fig-aigle', 'fig'],
+  ['licorne', 'Proue licorne de mer', 6500, 'fig-licorne', 'fig'], ['kraken', 'Proue kraken', 9000, 'fig-kraken', 'fig'],
+  ['canon', 'Canon doré', 4000, 'cannon-gold', 'canon'], ['canon-argent', 'Canon d’argent', 1500, 'cannon-silver', 'canon'], ['ancre', 'Ancre dorée', 2500, 'anchor-gold', 'ancre'], ['chaloupe', 'Chaloupe', 3500, 'rowboat', 'chaloupe'],
+  ['fanaux', 'Lanternes dorées', 500, null, 'lamp'], ['fanaux-emeraude', 'Lanternes émeraude', 1000, null, 'lamp'], ['fanaux-lune', 'Lanternes de lune', 1800, null, 'lamp']];
 const gearGroup = id => (GEAR.find(g => g[0] === id) || [])[4];
 const GEARSVG = { fanaux: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="27" r="16" fill="rgba(255,196,90,.35)"/><path d="M17 15h14l-2 4H19z" fill="#8a6224"/><rect x="18" y="19" width="12" height="16" rx="3" fill="#ffd36b" stroke="#8a6224" stroke-width="2"/><path d="M24 22c3 3 3 6 0 9-3-3-3-6 0-9z" fill="#fff4cf"/><path d="M18 35h12M24 9v6" stroke="#8a6224" stroke-width="2.4" stroke-linecap="round"/></svg>' };
 GEARSVG['fanaux-emeraude'] = GEARSVG.fanaux.replace('rgba(255,196,90,.35)', 'rgba(90,230,150,.35)').replace('#ffd36b', '#7fe6a8').replace('#fff4cf', '#e6fff0');
@@ -1295,9 +1301,10 @@ function shipArt(cls, extra = '') {
   const fig = gearSel('fig'), can = gearSel('canon');
   return `<div class="sart ${cls}" data-lv="${shipLv()}" ${extra}>${gearSel('chaloupe') ? `<img class="boat" src="${IMG('rowboat')}" alt="">` : ''}<img class="hull" src="${IMG(shipImg())}" alt="" style="${shipFx()}">${fig ? `<img class="figh f-${fig}" src="${IMG(gearImg(fig))}" alt="">` : ''}${can ? `<img class="gcan" src="${IMG(gearImg(can))}" alt="">` : ''}${gearSel('ancre') ? `<img class="anc" src="${IMG('anchor-gold')}" alt="">` : ''}${lamps() ? `<i class="lamp st ${lamps()}"></i><i class="lamp bw ${lamps()}"></i>` : ''}</div>`;
 }
-// Port d'attache : six parcelles, sept bâtiments au choix [id, nom, prix, largeur (px de port-base, 1024 de large), point d'appui x, y dans l'image]
-const BLDS = [['jardin', 'Jardin tropical', 600, 250, .5, .7], ['drapeau', 'Grand mât à pavillon', 800, 320, .38, .8], ['marche', 'Marché aux épices', 1200, 255, .5, .74],
-  ['taverne', 'Taverne', 1500, 260, .5, .75], ['phare', 'Phare', 2000, 235, .5, .84], ['chantier', 'Chantier naval', 2500, 270, .5, .74], ['statue', 'Statue du capitaine', 5000, 235, .5, .82]];
+// Port d'attache : six parcelles, sept bâtiments au choix [id, nom, prix en pierres précieuses, largeur (px de port-base, 1024 de large), point d'appui x, y dans l'image]
+// Depuis la 2.4, le port se paie seulement en pierres précieuses (coffres et boss des îles, coffre de la semaine, fin de l'histoire)
+const BLDS = [['jardin', 'Jardin tropical', 3, 250, .5, .7], ['drapeau', 'Grand mât à pavillon', 4, 320, .38, .8], ['marche', 'Marché aux épices', 5, 255, .5, .74],
+  ['taverne', 'Taverne', 6, 260, .5, .75], ['phare', 'Phare', 8, 235, .5, .84], ['chantier', 'Chantier naval', 10, 270, .5, .74], ['statue', 'Statue du capitaine', 15, 235, .5, .82]];
 const PLOTS = [[432, 332], [695, 440], [800, 595], [790, 747], [475, 772], [260, 845]];
 const portOwned = () => S.blds;
 const portBuilt = () => S.port.filter(b => b && BLDS.some(x => x[0] === b)).length;
@@ -1366,6 +1373,13 @@ const unlocked = i => ADMIN || (!i.soon && SW(i.sea) >= i.unlock);
 const left = i => i.unlock - SW(i.sea);
 const playable = () => ISLES.filter(i => !i.soon);
 const NODES = 10, CHEST = 5, BOSS = 10;
+// 2.4 : nouvelle économie. Le navire déjà gagné aux victoires reste acquis ; les coffres déjà ouverts, les boss déjà vaincus
+// et l'histoire déjà terminée rapportent d'office leurs pierres précieuses. Les bâtiments déjà construits sont gardés.
+if ((S.econ || 0) < 1) {
+  S.hull = Math.max(S.hull || 0, S.wins >= 15 ? 2 : S.wins >= 5 ? 1 : 0);
+  S.gems = gems() + Object.values(S.g).reduce((a, p) => a + (p.sagaFinal ? 5 : 0) + Object.values(p.isl || {}).reduce((b, i) => b + (i.node > CHEST ? 1 : 0) + (i.node > BOSS ? 2 : 0), 0), 0);
+  S.econ = 1; save();
+}
 const nodeDiff = (n, fails) => Math.max(1, Math.ceil(n / 2) - (fails >= 2 ? 1 : 0));
 
 /* ================= Générateurs (niveaux 1 à 5) ================= */
@@ -3908,13 +3922,13 @@ function questEv(ev, x) {
   Q.list.forEach(q => { if (q.done || (q.id === 'isle' ? ev !== 'win' || x !== q.isl : ev !== q.id)) return;
     q.n = Math.min(QUESTS[q.id].goal, q.n + 1);
     if (q.n >= QUESTS[q.id].goal) { q.done = true; S.gold += 60; out.push({ img: 'poster-blank', b: 'Quête accomplie : +60 doublons', s: QUESTS[q.id].t(q), tag: 'Quête' }); } });
-  if (!Q.bonus && Q.list.every(q => q.done)) { Q.bonus = true; S.gold += 150; out.push({ img: 'chest-open', b: 'Coffre de la semaine : +150 doublons', s: 'Les trois quêtes sont accomplies !', tag: 'Quête' }); }
+  if (!Q.bonus && Q.list.every(q => q.done)) { Q.bonus = true; S.gold += 150; S.gems = gems() + 1; out.push({ img: 'chest-open', b: 'Coffre de la semaine : +150 doublons', s: 'Les trois quêtes sont accomplies ! Et une pierre précieuse pour ton port.', tag: 'Quête' }); }
   if (out.length) { save(); if (R) R.qrw = (R.qrw || []).concat(out); }
   return out;
 }
 function questsHTML() {
   const Q = quests(), left = 7 - (new Date().getDay() + 6) % 7, nd = Q.list.filter(q => q.done).length;
-  return `<section class="jsec"><h2>Quêtes de la semaine</h2><p class="sub" style="margin:0 0 10px">Encore ${left} jour${left > 1 ? 's' : ''}. Chaque quête rapporte 60 doublons ; les trois ensemble ouvrent le coffre de la semaine.</p>
+  return `<section class="jsec"><h2>Quêtes de la semaine</h2><p class="sub" style="margin:0 0 10px">Encore ${left} jour${left > 1 ? 's' : ''}. Chaque quête rapporte 60 doublons ; les trois ensemble ouvrent le coffre de la semaine (150 doublons et une pierre précieuse).</p>
     ${Q.list.map(q => { const g = QUESTS[q.id].goal; return `<div class="quest${q.done ? ' done' : ''}"><div class="qi">${q.done ? '✓' : `${q.n}/${g}`}</div><div class="qt"><b>${QUESTS[q.id].t(q)}</b><div class="skbar"><i style="width:${Math.round(q.n / g * 100)}%"></i></div></div></div>`; }).join('')}
     <div class="quest bonus${Q.bonus ? ' done' : ''}"><img src="${IMG(Q.bonus ? 'chest-open' : 'chest-closed')}" alt=""><div class="qt"><b>Coffre de la semaine · +150</b><small>${Q.bonus ? 'Ouvert ! De nouvelles quêtes arrivent lundi.' : `${nd} quête${nd > 1 ? 's' : ''} accomplie${nd > 1 ? 's' : ''} sur 3`}</small></div></div></section>`;
 }
@@ -3972,10 +3986,10 @@ function openSaga(id) {
 }
 
 /* ================= Plan du navire ================= */
-// Le navire se construit toute la saison : coque (victoires), voiles, figures de proue, canons, ancre, chaloupe, lanternes (doublons)
+// Le navire se construit toute la saison : coque (étoiles des îles), voiles, figures de proue, canons, ancre, chaloupe, lanternes (doublons)
 function shipPlan() {
   const nx = SHIPS[shipLv() + 1], parts = [
-    ['Coque', shipLv() + 1, 3, nx ? `${SHIPS[shipLv()][2]} · ${nx[2]} à ${nx[0]} victoires` : 'galion, le plus grand navire'],
+    ['Coque', shipLv() + 1, 3, nx ? `${SHIPS[shipLv()][2]} · ${nx[2]} à ${nx[0]} étoiles` : 'galion, le plus grand navire'],
     ['Voiles', S.paints.length, PAINTS.length, 'nouvelles couleurs'], ...[['Figures de proue', ['fig'], 'dragon, sirène, aigle, licorne, kraken'], ['Canons', ['canon'], 'doré, d’argent'],
     ['Ancre et chaloupe', ['ancre', 'chaloupe'], ''], ['Lanternes', ['lamp'], 'dorées, émeraude, de lune']].map(([n, gs, d]) => { const all = GEAR.filter(g => gs.includes(g[4])); return [n, all.filter(g => S.gear.includes(g[0])).length, all.length, d]; })];
   const have = parts.reduce((a, x) => a + x[1], 0), tot = parts.reduce((a, x) => a + x[2], 0), pct = Math.round(have / tot * 100);
@@ -4528,26 +4542,31 @@ function endEscale() {
   S.rounds++; const rewards = [];
   if (R.used.calmar) { S.gold += R.gold; rewards.push({ img: 'crew-calmar', b: `Double butin : +${R.gold}`, s: 'Pouvoir du Calmar Calcul', tag: 'Pouvoir' }); R.gold *= 2; }
   if (win) {
-    const lvBefore = shipLv(); S.wins++; P().wins[R.i.sea] = SW(R.i.sea) + 1; s.fails = 0; s.stars[R.node] = Math.max(s.stars[R.node] || 0, stars);
-    const bonus = stars * 10 + (R.boss ? (has('pieuvre') ? 300 : 150) : 0) + (has('croco') ? 10 : 0); S.gold += bonus; R.gold += bonus;
+    const lvBefore = shipLv(), first = R.node === s.node, prime = R.boss && first ? (has('pieuvre') ? 300 : 150) : 0; let gemN = 0, gemWhy = [];
+    S.wins++; P().wins[R.i.sea] = SW(R.i.sea) + 1; s.fails = 0; s.stars[R.node] = Math.max(s.stars[R.node] || 0, stars);
+    const bonus = stars * 10 + prime + (has('croco') ? 10 : 0); S.gold += bonus; R.gold += bonus;
     if (has('croco')) rewards.push({ img: 'crew-croco', b: 'Croco Comparo : +10 doublons', s: 'Son pouvoir à chaque victoire', tag: 'Pouvoir' });
     if (has('poisson') && R.ok === R.n - 1) rewards.push({ img: 'crew-poisson', b: 'Étoile bonus du Poisson Fraction', s: '5 sur 6 compte comme un sans-faute', tag: 'Pouvoir' });
-    if (R.boss && has('pieuvre')) rewards.push({ img: 'crew-pieuvre', b: 'Prime doublée par la Pieuvre', s: '+300 au lieu de +150', tag: 'Pouvoir' });
+    if (prime && has('pieuvre')) rewards.push({ img: 'crew-pieuvre', b: 'Prime doublée par la Pieuvre', s: '+300 au lieu de +150', tag: 'Pouvoir' });
     if (shipLv() > lvBefore) rewards.push({ img: shipImg(), b: `Ton navire devient un ${SHIPS[shipLv()][2]} !`, s: 'Le Fier Calcul s’agrandit', tag: 'Navire' });
     const join = id => { if (id && !has(id)) { S.crew.push(id); const c = CREW.find(c => c.id === id); rewards.push({ img: 'crew-' + id, b: `${c.n} rejoint l’équipage`, s: c.p, tag: c.r }); } };
     if (R.node === s.node) { s.node++; if (s.node > NODES) rewards.push({ img: R.i.img, b: 'Île terminée !', s: 'Tu as conquis toute la route', tag: 'Route' }); else rewards.push({ img: s.node === CHEST ? 'chest-closed' : s.node === BOSS ? R.i.boss.img : R.i.img, b: s.node > NODES ? 'Île terminée !' : `Niveau ${s.node} débloqué`, s: s.node === BOSS ? 'Le boss t’attend' : s.node === CHEST ? 'Le coffre de l’île' : `Difficulté ${nodeDiff(s.node, 0)} sur 5`, tag: 'Route' }); }
     if (R.node === CHEST) {
-      S.gold += 80; R.gold += 80; rewards.push({ img: 'chest-open', b: 'Coffre de l’île : +80', s: 'Trésor caché du niveau 5', tag: 'Coffre' });
+      S.gold += 80; R.gold += 80; rewards.push({ img: 'chest-open', b: 'Coffre de l’île : +80', s: 'Trésor caché du niveau 5', tag: 'Coffre' });
+      if (first) { gemN += 1; gemWhy.push('dans le coffre'); }
       join(R.i.chestCrew);
     }
-    if (R.boss) { rewards.push({ img: R.i.boss.img, b: `${R.i.boss.n} est vaincu !`, s: `Prime de boss : +${has('pieuvre') ? 300 : 150} doublons`, tag: 'Boss' }); join(R.i.id === 'canons' ? 'requin' : 'pieuvre'); }
+    // La prime et les pierres du boss ne se gagnent qu'à la première victoire ; rejouer le boss reste un bon entraînement
+    if (R.boss) { rewards.push({ img: R.i.boss.img, b: `${R.i.boss.n} est ${first ? 'vaincu' : 'encore vaincu'} !`, s: first ? `Prime de boss : +${prime} doublons` : 'Sa prime a déjà été versée : bel entraînement !', tag: 'Boss' }); join(R.i.id === 'canons' ? 'requin' : 'pieuvre');
+      if (first) { gemN += 2; gemWhy.push('sur le boss'); } }
     join('crabe');
     if (R.ok === R.n) grantEp(R.i.ep);
     if (R.boss && R.i.id === 'canons') grantEp('Vainqueur du Kraken');
     questEv('win', R.i.id); if (R.ok === R.n) questEv('perfect');
     if (R.node === CHEST) { const c = SAGA.find(x => x.id === R.i.id); if (c) rewards.push({ img: 'deco-compass', b: typo(`Nouveau chapitre : « ${c.t} »`), s: typo('Un morceau de la carte au trésor ! Lis la suite dans ton journal.'), tag: 'Histoire', saga: c.id });
-      if (sagaIsles().every(i => IS(i.id).node > CHEST || i.id === R.i.id && s.node > CHEST) && !P().sagaFinal) { P().sagaFinal = 1; S.gold += 500; R.gold += 500; grantEp('Chasseur de Trésor'); rewards.push({ img: 'chest-open', b: 'Les douze morceaux sont réunis : +500 !', s: 'Lis le chapitre final dans ton journal', tag: 'Histoire', saga: 'final' }); } }
+      if (sagaIsles().every(i => IS(i.id).node > CHEST || i.id === R.i.id && s.node > CHEST) && !P().sagaFinal) { P().sagaFinal = 1; S.gold += 500; R.gold += 500; gemN += 5; gemWhy.push('à la fin de l’histoire'); grantEp('Chasseur de Trésor'); rewards.push({ img: 'chest-open', b: 'Les douze morceaux sont réunis : +500 !', s: 'Lis le chapitre final dans ton journal', tag: 'Histoire', saga: 'final' }); } }
     ISLES.forEach(i => { if (i.unlock && !i.soon && i.sea === R.i.sea && SW(i.sea) === i.unlock) rewards.push({ img: i.img, b: `${i.n} sort du brouillard`, s: `Nouvelle île : ${i.notion}`, tag: 'Carte' }); });
+    if (gemN) { S.gems = gems() + gemN; rewards.push({ img: 'gem', b: `+${gemTxt(gemN)}`, s: `Gagnée${gemN > 1 ? 's' : ''} ${gemWhy.join(' et ')} · pour bâtir ton port`, tag: 'Trésor' }); }
   } else { s.fails++; }
   if (R.newEp) rewards.push({ img: capt(), b: `Nouveau surnom : « ${R.newEp} »`, s: 'À afficher sur ton avis de recherche', tag: 'Surnom' });
   const rankUp = rankIdx(S.gold) > rankIdx(R.goldBefore) ? RANKS[rankIdx(S.gold)][1] : null;
@@ -4626,7 +4645,7 @@ function yardHTML() {
 function renderCrew() {
   app.innerHTML = `<div class="screen" style="background:radial-gradient(ellipse at 50% 0%,#16384a,#0b2230 60%)">${hudHTML()}<div class="tabpage">
     <div class="showship"><img class="bg" src="${IMG('bg-sea-golden')}" alt="">${shipArt('sh')}${flagHTML(S.flag, 'mini')}</div>
-    <div class="shipcap"><div class="smallcaps" style="color:#ffd9a0">Ton navire · ${SHIPS[shipLv()][2]}</div><div class="disp">Le Fier Calcul</div>${(() => { const nx = SHIPS[shipLv() + 1]; if (!nx) return '<div class="nx">Le plus grand navire de l’archipel !</div>'; const from = SHIPS[shipLv()][0], left = nx[0] - S.wins; return `<div class="nx">Encore ${left} victoire${left > 1 ? 's' : ''} pour le ${nx[2]}</div><div class="bar"><i style="width:${Math.round((S.wins - from) / (nx[0] - from) * 100)}%"></i></div>`; })()}</div>
+    <div class="shipcap"><div class="smallcaps" style="color:#ffd9a0">Ton navire · ${SHIPS[shipLv()][2]}</div><div class="disp">Le Fier Calcul</div>${(() => { const nx = SHIPS[shipLv() + 1]; if (!nx) return '<div class="nx">Le plus grand navire de l’archipel !</div>'; const from = SHIPS[shipLv()][0], st = starTotal(), left = Math.max(1, nx[0] - st); return `<div class="nx">Encore ${left} étoile${left > 1 ? 's' : ''} pour le ${nx[2]}</div><div class="bar"><i style="width:${Math.max(0, Math.min(100, Math.round((st - from) / (nx[0] - from) * 100)))}%"></i></div>`; })()}</div>
     ${yardHTML()}
     <h1>Équipage</h1><p class="sub">${S.crew.length} équipier${S.crew.length > 1 ? 's' : ''} sur 12. Chacun apporte un pouvoir pendant les escales.</p>
     <div class="crew-grid">${CREW.map(c => S.crew.includes(c.id)
@@ -4672,15 +4691,15 @@ function renderHarbor(fresh) {
   const n = portBuilt();
   app.innerHTML = `<div class="screen harbor"><img class="hbsea" src="${IMG('port-base')}" alt="">${hudHTML()}
     <div class="hbwrap"><div class="hb"><div class="hbi">${S.port.map((b, i) => b && BLDS.some(x => x[0] === b) ? bldHTML(b, i, fresh === i) : `<button class="plot free" data-a="plot" data-p="${i}" style="left:${f2(PLOTS[i][0] / 10.24)}%;top:${f2(PLOTS[i][1] / 15.36)}%" aria-label="Parcelle libre ${i + 1} : construire"><i>+</i></button>`).join('')}</div></div></div>
-    <div class="hbcap glass"><div><div class="smallcaps">Ton port d’attache</div><b>${n === 6 ? 'Le plus beau port de l’archipel !' : n ? `${n} parcelle${n > 1 ? 's' : ''} construite${n > 1 ? 's' : ''} sur 6` : 'Touche une parcelle pour construire'}</b></div><button class="ghost-btn" data-a="home">Carte</button></div>${dockHTML()}</div>`;
+    <div class="hbcap glass"><div><div class="smallcaps">Ton port d’attache · <span class="gemc"><img src="${IMG('gem')}" alt="">${gems()}</span></div><b>${n === 6 ? 'Le plus beau port de l’archipel !' : n ? `${n} parcelle${n > 1 ? 's' : ''} construite${n > 1 ? 's' : ''} sur 6` : 'Touche une parcelle pour construire'}</b></div><button class="ghost-btn" data-a="home">Carte</button></div>${dockHTML()}</div>`;
   bindCog();
 }
 function plotSheet(i) {
   const cur = S.port[i], m = document.createElement('div'); m.className = 'modal bsheet';
   m.innerHTML = `<div class="box paper" role="dialog" aria-label="Construire"><div class="disp" style="font-size:24px">${cur ? 'Changer de bâtiment' : 'Construire ici'}</div>
-    <p style="margin:0;color:var(--ink-2);font-size:15px">Ton trésor : <b style="color:var(--ink)">${fmt(wallet())} doublons</b>. Un bâtiment déjà construit peut changer de parcelle.</p>
-    <div class="bgrid">${BLDS.map(([id, n, price]) => { const own = portOwned().includes(id), at = S.port.indexOf(id), here = at === i, can = own || wallet() >= price;
-      return `<button class="bopt${here ? ' on' : ''}${can ? '' : ' cant'}" data-a="build" data-b="${id}" data-p="${i}" ${here ? 'disabled' : ''}><img src="${IMG('bld-' + id)}" alt=""><b>${n}</b><span>${here ? 'Ici' : at >= 0 ? 'Déplacer ici' : own ? 'Construire' : `<img src="${IMG('coin-doublon')}" alt="">${fmt(price)}`}</span></button>`; }).join('')}</div>
+    <p style="margin:0;color:var(--ink-2);font-size:15px">Tu as <b style="color:var(--ink)">${gemTxt(gems())}</b>. On en trouve dans les coffres et sur les boss des îles. Un bâtiment déjà construit peut changer de parcelle.</p>
+    <div class="bgrid">${BLDS.map(([id, n, price]) => { const own = portOwned().includes(id), at = S.port.indexOf(id), here = at === i, can = own || gems() >= price;
+      return `<button class="bopt${here ? ' on' : ''}${can ? '' : ' cant'}" data-a="build" data-b="${id}" data-p="${i}" ${here ? 'disabled' : ''}><img src="${IMG('bld-' + id)}" alt=""><b>${n}</b><span>${here ? 'Ici' : at >= 0 ? 'Déplacer ici' : own ? 'Construire' : `<img src="${IMG('gem')}" alt="">${price}`}</span></button>`; }).join('')}</div>
     ${cur ? `<button class="ghost-btn dark" data-a="unbuild" data-p="${i}">Ranger dans la réserve</button>` : ''}<button class="brass-btn" data-a="bclose">Fermer</button></div>`;
   app.appendChild(m);
 }
@@ -4855,8 +4874,8 @@ app.addEventListener('click', e => {
     case 'bclose': { const m = $('.bsheet'); m && m.remove(); break; }
     case 'unbuild': { const i = +el.dataset.p; if (!(i >= 0 && i < 6)) break; S.port[i] = ''; save(); SND.tap(); renderHarbor(); break; }
     case 'build': { const B = BLDS.find(x => x[0] === el.dataset.b), i = +el.dataset.p; if (!B || !(i >= 0 && i < 6)) break; const id = B[0];
-      if (!portOwned().includes(id)) { if (wallet() < B[2]) { toast(`Il te manque ${fmt(B[2] - wallet())} doublons.`); break; }
-        S.spent += B[2]; S.blds.push(id); sfx('coins') || SND.coin(); toast(`${B[1]} : construit !`); } else SND.tap();
+      if (!portOwned().includes(id)) { if (gems() < B[2]) { toast(`Il te manque ${gemTxt(B[2] - gems())}. Cherche-les dans les coffres et sur les boss des îles.`); break; }
+        S.gems = gems() - B[2]; S.blds.push(id); sfx('coins') || SND.coin(); toast(`${B[1]} : construit !`); } else SND.tap();
       S.port = S.port.map(b => b === id ? '' : b); S.port[i] = id; if (portBuilt() === 6) grantEp('Gouverneur du Port'); save(); renderHarbor(i); break; }
     case 'lair': SND.tap(); toast(IS('canons').node > BOSS ? 'Le repaire du Kraken. Tu l’as vaincu, capitaine !' : 'Une île mystérieuse se cache dans le brouillard… Bats le boss de l’Île des Canons pour la découvrir.'); break;
     case 'paint': { const pt = PAINTS.find(x => x[0] === el.dataset.p); if (!pt) break;
@@ -5174,7 +5193,7 @@ function titleScreen() {
   let done = 0; list.forEach(n => { const im = new Image(); im.onload = im.onerror = () => { done++; const b = $('#tload'); if (b) b.style.width = Math.round(done / list.length * 100) + '%'; if (done === list.length) { const c = $('#tcomp'); c && c.classList.add('done'); } }; im.src = IMG(n); });
   ac();
 }
-if (ADMIN) { S.intro = true; if (!S.grade) setGrade('ce2'); if (!S.name) S.name = 'Admin'; S.crew = CREW.map(c => c.id); S.gold = Math.max(S.gold, 99999); S.wins = Math.max(S.wins, 30); save(); }
+if (ADMIN) { S.intro = true; if (!S.grade) setGrade('ce2'); if (!S.name) S.name = 'Admin'; S.crew = CREW.map(c => c.id); S.gold = Math.max(S.gold, 99999); S.wins = Math.max(S.wins, 30); S.gems = Math.max(gems(), 99); save(); }
 renderMap = after(renderMap, 'map'); renderIsle = after(renderIsle, 'isle'); renderResult = after(renderResult, 'result'); renderPort = after(renderPort, 'port');
 renderJournal = after(renderJournal, 'crew'); renderCrew = after(renderCrew, 'crew'); renderPrime = after(renderPrime, 'prime'); renderGame = after(renderGame, 'game'); titleScreen = after(titleScreen, 'title');
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
