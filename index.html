@@ -623,7 +623,12 @@ textarea.fld{min-height:76px}
 .g-scene.storm::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:#eef2ff;opacity:0;animation:flash 7s ease-out infinite 2s}
 @keyframes rain{to{background-position:-18px 60px}}
 @keyframes flash{0%,93%,100%{opacity:0}94%{opacity:.35}95.5%{opacity:.05}97%{opacity:.25}}
-.home-port .land{width:180px;top:46%}
+.coast{position:absolute;left:0;width:100%;pointer-events:none;background:linear-gradient(transparent calc(var(--ch) * 1.3),#7a6338 calc(var(--ch) * 1.3))}
+.coast img{position:absolute;left:0;top:0;width:100%;height:var(--ch);display:block}
+.coast img.flip{top:var(--ch);transform:scaleY(-1)}
+.coastport{position:absolute;display:block;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.coastport .lbl{position:absolute;left:-60%;top:38%;transform:translate(-50%,-50%);white-space:nowrap} /* sur l'eau, à gauche de la jetée : loin de l'étiquette de la première île */
+.coastport .lbl b{display:block;font-size:16px;color:#fffaf0;text-shadow:0 1px 2px rgba(0,0,0,.8),0 0 14px rgba(0,0,0,.55)}
 .lair{position:absolute;z-index:1;width:190px;height:200px;transform:translate(-50%,-50%);display:block}
 .lair img{width:100%;filter:brightness(.25) saturate(.2) blur(1.5px);opacity:.7}
 .lair.won img{filter:drop-shadow(0 10px 8px rgba(4,18,26,.45));opacity:1}
@@ -728,7 +733,7 @@ textarea.fld{min-height:76px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 .gradeb{flex:none;padding:1px 6px;border-radius:6px;background:var(--brass-hi);color:#2a1a07;font:800 10.5px/1.4 var(--f-u);letter-spacing:.06em}
 /* Police pirate (vieux livre de bord) pour les titres et les noms ; les chiffres des calculs, les touches et les réponses gardent Fraunces et Lexend, plus lisibles */
-.disp,.tlogo .disp,.isle .lbl b,.lair .lbl,.tide h2,.rlab b,.burst .w,.sheet-err h3,.tabpage h1,.crew-card b,.poster .t1,.poster .nm,.trophy .tt b,.yh,.yard h2,.hud .nm,.shipcap .disp{font-family:var(--f-p);font-weight:400;font-variation-settings:normal;font-synthesis:none;letter-spacing:.01em}
+.disp,.tlogo .disp,.isle .lbl b,.coastport .lbl b,.lair .lbl,.tide h2,.rlab b,.burst .w,.sheet-err h3,.tabpage h1,.crew-card b,.poster .t1,.poster .nm,.trophy .tt b,.yh,.yard h2,.hud .nm,.shipcap .disp{font-family:var(--f-p);font-weight:400;font-variation-settings:normal;font-synthesis:none;letter-spacing:.01em}
 .tlogo .disp{font-size:clamp(46px,13vw,74px);line-height:.98}
 .result .head .disp{font-size:33px}.tide h2{font-size:24px}.isle .lbl b{font-size:18px}.hud .nm{font-size:19px}
 
@@ -922,8 +927,8 @@ textarea.fld{min-height:76px}
 .bopt span{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:4px}.bopt span img{width:16px;height:16px}
 .bopt.on{box-shadow:inset 0 0 0 2.5px var(--brass);background:rgba(243,213,140,.25)}
 .bopt.cant{opacity:.5}
-.home-port.phare::after{content:"";position:absolute;left:58%;top:18%;width:70px;height:70px;margin:-35px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95) 0 10%,rgba(255,210,120,.5) 35%,transparent 70%);mix-blend-mode:screen;animation:lampf 2.2s ease-in-out infinite;pointer-events:none}
-@media (prefers-reduced-motion:reduce){.plot.free,.home-port.phare::after,.plot.built.fresh{animation:none}}
+.coastport.phare::after{content:"";position:absolute;left:75%;top:12%;width:70px;height:70px;margin:-35px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,180,.95) 0 10%,rgba(255,210,120,.5) 35%,transparent 70%);mix-blend-mode:screen;animation:lampf 2.2s ease-in-out infinite;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.plot.free,.coastport.phare::after,.plot.built.fresh{animation:none}}
 .why .diag{display:block;margin:0 0 8px;padding:8px 10px;border-radius:12px;background:rgba(184,56,42,.08);box-shadow:inset 3px 0 0 var(--wax-hi);color:var(--ink)}
 /* ---------- 1.5 : océan WebGL, îles sous l'orage, voiles flous, boutons, mouettes ---------- */
 .sea-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -4989,7 +4994,9 @@ function renderMap() {
   const cur = tc && tc.sea === S.sea ? tc : sea.filter(unlocked).sort((a, b) => prog(IS(a.id)) - prog(IS(b.id)))[0] || sea[0];
   const W = Math.min(app.clientWidth, 560);
   const px = i => i.x / 100 * W;
-  const PORT = { x: 66, y: 1700 }, path = `M${px(PORT).toFixed(0)},${PORT.y} ` + sea.map(i => `L${px(i).toFixed(0)},${i.y}`).join(' ');
+  // Côte du port : bas de la ville juste au-dessus du panneau de la marée (~250 px au bas de l'écran) ; la route part du bout de la jetée
+  const CW = app.clientWidth || W, CH = Math.round(CW * 2 / 3), CT = Math.round(Math.max(1480, 1750 - CH * .72));
+  const PORT = { x: 62, y: Math.round(CT + CH * .34) }, path = `M${px(PORT).toFixed(0)},${PORT.y} ` + sea.map(i => `L${px(i).toFixed(0)},${i.y}`).join(' ');
   const krak = bossDone(IS('canons'));
   const isleHTML = sea.map(i => {
     const s = IS(i.id), lk = !unlocked(i), isCur = i === cur;
@@ -5004,8 +5011,8 @@ function renderMap() {
     <div class="map-scroll" id="mapScroll"><div class="map sea-${S.sea}">
       <div class="ocean"></div><div class="glints"></div>
       <svg class="route" viewBox="0 0 ${W} 2000" preserveAspectRatio="none"><path d="${path}" fill="none" stroke="#f4e8cc" stroke-opacity=".55" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/></svg>
-      <img class="mapcomp" src="${IMG('deco-compass')}" alt="" style="left:${W * .2}px;top:1850px">
-      <button class="isle home-port${S.port.includes('phare') ? ' phare' : ''}" style="left:${px(PORT)}px;top:${PORT.y}px" data-a="portisle" aria-label="Port d’attache"><img class="land" src="${IMG('isle-port')}" alt=""><span class="lbl"><b>Port d’attache</b></span></button>
+      <div class="coast" style="top:${CT}px;height:${2000 - CT}px;--ch:${CH}px" aria-hidden="true"><img src="${IMG('port-coast')}" alt=""><img class="flip" src="${IMG('port-coast')}" alt=""></div>
+      <button class="coastport${S.port.includes('phare') ? ' phare' : ''}" style="left:${Math.round(CW * .6)}px;top:${Math.round(CT + CH * .26)}px;width:${Math.round(CW * .4)}px;height:${Math.round(CH * .48)}px" data-a="portisle" aria-label="Port d’attache"><span class="lbl"><b>Port d’attache</b></span></button>
       <button class="lair${krak ? ' won' : ''}" style="left:${W * .76}px;top:96px" data-a="lair" aria-label="${krak ? 'Repaire du Kraken' : 'Une île cachée dans le brouillard'}"><img src="${IMG('isle-kraken')}" alt="">${krak ? '<span class="lbl"><b>Repaire du Kraken</b></span>' : ''}</button>
       <img class="fogpatch" src="${IMG('fx-fog-a')}" alt="" style="left:${W * .3}px;top:200px;width:420px"><img class="fogpatch fb" src="${IMG('fx-fog-b')}" alt="" style="left:${W * .75}px;top:${krak ? 40 : 120}px;width:${krak ? 300 : 440}px">
       <div class="mers" style="top:24px">Mers inexplorées</div>
@@ -5140,7 +5147,7 @@ function nextQ() {
 }
 // Recadrage horizontal des décors d'île : dans un écran en hauteur, on ne voit qu'environ la moitié de l'image.
 // Ces valeurs gardent le sujet (fort, forge, grotte…) dans le cadre plutôt que le centre de l'image.
-const HERO_X = { culture: 70, anglais: 75, formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
+const HERO_X = { culture: 58, anglais: 75, formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
 function sceneHTML() {
   const { i, boss } = R;
   if (i.v) return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="">${i.id === 'mix' ? shipArt('ship me sail', 'role="img" aria-label="Ton navire"') : `<img class="guidefig" src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise">`}<div class="waves"></div>${powersHTML()}</div>`;
@@ -6202,7 +6209,7 @@ function titleScreen() {
   app.innerHTML = `<div class="screen title${many ? ' who' : ''}" ${many ? '' : 'data-a="start" role="button" tabindex="0" aria-label="Toucher pour embarquer"'}><img class="bg" src="${IMG('bg-title')}" alt="">
     <div class="tlogo"><div class="smallcaps">L’école pirate</div><div class="disp">Moussaillon</div></div>
     <div class="tgo">${many ? `<div class="whob glass"><b>Qui joue ?</b><div class="whol">${PROFS.list.map(x => `<button data-a="who" data-p="${x.id}"><img src="${IMG('capt-' + (AVATARS.includes(x.avatar) ? x.avatar : 'a'))}" alt=""><span>${esc(profName(x))}</span>${x.grade && GRADES[x.grade] ? `<small>${GRADES[x.grade].n}</small>` : ''}</button>`).join('')}</div></div>` : '<span>Touche pour embarquer</span>'}<div class="trow" aria-hidden="true"><img class="tcomp" id="tcomp" src="${IMG('deco-compass')}" alt=""><div class="tload"><i id="tload"></i></div></div></div><div class="vers2">v${VERSION.split(' ')[0]}${ADMIN ? ' · admin' : ''}</div></div>`;
-  const list = ['tex-sea', 'lagoon-round', 'lagoon-oval', 'lagoon-rocks', 'fx-fog-a', 'fx-fog-b', 'isle-port', 'isle-kraken', 'deco-compass', 'ship-player-top', capt(), 'coin-doublon', 'tex-parchment', 'guide-capitaine', ...ISLES.filter(i => !i.soon).map(i => i.img), 'crew-perroquet'];
+  const list = ['tex-sea', 'lagoon-round', 'lagoon-oval', 'lagoon-rocks', 'fx-fog-a', 'fx-fog-b', 'port-coast', 'isle-kraken', 'deco-compass', 'ship-player-top', capt(), 'coin-doublon', 'tex-parchment', 'guide-capitaine', ...ISLES.filter(i => !i.soon).map(i => i.img), 'crew-perroquet'];
   let done = 0; list.forEach(n => { const im = new Image(); im.onload = im.onerror = () => { done++; const b = $('#tload'); if (b) b.style.width = Math.round(done / list.length * 100) + '%'; if (done === list.length) { const c = $('#tcomp'); c && c.classList.add('done'); } }; im.src = IMG(n); });
   ac();
 }
