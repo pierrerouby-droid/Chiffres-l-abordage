@@ -1376,6 +1376,8 @@ const ISYM = {
   conjug: b => `<path fill="${b}" d="M12 30h58c0 11 9 16 20 16-4 7-15 9-26 9l-5 11h9v14H31V66h9l-5-11C22 55 12 46 12 30z"/>`,
   gram: (b, d) => `<path fill="${b}" d="M12 50c15-19 42-23 61-6l14-11v34L73 56C54 73 27 69 12 50z"/><circle cx="31" cy="46" r="4.5" fill="${d}"/>`,
   accords: b => `<path fill="${b}" d="M6 40h88v10h-7v30H73V64c0-13-10-23-23-23S27 51 27 64v16H13V50H6z"/>`,
+  anglais: (b, d) => `<path fill="${b}" d="M16 18h68a9 9 0 0 1 9 9v36a9 9 0 0 1-9 9H46L26 88V72H16a9 9 0 0 1-9-9V27a9 9 0 0 1 9-9z"/><text x="50" y="56" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="28" fill="${d}">Hi!</text>`,
+  culture: (b, d) => `<circle cx="50" cy="50" r="35" fill="${b}"/><g fill="none" stroke="${d}" stroke-width="3.5"><ellipse cx="50" cy="50" rx="15" ry="35"/><path d="M15 50h70M22 31h56M22 69h56"/></g>`,
   vocab: b => `<text x="50" y="66" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="48" fill="${b}">Aa</text>` };
 const isleFlags = () => ISLES.filter(i => ISYM[i.id] && Object.values(S.g).some(p => ((p.isl || {})[i.id] || {}).rank >= 3)).map(i => ['i-' + i.id, `Pavillon ${deArt(i.art)}`]);
 const allFlags = () => [...FLAGS, ...isleFlags()];
@@ -1397,7 +1399,7 @@ const EPITHETS = [ // [surnom, comment le gagner, île : masqué tant que l'île
   ['Calcul-Éclair', '5 bonnes réponses de suite en moins de 5 s'], ['Canonnier d’Élite', '6 sur 6 à l’Île des Canons'], ['Tête Froide', '6 sur 6 au Stade des Vagues'],
   ['Bâtisseur', '6 sur 6 à la Mine aux Blocs'], ['Œil-de-Lynx', '6 sur 6 dans la Jungle'], ['Main-d’Or', '6 sur 6 au Marché du Port'], ['Fine Lame', '6 sur 6 à la Cuisine'], ['Vainqueur du Kraken', 'Bats le boss de l’Île des Canons'], ['Maître du Temps', '6 sur 6 à l’Île de l’Horloge', 'horloge'], ['Grand Géomètre', '6 sur 6 à l’Île des Formes', 'formes'],
   ['Chasseur de Trésor', 'Retrouve les douze morceaux de la carte'], ['Maître Charpentier', 'Termine le plan de ton navire'], ['Gouverneur du Port', 'Construis les six parcelles de ton port d’attache'],
-  ['Grand Liseur', '6 sur 6 à la Grotte aux Histoires', 'lecture'], ['Globe-Trotter', '6 sur 6 à l’Île des Perroquets', 'anglais'], ['Maître des Verbes', '6 sur 6 à la Forge des Verbes', 'conjug'], ['Chef de Phrase', '6 sur 6 au Récif des Phrases', 'gram'], ['Gardien des Accords', '6 sur 6 au Pont des Accords', 'accords'], ['Mille-Mots', '6 sur 6 à la Baie des Mots', 'vocab'],
+  ['Grand Liseur', '6 sur 6 à la Grotte aux Histoires', 'lecture'], ['Globe-Trotter', '6 sur 6 à l’Île des Perroquets', 'anglais'], ['Puits de Science', '6 sur 6 à l’Île des Curiosités', 'culture'], ['Maître des Verbes', '6 sur 6 à la Forge des Verbes', 'conjug'], ['Chef de Phrase', '6 sur 6 au Récif des Phrases', 'gram'], ['Gardien des Accords', '6 sur 6 au Pont des Accords', 'accords'], ['Mille-Mots', '6 sur 6 à la Baie des Mots', 'vocab'],
 ];
 const ISLES = [
   { id: 'canons', sea: 'm', cm1: 'Tables, multiples et divisions', hero: 'hero-canons', boss: { img: 'boss-kraken', n: 'Le Kraken des Tables' }, chestCrew: 'tortue', art: 'l’Île des Canons', n: 'Île des Canons', notion: 'Tables de multiplication', img: 'isle-canons', lag: 'lagoon-round', x: 28, y: 1450, gen: genCanon, ep: 'Canonnier d’Élite', unlock: 0, sfx: ['BOUM !', 'TOUCHÉ !', 'EN PLEIN DANS LE MILLE !'] },
@@ -1414,16 +1416,18 @@ const ISLES = [
   { id: 'conjug', sea: 'f', hero: 'hero-conjug', boss: { img: 'boss-conjug', n: 'Le Forgeron des Temps' }, chestCrew: null, art: 'la Forge des Verbes', n: 'Forge des Verbes', notion: 'Conjugaison', img: 'isle-conjug', lag: 'lagoon-oval', x: 72, y: 1230, gen: genConjug, ep: 'Maître des Verbes', unlock: 0, sfx: ['BIEN FORGÉ !', 'VERBE PARFAIT !'] },
   // Île des Perroquets : anglais du CE2 au CM2 (2.4 ; images provisoires en attendant le lot 9)
   { id: 'anglais', sea: 'f', only: ['ce2', 'cm1', 'cm2'], cm1: 'Anglais : nombres, dates et petits échanges', hero: 'hero-anglais', boss: { img: 'boss-anglais', n: 'Le Capitaine Ara' }, chestCrew: null, art: 'l’Île des Perroquets', n: 'Île des Perroquets', notion: 'Anglais : mots, consignes et petites phrases', img: 'isle-anglais', lag: 'lagoon-oval', x: 72, y: 900, gen: genAnglais, ep: 'Globe-Trotter', unlock: 3, sfx: ['WELL DONE!', 'GREAT!', 'BRILLIANT!'] },
+  // Île des Curiosités : culture générale du CP au CM2 (2.4 ; images provisoires en attendant le lot 9)
+  { id: 'culture', sea: 'f', cm1: 'Moyen Âge, rois, explorations et sciences', hero: 'hero-culture', boss: { img: 'boss-culture', n: 'Le Sphinx des Énigmes' }, chestCrew: null, art: 'l’Île des Curiosités', n: 'Île des Curiosités', notion: 'Histoire, Terre et Lune, eau et air, la commune', img: 'isle-culture', lag: 'lagoon-round', x: 28, y: 900, gen: genCulture, ep: 'Puits de Science', unlock: 4, sfx: ['QUEL SAVOIR !', 'BIEN VU !'] },
   { id: 'gram', sea: 'f', hero: 'hero-gram', boss: { img: 'boss-gram', n: 'La Murène des Phrases' }, chestCrew: null, art: 'le Récif des Phrases', n: 'Récif des Phrases', notion: 'Grammaire', img: 'isle-gram', lag: 'lagoon-rocks', x: 28, y: 1010, gen: genGram, ep: 'Chef de Phrase', unlock: 2, sfx: ['BIEN VU !', 'PHRASE DOMPTÉE !'] },
   { id: 'accords', sea: 'f', hero: 'hero-accords', boss: { img: 'boss-accords', n: 'Le Troll du Pont' }, chestCrew: null, art: 'le Pont des Accords', n: 'Pont des Accords', notion: 'Accords et homophones', img: 'isle-accords', lag: 'lagoon-oval', x: 72, y: 790, gen: genAccords, ep: 'Gardien des Accords', unlock: 5, sfx: ['ACCORDÉ !', 'BIEN ACCORDÉ !'] },
   { id: 'vocab', sea: 'f', hero: 'hero-vocab', boss: { img: 'boss-vocab', n: 'La Baleine Dictionnaire' }, chestCrew: null, art: 'la Baie des Mots', n: 'Baie des Mots', notion: 'Vocabulaire', img: 'isle-vocab', lag: 'lagoon-round', x: 28, y: 570, gen: genVocab, ep: 'Mille-Mots', unlock: 8, sfx: ['QUEL MOT !', 'BIEN TROUVÉ !'] },
 ];
 // Notions affichées en CP (les îles restent les mêmes, le contenu change)
-const CPN = { canons: 'Additions jusqu’à 20', stade: 'Calcul mental', mine: 'Dizaines et unités', jungle: 'Droite graduée jusqu’à 100', marche: 'Pièces et billets', cuisine: 'Moitiés, doubles et problèmes', horloge: 'Jours, heures et mois',
+const CPN = { culture: 'Le temps, le monde, le vivant, le corps', canons: 'Additions jusqu’à 20', stade: 'Calcul mental', mine: 'Dizaines et unités', jungle: 'Droite graduée jusqu’à 100', marche: 'Pièces et billets', cuisine: 'Moitiés, doubles et problèmes', horloge: 'Jours, heures et mois',
   lecture: 'Lire de petites phrases', conjug: 'Sons et syllabes', gram: 'Mots et phrases', accords: 'Le, la, un, une, des', vocab: 'Mots et catégories' };
-const CE1N = { canons: 'Additions et premières tables', stade: 'Calcul mental', mine: 'Nombres jusqu’à 1 000', jungle: 'Droite graduée jusqu’à 1 000', marche: 'Euros et centimes', cuisine: 'Fractions et problèmes', horloge: 'Heures, quarts d’heure et durées', formes: 'Figures, solides et longueurs',
+const CE1N = { culture: 'Calendrier, animaux, plantes, eau et République', canons: 'Additions et premières tables', stade: 'Calcul mental', mine: 'Nombres jusqu’à 1 000', jungle: 'Droite graduée jusqu’à 1 000', marche: 'Euros et centimes', cuisine: 'Fractions et problèmes', horloge: 'Heures, quarts d’heure et durées', formes: 'Figures, solides et longueurs',
   lecture: 'Lecture et compréhension', conjug: 'Présent, futur, imparfait, passé composé', gram: 'Phrase, verbe et nom', accords: 'Pluriel, féminin et accords', vocab: 'Alphabet, familles, synonymes' };
-const CM2N = { anglais: 'Anglais : heure, chemins et dialogues', canons: 'Multiples, diviseurs et calculs', stade: 'Calcul mental et décimaux', mine: 'Grands nombres et millièmes', jungle: 'Droite graduée et fractions', marche: 'Prix et proportionnalité', cuisine: 'Fractions', horloge: 'Heures, minutes, secondes', formes: 'Géométrie, angles et aires',
+const CM2N = { culture: 'République, âge industriel, planètes et corps', anglais: 'Anglais : heure, chemins et dialogues', canons: 'Multiples, diviseurs et calculs', stade: 'Calcul mental et décimaux', mine: 'Grands nombres et millièmes', jungle: 'Droite graduée et fractions', marche: 'Prix et proportionnalité', cuisine: 'Fractions', horloge: 'Heures, minutes, secondes', formes: 'Géométrie, angles et aires',
   lecture: 'Lecture et compréhension', conjug: 'Passé simple et plus-que-parfait', gram: 'Fonctions et phrase complexe', accords: 'Accords et participe passé', vocab: 'Dictionnaire, sens et formation des mots' };
 ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; i.cm2 = CM2N[i.id]; i.x0 = i.x; i.y0 = i.y; });
 ISLES.forEach(i => EPITHETS.push([`Maître ${deArt(i.art)}`, `termine le rang or ${deArt(i.art)}`, i.id, 'm']));
@@ -1435,7 +1439,7 @@ function applyGrade() {
   const m = ISLES.filter(i => i.sea === 'm' && !i.hide);
   m.forEach((i, k) => { if (m.length > 7) { i.x = (k + 1) % 2 ? 72 : 28; i.y = 1470 - k * 188; } else { i.x = i.x0; i.y = i.y0; } });
   const f = ISLES.filter(i => i.sea === 'f' && !i.hide);
-  f.forEach((i, k) => { i.x = k % 2 ? 72 : 28; i.y = f.length > 7 ? 1470 - k * 188 : 1450 - k * 220; });
+  f.forEach((i, k) => { i.x = k % 2 ? 72 : 28; i.y = f.length > 6 ? 1470 - k * 188 : 1450 - k * 220; });
 }
 applyGrade();
 // Escales sans île : chaque question y vient d'une vraie île (escale mélangée : révisions entrelacées ; test du capitaine : placement)
@@ -3421,6 +3425,286 @@ function genAnglais(l) {
   return r < .4 ? enReadPic(more) : r < .75 ? enPicWord(more) : enComplete();
 }
 
+/* ================= Île des Curiosités : culture générale (2.4) ================= */
+// Banque vérifiée sur les programmes en vigueur en 2026-2027 : sciences et histoire-géographie 2026 (CP, CM1),
+// « Questionner le monde » et cycle 3 de 2020 (CE1, CE2, CM2), EMC 2024 (toutes les classes).
+// Chaque question : [question, bonne réponse, [deux pièges], explication]. Pas de date ni de chiffre qui change avec les années.
+const CULT = {
+  cp: [
+    [['Combien y a-t-il de jours dans une semaine ?', '7', ['5', '10'], 'Une semaine compte 7 jours : lundi, mardi, mercredi, jeudi, vendredi, samedi et dimanche.'],
+      ['Combien y a-t-il de mois dans une année ?', '12', ['7', '10'], 'Une année compte 12 mois, de janvier à décembre.'],
+      ['Quel jour vient juste après lundi ?', 'mardi', ['jeudi', 'dimanche'], 'Lundi, puis mardi, puis mercredi…'],
+      ['Quel mois vient juste après janvier ?', 'février', ['mars', 'décembre'], 'Janvier, puis février, puis mars… Décembre est le dernier mois de l’année.'],
+      ['En France métropolitaine, combien y a-t-il de saisons ?', '4', ['2', '12'], 'Il y a 4 saisons : le printemps, l’été, l’automne et l’hiver.'],
+      ['Lequel est une saison ?', 'l’automne', ['mercredi', 'juillet'], 'L’automne est une saison. Mercredi est un jour et juillet est un mois.'],
+      ['Pourquoi y a-t-il le jour et la nuit ?', 'la Terre tourne sur elle-même', ['la Lune cache le Soleil', 'le Soleil s’éteint'], 'La Terre tourne sur elle-même. Le côté tourné vers le Soleil est éclairé : il y fait jour. L’autre côté est dans la nuit.'],
+      ['Une journée entière (le jour et la nuit) dure :', '24 heures', ['12 heures', '7 heures'], 'Le jour et la nuit ensemble font 24 heures : c’est le temps que met la Terre pour faire un tour sur elle-même.'],
+      ['Quel objet mesure une durée en laissant couler du sable ?', 'le sablier', ['le thermomètre', 'la boussole'], 'Dans un sablier, le sable coule d’en haut vers en bas : quand tout est tombé, la durée est passée.'],
+      ['Hier, c’était dimanche. Aujourd’hui, c’est :', 'lundi', ['samedi', 'mardi'], 'Après dimanche vient lundi. Samedi, c’était avant-hier ; mardi, ce sera demain.']],
+    [['Quelles sont les couleurs du drapeau français ?', 'bleu, blanc, rouge', ['vert, blanc, rouge', 'bleu, jaune, rouge'], 'Le drapeau de la France est bleu, blanc, rouge : on l’appelle le drapeau tricolore.'],
+      ['Comment s’appelle l’hymne national de la France ?', 'La Marseillaise', ['Frère Jacques', 'Au clair de la lune'], 'L’hymne national, c’est le chant de la France : La Marseillaise.'],
+      ['Qu’est-ce qui couvre la plus grande partie de la Terre ?', 'les océans', ['les forêts', 'les déserts'], 'Les océans couvrent la plus grande partie de la Terre : vue de l’espace, elle paraît bleue.'],
+      ['Comment s’appelle la carte du monde dessinée à plat ?', 'un planisphère', ['un globe', 'un calendrier'], 'Le planisphère montre le monde entier à plat. Le globe, lui, est une boule.'],
+      ['Lequel est un océan ?', 'le Pacifique', ['l’Europe', 'la Seine'], 'Le Pacifique est un océan. L’Europe est un continent et la Seine est un fleuve.'],
+      ['Lequel est un continent ?', 'l’Afrique', ['l’Atlantique', 'la France'], 'L’Afrique est un continent. L’Atlantique est un océan et la France est un pays.'],
+      ['Sur quel continent se trouve la France métropolitaine ?', 'l’Europe', ['l’Asie', 'l’Océanie'], 'La France métropolitaine est en Europe.'],
+      ['Quelle est la capitale de la France ?', 'Paris', ['Lyon', 'Marseille'], 'Paris est la capitale de la France. Lyon et Marseille sont de grandes villes.'],
+      ['Quel est le plus grand océan ?', 'le Pacifique', ['l’Atlantique', 'l’océan Indien'], 'Le Pacifique est le plus grand océan du monde.'],
+      ['Quels sont les quatre points cardinaux ?', 'nord, sud, est, ouest', ['haut, bas, gauche, droite', 'printemps, été, automne, hiver'], 'Les quatre points cardinaux sont le nord, le sud, l’est et l’ouest. Ils servent à s’orienter.']],
+    [['Lequel est vivant ?', 'un escargot', ['un caillou', 'une cuillère'], 'L’escargot est vivant : il naît, se nourrit, grandit. Le caillou et la cuillère ne sont pas vivants.'],
+      ['Lequel n’est pas vivant ?', 'un caillou', ['un arbre', 'un ver de terre'], 'Le caillou n’est pas vivant. L’arbre et le ver de terre naissent, se nourrissent et grandissent.'],
+      ['Qui fabrique un nid ?', 'l’oiseau', ['le poisson', 'l’escargot'], 'L’oiseau fabrique son nid avec des brindilles, de la mousse ou de la boue.'],
+      ['Qui fabrique le miel ?', 'l’abeille', ['l’araignée', 'le papillon'], 'Les abeilles fabriquent le miel avec le nectar des fleurs.'],
+      ['La laine vient :', 'du mouton', ['de la poule', 'du poisson'], 'La laine, ce sont les poils du mouton. On la tond, puis on la file pour faire des pulls.'],
+      ['Combien de pattes a un insecte ?', '6', ['8', '4'], 'Un insecte a 6 pattes : la fourmi, l’abeille, le papillon…'],
+      ['Combien de pattes a une araignée ?', '8', ['6', '10'], 'L’araignée a 8 pattes.'],
+      ['L’araignée est-elle un insecte ?', 'non', ['oui', 'seulement quand elle est petite'], 'Non : l’araignée a 8 pattes, alors qu’un insecte en a 6.'],
+      ['Qui fabrique la toile d’araignée ?', 'l’araignée', ['la mouche', 'le papillon'], 'L’araignée fabrique sa toile avec un fil de soie qui sort de son corps.'],
+      ['Pour pousser, une plante a besoin :', 'de lumière et d’eau', ['de sable et de bonbons', 'de rester dans le noir'], 'Une plante a besoin de lumière et d’eau pour pousser.']],
+    [['Quelle articulation permet de plier le bras ?', 'le coude', ['le genou', 'la cheville'], 'Le coude est au milieu du bras : il permet de le plier.'],
+      ['Quelle articulation permet de plier la jambe ?', 'le genou', ['le coude', 'le poignet'], 'Le genou est au milieu de la jambe : il permet de la plier.'],
+      ['Quelle articulation relie la main à l’avant-bras ?', 'le poignet', ['la cheville', 'l’épaule'], 'Le poignet relie la main à l’avant-bras.'],
+      ['Quelle articulation relie le pied à la jambe ?', 'la cheville', ['le poignet', 'le cou'], 'La cheville relie le pied à la jambe.'],
+      ['Le lait, le yaourt et le fromage sont des :', 'produits laitiers', ['féculents', 'matières grasses'], 'Le yaourt et le fromage sont fabriqués avec du lait : ce sont des produits laitiers.'],
+      ['Les pâtes, le riz et le pain font partie des :', 'féculents', ['produits laitiers', 'boissons'], 'Les pâtes, le riz et le pain sont des féculents : ils donnent de l’énergie.'],
+      ['La pomme est un aliment d’origine :', 'végétale', ['animale', 'minérale'], 'La pomme pousse sur un arbre, le pommier : elle est d’origine végétale.'],
+      ['Le lait est un aliment d’origine :', 'animale', ['végétale', 'minérale'], 'Le lait vient d’un animal, par exemple la vache : il est d’origine animale.'],
+      ['Combien de fois par jour conseille-t-on de se brosser les dents ?', '2 fois (matin et soir)', ['1 fois par semaine', 'seulement quand on a mal'], 'On conseille de se brosser les dents 2 fois par jour, le matin et le soir.'],
+      ['Que fait-on avant de passer à table ?', 'on se lave les mains', ['on court', 'on regarde un écran'], 'On se lave les mains avant de manger, pour enlever les microbes.']],
+    [['La glace, c’est de l’eau :', 'solide', ['liquide', 'ce n’est pas de l’eau'], 'La glace, c’est de l’eau solide : elle garde sa forme.'],
+      ['La pluie, c’est de l’eau :', 'liquide', ['solide', 'ce n’est pas de l’eau'], 'La pluie, c’est de l’eau liquide qui tombe des nuages.'],
+      ['La neige, c’est de l’eau :', 'solide', ['liquide', 'ce n’est pas de l’eau'], 'La neige, c’est de l’eau solide : de petits cristaux de glace.'],
+      ['Un glaçon posé au soleil :', 'fond et devient liquide', ['grandit', 'devient du sable'], 'Quand il fait chaud, la glace fond : le glaçon redevient de l’eau liquide.'],
+      ['Quel instrument mesure la température ?', 'le thermomètre', ['la balance', 'le sablier'], 'Le thermomètre mesure la température : il dit s’il fait chaud ou froid.'],
+      ['La température se mesure en :', 'degrés Celsius', ['kilogrammes', 'mètres'], 'La température se mesure en degrés Celsius (°C). Les kilogrammes servent pour les masses, les mètres pour les longueurs.'],
+      ['Quel instrument permet de trouver l’objet le plus lourd ?', 'la balance', ['le thermomètre', 'la montre'], 'La balance compare les masses : le côté le plus lourd descend.'],
+      ['Lequel est un objet fabriqué par les humains ?', 'une gomme', ['une branche d’arbre', 'une feuille d’arbre'], 'La gomme est fabriquée dans une usine. La branche et la feuille viennent de l’arbre.'],
+      ['Avec la laine du mouton, on peut fabriquer :', 'un pull', ['une tuile', 'une cuillère'], 'On file la laine, puis on la tricote pour faire un pull.'],
+      ['Avec de l’argile, on peut fabriquer :', 'une tuile', ['un pull', 'une bouteille en plastique'], 'On façonne l’argile, puis on la cuit dans un four : elle devient une tuile ou une brique.']]
+  ],
+  ce1: [
+    [['Combien y a-t-il de minutes dans une heure ?', '60', ['100', '30'], 'Une heure dure 60 minutes.'],
+      ['Combien y a-t-il d’heures dans une journée ?', '24', ['12', '60'], 'Une journée (le jour et la nuit) dure 24 heures.'],
+      ['Combien y a-t-il de secondes dans une minute ?', '60', ['100', '10'], 'Une minute dure 60 secondes.'],
+      ['Quel mois vient juste avant mai ?', 'avril', ['juin', 'mars'], 'Mars, avril, mai, juin : juste avant mai, il y a avril.'],
+      ['Quelle saison vient après l’été ?', 'l’automne', ['le printemps', 'l’hiver'], 'Printemps, été, automne, hiver : après l’été vient l’automne.'],
+      ['Deux semaines, c’est :', '14 jours', ['10 jours', '20 jours'], 'Une semaine dure 7 jours : 7 + 7 = 14 jours.'],
+      ['Un siècle, c’est :', '100 ans', ['10 ans', '1 000 ans'], 'Un siècle dure 100 ans.'],
+      ['Ton anniversaire revient :', 'une fois par an', ['une fois par semaine', 'une fois par mois'], 'L’anniversaire revient chaque année, à la même date.'],
+      ['Quel outil montre tous les jours et les mois de l’année ?', 'le calendrier', ['le thermomètre', 'la boussole'], 'Le calendrier montre les jours, les semaines et les mois de l’année.'],
+      ['Sur une frise chronologique, on range les événements :', 'du plus ancien au plus récent', ['par ordre alphabétique', 'par couleur'], 'Une frise chronologique range les événements dans l’ordre du temps, du plus ancien au plus récent.']],
+    [['Un animal qui mange surtout des plantes est :', 'herbivore', ['carnivore', 'omnivore'], 'Herbivore vient d’« herbe » : il mange surtout des plantes, comme la vache ou le lapin.'],
+      ['Un animal qui mange d’autres animaux est :', 'carnivore', ['herbivore', 'végétarien'], 'Un carnivore mange d’autres animaux, comme le lion ou le loup.'],
+      ['Le lion est :', 'carnivore', ['herbivore', 'omnivore'], 'Le lion chasse et mange d’autres animaux : il est carnivore.'],
+      ['La vache mange surtout :', 'de l’herbe', ['des poissons', 'des insectes'], 'La vache mange de l’herbe : elle est herbivore.'],
+      ['Le petit de la poule s’appelle :', 'le poussin', ['le têtard', 'le chaton'], 'Le poussin sort de l’œuf de la poule. Le têtard est le petit de la grenouille, le chaton celui de la chatte.'],
+      ['Le têtard est le petit :', 'de la grenouille (ou du crapaud)', ['du poisson rouge', 'du papillon'], 'Le têtard vit dans l’eau, puis il se transforme en grenouille (ou en crapaud).'],
+      ['La chenille va devenir :', 'un papillon', ['une abeille', 'une araignée'], 'La chenille fabrique une chrysalide, puis elle en sort transformée en papillon.'],
+      ['Les mammifères nourrissent leurs petits avec :', 'du lait', ['du miel', 'des graines'], 'Les mamans mammifères nourrissent leurs petits avec leur lait.'],
+      ['Le dauphin est :', 'un mammifère', ['un poisson', 'un oiseau'], 'Le dauphin vit dans la mer, mais il respire de l’air et nourrit ses petits avec du lait : c’est un mammifère.'],
+      ['Dans « herbe → lapin → renard », la flèche veut dire « est mangé par ». Qui mange le lapin ?', 'le renard', ['l’herbe', 'personne'], 'Lapin → renard : le lapin est mangé par le renard.']],
+    [['Pour pousser, la plupart des plantes ont besoin :', 'de lumière, d’eau et d’air', ['de noir et de sel', 'de lait'], 'Les plantes ont besoin de lumière, d’eau et d’air pour vivre et grandir.'],
+      ['Par où la plante puise-t-elle l’eau du sol ?', 'par les racines', ['par les fleurs', 'par les pétales'], 'Les racines sont dans la terre : elles puisent l’eau du sol.'],
+      ['Une graine mise dans de bonnes conditions va :', 'germer', ['fondre', 's’évaporer'], 'Avec de l’eau et de la chaleur, la graine germe : une petite plante en sort.'],
+      ['Quand une graine germe, il en sort d’abord :', 'une petite racine', ['une fleur', 'un fruit'], 'La graine germe : une petite racine sort d’abord, puis une petite tige avec des feuilles.'],
+      ['À l’intérieur d’une graine, il y a :', 'une plante en miniature', ['un petit animal', 'de la glace'], 'Dans la graine se cache une toute petite plante, avec des réserves de nourriture.'],
+      ['Chez les plantes à fleurs, les graines sont souvent :', 'dans le fruit', ['dans les racines', 'dans les feuilles'], 'Les graines sont dans le fruit : les pépins de la pomme, les noyaux de la cerise.'],
+      ['Les graines de pissenlit voyagent :', 'avec le vent', ['dans le ventre des poissons', 'elles ne bougent jamais'], 'Les graines de pissenlit ont de petits parachutes : le vent les emporte loin.'],
+      ['En butinant, l’abeille transporte de fleur en fleur :', 'du pollen', ['du sable', 'de la neige'], 'Le pollen se colle sur l’abeille et passe d’une fleur à l’autre : cela aide les fleurs à faire des fruits.'],
+      ['Une plante est-elle un être vivant ?', 'oui', ['non', 'seulement quand elle a des fleurs'], 'Oui : une plante naît, se nourrit, grandit et se reproduit.'],
+      ['Une plante peut-elle se déplacer toute seule ?', 'non', ['oui, la nuit', 'oui, en marchant'], 'Non : une plante est vivante, mais elle reste à sa place. Ce sont ses graines qui voyagent.']],
+    [['Quand l’eau liquide gèle, elle devient :', 'de la glace', ['de la vapeur', 'du sable'], 'Quand il fait très froid, l’eau liquide gèle : elle devient de la glace, de l’eau solide.'],
+      ['Le passage de la glace à l’eau liquide s’appelle :', 'la fusion', ['la solidification', 'l’ébullition'], 'Quand la glace fond, c’est la fusion : l’eau passe de l’état solide à l’état liquide.'],
+      ['Le passage de l’eau liquide à la glace s’appelle :', 'la solidification', ['la fusion', 'la germination'], 'Quand l’eau gèle, c’est la solidification : elle passe de l’état liquide à l’état solide.'],
+      ['La glace fond à partir de :', '0 °C', ['100 °C', '50 °C'], 'L’eau gèle et la glace fond à 0 °C.'],
+      ['La grêle, c’est de l’eau :', 'solide', ['liquide', 'ce n’est pas de l’eau'], 'La grêle, ce sont des billes de glace qui tombent du ciel : de l’eau solide.'],
+      ['Quand un glaçon fond, on obtient :', 'de l’eau liquide', ['du lait', 'du sel'], 'Un glaçon, c’est de l’eau gelée : en fondant, il redevient de l’eau liquide.'],
+      ['À quoi sert l’interrupteur dans un circuit ?', 'à allumer ou éteindre', ['à fabriquer l’électricité', 'à mesurer la température'], 'L’interrupteur ouvre ou ferme le circuit : il allume ou éteint la lampe.'],
+      ['Lequel laisse passer le courant électrique ?', 'un clou en fer', ['une règle en plastique', 'une baguette en bois'], 'Les métaux, comme le fer, laissent passer le courant : ce sont des conducteurs.'],
+      ['Lequel est un isolant ?', 'le plastique', ['le cuivre', 'le fer'], 'Le plastique ne laisse pas passer le courant : c’est un isolant. C’est pour cela qu’il entoure les fils électriques.'],
+      ['Peut-on mettre un objet dans une prise électrique ?', 'non, c’est dangereux', ['oui, si c’est rapide', 'oui, avec du métal'], 'Jamais : le courant d’une prise est très dangereux. On ne joue pas avec les prises.']],
+    [['Quelle est la devise de la République ?', 'Liberté, Égalité, Fraternité', ['Un pour tous, tous pour un', 'Paix, Travail, Joie'], 'La devise de la République française est « Liberté, Égalité, Fraternité ».'],
+      ['Combien de mots compte la devise de la République ?', '3', ['2', '5'], 'Liberté, Égalité, Fraternité : 3 mots.'],
+      ['Quelle est la langue de la République ?', 'le français', ['le latin', 'l’anglais'], 'La Constitution dit que la langue de la République est le français.'],
+      ['Dans l’ordre, les couleurs du drapeau français sont :', 'bleu, blanc, rouge', ['rouge, blanc, bleu', 'blanc, bleu, rouge'], 'Le drapeau tricolore est bleu, blanc, rouge, avec le bleu près du mât.'],
+      ['Comment s’appelle la femme qui représente la République ?', 'Marianne', ['Jeanne', 'Joséphine'], 'Marianne représente la République française. On voit son visage dans les mairies, sur les timbres et les pièces.'],
+      ['Que porte souvent Marianne sur la tête ?', 'un bonnet phrygien', ['une couronne', 'un casque'], 'Marianne porte souvent un bonnet rouge, le bonnet phrygien, signe de liberté.'],
+      ['Quel jour a lieu la fête nationale ?', 'le 14 juillet', ['le 1er janvier', 'le 25 décembre'], 'La fête nationale française a lieu le 14 juillet.'],
+      ['Qui a écrit La Marseillaise ?', 'Rouget de Lisle', ['Victor Hugo', 'Jules Ferry'], 'Rouget de Lisle a écrit La Marseillaise en 1792.'],
+      ['À l’école, la laïcité permet à chacun :', 'de croire ou de ne pas croire', ['d’obliger les autres à croire comme lui', 'd’ignorer les règles'], 'La laïcité protège la liberté de chacun : on peut croire ou ne pas croire, et on respecte les autres.'],
+      ['Sur la façade des écoles publiques, on trouve :', 'la devise et le drapeau tricolore', ['le menu de la cantine', 'un drapeau pirate'], 'La devise de la République et le drapeau tricolore sont sur la façade des écoles publiques, avec le drapeau européen.']]
+  ],
+  ce2: [
+    [['Quelle est la période la plus ancienne ?', 'la Préhistoire', ['le Moyen Âge', 'l’Antiquité'], 'Dans l’ordre : la Préhistoire, l’Antiquité, le Moyen Âge, les Temps modernes, l’époque contemporaine.'],
+      ['Quelle période vient juste après l’Antiquité ?', 'le Moyen Âge', ['la Préhistoire', 'les Temps modernes'], 'Préhistoire, Antiquité, puis Moyen Âge.'],
+      ['La Préhistoire se termine avec l’apparition :', 'de l’écriture', ['de l’électricité', 'de l’imprimerie'], 'La Préhistoire, c’est le temps avant l’écriture. Quand l’écriture apparaît, l’Antiquité commence.'],
+      ['Dans quelle période vivons-nous ?', 'l’époque contemporaine', ['le Moyen Âge', 'l’Antiquité'], 'L’époque contemporaine a commencé en 1789 et continue aujourd’hui.'],
+      ['Un millénaire, c’est :', '1 000 ans', ['100 ans', '10 ans'], 'Un millénaire dure 1 000 ans, soit 10 siècles.'],
+      ['Nous vivons au :', 'XXIe siècle', ['XXe siècle', 'XIXe siècle'], 'Depuis l’an 2001, nous sommes au XXIe siècle (le vingt-et-unième).'],
+      ['Les châteaux forts sont typiques :', 'du Moyen Âge', ['de la Préhistoire', 'de notre époque'], 'Les seigneurs du Moyen Âge construisaient des châteaux forts pour se protéger.'],
+      ['À quelle période les humains taillaient-ils des outils en pierre ?', 'la Préhistoire', ['le Moyen Âge', 'les Temps modernes'], 'À la Préhistoire, les humains taillaient la pierre pour fabriquer des outils.'],
+      ['Le Moyen Âge a duré environ :', '1 000 ans', ['10 ans', '100 000 ans'], 'Le Moyen Âge a duré près de mille ans.'],
+      ['Sur une frise, l’événement le plus récent est :', 'à la fin', ['au début', 'n’importe où'], 'Sur une frise, le temps avance de gauche à droite : le plus récent est à la fin.']],
+    [['La grotte de Lascaux est célèbre pour ses :', 'peintures préhistoriques', ['vitraux', 'tableaux de la Renaissance'], 'Les murs de la grotte de Lascaux sont couverts d’animaux peints il y a très longtemps, à la Préhistoire.'],
+      ['Qui a construit le pont du Gard ?', 'les Romains', ['les hommes préhistoriques', 'Louis XIV'], 'Le pont du Gard a été construit par les Romains, dans l’Antiquité.'],
+      ['Le pont du Gard servait à transporter :', 'de l’eau (c’est un aqueduc)', ['des trains', 'des voitures'], 'Le pont du Gard est un aqueduc : il apportait de l’eau à la ville de Nîmes.'],
+      ['Notre-Dame de Paris est :', 'une cathédrale', ['un château fort', 'une grotte'], 'Notre-Dame de Paris est une grande cathédrale.'],
+      ['Notre-Dame de Paris a été construite :', 'au Moyen Âge', ['pendant la Préhistoire', 'au XXe siècle'], 'Notre-Dame de Paris a été construite au Moyen Âge, pendant près de deux siècles.'],
+      ['Quel roi a transformé Versailles en somptueux palais ?', 'Louis XIV', ['Jules César', 'Vercingétorix'], 'Louis XIV, le Roi-Soleil, a fait du château de Versailles un palais magnifique.'],
+      ['La tour Eiffel a été construite pour :', 'l’Exposition universelle de 1889', ['le sacre d’un roi', 'des Jeux olympiques'], 'La tour Eiffel a été construite pour l’Exposition universelle de 1889, à Paris.'],
+      ['Qui fouille le sol pour retrouver des traces du passé ?', 'l’archéologue', ['l’astronaute', 'le boulanger'], 'L’archéologue fouille le sol pour retrouver des objets et des traces du passé.'],
+      ['Un fossile, c’est :', 'le reste ou l’empreinte d’un être vivant conservé dans la roche', ['un monument romain', 'une pierre précieuse'], 'Un fossile est le reste ou l’empreinte d’un être vivant très ancien, conservé dans la roche.'],
+      ['Les humains ont-ils vécu en même temps que les grands dinosaures ?', 'non, ils sont apparus bien après', ['oui, ils les chassaient', 'oui, ils les élevaient'], 'Les grands dinosaures ont disparu il y a 66 millions d’années, bien avant l’apparition des humains.']],
+    [['Le Soleil est :', 'une étoile', ['une planète', 'un satellite'], 'Le Soleil est une étoile : il fabrique sa propre lumière et sa chaleur.'],
+      ['La Terre est :', 'une planète', ['une étoile', 'un satellite'], 'La Terre est une planète : elle tourne autour du Soleil.'],
+      ['Qu’est-ce qui tourne autour de la Terre ?', 'la Lune', ['le Soleil', 'Mars'], 'La Lune tourne autour de la Terre. La Terre, elle, tourne autour du Soleil.'],
+      ['La Lune brille parce qu’elle :', 'renvoie la lumière du Soleil', ['fabrique sa propre lumière', 'contient du feu'], 'La Lune ne fabrique pas de lumière : elle renvoie celle du Soleil, comme un miroir.'],
+      ['La Terre fait le tour du Soleil en :', 'environ un an', ['environ un jour', 'environ une heure'], 'La Terre met environ un an (365 jours) pour faire le tour du Soleil.'],
+      ['La Terre fait un tour sur elle-même en :', 'environ 24 heures', ['un an', 'une semaine'], 'La Terre fait un tour sur elle-même en environ 24 heures : c’est ce qui fait le jour et la nuit.'],
+      ['Quand il fait jour sur une moitié de la Terre, sur l’autre moitié il fait :', 'nuit', ['jour aussi', 'toujours midi'], 'Le Soleil n’éclaire qu’une moitié de la Terre à la fois : de l’autre côté, il fait nuit.'],
+      ['Combien de planètes compte le système solaire ?', '8', ['9', '5'], 'Le système solaire compte 8 planètes : Mercure, Vénus, la Terre, Mars, Jupiter, Saturne, Uranus et Neptune.'],
+      ['En partant du Soleil, la Terre est la planète numéro :', '3', ['1', '8'], 'Mercure, Vénus, puis la Terre : c’est la troisième planète en partant du Soleil.'],
+      ['La forme de la Lune semble changer pendant environ :', 'un mois', ['une heure', 'dix ans'], 'La Lune passe de la nouvelle lune à la pleine lune, puis revient : cela dure environ un mois.']],
+    [['Quels sont les trois états de l’eau ?', 'solide, liquide, gazeux', ['chaud, froid, tiède', 'glace, neige, grêle'], 'L’eau peut être solide (glace), liquide (eau) ou gazeuse (vapeur d’eau).'],
+      ['La vapeur d’eau, c’est de l’eau à l’état :', 'gazeux', ['solide', 'liquide'], 'La vapeur d’eau est un gaz.'],
+      ['La vapeur d’eau est-elle visible ?', 'non, elle est invisible', ['oui, c’est un nuage blanc', 'oui, elle est bleue'], 'La vapeur d’eau est invisible. Le petit nuage blanc au-dessus d’une casserole, ce sont déjà de minuscules gouttes d’eau liquide.'],
+      ['Le linge mouillé sèche parce que l’eau :', 's’évapore', ['gèle', 'fond'], 'L’eau du linge s’évapore : elle devient de la vapeur d’eau dans l’air.'],
+      ['Au niveau de la mer, l’eau bout à :', '100 °C', ['0 °C', '37 °C'], 'L’eau bout à 100 °C. À 0 °C, elle gèle ; 37 °C, c’est la température du corps humain.'],
+      ['Le passage de la glace à l’eau liquide s’appelle :', 'la fusion', ['l’évaporation', 'la solidification'], 'La fusion, c’est le passage de l’état solide à l’état liquide : la glace fond.'],
+      ['La buée sur une vitre froide, c’est :', 'de l’eau liquide en gouttelettes', ['de la fumée', 'de la poussière'], 'La vapeur d’eau de l’air touche la vitre froide et redevient de l’eau liquide, en toutes petites gouttes.'],
+      ['Un ballon de baudruche gonflé contient :', 'de l’air', ['du vide', 'de l’eau'], 'On le gonfle avec de l’air : l’air est une matière, même si on ne le voit pas.'],
+      ['Le vent, c’est :', 'de l’air qui se déplace', ['de la lumière', 'du bruit'], 'Le vent, c’est de l’air en mouvement.'],
+      ['Un nuage est formé :', 'de gouttelettes d’eau ou de cristaux de glace', ['de fumée', 'de coton'], 'Un nuage est fait de milliards de minuscules gouttes d’eau ou de cristaux de glace.']],
+    [['Qui est à la tête de la commune ?', 'le maire', ['le directeur de l’école', 'le boulanger'], 'Le maire dirige la commune avec le conseil municipal.'],
+      ['Le maire travaille :', 'à la mairie', ['au château de Versailles', 'à la gare'], 'Le maire travaille à la mairie, qu’on appelle aussi l’hôtel de ville.'],
+      ['Le maire est :', 'un élu', ['tiré au sort', 'nommé par un roi'], 'Le maire est élu. En France, il n’y a plus de roi depuis longtemps.'],
+      ['Qui élit le maire ?', 'le conseil municipal', ['le président de la République', 'les élèves'], 'Les habitants élisent le conseil municipal, puis le conseil municipal élit le maire.'],
+      ['Qui est le chef de l’État en France ?', 'le président de la République', ['le maire', 'un roi'], 'Le chef de l’État, en France, est le président de la République.'],
+      ['Le président de la République est élu pour :', '5 ans', ['1 an', 'toute sa vie'], 'Le président de la République est élu pour 5 ans : c’est le quinquennat.'],
+      ['Qui élit le président de la République ?', 'les électeurs, directement', ['les maires seulement', 'les écoliers'], 'Les électeurs votent directement pour choisir le président de la République.'],
+      ['À partir de quel âge peut-on voter en France ?', '18 ans', ['10 ans', '30 ans'], 'En France, on peut voter à partir de 18 ans.'],
+      ['Le maire s’occupe notamment :', 'de l’état civil (naissances, mariages)', ['du Tour de France', 'des programmes de télévision'], 'À la mairie, on enregistre les naissances et on célèbre les mariages : c’est l’état civil.'],
+      ['Trier ses déchets, c’est un geste :', 'qui protège l’environnement, notre bien commun', ['interdit', 'inutile'], 'Trier les déchets permet de les recycler et de protéger la nature, qui appartient à tous.']]
+  ],
+  cm1: [
+    [['Par convention, le Moyen Âge va de :', '476 à 1492', ['1492 à 1789', '1789 à nos jours'], 'Par convention, le Moyen Âge commence en 476 (fin de l’Empire romain d’Occident) et se termine en 1492.'],
+      ['La tour principale du château fort, demeure du seigneur, s’appelle :', 'le donjon', ['le beffroi', 'la rosace'], 'Le donjon est la plus grande tour du château fort : le seigneur y habitait.'],
+      ['Le pont qui se relève pour fermer le château s’appelle :', 'le pont-levis', ['l’aqueduc', 'l’arc-boutant'], 'Le pont-levis se relève pour empêcher les ennemis d’entrer dans le château.'],
+      ['La corvée, c’était :', 'un travail gratuit que les paysans devaient au seigneur', ['une fête au château', 'un impôt pour l’école'], 'Les paysans devaient travailler gratuitement pour le seigneur : c’était la corvée.'],
+      ['La dîme était versée :', 'à l’Église', ['au maire', 'aux marchands'], 'La dîme était une part des récoltes que les paysans donnaient à l’Église.'],
+      ['Les moines vivent dans :', 'une abbaye', ['un donjon', 'une usine'], 'Les moines vivent, prient et travaillent dans une abbaye (ou un monastère).'],
+      ['Une cathédrale est l’église :', 'd’un évêque', ['d’un roi', 'd’un seigneur'], 'La cathédrale est l’église de l’évêque : on y trouve son siège.'],
+      ['Quel art a des murs épais, de petites fenêtres et des arcs en demi-cercle ?', 'l’art roman', ['l’art gothique', 'l’art de la Renaissance'], 'Les églises romanes ont des murs épais, de petites fenêtres et des arcs en demi-cercle.'],
+      ['Quel art a de hautes fenêtres à vitraux et des arcs-boutants ?', 'l’art gothique', ['l’art roman', 'l’art préhistorique'], 'Grâce aux arcs-boutants, les églises gothiques sont hautes, avec de grandes fenêtres à vitraux.'],
+      ['Notre-Dame de Paris est un chef-d’œuvre de l’art :', 'gothique', ['roman', 'baroque'], 'Notre-Dame de Paris, avec ses arcs-boutants et ses rosaces, est un chef-d’œuvre de l’art gothique.']],
+    [['Quel roi a accueilli Léonard de Vinci en France ?', 'François Ier', ['Louis XIV', 'Henri IV'], 'François Ier, roi de la Renaissance, a invité Léonard de Vinci en France.'],
+      ['Qui a peint La Joconde ?', 'Léonard de Vinci', ['Louis XIV', 'Christophe Colomb'], 'La Joconde est un tableau de Léonard de Vinci, peintre et inventeur italien.'],
+      ['Où peut-on voir La Joconde ?', 'au musée du Louvre, à Paris', ['au château de Versailles', 'à la tour Eiffel'], 'La Joconde est exposée au musée du Louvre, à Paris.'],
+      ['Où Léonard de Vinci a-t-il passé ses dernières années ?', 'en France, à Amboise', ['en Espagne', 'en Angleterre'], 'Léonard de Vinci a vécu ses dernières années à Amboise, au château du Clos Lucé, près du roi François Ier.'],
+      ['En 1598, quel texte d’Henri IV ramène la paix entre catholiques et protestants ?', 'l’édit de Nantes', ['la Déclaration des droits de l’homme', 'la Constitution de 1958'], 'En 1598, l’édit de Nantes d’Henri IV permet aux protestants de pratiquer leur religion : la paix revient.'],
+      ['Quel roi est surnommé « le Roi-Soleil » ?', 'Louis XIV', ['François Ier', 'Henri IV'], 'Louis XIV avait choisi le Soleil comme emblème : on l’appelle le Roi-Soleil.'],
+      ['En 1682, Louis XIV installe la Cour au château :', 'de Versailles', ['de Chambord', 'd’Amboise'], 'En 1682, Louis XIV s’installe à Versailles avec toute la Cour.'],
+      ['Quelle salle célèbre de Versailles est couverte de miroirs ?', 'la galerie des Glaces', ['la chapelle Sixtine', 'la salle des Pas perdus'], 'La galerie des Glaces, à Versailles, est couverte de centaines de miroirs.'],
+      ['Le règne de Louis XIV (1643-1715) est :', 'le plus long de l’histoire de France', ['le plus court', 'un règne de 10 ans'], 'Louis XIV a régné 72 ans : c’est le plus long règne de l’histoire de France.'],
+      ['Les trois ordres de l’Ancien Régime sont :', 'clergé, noblesse, tiers état', ['rois, reines, princes', 'paysans, ouvriers, marins'], 'Le clergé prie, la noblesse combat, le tiers état travaille : ce sont les trois ordres.']],
+    [['En 1492, Christophe Colomb arrive :', 'en Amérique', ['en Australie', 'en Chine'], 'En 1492, Christophe Colomb traverse l’océan Atlantique et arrive en Amérique.'],
+      ['Où Christophe Colomb croyait-il être arrivé ?', 'aux Indes, en Asie', ['en Afrique', 'sur une île du Pacifique'], 'Colomb voulait aller aux Indes en partant vers l’ouest : il pensait y être arrivé. C’est pour cela qu’il a appelé les habitants « Indiens ».'],
+      ['Quel navire rapide utilisaient les explorateurs ?', 'la caravelle', ['le paquebot', 'le sous-marin'], 'La caravelle était un navire léger et rapide, idéal pour explorer les océans.'],
+      ['Quel instrument indique le nord ?', 'la boussole', ['le sablier', 'le thermomètre'], 'L’aiguille aimantée de la boussole indique le nord.'],
+      ['L’expédition de Magellan (1519-1522) est la première à :', 'faire le tour du monde', ['atteindre le pôle Sud', 'traverser le Sahara'], 'Partie avec Magellan en 1519, l’expédition revient en 1522 après avoir fait le tour du monde.'],
+      ['La pomme de terre est originaire :', 'des Andes, en Amérique du Sud', ['d’Australie', 'du Groenland'], 'La pomme de terre vient des Andes, en Amérique du Sud. Les Européens l’ont découverte après les grands voyages.'],
+      ['Le 14 juillet 1789, les Parisiens prennent :', 'la Bastille', ['la tour Eiffel', 'le Louvre'], 'Le 14 juillet 1789, les Parisiens prennent la Bastille, une prison du roi.'],
+      ['La Déclaration des droits de l’homme et du citoyen date de :', '1789', ['1492', '1958'], 'La Déclaration des droits de l’homme et du citoyen date de 1789, au début de la Révolution française.'],
+      ['Complète l’article 1er : « Les hommes naissent et demeurent libres et … en droits. »', 'égaux', ['riches', 'sages'], '« Les hommes naissent et demeurent libres et égaux en droits » : c’est l’article 1er de la Déclaration de 1789.'],
+      ['Pendant la nuit du 4 août 1789, les députés abolissent :', 'les privilèges', ['l’école', 'la monnaie'], 'La nuit du 4 août 1789, les députés suppriment les privilèges des nobles et du clergé.']],
+    [['Un animal dont la femelle pond des œufs est :', 'ovipare', ['vivipare', 'carnivore'], 'Ovipare vient d’« ovum », l’œuf : la femelle pond des œufs.'],
+      ['Un animal dont le petit se développe dans le ventre de sa mère est :', 'vivipare', ['ovipare', 'herbivore'], 'Chez les vivipares, le petit grandit dans le ventre de sa mère et naît vivant.'],
+      ['Lequel est ovipare ?', 'la poule', ['la chatte', 'la vache'], 'La poule pond des œufs : elle est ovipare. La chatte et la vache sont vivipares.'],
+      ['Lequel est vivipare ?', 'le chien', ['la tortue', 'le crocodile'], 'Le chiot grandit dans le ventre de sa mère : le chien est vivipare. La tortue et le crocodile pondent des œufs.'],
+      ['Une espèce, c’est un ensemble d’individus qui :', 'peuvent se reproduire entre eux', ['ont la même couleur', 'vivent dans le même pays'], 'Les individus d’une même espèce peuvent se reproduire entre eux et avoir des petits.'],
+      ['Les animaux qui ont une colonne vertébrale sont des :', 'vertébrés', ['insectes', 'végétaux'], 'La colonne vertébrale est faite de vertèbres : ces animaux sont des vertébrés.'],
+      ['La chauve-souris est :', 'un mammifère', ['un oiseau', 'un insecte'], 'La chauve-souris vole, mais elle a des poils et nourrit ses petits avec du lait : c’est un mammifère.'],
+      ['Dans un réseau alimentaire, la flèche va :', 'du mangé vers le mangeur', ['du mangeur vers le mangé', 'du plus grand au plus petit'], 'La flèche veut dire « est mangé par » : elle va de celui qui est mangé vers celui qui mange.'],
+      ['Un écosystème, c’est :', 'un milieu, les êtres vivants qui y vivent et leurs relations', ['un appareil de mesure', 'une seule espèce'], 'Un écosystème, comme une forêt ou une mare, réunit un milieu, ses êtres vivants et leurs relations.'],
+      ['Pour produire leur matière, les végétaux verts ont besoin notamment :', 'de lumière et d’eau', ['de viande et de sucre', 'd’obscurité totale'], 'Les plantes vertes fabriquent leur matière grâce à la lumière, à l’eau et à l’air.']],
+    [['Lequel se dissout dans l’eau ?', 'le sucre', ['le sable', 'un caillou'], 'Le sucre se dissout : on ne le voit plus, mais l’eau a un goût sucré. Le sable et le caillou restent au fond.'],
+      ['Pour séparer le sable de l’eau, on peut utiliser :', 'un filtre', ['un thermomètre', 'un aimant'], 'Le filtre laisse passer l’eau et retient le sable : c’est la filtration.'],
+      ['Si l’on verse beaucoup de sel dans un verre d’eau, à un moment :', 'il ne se dissout plus', ['l’eau devient solide', 'le sel disparaît toujours'], 'L’eau ne peut dissoudre qu’une certaine quantité de sel : ensuite, le sel reste au fond. On dit que l’eau est saturée.'],
+      ['Un matériau qui ne laisse pas passer la lumière est :', 'opaque', ['transparent', 'translucide'], 'Un matériau opaque, comme le bois, ne laisse pas passer la lumière.'],
+      ['Une vitre à travers laquelle on voit nettement est :', 'transparente', ['opaque', 'translucide'], 'Une vitre transparente laisse passer la lumière et on voit nettement à travers.'],
+      ['L’ombre d’un objet se trouve :', 'du côté opposé à la lumière', ['du côté de la lampe', 'sous la lampe'], 'L’objet arrête la lumière : son ombre se forme de l’autre côté, à l’opposé de la source de lumière.'],
+      ['Quand la Lune nous apparaît entièrement éclairée, c’est :', 'la pleine lune', ['la nouvelle lune', 'le premier quartier'], 'Quand on voit la Lune ronde et toute éclairée, c’est la pleine lune.'],
+      ['Quel instrument mesure la quantité de pluie ?', 'le pluviomètre', ['l’anémomètre', 'le thermomètre'], 'Le pluviomètre recueille la pluie pour mesurer combien il en est tombé.'],
+      ['Quel instrument mesure la vitesse du vent ?', 'l’anémomètre', ['le pluviomètre', 'la balance'], 'L’anémomètre a de petites coupelles que le vent fait tourner : il mesure sa vitesse.'],
+      ['La météo décrit le temps au jour le jour. Le climat décrit :', 'le temps qu’il fait en moyenne sur de longues années', ['le temps d’une heure', 'la température d’un seul jour'], 'Le climat, c’est le temps qu’il fait en moyenne dans une région, sur de nombreuses années.']]
+  ],
+  cm2: [
+    [['Selon la Constitution, l’emblème national est :', 'le drapeau tricolore', ['le coq', 'Marianne'], 'L’article 2 de la Constitution dit : « L’emblème national est le drapeau tricolore, bleu, blanc, rouge. »'],
+      ['Le 14 juillet est devenu la fête nationale par une loi de :', '1880', ['1789', '1958'], 'C’est une loi de 1880 qui a fait du 14 juillet la fête nationale.'],
+      ['Le 14 juillet rappelle la prise de la Bastille et :', 'la fête de la Fédération de 1790', ['l’armistice de 1918', 'le sacre de Louis XIV'], 'Le 14 juillet rappelle la prise de la Bastille (1789) et la fête de la Fédération (1790).'],
+      ['Où Rouget de Lisle compose-t-il La Marseillaise, en 1792 ?', 'à Strasbourg', ['à Marseille', 'à Paris'], 'Rouget de Lisle compose ce chant à Strasbourg en 1792.'],
+      ['Pourquoi l’appelle-t-on « la Marseillaise » ?', 'des volontaires venus de Marseille la chantaient', ['elle a été écrite à Marseille', 'elle parle de la mer'], 'Des soldats volontaires venus de Marseille la chantaient en arrivant à Paris : on l’a appelée La Marseillaise.'],
+      ['Combien d’étoiles compte le drapeau européen ?', '12', ['27', '15'], 'Le drapeau européen a 12 étoiles en cercle. Ce nombre ne dépend pas du nombre de pays : il représente l’unité.'],
+      ['L’hymne européen est l’« Ode à la joie » de :', 'Beethoven', ['Mozart', 'Rouget de Lisle'], 'L’hymne européen est tiré de la 9e symphonie de Beethoven.'],
+      ['La journée de l’Europe a lieu le :', '9 mai', ['14 juillet', '1er janvier'], 'Le 9 mai est la journée de l’Europe.'],
+      ['Les pièces et billets en euros circulent depuis :', '2002', ['1789', '1958'], 'Les pièces et les billets en euros sont arrivés dans les porte-monnaie en 2002.'],
+      ['« Unie dans la diversité » est la devise :', 'de l’Union européenne', ['de la République française', 'de l’ONU'], '« Unie dans la diversité » est la devise de l’Union européenne. Celle de la France est « Liberté, Égalité, Fraternité ».']],
+    [['La Première République est proclamée en :', '1792', ['1515', '1945'], 'La Première République est proclamée en 1792, pendant la Révolution française.'],
+      ['En 1892, la République fête :', 'ses 100 ans', ['ses 10 ans', 'ses 1 000 ans'], '1792 + 100 = 1892 : la République fête ses cent ans.'],
+      ['Les lois de Jules Ferry (1881-1882) rendent l’école primaire publique :', 'gratuite, laïque et obligatoire', ['payante', 'réservée aux garçons'], 'Grâce aux lois de Jules Ferry, l’école primaire publique devient gratuite, laïque et obligatoire.'],
+      ['En 1882, l’instruction devient obligatoire pour :', 'les filles et les garçons', ['les garçons seulement', 'les enfants des villes seulement'], 'La loi de 1882 rend l’instruction obligatoire pour tous les enfants, filles et garçons.'],
+      ['En France, les femmes obtiennent le droit de vote en :', '1944', ['1789', '1999'], 'En France, les femmes obtiennent le droit de vote en 1944. Elles votent pour la première fois en 1945.'],
+      ['La Constitution de la Ve République date de :', '1958', ['1789', '1515'], 'La Constitution de la Ve République a été adoptée en 1958.'],
+      ['En 1948, la Déclaration universelle des droits de l’homme est adoptée à :', 'Paris', ['New York', 'Rome'], 'La Déclaration universelle des droits de l’homme est adoptée à Paris, au palais de Chaillot, en 1948.'],
+      ['La Convention internationale des droits de l’enfant est adoptée en :', '1989', ['1789', '1515'], 'La Convention internationale des droits de l’enfant est adoptée par l’ONU le 20 novembre 1989.'],
+      ['Le 11 novembre, on commémore :', 'l’armistice de 1918, qui arrête les combats de la Première Guerre mondiale', ['la prise de la Bastille', 'la journée de l’Europe'], 'Le 11 novembre 1918, l’armistice arrête les combats de la Première Guerre mondiale.'],
+      ['Le 8 mai rappelle :', 'la victoire de 1945 et la fin de la guerre en Europe', ['la naissance de Louis XIV', 'l’arrivée de Colomb'], 'Le 8 mai 1945 marque la fin de la Seconde Guerre mondiale en Europe.']],
+    [['Quelle énergie faisait surtout fonctionner les machines à vapeur ?', 'le charbon', ['le soleil', 'le vent'], 'On brûlait du charbon pour chauffer l’eau des machines à vapeur.'],
+      ['Dans une machine à vapeur, on chauffe :', 'de l’eau pour faire de la vapeur', ['du sable', 'de la glace'], 'L’eau chauffée devient de la vapeur, qui pousse les pièces de la machine.'],
+      ['Vers 1760, la révolution industrielle commence :', 'en Angleterre', ['au Japon', 'en Australie'], 'La révolution industrielle commence en Angleterre, vers 1760, puis gagne l’Europe.'],
+      ['Les grands bâtiments qui regroupent les machines s’appellent :', 'des usines', ['des abbayes', 'des donjons'], 'Dans les usines, les ouvriers et les ouvrières travaillent sur des machines.'],
+      ['Les mineurs extrayaient surtout :', 'du charbon', ['du miel', 'du chocolat'], 'Les mineurs descendaient dans les mines pour extraire le charbon.'],
+      ['Le charbon est une roche d’origine :', 'végétale', ['animale', 'volcanique'], 'Le charbon s’est formé, il y a très longtemps, à partir de plantes enfouies dans le sol.'],
+      ['Après le charbon, quelle grande énergie se développe ?', 'le pétrole', ['le bois', 'le vent'], 'Au XXe siècle, le pétrole devient une énergie très utilisée, après le charbon.'],
+      ['La tour Eiffel a été construite pour l’Exposition universelle de :', '1889', ['1789', '1989'], 'La tour Eiffel, tout en fer, a été construite pour l’Exposition universelle de 1889.'],
+      ['Grâce aux locomotives à vapeur se développe :', 'le chemin de fer', ['l’avion à réaction', 'la fusée'], 'Les locomotives à vapeur tirent les trains : le chemin de fer se développe partout.'],
+      ['Le départ des paysans vers les villes pour y travailler s’appelle :', 'l’exode rural', ['la Renaissance', 'la transhumance'], 'Beaucoup de paysans quittent les campagnes pour travailler dans les usines des villes : c’est l’exode rural.']],
+    [['Quelle planète est la plus proche du Soleil ?', 'Mercure', ['Vénus', 'la Terre'], 'Mercure est la planète la plus proche du Soleil.'],
+      ['Quelle est la plus grande planète du système solaire ?', 'Jupiter', ['Saturne', 'la Terre'], 'Jupiter est la plus grande planète : plus de 1 000 Terres pourraient tenir dedans.'],
+      ['Quelle planète surnomme-t-on « la planète rouge » ?', 'Mars', ['Vénus', 'Neptune'], 'Le sol de Mars contient de la rouille : c’est la planète rouge.'],
+      ['Quelle planète est la plus éloignée du Soleil ?', 'Neptune', ['Pluton', 'Uranus'], 'Neptune est la planète la plus éloignée du Soleil. Pluton n’est plus classée parmi les planètes.'],
+      ['Pluton est aujourd’hui classée comme :', 'une planète naine', ['la 9e planète', 'une étoile'], 'Depuis 2006, Pluton est classée comme planète naine.'],
+      ['Quelle planète est célèbre pour ses grands anneaux, même si d’autres en ont ?', 'Saturne', ['Mars', 'Mercure'], 'Saturne a de magnifiques anneaux, faits de morceaux de glace et de roche.'],
+      ['Une année correspond au temps que met la Terre pour :', 'faire le tour du Soleil', ['tourner sur elle-même', 'faire le tour de la Lune'], 'Une année, c’est un tour de la Terre autour du Soleil. Un tour sur elle-même, c’est une journée.'],
+      ['Pourquoi y a-t-il des saisons ?', 'parce que l’axe de la Terre est penché', ['parce que la Terre s’éloigne du Soleil en hiver', 'parce que la Lune cache le Soleil'], 'L’axe de la Terre est penché : selon la période de l’année, chaque moitié de la Terre reçoit plus ou moins de lumière.'],
+      ['Lors d’une éclipse de Soleil, qui passe entre le Soleil et la Terre ?', 'la Lune', ['Mars', 'un nuage'], 'Pendant une éclipse de Soleil, la Lune passe devant le Soleil et le cache.'],
+      ['Qu’a la Terre de particulier dans le système solaire ?', 'elle est la seule à avoir de l’eau liquide à sa surface', ['elle est la seule à avoir des anneaux', 'elle est la seule à avoir une lune'], 'La Terre est la seule planète du système solaire avec de l’eau liquide à sa surface. D’autres planètes ont des anneaux ou des lunes.']],
+    [['Dans quel ordre les aliments passent-ils ?', 'bouche → œsophage → estomac → intestin', ['bouche → poumons → cœur', 'estomac → bouche → œsophage'], 'Les aliments passent par la bouche, l’œsophage, l’estomac, puis l’intestin.'],
+      ['À quoi sert le cœur ?', 'à faire circuler le sang', ['à digérer', 'à respirer'], 'Le cœur est une pompe : il fait circuler le sang dans tout le corps.'],
+      ['Le sang apporte aux organes notamment :', 'du dioxygène', ['du sable', 'de la lumière'], 'Le sang transporte le dioxygène de l’air que l’on respire, ainsi que les nutriments.'],
+      ['Quelles dents coupent les aliments ?', 'les incisives', ['les molaires', 'les canines'], 'Les incisives, à l’avant de la bouche, coupent les aliments.'],
+      ['Quelles dents broient les aliments ?', 'les molaires', ['les incisives', 'les canines'], 'Les molaires, au fond de la bouche, broient les aliments.'],
+      ['Combien de dents de lait a un enfant ?', '20', ['32', '10'], 'Un enfant a 20 dents de lait. Un adulte peut avoir jusqu’à 32 dents.'],
+      ['Qu’est-ce qui fait lever la pâte à pain ?', 'la levure', ['le sel', 'le sucre glace'], 'La levure est un être vivant microscopique : elle fait gonfler la pâte.'],
+      ['Pour fabriquer un yaourt avec du lait, on utilise :', 'des ferments lactiques', ['de la levure de boulanger', 'du vinaigre'], 'Les ferments lactiques transforment le lait en yaourt.'],
+      ['Une éolienne produit de l’électricité grâce :', 'au vent', ['au charbon', 'à la pluie'], 'Le vent fait tourner les pales de l’éolienne, qui produit de l’électricité.'],
+      ['Une centrale hydroélectrique utilise la force :', 'de l’eau', ['du vent', 'du Soleil'], '« Hydro » veut dire « eau » : la force de l’eau fait tourner une turbine qui produit de l’électricité.']]
+  ]
+};
+// Un coup de pouce de Pi pour chaque niveau, sans donner la réponse
+const CULTH = {
+  cp: ['Pense au calendrier de la classe : les jours, les mois, les saisons.', 'Pense à la carte du monde et au drapeau de la France.', 'Un être vivant naît, se nourrit et grandit.', 'Pense à ton corps et à ce que tu manges.', 'Pense à l’eau : est-elle dure comme un glaçon ou est-ce qu’elle coule ?'],
+  ce1: ['Pense aux unités de temps : secondes, minutes, heures, jours, siècles.', 'Que mange cet animal ? Comment grandit-il ?', 'Une plante a des racines, une tige, des feuilles, des fleurs et des fruits.', 'L’eau peut geler ou fondre ; le courant passe dans les métaux.', 'Pense aux symboles qu’on voit sur les mairies et les écoles.'],
+  ce2: ['Rappelle-toi l’ordre : Préhistoire, Antiquité, Moyen Âge, Temps modernes, époque contemporaine.', 'À quelle époque ce monument ou cette trace a-t-il été fait ?', 'Le Soleil éclaire ; la Terre tourne autour de lui ; la Lune tourne autour de la Terre.', 'L’eau peut être solide, liquide ou gazeuse.', 'Pense à la mairie, au maire et aux élections.'],
+  cm1: ['Pense aux seigneurs, aux paysans, aux moines et aux cathédrales.', 'Pense à François Ier, à Henri IV et à Louis XIV.', 'Pense aux grands voyages en mer et à la Révolution de 1789.', 'Comment naît cet animal ? Qui mange qui ?', 'Pense aux expériences de la classe : mélanges, ombres, météo.'],
+  cm2: ['Pense aux symboles de la France et de l’Union européenne.', 'Pense aux grandes dates de la République et des droits.', 'Pense aux machines à vapeur, aux mines et aux usines.', 'Pense à l’ordre des planètes autour du Soleil.', 'Pense au trajet des aliments et aux énergies.']
+};
+function genCulture(l) {
+  const g = CULT[GR()] ? GR() : 'ce2', lv = Math.max(1, Math.min(5, l || 1)), ap = t => t.replace(/'/g, '’');
+  const [q, a, w, e] = pick(CULT[g][lv - 1]).map(x => Array.isArray(x) ? x.map(ap) : ap(x));
+  return { kind: 'choices', ask: q, prompt: '', answer: a, answerText: a, choices: shuffle([a, ...w]).map(v => ({ v, html: v })), log: `culture : ${q}`, explain: e, hint: CULTH[g][lv - 1], sayChoices: ['cp', 'ce1'].includes(g) };
+}
+
 /* ================= Français : conjugaison ================= */
 // Programme : CE2 (BO n° 41 du 31 octobre 2024), CM1 (cycle 3, rentrée 2025). Présent, futur, imparfait, passé composé.
 // Espace insécable entre un nombre et son unité : « 1,73 € » ou « 4 h 45 » ne se coupent jamais en fin de ligne
@@ -4465,6 +4749,7 @@ const SKILLS = {
     conjug: ['reconnaître la première lettre d’un mot', 'entendre les rimes', 'compter les syllabes', 'trouver la syllabe qui manque dans un mot', 'lire ou, on, an, oi, ch, conjuguer être et avoir'],
     gram: ['trouver un mot dans une phrase', 'compter les mots d’une phrase', 'repérer la majuscule et le point', 'reconnaître une phrase qui a du sens', 'reconnaître une phrase bien écrite et qui a du sens'],
     accords: ['choisir le ou la', 'choisir un ou une', 'écrire le pluriel avec un s', 'reconnaître un mot au pluriel', 'remplacer un nom par il ou elle'],
+    culture: ['nommer les jours, les mois et les saisons', 'reconnaître les symboles de la France, les continents et les océans', 'distinguer le vivant du non-vivant', 'nommer des parties de mon corps et des gestes bons pour ma santé', 'reconnaître l’eau solide ou liquide et la matière des objets'],
     vocab: ['reconnaître les animaux et les fruits', 'ranger un mot dans sa catégorie', 'trouver le contraire', 'connaître l’ordre de l’alphabet', 'trouver l’intrus'] },
   ce1: { canons: ['additionner et compléter jusqu’à 20', 'utiliser les tables de 2 et de 10', 'utiliser les tables de 2, 5 et 10', 'utiliser les tables de 2, 3, 4 et 5', 'utiliser les tables et trouver le nombre caché'],
     stade: ['additionner et soustraire jusqu’à 20', 'trouver le double ou la moitié d’un nombre', 'ajouter ou enlever 10 et 100', 'compléter à 100 avec des dizaines (70 + 30)', 'ajouter un petit nombre ou des dizaines'],
@@ -4478,6 +4763,7 @@ const SKILLS = {
     conjug: ['trouver le bon pronom', 'conjuguer au présent', 'conjuguer au futur, trouver l’infinitif', 'conjuguer à l’imparfait', 'conjuguer au passé composé, reconnaître le temps'],
     gram: ['repérer majuscule et point, trouver le type de phrase', 'trouver le verbe', 'trouver les noms et les déterminants', 'trouver le sujet et le verbe', 'utiliser la négation, trouver le sujet et le verbe'],
     accords: ['choisir le, la ou les, reconnaître un pluriel', 'mettre un nom au pluriel', 'accorder l’adjectif au féminin et au pluriel', 'accorder le groupe nominal et le verbe', 'faire tous les accords, a / à, et / est'],
+    culture: ['utiliser le calendrier et les unités de durée', 'dire ce que mangent des animaux et comment ils grandissent', 'dire ce dont une plante a besoin', 'nommer les changements de l’eau et utiliser l’électricité sans danger', 'reconnaître les symboles et la devise de la République'],
     vocab: ['ranger lettres et mots dans l’ordre alphabétique', 'trouver un contraire, ranger des mots', 'trouver les mots de la même famille', 'trouver un synonyme ou un contraire', 'reconnaître familles, synonymes, préfixes et expressions'] },
   ce2: { canons: ['utiliser les tables de 2, 5 et 10', 'utiliser les tables de 2, 3, 4, 5 et 10', 'utiliser toutes les tables', 'trouver le nombre caché d’une multiplication', 'multiplier, trouver le nombre caché, diviser'],
     stade: ['additionner et soustraire jusqu’à 20', 'trouver le double ou la moitié d’un nombre', 'ajouter et enlever des unités ou des dizaines', 'multiplier par 10 et 100, doubler et partager en deux', 'calculer de tête jusqu’à 100 avec des astuces'],
@@ -4492,6 +4778,7 @@ const SKILLS = {
     gram: ['reconnaître le type de phrase et le verbe', 'trouver les noms et les déterminants', 'trouver les adjectifs, le sujet et les pronoms', 'utiliser la négation, trouver la nature d’un mot', 'trouver la nature d’un mot et le sujet du verbe'],
     accords: ['mettre les noms au pluriel', 'accorder l’adjectif', 'accorder le verbe, choisir a/à, et/est, son/sont', 'accorder le groupe nominal', 'faire les accords et choisir le bon homophone'],
     anglais: ['reconnaître un mot anglais que j’entends', 'comprendre une consigne en anglais', 'comprendre une petite phrase sur quelqu’un', 'choisir la bonne réponse à une question', 'lire des mots anglais déjà connus'],
+    culture: ['ranger les grandes périodes de l’histoire', 'associer un monument à son époque', 'situer la Terre, le Soleil et la Lune', 'nommer les trois états de l’eau', 'dire qui sont les élus de la commune et de la République'],
     vocab: ['ranger des mots dans l’ordre alphabétique', 'trouver les mots de la même famille', 'comprendre les préfixes et les suffixes', 'trouver un synonyme ou un contraire', 'comprendre le sens figuré'] },
   cm1: { canons: ['utiliser les tables, trouver le nombre caché', 'diviser avec les tables', 'multiplier et diviser des dizaines, des centaines', 'faire une division avec reste', 'multiplier un nombre à 2 chiffres, diviser avec reste'],
     stade: ['multiplier et diviser par 10, 100, 1 000', 'compléter à 1 000, trouver un double ou une moitié', 'ajouter des dixièmes, doubler et partager en deux', 'multiplier ou diviser un décimal par 10', 'prendre une fraction d’un nombre et calculer vite'],
@@ -4506,6 +4793,7 @@ const SKILLS = {
     gram: ['trouver la nature des mots', 'trouver le sujet et le nom noyau', 'trouver les compléments', 'reconnaître les déterminants et les adjectifs épithètes', 'trouver la fonction des groupes'],
     accords: ['écrire les pluriels difficiles', 'accorder les adjectifs dans le groupe nominal', 'accorder le verbe avec un sujet difficile', 'accorder le participe passé avec être', 'faire tous les accords, choisir le bon homophone'],
     anglais: ['comprendre les nombres, les jours et les dates', 'suivre une consigne, dire où sont les choses', 'savoir qui parle et de qui on parle', 'réagir dans un petit échange', 'lire un court texte et compléter une phrase'],
+    culture: ['décrire la vie au Moyen Âge', 'situer François Ier, Henri IV et Louis XIV', 'situer les grandes explorations et 1789', 'classer des animaux et dire qui mange qui', 'séparer un mélange, expliquer une ombre, décrire la météo'],
     vocab: ['ranger des mots, comprendre préfixes et suffixes', 'comprendre préfixes, suffixes et radicaux', 'classer des synonymes, reconnaître les niveaux de langue', 'comprendre les sens d’un mot et les expressions', 'utiliser les mots génériques et les homonymes'] },
   cm2: { canons: ['reconnaître multiples, diviseurs, divisibles par 2, 5, 10', 'trouver des diviseurs et des multiples communs', 'faire une division avec reste au-delà des tables', 'calculer avec des parenthèses', 'multiplier des dizaines, centaines, utiliser la distributivité'],
     stade: ['multiplier et diviser un décimal par 10, 100, 1 000', 'ajouter un entier à un décimal, ajouter 9, 19… 99', 'ajouter des décimaux, doubler et partager en deux', 'multiplier par 5 et 50, diviser par 4 et 8', 'écrire 1/2, 1/4, 3/4 en décimal'],
@@ -4520,6 +4808,7 @@ const SKILLS = {
     gram: ['trouver le sujet, même inversé', 'distinguer attribut du sujet et COD', 'distinguer COD, COI et compléments circonstanciels', 'reconnaître complément du nom, épithète et classes de mots', 'distinguer phrase simple et phrase complexe'],
     accords: ['accorder le groupe nominal', 'accorder le verbe avec un sujet inversé', 'accorder l’attribut du sujet', 'accorder le participe passé avec être et avoir', 'faire tous les accords, leur / leurs, la / l’a / là'],
     anglais: ['repérer l’heure, un prix ou un mois', 'suivre un chemin et des consignes', 'comprendre un portrait ou une habitude', 'comprendre un dialogue et une préférence', 'lire un message et compléter une phrase'],
+    culture: ['expliquer les symboles de la République et de l’Union européenne', 'situer les grandes étapes de la République et des droits', 'décrire l’âge industriel', 'situer la Terre dans le système solaire', 'expliquer le trajet des aliments et des sources d’énergie'],
     vocab: ['utiliser le dictionnaire', 'comprendre les mots polysémiques', 'comprendre un mot grâce à sa formation', 'choisir des synonymes et des antonymes précis', 'maîtriser les sens et la formation des mots'] } };
 const skillName = (id, L) => ((SKILLS[GR()] || SKILLS.ce2)[id] || [])[L - 1] || `niveau ${L}`;
 // État d'une compétence : acquise (80 % sur au moins 4 questions, ou les deux étapes de la route passées), à revoir (moins de 60 %),
@@ -4842,7 +5131,7 @@ function nextQ() {
 }
 // Recadrage horizontal des décors d'île : dans un écran en hauteur, on ne voit qu'environ la moitié de l'image.
 // Ces valeurs gardent le sujet (fort, forge, grotte…) dans le cadre plutôt que le centre de l'image.
-const HERO_X = { anglais: 75, formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
+const HERO_X = { culture: 70, anglais: 75, formes: 50, accords: 55, canons: 75, conjug: 72, cuisine: 75, gram: 65, horloge: 78, jungle: 75, lecture: 75, marche: 75, mine: 75, stade: 70, vocab: 70 };
 function sceneHTML() {
   const { i, boss } = R;
   if (i.v) return `<div class="g-scene" id="scene"><img class="bg hero-bg" src="${IMG(i.hero)}" alt="">${i.id === 'mix' ? shipArt('ship me sail', 'role="img" aria-label="Ton navire"') : `<img class="guidefig" src="${IMG('guide-capitaine')}" alt="Le capitaine Barbe-Grise">`}<div class="waves"></div>${powersHTML()}</div>`;
@@ -5424,7 +5713,7 @@ function openParents() {
       <a class="ghost-btn" style="display:grid;place-items:center;text-decoration:none" href="${ADMIN ? './' : './?admin'}">${ADMIN ? 'Revenir à la version de l’enfant' : 'Ouvrir la version administrateur'}</a></div>
     <div class="pcard"><h3>Classe de l’enfant</h3><div class="seg">${Object.entries(GRADES).map(([k, g]) => `<button data-a="grade" data-v="${k}" aria-pressed="${GR() === k}">${g.n} · ${g.age}</button>`).join('')}</div>
       <p class="note" style="margin:8px 0 0">Les questions suivent le programme de la classe choisie. Chaque classe garde sa propre progression : on peut changer sans rien perdre.</p></div>
-    ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sk === 'f' && l.some(i => i.id === 'anglais') ? 'Français et anglais' : sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
+    ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sk === 'f' && l.some(i => ['anglais', 'culture'].includes(i.id)) ? ['Français', l.some(i => i.id === 'anglais') && 'anglais', l.some(i => i.id === 'culture') && 'culture générale'].filter(Boolean).join(', ').replace(/, ([^,]*)$/, ' et $1') : sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
       return `<div class="prow"><img src="${IMG(i.img)}" alt=""><div><b>${i.notion}${badge}</b><span>${capF(rankTxt(s))} · ${s.tot} questions${s.tot ? ` · ${(s.ms / s.tot / 1000).toFixed(1).replace('.', ',')} s par réponse` : ''}</span></div><span class="pct">${p == null ? '–' : p + ' %'}</span></div>`; }).join('')}</div>` : ''; }).join('')}
     <div class="pcard"><h3>Minutes de jeu, 7 derniers jours</h3><div class="days">${last7.map(([x, s]) => `<div class="day"><span>${s ? Math.round(s / 60) : ''}</span><i style="height:${Math.max(2, s / maxS * 70)}px"></i><span>${x.toLocaleDateString('fr-FR', { weekday: 'short' }).slice(0, 3)}</span></div>`).join('')}</div></div>
     <div class="pcard"><h3>Compétences « Je sais… »</h3>${(() => { const all = playable().flatMap(i => range(1, 5).map(L => ({ i, L, st: skillState(i.id, L) }))), ok = all.filter(x => x.st === 'ok').length, rv = all.filter(x => x.st === 'rev');
@@ -5891,7 +6180,7 @@ renderJournal = after(renderJournal, 'crew'); renderCrew = after(renderCrew, 'cr
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 let goNow = false; try { goNow = !!sessionStorage.getItem('mous-go'); sessionStorage.removeItem('mous-go'); } catch (e) {}
 if (location.hash === '#direct' || goNow) { show('map'); if (!S.intro) onboarding(); else if (goNow) setTimeout(() => toast(`À toi de jouer, ${S.name} !`), 400); } else titleScreen();
-window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, openParents, voice, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge, genFormes, genAnglais }, geo: { gNet, gFigName, gPolyName, gCercle, gDroites, gAngleType, gAngleCmp, gDegres, gAngleNom, gCarreaux, gDemi, gCmpAB, gRectMes, gConv, gQuelRect, gSolNom, gSolCompte, gSolFaces, gPatron, gSym, gDepl }, words, ISLES, setGrade, check, labN };
+window.__arch = { get R() { return R; }, get S() { return S; }, get BUF() { return BUF; }, openParents, voice, FX, speakable, diagnose, answer, skillState, nextQ: () => nextQ(), gens: { genCanon, genFoot, genMine, genChasse, genMarche, genCuisine, genHorloge, genFormes, genAnglais, genCulture }, geo: { gNet, gFigName, gPolyName, gCercle, gDroites, gAngleType, gAngleCmp, gDegres, gAngleNom, gCarreaux, gDemi, gCmpAB, gRectMes, gConv, gQuelRect, gSolNom, gSolCompte, gSolFaces, gPatron, gSym, gDepl }, words, ISLES, setGrade, check, labN };
 })();
 </script>
 
