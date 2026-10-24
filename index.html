@@ -445,7 +445,16 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .grades button[aria-pressed="true"]{background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 4px 0 var(--brass-lo)}
 .grades.nudge{animation:shake .4s}
 .modal input{font:700 20px var(--f-u);text-align:center;border:0;border-radius:14px;padding:12px;width:100%;color:var(--ink);background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.5)}
-/* Pages pour les parents (guide, confidentialité, assistance) affichées dans l'appli */
+/* Porte parentale (exigée par Apple dans la catégorie Enfants) et pages pour les parents affichées dans l'appli */
+.pgate{position:absolute;inset:0;z-index:120;display:grid;place-items:center;padding:20px;background:rgba(4,14,20,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.pgbox{width:min(360px,100%);border-radius:22px;padding:20px 18px 16px;text-align:center;color:var(--ink)}
+.pgbox h3{font:800 22px/1.15 var(--f-d);margin:0 0 6px}
+.pgbox p{margin:0 0 10px;font-size:15px;color:#5b4636}
+.pgq{font:800 24px/1.2 var(--f-d);margin:4px 0 12px}
+.pgbox .fld{width:100%;text-align:center;font:700 24px var(--f-u);margin-bottom:12px;color:var(--ink);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.5)}
+.pgbox .ghost-btn{color:var(--ink);background:rgba(42,28,18,.06);box-shadow:inset 0 0 0 1.5px rgba(42,28,18,.3)}
+.pgbox .gap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pgerr{color:#a8241a!important;font-weight:600;margin:10px 0 0!important}
 .docwrap{position:absolute;inset:0;z-index:100;display:flex;flex-direction:column;background:#0b2230}
 .dochead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(var(--st) + 10px) 14px 10px;color:var(--foam);font:700 17px var(--f-u)}
 .docwrap iframe{flex:1;width:100%;border:0;background:#0b2230}
@@ -4969,7 +4978,7 @@ function dockHTML() {
 }
 function bindCog() {
   const c = $('#cog'); if (!c) return; let tm, held = false;
-  const go = e => { e.preventDefault(); held = false; c.classList.add('hold'); tm = setTimeout(() => { held = true; c.classList.remove('hold'); openParents(); }, 2000); };
+  const go = e => { e.preventDefault(); held = false; c.classList.add('hold'); tm = setTimeout(() => { held = true; c.classList.remove('hold'); parentGate(openParents); }, 2000); };
   const stop = () => { if (tm) clearTimeout(tm); c.classList.remove('hold'); };
   c.addEventListener('pointerdown', go); ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => c.addEventListener(ev, stop));
   c.addEventListener('click', () => { if (!held) toast('Espace parents : maintiens le bouton 2 secondes.'); held = false; });
@@ -5693,6 +5702,26 @@ function offerPlacement() {
 
 /* ================= Parents ================= */
 let parentSample = false;
+// Porte parentale : une tâche d'adulte avant l'espace parents, d'où partent l'avis et la sauvegarde (règle 1.3 d'Apple, catégorie Enfants).
+// Un calcul facile de tête pour un adulte (dix-sept fois quatre), écrit en lettres pour arrêter les plus jeunes ; on ne le lit pas à voix haute.
+// Elle reste ouverte 5 minutes, le temps de changer les réglages.
+let gateAt = 0;
+const GATE_N = { 3: 'trois', 4: 'quatre', 5: 'cinq', 6: 'six', 12: 'douze', 13: 'treize', 14: 'quatorze', 15: 'quinze', 16: 'seize', 17: 'dix-sept', 18: 'dix-huit', 19: 'dix-neuf' };
+function parentGate(then) {
+  if (Date.now() - gateAt < 5 * 60000) { then(); return; }
+  const a = rnd(12, 19), b = rnd(3, 6), el = document.createElement('div'); el.className = 'pgate'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Réservé aux parents');
+  el.innerHTML = `<div class="pgbox paper"><h3>Réservé aux parents</h3><p>Pour continuer, écrivez en chiffres le résultat de :</p><div class="pgq">${typo(`${GATE_N[a]} fois ${GATE_N[b]}`)}</div>
+    <input class="fld" id="pgin" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" aria-label="Résultat">
+    <div class="gap"><button class="ghost-btn" data-a="pgno">Annuler</button><button class="brass-btn" data-a="pgok" style="min-height:48px">Valider</button></div><p class="pgerr" id="pgerr" hidden>Ce n’est pas le bon résultat.</p></div>`;
+  el._then = then; el._ans = a * b; app.appendChild(el);
+  if (S.sound && S.voice) speak('Cette partie est pour les parents. Demande à un adulte de t’aider.');
+  const inp = $('#pgin', el); inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); gateCheck(); } }); setTimeout(() => inp.focus(), 60);
+}
+function gateCheck() {
+  const el = $('.pgate'); if (!el) return;
+  if (+$('#pgin', el).value === el._ans) { gateAt = Date.now(); el.remove(); el._then(); }
+  else { $('#pgerr', el).hidden = false; $('#pgin', el).value = ''; }
+}
 // Guide et confidentialité : affichés dans l'appli, sans ouvrir de navigateur (règles des stores pour les apps d'enfants)
 function openDoc(url, title) {
   const el = document.createElement('div'); el.className = 'docwrap'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', title);
@@ -5898,6 +5927,8 @@ app.addEventListener('click', e => {
     case 'support': openDoc('support.html', 'Assistance et contact'); break;
     case 'sndfix': wakeAudio(true); SND.ok(); setTimeout(() => { const d = $('#sdiag'); if (d) { d.textContent = 'Son relancé. Détails techniques : ' + audioDiag(); d.hidden = false; } }, 1200); break;
     case 'docclose': { const d = $('.docwrap'); d && d.remove(); break; }
+    case 'pgok': gateCheck(); break;
+    case 'pgno': { const g = $('.pgate'); g && g.remove(); break; }
     case 'bkcopy': { const c = backupCode(); copyText(c).then(ok => { toast(ok ? 'Code de sauvegarde copié' : 'Copiez le code ci-dessous'); $('#bkbox').innerHTML = `<p class="note" style="margin:12px 0 6px">Votre code (gardez-le précieusement) :</p><textarea class="fld" readonly style="min-height:90px;font-size:12px">${c}</textarea>`; }); break; }
     case 'bkrestore': $('#bkbox').innerHTML = `<p class="note" style="margin:12px 0 6px">Collez le code de sauvegarde. La progression actuelle sera remplacée.</p><textarea class="fld" id="bkin" style="min-height:90px;font-size:12px" placeholder="ARCHIPEL1:…"></textarea><div style="margin-top:8px"><button class="ghost-btn" data-a="bkdo">Restaurer</button></div>`; break;
     case 'bkdo': if (restoreFrom($('#bkin').value)) { toast('Progression restaurée'); setTimeout(() => location.reload(), 900); } else toast('Ce code ne fonctionne pas. Vérifiez qu’il est complet.'); break;

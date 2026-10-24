@@ -7,4 +7,4 @@ Nouveautés de la version 2.4
 • Plusieurs enfants peuvent jouer sur le même appareil, chacun avec sa progression.
 • Le navire grandit avec les étoiles gagnées, et les pierres précieuses des coffres et des boss servent à bâtir le port.
 • Version iPad.
-• L’espace parents s’ouvre sans calcul : il suffit de garder le doigt 2 secondes sur la roue dentée.
+• La question qui protège l’espace parents est plus simple : un petit calcul à faire de tête.
