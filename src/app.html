@@ -61,6 +61,11 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .isle .land{position:absolute;left:50%;top:44%;width:190px;transform:translate(-50%,-50%);filter:drop-shadow(0 10px 8px rgba(4,18,26,.45))}
 .isle .lbl{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);text-align:center;white-space:nowrap}
 .isle .lbl b{display:block;font-family:var(--f-d);font-variation-settings:'SOFT' 100;font-weight:800;font-size:16px;color:#fffaf0;text-shadow:0 1px 2px rgba(0,0,0,.8),0 0 14px rgba(0,0,0,.55)}
+.pen{display:inline-block;width:19px;height:23px;vertical-align:-3px;margin-right:4px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.chip .pen{margin-right:6px}.trophy .ti .pen{width:34px;height:42px;margin:0}
+.lvl-pill.r1{background:linear-gradient(#f3f6f8,#b9c4cc)}.lvl-pill.r2,.lvl-pill.r3{background:linear-gradient(#ffe9a8,#e0a92e)}
+.rkm .box{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}.rkm .rkb .pen{width:46px;height:56px;margin:0}
+.rkl{margin:0;padding:0 0 0 18px;text-align:left;color:var(--ink);font-size:15px;line-height:1.45}
 .lvl-pill{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font:700 11px var(--f-u);letter-spacing:.06em;color:#2a1a07;background:linear-gradient(#f7dc93,#c9973f);padding:3px 9px;border-radius:10px;box-shadow:0 2px 0 var(--brass-lo)}
 .lvl-pill.lock{background:none;box-shadow:none;padding:0 2px;color:#f6efdc;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.75)}
 .lvl-pill svg{width:14px;height:14px;flex:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.8))}
@@ -1235,7 +1240,7 @@ const CREW = [
 const has = id => S.crew.includes(id);
 // Navires gagnés aux étoiles des îles, toutes classes confondues (2.4 ; avant : 5 et 15 victoires). S.hull garde le navire déjà gagné.
 const SHIPS = [[0, 'ship-player-1', 'sloop'], [60, 'ship-player-2', 'brigantin'], [200, 'ship-player-3', 'galion']];
-const starTotal = () => Object.values(S.g).reduce((a, p) => a + Object.values(p.isl || {}).reduce((b, s) => b + Object.values(s.stars || {}).reduce((c, x) => c + (+x || 0), 0), 0), 0);
+const starTotal = () => Object.values(S.g).reduce((a, p) => a + Object.values(p.isl || {}).reduce((b, s) => b + (s.ps || 0) + Object.values(s.stars || {}).reduce((c, x) => c + (+x || 0), 0), 0), 0);
 const shipLv = () => { const w = starTotal(); let k = 0; SHIPS.forEach((x, j) => { if (w >= x[0]) k = j; }); return Math.max(k, Math.min(S.hull || 0, SHIPS.length - 1)); };
 // Pierres précieuses : seule monnaie du port d'attache
 const gems = () => Math.max(0, S.gems || 0);
@@ -1310,8 +1315,28 @@ const PLOTS = [[432, 332], [695, 440], [800, 595], [790, 747], [475, 772], [260,
 const portOwned = () => S.blds;
 const portBuilt = () => S.port.filter(b => b && BLDS.some(x => x[0] === b)).length;
 const FLAGS = [['crane', 'Crâne'], ['ancre', 'Ancre'], ['etoile', 'Étoile'], ['coeur', 'Cœur'], ['eclair', 'Éclair'], ['couronne', 'Couronne'], ['lettre', 'Initiale']];
+// « l’Île des Canons » → « de l’Île des Canons », « le Stade » → « du Stade »
+const deArt = a => a.replace(/^(l’|le |la )/, m => ({ 'l’': 'de l’', 'le ': 'du ', 'la ': 'de la ' })[m]);
+// Pavillon exclusif de chaque île, gagné au rang or (dans n'importe quelle classe)
+const ISYM = {
+  canons: (b, d) => `<g fill="${b}"><rect x="16" y="36" width="60" height="20" rx="9" transform="rotate(-18 46 46)"/><circle cx="38" cy="66" r="15"/><circle cx="84" cy="26" r="6"/></g><circle cx="38" cy="66" r="5" fill="${d}"/>`,
+  stade: (b, d) => `<circle cx="50" cy="50" r="34" fill="${b}"/><path fill="${d}" d="M50 37l12 9-5 14H43l-5-14z"/><path stroke="${d}" stroke-width="3" fill="none" d="M50 37V17M62 46l18-6M57 60l11 15M43 60L32 75M38 46l-18-6"/>`,
+  mine: (b, d) => `<g fill="${b}" stroke="${d}" stroke-width="3"><rect x="18" y="52" width="30" height="30"/><rect x="52" y="52" width="30" height="30"/><rect x="35" y="18" width="30" height="30"/></g>`,
+  formes: b => `<g fill="${b}"><path d="M28 14l22 36H6z"/><circle cx="72" cy="32" r="17"/><rect x="32" y="58" width="36" height="28" rx="2"/></g>`,
+  jungle: (b, d) => `<path d="M20 80c22 0 26-16 10-24S16 30 38 26s34 6 34 6" fill="none" stroke="${b}" stroke-width="11" stroke-linecap="round"/><circle cx="76" cy="32" r="10" fill="${b}"/><circle cx="79" cy="29" r="2.6" fill="${d}"/>`,
+  marche: (b, d) => `<circle cx="50" cy="50" r="33" fill="${b}"/><circle cx="50" cy="50" r="25" fill="none" stroke="${d}" stroke-width="3"/><text x="50" y="63" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="36" fill="${d}">€</text>`,
+  cuisine: b => `<g fill="${b}"><circle cx="32" cy="40" r="16"/><circle cx="50" cy="30" r="19"/><circle cx="68" cy="40" r="16"/><rect x="29" y="42" width="42" height="32" rx="3"/><rect x="26" y="77" width="48" height="9" rx="2"/></g>`,
+  horloge: (b, d) => `<circle cx="50" cy="50" r="34" fill="${b}"/><path d="M50 50V26M50 50l15 10" stroke="${d}" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="50" r="4" fill="${d}"/>`,
+  lecture: (b, d) => `<path fill="${b}" d="M50 30C38 21 22 21 10 26v50c12-5 28-5 40 3zM50 30c12-9 28-9 40-4v50c-12-5-28-5-40 3z"/><path d="M50 30v49" stroke="${d}" stroke-width="3"/>`,
+  conjug: b => `<path fill="${b}" d="M12 30h58c0 11 9 16 20 16-4 7-15 9-26 9l-5 11h9v14H31V66h9l-5-11C22 55 12 46 12 30z"/>`,
+  gram: (b, d) => `<path fill="${b}" d="M12 50c15-19 42-23 61-6l14-11v34L73 56C54 73 27 69 12 50z"/><circle cx="31" cy="46" r="4.5" fill="${d}"/>`,
+  accords: b => `<path fill="${b}" d="M6 40h88v10h-7v30H73V64c0-13-10-23-23-23S27 51 27 64v16H13V50H6z"/>`,
+  vocab: b => `<text x="50" y="66" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="48" fill="${b}">Aa</text>` };
+const isleFlags = () => ISLES.filter(i => ISYM[i.id] && Object.values(S.g).some(p => ((p.isl || {})[i.id] || {}).rank >= 3)).map(i => ['i-' + i.id, `Pavillon ${deArt(i.art)}`]);
+const allFlags = () => [...FLAGS, ...isleFlags()];
 function flagSym(id) {
   const b = '#f4ead2', d = '#1d1712';
+  if (/^i-/.test(id) && ISYM[id.slice(2)]) return ISYM[id.slice(2)](b, d);
   if (id === 'ancre') return `<g fill="none" stroke="${b}" stroke-width="7" stroke-linecap="round"><circle cx="50" cy="17" r="8"/><path d="M50 25v62M33 36h34M20 60c4 22 18 28 30 28s26-6 30-28"/><path d="M14 66l6-8 8 6M86 66l-6-8-8 6"/></g>`;
   if (id === 'etoile') return `<path fill="${b}" d="M50 8l11 27 29 2-22 19 7 29-25-16-25 16 7-29-22-19 29-2z"/>`;
   if (id === 'coeur') return `<path fill="${b}" d="M50 88C12 62 12 26 34 22c9-2 14 4 16 10 2-6 7-12 16-10 22 4 22 40-16 66z"/>`;
@@ -1354,6 +1379,7 @@ const CE1N = { canons: 'Additions et premières tables', stade: 'Calcul mental',
 const CM2N = { canons: 'Multiples, diviseurs et calculs', stade: 'Calcul mental et décimaux', mine: 'Grands nombres et millièmes', jungle: 'Droite graduée et fractions', marche: 'Prix et proportionnalité', cuisine: 'Fractions', horloge: 'Heures, minutes, secondes', formes: 'Géométrie, angles et aires',
   lecture: 'Lecture et compréhension', conjug: 'Passé simple et plus-que-parfait', gram: 'Fonctions et phrase complexe', accords: 'Accords et participe passé', vocab: 'Dictionnaire, sens et formation des mots' };
 ISLES.forEach(i => { i.ce2 = i.notion; i.cp = CPN[i.id]; i.ce1 = CE1N[i.id]; i.cm2 = CM2N[i.id]; i.x0 = i.x; i.y0 = i.y; });
+ISLES.forEach(i => EPITHETS.push([`Maître ${deArt(i.art)}`, `termine le rang or ${deArt(i.art)}`, i.id, 'm']));
 const SEAS = { m: { n: 'Mer des Chiffres', s: 'Maths', ic: '123' }, f: { n: 'Mer des Lettres', s: 'Français', ic: 'Abc' } };
 // Une île réservée à une classe (only) est cachée ailleurs. Avec huit îles (CM2), la Mer des Chiffres se resserre ;
 // le zigzag part alors vers la droite pour que la dernière île reste à gauche, sous le repaire du Kraken.
@@ -1374,6 +1400,17 @@ const unlocked = i => ADMIN || (!i.soon && SW(i.sea) >= i.unlock);
 const left = i => i.unlock - SW(i.sea);
 const playable = () => ISLES.filter(i => !i.soon);
 const NODES = 10, CHEST = 5, BOSS = 10;
+// Rangs d'île (2.4) : bronze (la route d'origine), argent, or. Une route terminée avec 3 étoiles aux 9 niveaux fait passer au rang suivant :
+// la route repart du niveau 1, avec des niveaux mélangés plus exigeants, plus de réponses à écrire, moins d'indices et un boss plus coriace,
+// toujours dans le programme de la classe. rank : 0 route bronze, 1 route argent, 2 route or, 3 île maîtrisée. ps : étoiles des rangs passés.
+const IRANK = [{ n: 'bronze', c: '#c98a4a', gem: 3 }, { n: 'argent', c: '#d5dde3', gem: 5 }, { n: 'or', c: '#f2c14e', gem: 0 }];
+const rk = s => Math.min(3, s.rank || 0);
+const chestDone = s => rk(s) > 0 || s.node > CHEST, bossDone = s => rk(s) > 0 || s.node > BOSS;
+const prog = s => rk(s) * (NODES + 1) + s.node; // de l'île la moins avancée à la plus avancée
+const routeStars = s => range(1, NODES - 1).reduce((a, k) => a + Math.min(3, s.stars[k] || 0), 0);
+const rankTxt = s => rk(s) === 3 ? 'île maîtrisée (rang or)' : `${rk(s) ? `rang ${IRANK[rk(s)].n}, ` : ''}niveau ${Math.min(s.node, NODES)}/${NODES}`;
+// Fanion planté sur l'île de la carte : couleur du dernier rang réussi
+const penSVG = r => `<svg class="pen" viewBox="0 0 20 24" aria-hidden="true"><path d="M3 2v21" stroke="#3a2a14" stroke-width="2.2" stroke-linecap="round"/><path d="M4 3l14 5-14 5z" fill="${IRANK[r - 1].c}" stroke="#3a2a14" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
 // 2.4 : nouvelle économie. Le navire déjà gagné aux victoires reste acquis ; les coffres déjà ouverts, les boss déjà vaincus
 // et l'histoire déjà terminée rapportent d'office leurs pierres précieuses. Les bâtiments déjà construits sont gardés.
 if ((S.econ || 0) < 1) {
@@ -4104,7 +4141,7 @@ const skillName = (id, L) => ((SKILLS[GR()] || SKILLS.ce2)[id] || [])[L - 1] || 
 function skillState(id, L) {
   const s = IS(id), st = (s.lv || {})[L], acc = st && st[1] ? st[0] / st[1] : null, now = Math.min(5, nodeDiff(Math.min(s.node, NODES), 0));
   if (st && st[1] >= 3 && acc < .6) return 'rev';
-  if ((st && st[1] >= 4 && acc >= .8) || s.node > 2 * L) return 'ok';
+  if ((st && st[1] >= 4 && acc >= .8) || rk(s) > 0 || s.node > 2 * L) return 'ok';
   if (st || L <= now) return 'cur';
   return 'new';
 }
@@ -4132,7 +4169,7 @@ function quests() {
   const wk = weekKey(); let Q = P().quests;
   if (!Q || Q.wk !== wk) {
     const open = playable().filter(unlocked), acc = i => { const s = IS(i.id); return s.tot ? s.ok / s.tot : 1; };
-    const weak = open.slice().sort((a, b) => acc(a) - acc(b) || IS(a.id).node - IS(b.id).node)[0] || isleById('canons');
+    const weak = open.slice().sort((a, b) => acc(a) - acc(b) || prog(IS(a.id)) - prog(IS(b.id)))[0] || isleById('canons');
     const pool = shuffle(['perfect', 'rev', 'days', 'tide', 'answers', 'combo'].concat(open.length >= 3 ? ['mix'] : [])).slice(0, 2);
     Q = P().quests = { wk, list: [{ id: 'isle', isl: weak.id, n: 0 }, ...pool.map(id => ({ id, n: 0 }))], days: [], bonus: false }; save();
   }
@@ -4173,9 +4210,9 @@ const SAGA = [
   { id: 'vocab', t: 'La baleine qui sait tout', x: ['Dans la Baie des Mots vit la Baleine Dictionnaire. Elle connaît tous les mots du monde ! Elle te souffle des mots qui veulent dire la même chose, puis des contraires.', '« Énorme, gigantesque… comme moi ! » dit-elle en riant. Sur son dos, un coffre t’attend.', 'Dedans, un morceau de carte avec une grande croix rouge ! Mais où se trouve cette croix ? Pour le savoir, il faudra réunir tous les morceaux.'] },
   { id: 'final', t: 'Le trésor de l’archipel', x: ['Sur le pont du Fier Calcul, tu assembles les douze morceaux. La carte est complète ! Elle montre une île cachée derrière le brouillard. Cap sur l’île !', 'Sous une grande croix rouge, tu creuses… Bong ! Voici le coffre du trésor : cinq cents doublons brillent au soleil. Au loin, le Kraken boude.', 'Barbe-Grise sourit : « Bravo, capitaine ! Les nombres, les mots, les heures… Tout ce que tu as appris, c’est à toi pour toujours. » Pi ajoute : « Et les doublons aussi ! »'] } ];
 const sagaIsles = () => playable().filter(i => SAGA.some(c => c.id === i.id));
-const chapterOpen = c => c.id === 'prologue' || (c.id === 'final' ? sagaIsles().every(i => IS(i.id).node > CHEST) : IS(c.id).node > CHEST);
+const chapterOpen = c => c.id === 'prologue' || (c.id === 'final' ? sagaIsles().every(i => chestDone(IS(i.id))) : chestDone(IS(c.id)));
 const sagaCount = () => SAGA.filter(chapterOpen).length;
-const pieces = () => { const n = sagaIsles().filter(i => IS(i.id).node > CHEST).length; return `${n} morceau${n > 1 ? 'x' : ''}`; }; // morceaux de la carte au trésor (un par coffre d'île)
+const pieces = () => { const n = sagaIsles().filter(i => chestDone(IS(i.id))).length; return `${n} morceau${n > 1 ? 'x' : ''}`; }; // morceaux de la carte au trésor (un par coffre d'île)
 // La carte au trésor se reconstitue : un morceau par île, dans l'ordre des îles
 function treasureMap() {
   const isl = sagaIsles(), W = 400, H = 300, cw = 100, ch = 100;
@@ -4224,7 +4261,7 @@ function checkShipwright() { if (shipPlan().pct >= 100) grantEp('Maître Charpen
 function ensureTide() {
   if (P().tide && P().tide.date === today()) return P().tide;
   const acc = i => { const s = IS(i.id); return P().rev.some(x => x.g === i.id && x.due <= today()) ? -2 : s.tot ? s.ok / s.tot : -1; };
-  const weak = l => l.slice().sort((a, b) => acc(a) - acc(b) || IS(a.id).node - IS(b.id).node);
+  const weak = l => l.slice().sort((a, b) => acc(a) - acc(b) || prog(IS(a.id)) - prog(IS(b.id)));
   const om = ISLES.filter(i => i.sea === 'm' && unlocked(i)), of = ISLES.filter(i => i.sea === 'f' && unlocked(i));
   const stops = []; for (const i of weak(om)) { if (stops.length < (of.length ? 1 : 2)) stops.push(i.id); }
   if (of.length) stops.push(weak(of)[0].id);
@@ -4265,17 +4302,17 @@ function bindCog() {
 
 function renderMap() {
   const t = ensureTide(), sea = ISLES.filter(i => i.sea === S.sea && !i.hide), tc = isleById(t.done ? t.stops[2] : t.stops[Math.min(t.i, 2)]);
-  const cur = tc && tc.sea === S.sea ? tc : sea.filter(unlocked).sort((a, b) => IS(a.id).node - IS(b.id).node)[0] || sea[0];
+  const cur = tc && tc.sea === S.sea ? tc : sea.filter(unlocked).sort((a, b) => prog(IS(a.id)) - prog(IS(b.id)))[0] || sea[0];
   const W = Math.min(app.clientWidth, 560);
   const px = i => i.x / 100 * W;
   const PORT = { x: 66, y: 1700 }, path = `M${px(PORT).toFixed(0)},${PORT.y} ` + sea.map(i => `L${px(i).toFixed(0)},${i.y}`).join(' ');
-  const krak = IS('canons').node > BOSS;
+  const krak = bossDone(IS('canons'));
   const isleHTML = sea.map(i => {
     const s = IS(i.id), lk = !unlocked(i), isCur = i === cur;
     if (i.soon) return `<button class="isle locked soon" style="left:${px(i)}px;top:${i.y}px" data-a="isle" data-i="${i.id}" aria-label="${esc(i.n)}, bientôt"><img class="lag" src="${IMG(i.lag)}" alt=""><span class="lbl"><b>${i.n}</b><span class="lvl-pill lock">Bientôt</span></span></button>`;
     return `<button class="isle${lk ? ' locked' : ''}${isCur ? ' cur' : ''}" style="left:${px(i)}px;top:${i.y}px" data-a="isle" data-i="${i.id}" aria-label="${esc(i.n)}${lk ? ', verrouillée' : ''}">
       <img class="lag" src="${IMG(i.lag)}" alt=""><img class="land" src="${IMG(i.img)}" alt="">
-      <span class="lbl"><b>${i.n}</b>${lk ? `<span class="lvl-pill lock">${ico('iLock')} ${left(i)} escale${left(i) > 1 ? 's' : ''} à gagner</span>` : `<span class="lvl-pill">Niveau ${Math.min(s.node, NODES)}/${NODES}</span>`}</span></button>`;
+      <span class="lbl"><b>${!lk && rk(s) ? penSVG(rk(s)) : ''}${i.n}</b>${lk ? `<span class="lvl-pill lock">${ico('iLock')} ${left(i)} escale${left(i) > 1 ? 's' : ''} à gagner</span>` : `<span class="lvl-pill${rk(s) ? ' r' + rk(s) : ''}">${rk(s) === 3 ? 'Île maîtrisée' : `${rk(s) ? `${capF(IRANK[rk(s)].n)} · niveau` : 'Niveau'} ${Math.min(s.node, NODES)}/${NODES}`}</span>`}</span></button>`;
   }).join('');
   // Île pas encore ouverte : on la devine, floue, sous un nuage d'orage traversé d'éclairs
   const fog = sea.filter(i => !unlocked(i)).map((i, k) => `<div class="mstorm${k % 2 ? ' fb' : ''}" style="left:${px(i)}px;top:${i.y - 18}px;--bd:${(6.5 + (k * 2.3) % 4).toFixed(1)}s;--bdel:-${(k * 2.9 % 7).toFixed(1)}s;--bx:${k % 2 ? 8 : -34}px" aria-hidden="true"><img class="fogpatch${k % 2 ? ' fb' : ''}" src="${IMG(k % 2 ? 'fx-fog-b' : 'fx-fog-a')}" alt="">${BOLT}<i class="flash"></i></div>`).join('');
@@ -4319,7 +4356,8 @@ function trophyHTML(i, s) {
   let ic, top, title;
   if (s.node <= CHEST) { const left = CHEST - s.node; ic = `<div class="ti"><img src="${IMG('chest-closed')}" alt=""></div>`; top = left ? `Prochain trésor · encore ${left} niveau${left > 1 ? 'x' : ''}` : 'Prochain trésor · c’est maintenant\u00a0!'; title = !i.chestCrew || has(i.chestCrew) ? 'Le coffre de l’île' : 'Un coffre et un nouvel équipier'; }
   else if (s.node <= BOSS) { const left = BOSS - s.node; ic = `<div class="ti boss"><img src="${IMG(i.boss.img)}" alt=""></div>`; top = left ? `Prochain défi · encore ${left} niveau${left > 1 ? 'x' : ''}` : 'Prochain défi · c’est maintenant\u00a0!'; title = i.boss.n; }
-  else { ic = `<div class="ti"><img src="${IMG(i.img)}" alt=""></div>`; top = 'Île conquise\u00a0!'; title = 'Rejoue pour gagner toutes les étoiles'; }
+  else if (rk(s) === 3) { ic = `<div class="ti">${penSVG(3)}</div>`; top = 'Île maîtrisée\u00a0!'; title = 'Rejoue quand tu veux pour t’entraîner'; }
+  else { ic = `<div class="ti">${penSVG(rk(s) + 1)}</div>`; top = `Route terminée · ${routeStars(s)} étoiles sur ${max}`; title = `3 étoiles partout pour le rang ${IRANK[rk(s)].n}`; }
   return `<div class="trophy">${ic}<div class="tt"><span>${top}</span><b>${title}</b></div><div class="st"><i>★</i> ${total}<small>sur ${max}</small></div></div>`;
 }
 function renderIsle(id) {
@@ -4335,7 +4373,7 @@ function renderIsle(id) {
     else if (k === CHEST) { cls = 'chest' + (k > s.node ? ' lockimg' : ''); inner = `<img src="${IMG(isDone ? 'chest-open' : 'chest-closed')}" alt="" style="width:46px">`; }
     else if (isDone) { cls = 'done'; inner = k; } else if (isCur) { cls = 'cur'; inner = k; }
     if (isCur && k !== BOSS && k !== CHEST) cls = 'cur';
-    const lab = isCur ? `<div class="rlab" style="left:${x < W / 2 ? x + 48 : x - 200}px;top:${y - 18}px;${x < W / 2 ? '' : 'text-align:right;width:150px'}"><b>${k === BOSS ? i.boss.n : k === CHEST ? 'Le coffre de l’île' : 'Niveau ' + k}</b>${k === BOSS ? '6 sur 8 pour gagner' : k === CHEST ? 'Gagne pour l’ouvrir' : '4 sur 6 pour gagner'}</div>` : '';
+    const lab = isCur ? `<div class="rlab" style="left:${x < W / 2 ? x + 48 : x - 200}px;top:${y - 18}px;${x < W / 2 ? '' : 'text-align:right;width:150px'}"><b>${k === BOSS ? i.boss.n : k === CHEST ? 'Le coffre de l’île' : 'Niveau ' + k}</b>${k === BOSS ? (rk(s) ? '8 sur 10 pour gagner' : '6 sur 8 pour gagner') : k === CHEST ? 'Gagne pour l’ouvrir' : '4 sur 6 pour gagner'}</div>` : '';
     const stars = isDone && k !== CHEST ? `<div class="rstars" style="left:${x}px;top:${y + 30}px">${'★'.repeat(st)}<span style="opacity:.25">${'★'.repeat(3 - st)}</span></div>` : '';
     if (ADMIN && cls === 'lock') { cls = 'lock adm'; inner = k; }
     const play = ADMIN || isDone || isCur;
@@ -4345,7 +4383,7 @@ function renderIsle(id) {
   const hero = `<img class="bg" src="${IMG(i.hero)}" alt="">`;
   app.innerHTML = `<div class="screen"><div class="hero">${hero}
       <div class="tt"><div class="smallcaps" style="color:#ffd9a0"><span class="gradeb" style="margin-right:6px;vertical-align:1px">${GRADES[GR()].n}</span>${i.notion}</div><div class="disp">${i.n}</div></div></div>
-    <div class="topbar"><button class="round glass" data-a="home" aria-label="Retour à la carte">${ico('iBack')}</button><span class="chip glass" style="height:40px;border-radius:20px;color:#ffe2a6">${s.node > CHEST ? 'Coffre ouvert' : 'Coffre au niveau 5'}</span></div>
+    <div class="topbar"><button class="round glass" data-a="home" aria-label="Retour à la carte">${ico('iBack')}</button><span class="chip glass" style="height:40px;border-radius:20px;color:#ffe2a6">${rk(s) ? `${penSVG(Math.min(rk(s) + 1, 3))}Rang ${IRANK[Math.min(rk(s), 2)].n} · ` : ''}${s.node > CHEST ? 'Coffre ouvert' : 'Coffre au niveau 5'}</span></div>
     <div class="sheet paper">${trophyHTML(i, s)}<div class="stats" hidden>
         <div class="stat"><svg width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="24" fill="none" stroke="rgba(138,98,36,.2)" stroke-width="6"/><circle cx="29" cy="29" r="24" fill="none" stroke="url(#gBrass)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(acc / 100 * 150.8).toFixed(1)} 150.8" transform="rotate(-90 29 29)"/><text x="29" y="34.5" text-anchor="middle" font-family="Fraunces,serif" font-weight="800" font-size="15" fill="#2a1c12">${acc}%</text></svg><span>Réussite</span></div>
         <div class="stat"><b>${node}<span style="font-size:15px;color:#6b5440;font-weight:600"> /${NODES}</span></b><span>Niveau</span></div>
@@ -4353,6 +4391,16 @@ function renderIsle(id) {
       <div class="route-list" id="routeList"><div style="position:relative;height:${H}px"><svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 ${W} ${H}"><path d="${path}" fill="none" stroke="#b89a63" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/></svg>${nodes}</div></div>
       <div class="cta">${s.node > NODES ? `<button class="brass-btn" data-a="play" data-i="${id}" data-n="${NODES}">Rejouer le boss</button>` : `<button class="brass-btn" data-a="play" data-i="${id}" data-n="${node}">Jouer le niveau ${node}</button>`}</div></div></div>`;
   const rl = $('#routeList'); rl.scrollTop = Math.max(0, ys(node) - rl.clientHeight / 2);
+  if (rk(s) && rk(s) < 3 && (s.seenRank || 0) < rk(s)) { s.seenRank = rk(s); save(); rankIntro(i, rk(s)); }
+}
+// Présentation d'un nouveau rang, à la première visite de l'île
+function rankIntro(i, r) {
+  const m = document.createElement('div'); m.className = 'modal rkm';
+  m.innerHTML = `<div class="box paper" role="dialog" aria-label="Nouveau rang"><div class="rkb">${penSVG(r)}</div><div class="smallcaps" style="color:var(--ink-2)">${i.n}</div><div class="disp" style="font-size:28px">Rang ${IRANK[r].n}</div>
+    <p style="margin:0;color:var(--ink-2)">Tu as gagné toutes les étoiles du rang ${IRANK[r - 1].n}. La route repart du niveau 1, en plus difficile :</p>
+    <ul class="rkl"><li>des questions de niveaux plus élevés, mélangés ;</li><li>plus de réponses à écrire toi-même ;</li><li>${r === 2 ? 'aucun indice du perroquet ;' : 'pas d’indice contre le boss ;'}</li><li>un boss plus coriace : 8 bonnes réponses sur 10.</li></ul>
+    <p style="margin:0;color:var(--ink-2)">${r === 2 ? 'Au bout de la route : le titre de maître de l’île et un pavillon exclusif.' : 'Au bout de la route : 5 pierres précieuses et le rang or.'}</p><button class="brass-btn" data-a="rkclose">En route !</button></div>`;
+  app.appendChild(m);
 }
 
 /* ================= Escale (jeu) ================= */
@@ -4362,8 +4410,8 @@ function startEscale(id, node, fromTide) {
   if (i.v) { R = Object.assign(base, { i, node: 0, d: 3, boss: false, n: 6 });
     if (id === 'test') { R.test = { list: playable().map(x => x.id), at: 0, st: 0, res: {} }; R.n = R.test.list.length * 2; }
     ac(); music('escale'); if (id === 'mix') setTimeout(() => voice('melange', true), voiceLeft() + 500); return nextQ(); }
-  const s = IS(id), boss = node === BOSS;
-  R = Object.assign(base, { i, node, d: boss ? 5 : nodeDiff(node, s.fails), boss, n: boss ? 8 : 6 });
+  const s = IS(id), boss = node === BOSS, rank = Math.min(2, rk(s));
+  R = Object.assign(base, { i, node, rank, d: boss ? 5 : nodeDiff(node, s.fails), boss, n: boss ? (rank ? 10 : 8) : 6 });
   if (boss) R.plan = bossPlan(i, s);
   ac(); music(boss ? 'boss' : 'escale'); nextQ();
 }
@@ -4384,6 +4432,8 @@ function testPick() {
   const T = R.test; if (T.at >= T.list.length) return null;
   return { i: isleById(T.list[T.at]), l: T.st ? 3 : 2 };
 }
+// Rangs argent et or : chaque question tire son niveau un ou deux crans au-dessus de celui de la route (sans dépasser le niveau 5 de la classe)
+const rankLv = () => !R.rank || R.boss ? R.d : Math.min(5, R.d + R.rank - 1 + (Math.random() < .5 ? 1 : 0));
 const advance = () => { R.k++; if (R.skip) { R.k++; R.res.push(null); R.skip = 0; } nextQ(); };
 function nextQ() {
   if (R.k >= R.n) return endEscale();
@@ -4394,7 +4444,7 @@ function nextQ() {
   else if (R.test) { const pk = testPick(); if (!pk) return endEscale(); R.qi = pk.i; do { q = pk.i.gen(pk.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = pk.l; }
   else if (tp && tp.rev) q = Object.assign({}, tp.rev.q, { rev: true, tgt: 1 });
   else if (rv) { q = Object.assign({}, rv.q, { rev: true }); R.qi = isleById(rv.g); R.revs++; setTimeout(() => voice('revanche', true), 500); }
-  else { const src = R.i.id === 'mix' ? mixPick() : { i: R.i, l: tp ? tp.lv : R.d }; R.qi = src.i; do { q = src.i.gen(src.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = src.l; if (tp) q.tgt = 1; q = recall(q); }
+  else { const src = R.i.id === 'mix' ? mixPick() : { i: R.i, l: tp ? tp.lv : rankLv() }; R.qi = src.i; do { q = src.i.gen(src.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = src.l; if (tp) q.tgt = 1; q = recall(q); }
   if (q.tgt) setTimeout(() => R && R.q === q && (R.cible || (R.cible = voice('boss-cible')), pop(R.i.boss.img, `${R.i.boss.n} vise ton point faible : ${q.lv ? skillName(R.i.id, q.lv) : 'une question déjà ratée'}`)), 700);
   if (QI().sea === 'f' && !q.typo) { ['ask', 'prompt', 'explain', 'hint', 'answerText'].forEach(k => { if (typeof q[k] === 'string') q[k] = typo(q[k]); }); (q.choices || []).forEach(c => { c.html = typo(String(c.html)); }); q.typo = 1; }
   // La bonne réponse change de place à chaque question, et jamais trois fois de suite au même endroit (les signes <, =, > gardent leur ordre)
@@ -4429,7 +4479,8 @@ function sceneHTML() {
 }
 function powersHTML() {
   const p = [];
-  if (S.crew.includes('perroquet')) p.push(`<button class="pw glass" data-a="power" data-p="perroquet" ${R.used.perroquet ? 'disabled' : ''}><img src="${IMG('crew-perroquet')}" alt=""><span>Indice<small>Perroquet · ×1</small></span></button>`);
+  // Pas d'indice du perroquet au rang or, ni contre le boss du rang argent
+  if (S.crew.includes('perroquet') && !(R.rank >= 2 || (R.rank && R.boss))) p.push(`<button class="pw glass" data-a="power" data-p="perroquet" ${R.used.perroquet ? 'disabled' : ''}><img src="${IMG('crew-perroquet')}" alt=""><span>Indice<small>Perroquet · ×1</small></span></button>`);
   if (S.crew.includes('calmar')) p.push(`<button class="pw glass" data-a="power" data-p="calmar" ${R.used.calmar ? 'disabled' : ''}><img src="${IMG('crew-calmar')}" alt=""><span>Butin ×2<small>Calmar · ×1</small></span></button>`);
   if (S.crew.includes('crabe')) p.push(`<button class="pw glass" data-a="power" data-p="crabe" ${R.used.crabe ? 'disabled' : ''}><img src="${IMG('crew-crabe')}" alt=""><span>Relance<small>Crabe · ×1</small></span></button>`);
   return `<div class="powers">${p.join('')}</div>`;
@@ -4566,13 +4617,13 @@ function refreshBottom() { const rt = $('.rtext'), y = rt ? rt.scrollTop : 0; $(
 const normT = x => String(x).toLowerCase().replace(/[’']/g, '\'').replace(/\s+/g, ' ').trim();
 const noAcc = x => normT(x).normalize('NFD').replace(/[̀-ͯ]/g, '');
 function recall(q) {
-  if (!R || GR() === 'cp' || (q.lv || R.d) < 4 || !q.choices || q.kind !== 'choices') return q;
+  if (!R || GR() === 'cp' || (q.lv || R.d) < (R.rank ? 2 : 4) || !q.choices || q.kind !== 'choices') return q;
   const whyOf = {}; q.choices.forEach(c => { if (c.why) whyOf[normT(q.typeable && q.typeable.strip ? String(c.v).replace(q.typeable.strip, '') : c.v)] = c.why; });
-  if (QI().id === 'stade' && typeof q.answer === 'number' && Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 999999 && Math.random() < .6) {
+  if (QI().id === 'stade' && typeof q.answer === 'number' && Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 999999 && Math.random() < (R.rank ? .85 : .6)) {
     const pr = String(q.prompt), slot = /= \?$/.test(pr) ? pr.replace(/= \?$/, `= ${SLOT}`) : /…/.test(pr) && !/[a-z]/i.test(pr.replace(/…/, '')) ? pr.replace('…', SLOT).replace(/ \?$/, '') : null;
     return Object.assign({}, q, { kind: 'keypad', ask: 'Écris le résultat, puis tire !', prompt: slot || `<span class="words">${pr}</span><br>${SLOT}`, promptClass: slot ? '' : 'mid', choices: undefined, sayChoices: false, whyOf, recall: 1 });
   }
-  if (q.typeable && ['ce2', 'cm1', 'cm2'].includes(GR()) && Math.random() < .5) {
+  if (q.typeable && ['ce2', 'cm1', 'cm2'].includes(GR()) && Math.random() < (R.rank ? .8 : .5)) {
     const T = q.typeable; Object.entries(T.whys || {}).forEach(([k, w]) => { whyOf[normT(k)] = w; }); return Object.assign({}, q, { kind: 'type', ask: T.ask, prompt: T.prompt || q.prompt, answer: T.ans, choices: undefined, whyOf, recall: 1 });
   }
   return q;
@@ -4747,7 +4798,7 @@ function endVirtual() {
       if (shipLv() > lvBefore) rewards.push({ img: shipImg(), b: `Ton navire devient un ${SHIPS[shipLv()][2]} !`, s: 'Le Fier Calcul s’agrandit', tag: 'Navire' }); } }
   else { // test du capitaine : chaque île démarre au niveau 1, 3 ou 5 de sa route (jamais en dessous de la progression déjà faite)
     Object.entries(R.test.res).forEach(([id, L]) => { const s = IS(id), node = 2 * L - 1, i = isleById(id);
-      if (s.node < node) { s.node = node; rewards.push({ img: i.img, b: i.n, s: `Tu commences au niveau ${node} de la route`, tag: 'Niveau' }); } });
+      if (!rk(s) && s.node < node) { s.node = node; rewards.push({ img: i.img, b: i.n, s: `Tu commences au niveau ${node} de la route`, tag: 'Niveau' }); } });
     if (!rewards.length) rewards.push({ img: 'guide-capitaine', b: 'Ta route ne change pas', s: 'Tu es déjà au bon niveau sur chaque île', tag: 'Test' });
     P().placed = today(); S.gold += 50; R.gold += 50; }
   rewards.unshift({ img: 'coin-doublon', b: `+${R.gold} doublons`, s: `${R.ok} bonnes réponses sur ${R.res.filter(x => x !== null).length}${R.best > 2 ? ` · combo ×${R.best}` : ''}`, tag: 'Butin' });
@@ -4759,7 +4810,7 @@ function endVirtual() {
 }
 function endEscale() {
   if (R.i.v) return endVirtual();
-  R.done = true; const s = IS(R.i.id), need = R.boss ? 6 : 4, win = R.ok >= need;
+  R.done = true; const s = IS(R.i.id), need = R.boss ? (R.rank ? 8 : 6) : 4, win = R.ok >= need;
   const stars = R.ok >= R.n || (has('poisson') && R.ok >= R.n - 1) ? 3 : R.ok >= R.n - 1 ? 2 : win ? 1 : 0;
   S.rounds++; const rewards = [];
   if (R.used.calmar) { S.gold += R.gold; rewards.push({ img: 'crew-calmar', b: `Double butin : +${R.gold}`, s: 'Pouvoir du Calmar Calcul', tag: 'Pouvoir' }); R.gold *= 2; }
@@ -4773,9 +4824,9 @@ function endEscale() {
     if (shipLv() > lvBefore) rewards.push({ img: shipImg(), b: `Ton navire devient un ${SHIPS[shipLv()][2]} !`, s: 'Le Fier Calcul s’agrandit', tag: 'Navire' });
     const join = id => { if (id && !has(id)) { S.crew.push(id); const c = CREW.find(c => c.id === id); rewards.push({ img: 'crew-' + id, b: `${c.n} rejoint l’équipage`, s: c.p, tag: c.r }); } };
     if (R.node === s.node) { s.node++; if (s.node > NODES) rewards.push({ img: R.i.img, b: 'Île terminée !', s: 'Tu as conquis toute la route', tag: 'Route' }); else rewards.push({ img: s.node === CHEST ? 'chest-closed' : s.node === BOSS ? R.i.boss.img : R.i.img, b: s.node > NODES ? 'Île terminée !' : `Niveau ${s.node} débloqué`, s: s.node === BOSS ? 'Le boss t’attend' : s.node === CHEST ? 'Le coffre de l’île' : `Difficulté ${nodeDiff(s.node, 0)} sur 5`, tag: 'Route' }); }
-    if (R.node === CHEST) {
+    if (R.node === CHEST && first) {
       S.gold += 80; R.gold += 80; rewards.push({ img: 'chest-open', b: 'Coffre de l’île : +80', s: 'Trésor caché du niveau 5', tag: 'Coffre' });
-      if (first) { gemN += 1; gemWhy.push('dans le coffre'); }
+      gemN += 1; gemWhy.push('dans le coffre');
       join(R.i.chestCrew);
     }
     // La prime et les pierres du boss ne se gagnent qu'à la première victoire ; rejouer le boss reste un bon entraînement
@@ -4785,9 +4836,16 @@ function endEscale() {
     if (R.ok === R.n) grantEp(R.i.ep);
     if (R.boss && R.i.id === 'canons') grantEp('Vainqueur du Kraken');
     questEv('win', R.i.id); if (R.ok === R.n) questEv('perfect');
-    if (R.node === CHEST) { const c = SAGA.find(x => x.id === R.i.id); if (c) rewards.push({ img: 'deco-compass', b: typo(`Nouveau chapitre : « ${c.t} »`), s: typo('Un morceau de la carte au trésor ! Lis la suite dans ton journal.'), tag: 'Histoire', saga: c.id });
-      if (sagaIsles().every(i => IS(i.id).node > CHEST || i.id === R.i.id && s.node > CHEST) && !P().sagaFinal) { P().sagaFinal = 1; S.gold += 500; R.gold += 500; gemN += 5; gemWhy.push('à la fin de l’histoire'); grantEp('Chasseur de Trésor'); rewards.push({ img: 'chest-open', b: 'Les douze morceaux sont réunis : +500 !', s: 'Lis le chapitre final dans ton journal', tag: 'Histoire', saga: 'final' }); } }
+    if (R.node === CHEST && first && !R.rank) { const c = SAGA.find(x => x.id === R.i.id); if (c) rewards.push({ img: 'deco-compass', b: typo(`Nouveau chapitre : « ${c.t} »`), s: typo('Un morceau de la carte au trésor ! Lis la suite dans ton journal.'), tag: 'Histoire', saga: c.id });
+      if (sagaIsles().every(i => chestDone(IS(i.id)) || i.id === R.i.id && s.node > CHEST) && !P().sagaFinal) { P().sagaFinal = 1; S.gold += 500; R.gold += 500; gemN += 5; gemWhy.push('à la fin de l’histoire'); grantEp('Chasseur de Trésor'); rewards.push({ img: 'chest-open', b: 'Les douze morceaux sont réunis : +500 !', s: 'Lis le chapitre final dans ton journal', tag: 'Histoire', saga: 'final' }); } }
     ISLES.forEach(i => { if (i.unlock && !i.soon && i.sea === R.i.sea && SW(i.sea) === i.unlock) rewards.push({ img: i.img, b: `${i.n} sort du brouillard`, s: `Nouvelle île : ${i.notion}`, tag: 'Carte' }); });
+    // Route terminée avec 3 étoiles aux 9 niveaux : rang suivant (la route repart du niveau 1), fanion sur l'île, pierres précieuses ; au rang or, titre et pavillon
+    if (s.node > NODES && rk(s) < 3 && routeStars(s) === (NODES - 1) * 3) { const r = rk(s), R0 = IRANK[r];
+      if (R0.gem) { gemN += R0.gem; gemWhy.push(`pour le rang ${R0.n}`); }
+      if (r < 2) { s.ps = (s.ps || 0) + Object.values(s.stars).reduce((a, b) => a + b, 0); s.stars = {}; s.node = 1; s.fails = 0; s.rank = r + 1;
+        rewards.push({ img: R.i.img, b: `Rang ${R0.n} réussi !`, s: `Un fanion ${r ? 'd’argent' : 'de bronze'} flotte sur ${R.i.art}. Nouvelle route : le rang ${IRANK[r + 1].n}, plus exigeant.`, tag: 'Rang' }); }
+      else { s.rank = 3; grantEp(`Maître ${deArt(R.i.art)}`);
+        rewards.push({ img: R.i.img, b: `Rang or réussi : île maîtrisée !`, s: 'Un fanion d’or flotte sur l’île', tag: 'Rang' }, { img: 'flag-blank', b: `Pavillon ${deArt(R.i.art)}`, s: 'Un pavillon exclusif pour ton navire', tag: 'Rang' }); } }
     if (gemN) { S.gems = gems() + gemN; rewards.push({ img: 'gem', b: `+${gemTxt(gemN)}`, s: `Gagnée${gemN > 1 ? 's' : ''} ${gemWhy.join(' et ')} · pour bâtir ton port`, tag: 'Trésor' }); }
   } else { s.fails++; }
   if (R.newEp) rewards.push({ img: capt(), b: `Nouveau surnom : « ${R.newEp} »`, s: 'À afficher sur ton avis de recherche', tag: 'Surnom' });
@@ -4845,7 +4903,7 @@ function openChest() {
 
 /* ================= Port (fin de session) ================= */
 function renderPort() {
-  R = null; music('port'); setTimeout(() => voice('port', true), 800); const t = P().tide || {}; const nextI = ISLES.filter(unlocked).sort((a, b) => IS(a.id).node - IS(b.id).node)[0];
+  R = null; music('port'); setTimeout(() => voice('port', true), 800); const t = P().tide || {}; const nextI = ISLES.filter(unlocked).sort((a, b) => prog(IS(a.id)) - prog(IS(b.id)))[0];
   app.innerHTML = `<div class="screen port"><img class="bg" src="${IMG('bg-port-dusk')}" alt="">
     <div style="position:absolute;left:0;right:0;top:calc(var(--st) + 60px);text-align:center;padding:0 20px"><div class="smallcaps" style="color:#ffd9a0">Fin de la marée</div><div class="disp" style="font-size:36px;color:#fffaf0;margin-top:6px;text-shadow:0 3px 14px rgba(0,0,0,.45)">Retour au port</div></div>
     <div class="card paper"><img class="cpile" src="${IMG('coin-pile')}" alt=""><div class="disp" style="font-size:20px;padding-right:76px">Belle navigation, ${esc(S.name || 'Capitaine')} !</div>
@@ -4895,11 +4953,11 @@ function renderPrime() {
     <section class="mine glass"><div class="smallcaps">Ton portrait</div>
       <div class="avs">${AVATARS.map(a => `<button data-a="avatar" data-v="${a}" aria-pressed="${capt() === 'capt-' + a}" aria-label="Portrait ${a.toUpperCase()}"><img src="${IMG('capt-' + a)}" alt=""></button>`).join('')}</div></section>
     <section class="mine glass"><div class="smallcaps">Ton pavillon</div>${flagHTML(S.flag, 'big')}
-      <div class="flags">${FLAGS.map(([id, n]) => `<button data-a="flag" data-f="${id}" aria-pressed="${S.flag === id}" aria-label="${n}"><svg viewBox="0 0 100 100" aria-hidden="true">${flagSym(id)}</svg></button>`).join('')}</div></section>
+      <div class="flags">${allFlags().map(([id, n]) => `<button data-a="flag" data-f="${id}" aria-pressed="${S.flag === id}" aria-label="${n}"><svg viewBox="0 0 100 100" aria-hidden="true">${flagSym(id)}</svg></button>`).join('')}</div></section>
     <div class="rank glass"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span class="disp" style="font-size:17px">${next ? `Prochain titre : ${next[1]}` : 'Tu es une légende !'}</span><span style="font-size:14px;color:var(--mist);white-space:nowrap">${next ? `encore ${fmt(next[0] - S.gold)}` : ''}</span></div>
       <div class="bar"><i style="width:${pct}%"></i></div>
       <div class="smallcaps" style="color:var(--mist);margin-bottom:8px">Tes surnoms</div>
-      <div class="eps">${EPITHETS.filter(e => !e[2] || !isleById(e[2]).soon || S.eps.includes(e[0])).map(([n, how]) => S.eps.includes(n) ? `<button class="have" data-a="ep" data-e="${esc(n)}" aria-pressed="${S.epithet === n}">${n}</button>` : `<button data-a="eptip" data-h="${esc(how)}">${ico('iLock')} ${n}</button>`).join('')}</div></div>
+      <div class="eps">${EPITHETS.filter(e => S.eps.includes(e[0]) || (e[3] === 'm' ? !isleById(e[2]).soon && rk(IS(e[2])) > 0 : !e[2] || !isleById(e[2]).soon)).map(([n, how]) => S.eps.includes(n) ? `<button class="have" data-a="ep" data-e="${esc(n)}" aria-pressed="${S.epithet === n}">${n}</button>` : `<button data-a="eptip" data-h="${esc(how)}">${ico('iLock')} ${n}</button>`).join('')}</div></div>
     <button class="ghost-btn" data-a="rename" style="margin-top:14px">Changer de nom</button></div>${dockHTML()}</div>`;
   bindCog();
   $$('.eps svg').forEach(s => { s.style.width = '14px'; s.style.height = '14px'; s.style.verticalAlign = '-1px'; });
@@ -4966,7 +5024,7 @@ function openParents() {
     <div class="pcard"><h3>Classe de l’enfant</h3><div class="seg">${Object.entries(GRADES).map(([k, g]) => `<button data-a="grade" data-v="${k}" aria-pressed="${GR() === k}">${g.n} · ${g.age}</button>`).join('')}</div>
       <p class="note" style="margin:8px 0 0">Les questions suivent le programme de la classe choisie. Chaque classe garde sa propre progression : on peut changer sans rien perdre.</p></div>
     ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
-      return `<div class="prow"><img src="${IMG(i.img)}" alt=""><div><b>${i.notion}${badge}</b><span>Niveau ${Math.min(s.node, NODES)}/10 · ${s.tot} questions${s.tot ? ` · ${(s.ms / s.tot / 1000).toFixed(1).replace('.', ',')} s par réponse` : ''}</span></div><span class="pct">${p == null ? '–' : p + ' %'}</span></div>`; }).join('')}</div>` : ''; }).join('')}
+      return `<div class="prow"><img src="${IMG(i.img)}" alt=""><div><b>${i.notion}${badge}</b><span>${capF(rankTxt(s))} · ${s.tot} questions${s.tot ? ` · ${(s.ms / s.tot / 1000).toFixed(1).replace('.', ',')} s par réponse` : ''}</span></div><span class="pct">${p == null ? '–' : p + ' %'}</span></div>`; }).join('')}</div>` : ''; }).join('')}
     <div class="pcard"><h3>Minutes de jeu, 7 derniers jours</h3><div class="days">${last7.map(([x, s]) => `<div class="day"><span>${s ? Math.round(s / 60) : ''}</span><i style="height:${Math.max(2, s / maxS * 70)}px"></i><span>${x.toLocaleDateString('fr-FR', { weekday: 'short' }).slice(0, 3)}</span></div>`).join('')}</div></div>
     <div class="pcard"><h3>Compétences « Je sais… »</h3>${(() => { const all = playable().flatMap(i => range(1, 5).map(L => ({ i, L, st: skillState(i.id, L) }))), ok = all.filter(x => x.st === 'ok').length, rv = all.filter(x => x.st === 'rev');
       return `<p style="margin:0 0 6px">${ok} acquise${ok > 1 ? 's' : ''} sur ${all.length} en ${GRADES[GR()].n}${P().placed ? ` · test du capitaine passé le ${P().placed.split('-').reverse().join('/')}` : ''}.</p>${rv.length ? `<p style="margin:0 0 4px;color:#ffb9ad">À revoir :</p><ul class="errs">${rv.slice(0, 8).map(x => `<li><b>${esc(x.i.n)}</b> · ${esc(skillName(x.i.id, x.L))}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Rien à revoir pour l’instant.</p>'}<p class="note" style="margin:8px 0 0">Le détail est dans l’onglet Journal de l’enfant.</p>`; })()}</div>
@@ -5012,7 +5070,7 @@ function feedbackText() {
     const secs = Object.values(S.days).reduce((a, b) => a + b, 0), os = (navigator.userAgent.match(/OS (\d+[_\d]*)/) || [])[1];
     L.push('', '— Résumé de jeu —', `${Object.keys(S.days).length} jour(s) de jeu · ${Math.round(secs / 60)} min · ${S.wins} escales gagnées · ${S.crew.length} équipiers`);
     L.push(`Classe choisie : ${GRADES[GR()].n}`);
-    playable().forEach(i => { const s = IS(i.id); L.push(`${i.notion} : niveau ${Math.min(s.node, NODES)}/10${s.tot ? ` · ${Math.round(s.ok / s.tot * 100)} % sur ${s.tot} questions` : ' · pas encore joué'}`); });
+    playable().forEach(i => { const s = IS(i.id); L.push(`${i.notion} : ${rankTxt(s)}${s.tot ? ` · ${Math.round(s.ok / s.tot * 100)} % sur ${s.tot} questions` : ' · pas encore joué'}`); });
     L.push(`Appareil : ${isIOS ? 'iOS ' + (os || '?').replace(/_/g, '.') : navigator.platform || '?'} · ${nativeApp ? 'appli App Store' : standalone ? 'écran d’accueil' : 'navigateur'}`);
   }
   return L.join('\n');
@@ -5090,16 +5148,17 @@ app.addEventListener('click', e => {
       else { SND.tap(); S.outfit[slot] = worn(slot) === id ? '' : id; }
       save(); const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; break; }
     case 'avatar': if (!AVATARS.includes(el.dataset.v)) break; S.avatar = el.dataset.v; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
-    case 'flag': if (!FLAGS.some(f => f[0] === el.dataset.f)) break; S.flag = el.dataset.f; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
+    case 'flag': if (!allFlags().some(f => f[0] === el.dataset.f)) break; S.flag = el.dataset.f; save(); SND.tap(); { const y = $('.tabpage').scrollTop; renderPrime(); $('.tabpage').scrollTop = y; } break;
     case 'portisle': SND.tap(); show('port'); break;
     case 'plot': { const i = +el.dataset.p; if (!(i >= 0 && i < 6) || $('.bsheet')) break; SND.tap(); plotSheet(i); break; }
     case 'bclose': { const m = $('.bsheet'); m && m.remove(); break; }
+    case 'rkclose': { const m = $('.rkm'); m && m.remove(); SND.tap(); break; }
     case 'unbuild': { const i = +el.dataset.p; if (!(i >= 0 && i < 6)) break; S.port[i] = ''; save(); SND.tap(); renderHarbor(); break; }
     case 'build': { const B = BLDS.find(x => x[0] === el.dataset.b), i = +el.dataset.p; if (!B || !(i >= 0 && i < 6)) break; const id = B[0];
       if (!portOwned().includes(id)) { if (gems() < B[2]) { toast(`Il te manque ${gemTxt(B[2] - gems())}. Cherche-les dans les coffres et sur les boss des îles.`); break; }
         S.gems = gems() - B[2]; S.blds.push(id); sfx('coins') || SND.coin(); toast(`${B[1]} : construit !`); } else SND.tap();
       S.port = S.port.map(b => b === id ? '' : b); S.port[i] = id; if (portBuilt() === 6) grantEp('Gouverneur du Port'); save(); renderHarbor(i); break; }
-    case 'lair': SND.tap(); toast(IS('canons').node > BOSS ? 'Le repaire du Kraken. Tu l’as vaincu, capitaine !' : 'Une île mystérieuse se cache dans le brouillard… Bats le boss de l’Île des Canons pour la découvrir.'); break;
+    case 'lair': SND.tap(); toast(bossDone(IS('canons')) ? 'Le repaire du Kraken. Tu l’as vaincu, capitaine !' : 'Une île mystérieuse se cache dans le brouillard… Bats le boss de l’Île des Canons pour la découvrir.'); break;
     case 'paint': { const pt = PAINTS.find(x => x[0] === el.dataset.p); if (!pt) break;
       if (S.paints.includes(pt[0])) { S.paint = pt[0]; SND.tap(); }
       else if (wallet() >= pt[2]) { S.spent += pt[2]; S.paints.push(pt[0]); S.paint = pt[0]; sfx('coins') || SND.coin(); voice('navire', true); toast(`${pt[1]} : ton navire est repeint !`); checkShipwright(); }
