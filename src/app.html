@@ -416,16 +416,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .grades button[aria-pressed="true"]{background:linear-gradient(180deg,#f7dc93,#c9973f);box-shadow:0 4px 0 var(--brass-lo)}
 .grades.nudge{animation:shake .4s}
 .modal input{font:700 20px var(--f-u);text-align:center;border:0;border-radius:14px;padding:12px;width:100%;color:var(--ink);background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.5)}
-/* Porte parentale (exigée par les stores pour les apps d'enfants) et pages pour les parents affichées dans l'appli */
-.pgate{position:absolute;inset:0;z-index:120;display:grid;place-items:center;padding:20px;background:rgba(4,14,20,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.pgbox{width:min(360px,100%);border-radius:22px;padding:20px 18px 16px;text-align:center;color:var(--ink)}
-.pgbox h3{font:800 22px/1.15 var(--f-d);margin:0 0 6px}
-.pgbox p{margin:0 0 10px;font-size:15px;color:#5b4636}
-.pgq{font:800 34px/1.1 var(--f-d);margin:4px 0 12px;font-variant-numeric:tabular-nums}
-.pgbox .fld{width:100%;text-align:center;font:700 24px var(--f-u);margin-bottom:12px;color:var(--ink);background:#fffaf0;box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.5)}
-.pgbox .ghost-btn{color:var(--ink);background:rgba(42,28,18,.06);box-shadow:inset 0 0 0 1.5px rgba(42,28,18,.3)}
-.pgbox .gap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pgerr{color:#a8241a!important;font-weight:600;margin:10px 0 0!important}
+/* Pages pour les parents (guide, confidentialité, assistance) affichées dans l'appli */
 .docwrap{position:absolute;inset:0;z-index:100;display:flex;flex-direction:column;background:#0b2230}
 .dochead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(var(--st) + 10px) 14px 10px;color:var(--foam);font:700 17px var(--f-u)}
 .docwrap iframe{flex:1;width:100%;border:0;background:#0b2230}
@@ -721,6 +712,9 @@ textarea.fld{min-height:76px}
 @keyframes gwr{0%,37%,100%{transform:rotate(-4deg)}6%,18%,30%{transform:rotate(34deg)}12%,24%{transform:rotate(-16deg)}}
 @keyframes gullfly{from{transform:translate(-60px,0)}to{transform:translate(640px,var(--gdy,-30px))}}
 .skies{position:absolute;inset:0;pointer-events:none}
+/* Mouettes : au-dessus des îles, des textes et des navires ; la carte est une couche à part, donc elles restent sous les panneaux de l'interface */
+.flock{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:9}
+.map{isolation:isolate}.mflock{z-index:25}
 .para{position:absolute;inset:0;pointer-events:none;z-index:4;will-change:transform}
 .para img{position:absolute;width:380px;opacity:.3;filter:drop-shadow(0 60px 18px rgba(3,24,34,.35));animation:cldrift var(--d,40s) ease-in-out infinite alternate}
 .hero>img.bg{animation:kburns 22s ease-in-out infinite alternate;transform-origin:30% 40%}
@@ -763,7 +757,7 @@ textarea.fld{min-height:76px}
 .purse.bump{animation:bump .6s cubic-bezier(.2,1.8,.4,1) .45s}
 @keyframes bump{40%{transform:scale(1.18);box-shadow:inset 0 0 0 1px rgba(243,213,140,.6),0 0 18px rgba(243,213,140,.6)}}
 .choice:not(.right):not(.wrong):active,.key:active{filter:brightness(1.06)}
-@media (prefers-reduced-motion:reduce){.amb,.skies,.isle.cur::before{display:none}.enter,.tlogo .disp .w,.brass-btn::after,.lvlban,.result .stars svg,.game.hot .qcard{animation:none}.title img.bg{transform:none}}
+@media (prefers-reduced-motion:reduce){.amb,.skies,.flock,.isle.cur::before{display:none}.enter,.tlogo .disp .w,.brass-btn::after,.lvlban,.result .stars svg,.game.hot .qcard{animation:none}.title img.bg{transform:none}}
 .say{position:absolute;right:8px;top:8px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#7a4f1a;background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1.5px rgba(138,98,36,.35);z-index:2}
 .say svg{width:19px;height:19px}.say:active{transform:scale(.92)}
 .errbtns{display:flex;gap:10px;align-items:center}.errbtns .say{position:static;flex:none;width:52px;height:52px}.errbtns .brass-btn{flex:1}
@@ -4027,7 +4021,7 @@ function dockHTML() {
 }
 function bindCog() {
   const c = $('#cog'); if (!c) return; let tm, held = false;
-  const go = e => { e.preventDefault(); held = false; c.classList.add('hold'); tm = setTimeout(() => { held = true; c.classList.remove('hold'); parentGate(openParents); }, 2000); };
+  const go = e => { e.preventDefault(); held = false; c.classList.add('hold'); tm = setTimeout(() => { held = true; c.classList.remove('hold'); openParents(); }, 2000); };
   const stop = () => { if (tm) clearTimeout(tm); c.classList.remove('hold'); };
   c.addEventListener('pointerdown', go); ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => c.addEventListener(ev, stop));
   c.addEventListener('click', () => { if (!held) toast('Espace parents : maintiens le bouton 2 secondes.'); held = false; });
@@ -4713,23 +4707,6 @@ function offerPlacement() {
 
 /* ================= Parents ================= */
 let parentSample = false;
-// Porte parentale : une tâche d'adulte avant l'espace parents, d'où partent l'avis, la sauvegarde et les pages d'aide.
-// Elle reste ouverte 5 minutes, le temps de changer les réglages.
-let gateAt = 0;
-function parentGate(then) {
-  if (Date.now() - gateAt < 5 * 60000) { then(); return; }
-  const a = rnd(13, 29), b = rnd(12, 19), el = document.createElement('div'); el.className = 'pgate'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Réservé aux parents');
-  el.innerHTML = `<div class="pgbox paper"><h3>Réservé aux parents</h3><p>Pour continuer, écrivez le résultat de :</p><div class="pgq">${a} × ${b}</div>
-    <input class="fld" id="pgin" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="Résultat">
-    <div class="gap"><button class="ghost-btn" data-a="pgno">Annuler</button><button class="brass-btn" data-a="pgok" style="min-height:48px">Valider</button></div><p class="pgerr" id="pgerr" hidden>Ce n’est pas le bon résultat.</p></div>`;
-  el._then = then; el._ans = a * b; app.appendChild(el);
-  const inp = $('#pgin', el); inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); gateCheck(); } }); setTimeout(() => inp.focus(), 60);
-}
-function gateCheck() {
-  const el = $('.pgate'); if (!el) return;
-  if (+$('#pgin', el).value === el._ans) { gateAt = Date.now(); el.remove(); el._then(); }
-  else { $('#pgerr', el).hidden = false; $('#pgin', el).value = ''; }
-}
 // Guide et confidentialité : affichés dans l'appli, sans ouvrir de navigateur (règles des stores pour les apps d'enfants)
 function openDoc(url, title) {
   const el = document.createElement('div'); el.className = 'docwrap'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', title);
@@ -4922,8 +4899,6 @@ app.addEventListener('click', e => {
     case 'support': openDoc('support.html', 'Assistance et contact'); break;
     case 'sndfix': wakeAudio(true); SND.ok(); setTimeout(() => { const d = $('#sdiag'); if (d) { d.textContent = 'Son relancé. Détails techniques : ' + audioDiag(); d.hidden = false; } }, 1200); break;
     case 'docclose': { const d = $('.docwrap'); d && d.remove(); break; }
-    case 'pgok': gateCheck(); break;
-    case 'pgno': { const g = $('.pgate'); g && g.remove(); break; }
     case 'bkcopy': { const c = backupCode(); copyText(c).then(ok => { toast(ok ? 'Code de sauvegarde copié' : 'Copiez le code ci-dessous'); $('#bkbox').innerHTML = `<p class="note" style="margin:12px 0 6px">Votre code (gardez-le précieusement) :</p><textarea class="fld" readonly style="min-height:90px;font-size:12px">${c}</textarea>`; }); break; }
     case 'bkrestore': $('#bkbox').innerHTML = `<p class="note" style="margin:12px 0 6px">Collez le code de sauvegarde. La progression actuelle sera remplacée.</p><textarea class="fld" id="bkin" style="min-height:90px;font-size:12px" placeholder="ARCHIPEL1:…"></textarea><div style="margin-top:8px"><button class="ghost-btn" data-a="bkdo">Restaurer</button></div>`; break;
     case 'bkdo': if (restoreFrom($('#bkin').value)) { toast('Progression restaurée'); setTimeout(() => location.reload(), 900); } else toast('Ce code ne fonctionne pas. Vérifiez qu’il est complet.'); break;
@@ -5087,23 +5062,22 @@ function seaInit() {
 }
 function seaMount(sc) {
   const ms = $('#mapScroll', sc), m = $('.map', sc); if (!ms || !m || !seaInit()) return;
-  const f = m.classList.contains('sea-f'); sc.prepend(SEA.cv); Object.assign(SEA, { sc, ms, drawn: false, col: seaMatrix(f ? -28 : 0, f ? 1.15 : 1, .92) });
-  ms.addEventListener('scroll', () => { SEA.fast = performance.now() + 300; seaKick(); }, { passive: true });
+  const f = m.classList.contains('sea-f'), oc = $('.ocean', m); oc ? oc.after(SEA.cv) : m.prepend(SEA.cv); Object.assign(SEA, { sc, ms, drawn: false, col: seaMatrix(f ? -28 : 0, f ? 1.15 : 1, .92) });
   seaKick();
 }
 function seaKick() { if (SEA.ok && !SEA.raf) SEA.raf = requestAnimationFrame(seaFrame); }
-// 30 images par seconde au repos, chaque image pendant le défilement ; une seule image si l'enfant a réduit les animations
+// La toile couvre toute la carte et défile avec elle : 30 images par seconde, une seule si l'enfant a réduit les animations
 function seaFrame(now) {
   SEA.raf = 0; if (!SEA.ok || !SEA.ready || !SEA.cv.isConnected || document.hidden) return;
-  const still = calm(), fast = now < (SEA.fast || 0);
-  if (!SEA.drawn || fast || (!still && now - (SEA.last || 0) >= 31)) { seaDraw(still ? 0 : now - SEA.t0); SEA.last = now; if (!SEA.drawn) { SEA.drawn = true; SEA.sc.classList.add('seagl'); } }
-  if (!still || fast) SEA.raf = requestAnimationFrame(seaFrame);
+  const still = calm();
+  if (!SEA.drawn || (!still && now - (SEA.last || 0) >= 31)) { seaDraw(still ? 0 : now - SEA.t0); SEA.last = now; if (!SEA.drawn) { SEA.drawn = true; SEA.sc.classList.add('seagl'); } }
+  if (!still) SEA.raf = requestAnimationFrame(seaFrame);
 }
 function seaDraw(ms) {
-  const { gl, cv, u } = SEA, dpr = Math.min(window.devicePixelRatio || 1, 2), W = Math.round(cv.clientWidth * dpr), H = Math.round(cv.clientHeight * dpr); if (!W || !H) return;
+  const { gl, cv, u } = SEA, dpr = Math.min(window.devicePixelRatio || 1, 1.5), W = Math.round(cv.clientWidth * dpr), H = Math.round(cv.clientHeight * dpr); if (!W || !H) return;
   if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; gl.viewport(0, 0, W, H); }
   const t = ms / 1000, T = SEA.tile, T2 = T / .73, wrap = (v, m) => ((v % m) + m) % m;
-  gl.uniform2f(u.uRes, W, H); gl.uniform1f(u.uDpr, dpr); gl.uniform1f(u.uTile, T); gl.uniform1f(u.uScroll, SEA.ms.scrollTop);
+  gl.uniform2f(u.uRes, W, H); gl.uniform1f(u.uDpr, dpr); gl.uniform1f(u.uTile, T); gl.uniform1f(u.uScroll, 0);
   gl.uniform1f(u.uPh, 2 * Math.PI * wrap(t, 10) / 10); gl.uniform1f(u.uRef, .12);
   gl.uniform2f(u.uOff1, wrap(t * 2.2, T) / T, wrap(t * 4.4, T) / T); gl.uniform2f(u.uOff2, wrap(-t * 3.1, T2) / T2, wrap(t * 2.4, T2) / T2);
   gl.uniformMatrix3fv(u.uCol, false, SEA.col); gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -5123,15 +5097,20 @@ function ambHTML(o) {
   if (o.sun) h += `${o.gods ? `<i class="gods" style="left:${o.sun[0]}%;top:${o.sun[1]}%"></i>` : ''}<i class="halo" style="left:${o.sun[0]}%;top:${o.sun[1]}%"></i>`;
   if (o.clouds != null) h += `<img class="cl" src="${IMG('fx-fog-a')}" alt="" style="top:${o.clouds}%"><img class="cl b" src="${IMG('fx-fog-b')}" alt="" style="top:${o.clouds + 10}%">`;
   if (o.mist) h += `<img class="mist" src="${IMG('fx-fog-b')}" alt="">`;
-  for (let k = 0; k < (o.gulls || 0); k++) h += `<i class="gull" style="--gy:${(o.gy || 12) + k * 7 + Math.random() * 5}%;--gd:${17 + k * 5}s;--gdel:-${(k * 6 + Math.random() * 6).toFixed(1)}s;--gw:${22 + Math.random() * 14}px;--gf:${(3 + Math.random()).toFixed(1)}s;--gfd:-${(Math.random() * 3).toFixed(1)}s;--gdy:${-15 - Math.random() * 40}px">${GULL}</i>`;
   return `<div class="amb" aria-hidden="true">${h}</div>`;
+}
+function flockHTML(o) {
+  let h = '';
+  for (let k = 0; k < (o.gulls || 0); k++) h += `<i class="gull" style="--gy:${(o.gy || 12) + k * 7 + Math.random() * 5}%;--gd:${17 + k * 5}s;--gdel:-${(k * 6 + Math.random() * 6).toFixed(1)}s;--gw:${22 + Math.random() * 14}px;--gf:${(3 + Math.random()).toFixed(1)}s;--gfd:-${(Math.random() * 3).toFixed(1)}s;--gdy:${-15 - Math.random() * 40}px">${GULL}</i>`;
+  return h ? `<div class="flock" aria-hidden="true">${h}</div>` : '';
 }
 let shownGold = null;
 // Habille l'écran qui vient d'être dessiné : entrée en fondu, décor vivant, particules d'ambiance, compteur de doublons qui défile
 function decorate(kind) {
   const sc = app.firstElementChild; if (!sc || sc.dataset.dec) return; sc.dataset.dec = kind;
   if (kind !== 'game' && kind !== 'title') sc.classList.add('enter');
-  const put = (host, o, first = true) => { if (!host) return; const t = document.createElement('div'); t.innerHTML = ambHTML(o); const e = t.firstElementChild; first && host.firstElementChild ? host.firstElementChild.after(e) : host.appendChild(e); return e; };
+  const put = (host, o, first = true) => { if (!host) return; const t = document.createElement('div'); t.innerHTML = ambHTML(o); const e = t.firstElementChild; first && host.firstElementChild ? host.firstElementChild.after(e) : host.appendChild(e);
+    t.innerHTML = flockHTML(o); if (t.firstElementChild) host.appendChild(t.firstElementChild); return e; };
   if (kind === 'title') {
     const d = $('.tlogo .disp', sc); if (d) d.innerHTML = [['Moussaillon', 0]].map(([w, k]) => w === '<br>' ? w : `<span class="w" style="animation-delay:${.15 + k * .16}s,${2 + k * .12}s">${w}</span>`).join(' ');
     const bg = $('img.bg', sc); put(sc, { sun: sunAt(sc, 1024, 1536, .2, .36), gods: 1, clouds: 4, gulls: 3, gy: 20 });
@@ -5141,12 +5120,12 @@ function decorate(kind) {
     seaMount(sc);
     const m = $('.map', sc), gl = $('.glints', sc);
     if (m && gl) { const t = document.createElement('div'); t.className = 'skies'; t.setAttribute('aria-hidden', 'true');
-      t.innerHTML = [120, 420, 760, 1080, 1390, 1700].map((y, k) => `<i class="csh" style="top:${y}px;--d:${70 + k * 13}s;--del:-${k * 17}s;width:${340 + (k % 3) * 70}px"></i>`).join('') + mapGulls();
+      t.innerHTML = [120, 420, 760, 1080, 1390, 1700].map((y, k) => `<i class="csh" style="top:${y}px;--d:${70 + k * 13}s;--del:-${k * 17}s;width:${340 + (k % 3) * 70}px"></i>`).join('');
       t.style.setProperty('--mw', m.clientWidth + 'px'); gl.after(t);
       const para = document.createElement('div'); para.className = 'para'; para.setAttribute('aria-hidden', 'true');
       para.innerHTML = [[260, 8, 'a'], [640, 55, 'b'], [980, 15, 'a'], [1330, 60, 'b'], [1650, 20, 'a']].map(([y, x, f], k) => `<img src="${IMG('fx-fog-' + f)}" alt="" style="top:${y}px;left:${x - 25}%;--d:${36 + k * 9}s">`).join('');
-      m.appendChild(para); const ms = $('#mapScroll', sc);
-      if (ms) { const move = () => { para.style.transform = `translate3d(0,${(-ms.scrollTop * .28).toFixed(1)}px,0)`; }; ms.addEventListener('scroll', move, { passive: true }); requestAnimationFrame(move); } }
+      m.appendChild(para);
+      const fl = document.createElement('div'); fl.className = 'flock mflock'; fl.setAttribute('aria-hidden', 'true'); fl.innerHTML = mapGulls(); m.appendChild(fl); }
     // Île découverte depuis le dernier passage sur la carte : la carte défile jusqu'à elle, le brouillard se dissipe, l'île apparaît
     { const P0 = P(), sea = ISLES.filter(i => i.sea === S.sea && unlocked(i)); if (!Array.isArray(P0.seen)) { P0.seen = ISLES.filter(unlocked).map(i => i.id); save(); }
       const fresh = sea.filter(i => !P0.seen.includes(i.id))[0];
