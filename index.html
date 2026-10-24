@@ -1067,7 +1067,7 @@ try { S = migrate(Object.assign(DEF(), JSON.parse(localStorage.getItem(KEY) || '
 const GR = () => S.grade || 'ce2', CM1 = () => GR() === 'cm1';
 const P = () => S.g[GR()] || (S.g[GR()] = PDEF());
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
-const VERSION = '2.3.6 bêta · octobre 2026';
+const VERSION = '2.4 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
 const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -1120,7 +1120,7 @@ function wakeAudio(force) {
   const a = ac(); alog('nouveau moteur ' + (a ? a.state : 'impossible')); setTimeout(() => alog('1 s après : ' + (AC ? AC.state : 'aucun')), 1000);
   if (a && musWant) music(musWant);
 }
-// Diagnostic du son, affiché dans l'espace parents pendant la bêta : ce que l'appareil dit vraiment du moteur audio.
+// Diagnostic du son, affiché dans l'espace parents après « Relancer le son » : ce que l'appareil dit vraiment du moteur audio.
 function audioDiag() {
   const ss = navigator.audioSession;
   return `Moteur ${AC ? AC.state : 'pas encore créé'} (n° ${audioCtxN}) · session ${ss ? ss.type + ' / ' + (ss.state || '?') : 'API absente'} · ${Object.keys(BUF).length} sons chargés${audioLog.length ? ' · ' + audioLog.join(' · ') : ''}`;
@@ -4767,8 +4767,8 @@ function openParents() {
     <div class="pcard"><h3>Compétences « Je sais… »</h3>${(() => { const all = playable().flatMap(i => range(1, 5).map(L => ({ i, L, st: skillState(i.id, L) }))), ok = all.filter(x => x.st === 'ok').length, rv = all.filter(x => x.st === 'rev');
       return `<p style="margin:0 0 6px">${ok} acquise${ok > 1 ? 's' : ''} sur ${all.length} en ${GRADES[GR()].n}${P().placed ? ` · test du capitaine passé le ${P().placed.split('-').reverse().join('/')}` : ''}.</p>${rv.length ? `<p style="margin:0 0 4px;color:#ffb9ad">À revoir :</p><ul class="errs">${rv.slice(0, 8).map(x => `<li><b>${esc(x.i.n)}</b> · ${esc(skillName(x.i.id, x.L))}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Rien à revoir pour l’instant.</p>'}<p class="note" style="margin:8px 0 0">Le détail est dans l’onglet Journal de l’enfant.</p>`; })()}</div>
     <div class="pcard"><h3>Dernières erreurs</h3>${P().errors.length ? `<ul class="errs">${P().errors.slice(0, 12).map(e => `<li><b>${esc(e.q)}</b> · a répondu <span style="color:#ffb9ad">${esc(e.a)}</span>, bonne réponse <span style="color:#a6e3bf">${esc(e.c)}</span>${e.d ? `<br><small style="color:var(--mist)">${esc(e.d)}</small>` : ''}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Aucune erreur enregistrée.</p>'}</div>
-    <div class="pcard"><h3>Bêta-test</h3><p class="note">Merci de tester l’Archipel ! Votre avis, même court, aide à améliorer le jeu.</p>
-      <div class="gap"><button class="brass-btn" data-a="fb" style="min-height:50px;font-size:16px">Donner mon avis</button><button class="ghost-btn" data-a="guide">Guide pour les parents</button></div><button class="ghost-btn" data-a="privacy" style="margin-top:10px">Politique de confidentialité</button><button class="ghost-btn" data-a="support" style="margin-top:10px">Assistance et contact</button><p class="note" id="sdiag" style="margin:12px 0 0;font-size:12px;overflow-wrap:anywhere">${esc(audioDiag())}</p><button class="ghost-btn" data-a="sndfix" style="margin-top:8px">Relancer le son</button></div>
+    <div class="pcard"><h3>Bêta-test</h3><p class="note">Merci de tester Moussaillon ! Votre avis, même court, aide à améliorer le jeu.</p>
+      <div class="gap"><button class="brass-btn" data-a="fb" style="min-height:50px;font-size:16px">Donner mon avis</button><button class="ghost-btn" data-a="guide">Guide pour les parents</button></div><button class="ghost-btn" data-a="privacy" style="margin-top:10px">Politique de confidentialité</button><button class="ghost-btn" data-a="support" style="margin-top:10px">Assistance et contact</button><button class="ghost-btn" data-a="sndfix" style="margin-top:10px">Relancer le son</button><p class="note" id="sdiag" hidden style="margin:8px 0 0;font-size:12px;overflow-wrap:anywhere"></p></div>
     <div class="pcard"><h3>Sauvegarde de la progression</h3><p class="note">Sur iPhone, Safari peut effacer les données d’un site peu utilisé. Gardez un code de sauvegarde (dans vos notes, par exemple) : il permet de tout retrouver, même sur un autre appareil.</p>
       <div class="gap"><button class="ghost-btn" data-a="bkcopy">Copier le code de sauvegarde</button><button class="ghost-btn" data-a="bkrestore">Restaurer depuis un code</button></div><div id="bkbox"></div></div>
     <div class="pcard"><h3>Réglages</h3>
@@ -4934,7 +4934,7 @@ app.addEventListener('click', e => {
     case 'guide': openDoc('aide.html', 'Guide pour les parents'); break;
     case 'privacy': openDoc('confidentialite.html', 'Politique de confidentialité'); break;
     case 'support': openDoc('support.html', 'Assistance et contact'); break;
-    case 'sndfix': wakeAudio(true); SND.ok(); setTimeout(() => { const d = $('#sdiag'); if (d) d.textContent = audioDiag(); }, 1200); break;
+    case 'sndfix': wakeAudio(true); SND.ok(); setTimeout(() => { const d = $('#sdiag'); if (d) { d.textContent = 'Son relancé. Détails techniques : ' + audioDiag(); d.hidden = false; } }, 1200); break;
     case 'docclose': { const d = $('.docwrap'); d && d.remove(); break; }
     case 'pgok': gateCheck(); break;
     case 'pgno': { const g = $('.pgate'); g && g.remove(); break; }

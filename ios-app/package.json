@@ -1,7 +1,7 @@
 {
   "name": "chiffres-ios",
   "private": true,
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Application iPhone de Moussaillon, l’école pirate (Capacitor : les fichiers du jeu sont embarqués dans l'app)",
   "scripts": {
     "web": "node copy-web.js",
