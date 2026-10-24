@@ -1,0 +1,52 @@
+# Envoie à App Store Connect les textes de la fiche (dossier fastlane/metadata de la branche choisie) pour la version
+# indiquée dans le projet iPhone, choisit la compilation, et, si demandé, soumet la version à l'examen d'Apple.
+# À lancer à la main : onglet Actions > « iOS · fiche et soumission à Apple » > Run workflow, en choisissant la branche.
+# La publication reste manuelle : après l'accord d'Apple, cliquer « Publier cette version » dans App Store Connect.
+# Utilise la clé d'API de la compilation iPhone (secrets ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8).
+name: iOS · fiche et soumission à Apple
+
+on:
+  workflow_dispatch:
+    inputs:
+      build:
+        description: "Numéro de la compilation à soumettre (celui affiché dans TestFlight, par exemple 9)"
+        required: true
+      soumettre:
+        description: "Soumettre à l'examen d'Apple (décoché : envoie seulement les textes et la compilation)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  fiche:
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version et clé d'API
+        run: |
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
+            if [ -z "${!v}" ]; then echo "::error::Le secret $v est manquant (Settings > Secrets and variables > Actions)"; exit 1; fi
+          done
+          VERSION=$(grep -m1 "MARKETING_VERSION" ios-app/ios/App/App.xcodeproj/project.pbxproj | sed 's/[^0-9.]//g')
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Version $VERSION, compilation ${{ inputs.build }}, soumission : ${{ inputs.soumettre }}"
+          python3 -c "import json,os; json.dump({'key_id': os.environ['ASC_KEY_ID'], 'issuer_id': os.environ['ASC_ISSUER_ID'], 'key': os.environ['ASC_KEY_P8'], 'in_house': False}, open(os.environ['RUNNER_TEMP'] + '/asc.json', 'w'))"
+
+      - name: Fiche et soumission (fastlane deliver)
+        run: |
+          command -v fastlane >/dev/null || brew install fastlane
+          fastlane deliver --api_key_path "$RUNNER_TEMP/asc.json" \
+            --app_version "$VERSION" --build_number "${{ inputs.build }}" \
+            --submit_for_review "${{ inputs.soumettre }}"
+
+      - name: Effacer la clé
+        if: always()
+        run: rm -f "$RUNNER_TEMP/asc.json"
