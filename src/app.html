@@ -682,7 +682,11 @@ textarea.fld{min-height:76px}
 .whol{display:flex;flex-direction:column;gap:8px;width:100%}
 .whol button{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:7px 14px 7px 8px;border-radius:16px;background:rgba(8,26,36,.55);box-shadow:inset 0 0 0 1.5px rgba(243,213,140,.45);color:#fff3d0;text-align:left}
 .whol img{width:48px;height:48px;flex:none;border-radius:50%;object-fit:cover;object-position:50% 20%;box-shadow:0 0 0 2px #f3d58c}
-.tgo .whol span{flex:1;min-width:0;padding:0;border-radius:0;background:none;box-shadow:none;animation:none;text-align:left;font:700 18px var(--f-u);color:#fff3d0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.whol .wn{flex:1;min-width:0;padding:0;border-radius:0;background:none;box-shadow:none;animation:none;text-align:left;font:700 18px var(--f-u);color:#fff3d0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.whol button[aria-current]{box-shadow:inset 0 0 0 2.5px #f3d58c;background:rgba(243,213,140,.14)}
+.kbox{align-items:center;gap:12px;background:rgba(8,26,36,.94);box-shadow:inset 0 0 0 1.5px rgba(243,213,140,.4),0 20px 40px rgba(0,0,0,.45)}.kbox>b{font:700 21px var(--f-u);color:#fff3d0}
+.kclose{min-height:44px;padding:0 22px;border-radius:22px;font:700 15px var(--f-u);color:#fff3d0;box-shadow:inset 0 0 0 1.5px rgba(243,213,140,.45)}
+button.medal{display:block;padding:0;cursor:pointer}
 .whol small{flex:none;padding:3px 9px;border-radius:10px;background:rgba(243,213,140,.16);font:700 12px var(--f-u);color:#f3d58c}
 #ob{position:relative}.obx{position:absolute;top:10px;right:10px;z-index:2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink);background:rgba(42,28,18,.08);box-shadow:inset 0 0 0 1.5px rgba(42,28,18,.25)}.obx svg{width:20px;height:20px}
 .kid{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(243,213,140,.15)}.kid:first-of-type{border-top:0}.kid img{width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:50% 20%}
@@ -1124,6 +1128,14 @@ function cancelNewProf() {
 }
 function delProf(id) { if (id === ME || PROFS.list.length < 2) return; PROFS.list = PROFS.list.filter(x => x.id !== id); try { localStorage.removeItem(profKey(id)); } catch (e) {} saveProfs(); }
 const profName = p => p.name || 'Nouveau moussaillon';
+// Un enfant par ligne : portrait, prénom, classe ; « mine » marque l'enfant qui joue (sélecteur du bandeau)
+const kidList = mine => `<div class="whol">${PROFS.list.map(x => `<button data-a="who" data-p="${x.id}"${mine && x.id === ME ? ' aria-current="true"' : ''}><img src="${IMG('capt-' + (AVATARS.includes(x.avatar) ? x.avatar : 'a'))}" alt=""><span class="wn">${esc(profName(x))}</span>${x.grade && GRADES[x.grade] ? `<small>${GRADES[x.grade].n}</small>` : ''}</button>`).join('')}</div>`;
+// Changer d'enfant sans passer par l'espace parents (ajouter ou retirer un enfant y reste)
+function kidsSheet() {
+  const m = document.createElement('div'); m.className = 'modal kidsm';
+  m.innerHTML = `<div class="box kbox glass" role="dialog" aria-label="Qui joue ?"><b>Qui joue ?</b>${kidList(true)}<button class="kclose" data-a="kidsclose">Fermer</button></div>`;
+  app.appendChild(m);
+}
 const VERSION = '2.4 bêta · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
@@ -4982,7 +4994,8 @@ let tab = 'map', R = null, mapScroll = null;
 function toast(msg) { const t = document.createElement('div'); t.className = 'toast glass'; t.textContent = msg; app.appendChild(t); setTimeout(() => t.remove(), 3200); }
 function hudHTML() {
   const ri = rankIdx(S.gold), next = RANKS[ri + 1], pct = next ? (S.gold - RANKS[ri][0]) / (next[0] - RANKS[ri][0]) * 100 : 100;
-  return `<div class="hud glass"><div class="medal${ADMIN ? ' adm' : ''}">${captBust()}${ADMIN ? '<span class="admb">Admin</span>' : ''}</div>
+  const kids = !ADMIN && PROFS.list.length > 1;
+  return `<div class="hud glass">${kids ? `<button class="medal" data-a="kids" aria-label="Changer d’enfant">${captBust()}</button>` : `<div class="medal${ADMIN ? ' adm' : ''}">${captBust()}${ADMIN ? '<span class="admb">Admin</span>' : ''}</div>`}
     <div style="min-width:0"><div class="nm">${esc(S.name || 'Capitaine')}</div><div class="rk"><span class="gradeb" title="Programme suivi">${GRADES[GR()].n}</span>${RANKS[ri][1]} <span class="xp"><i style="width:${pct}%"></i></span></div></div>
     <div class="purse" role="img" aria-label="${fmt(wallet())} doublons, ${gemTxt(gems())}"><span class="pcoin"><img src="${IMG('coin-doublon')}" alt=""><b class="num">${fmt(wallet())}</b></span><span class="pgem"><img src="${IMG('gem')}" alt=""><b>${gems()}</b></span></div>
     <button class="cog" id="cog" aria-label="Réglages parents : maintenir 2 secondes">${ico('iCog')}<i></i></button></div>`;
@@ -5935,7 +5948,9 @@ app.addEventListener('click', e => {
     case 'eptip': toast(`Pour le gagner : ${el.dataset.h}.`); break;
     case 'rename': { const old = S.name; S.name = ''; onboarding(old); break; }
     case 'obclose': { const m = el.closest('.modal'); if (m && m.dataset.old) { S.name = m.dataset.old; save(); m.remove(); break; } cancelNewProf(); break; }
-    case 'who': { const id = el.dataset.p; if (id === ME) { FX.sparkles(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, 26, 240); ac(); { const st = $('.title'); st && st.remove(); } show('map'); if (!S.intro) { onboarding(); welcome(true); } else welcome(false); } else switchProf(id); break; }
+    case 'kids': SND.tap(); kidsSheet(); break;
+    case 'kidsclose': { const m = el.closest('.modal'); m && m.remove(); break; }
+    case 'who': { const id = el.dataset.p; if (id === ME && el.closest('.kidsm')) { el.closest('.kidsm').remove(); break; } if (id === ME) { FX.sparkles(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, 26, 240); ac(); { const st = $('.title'); st && st.remove(); } show('map'); if (!S.intro) { onboarding(); welcome(true); } else welcome(false); } else switchProf(id); break; }
     case 'kidplay': switchProf(el.dataset.p); break;
     case 'kidadd': addProf(); break;
     case 'kiddel1': { const b = el.closest('.kid'); b && (b.querySelector('.kidx').innerHTML = `<button class="mini-btn" data-a="kiddel2" data-p="${el.dataset.p}" style="background:#7a2a22;color:#ffe1da">Oui, retirer</button><button class="mini-btn" data-a="kiddel0">Non</button>`); break; }
@@ -6223,7 +6238,7 @@ function titleScreen() {
   const many = !ADMIN && PROFS.list.length > 1;
   app.innerHTML = `<div class="screen title${many ? ' who' : ''}" ${many ? '' : 'data-a="start" role="button" tabindex="0" aria-label="Toucher pour embarquer"'}><img class="bg" src="${IMG('bg-title')}" alt="">
     <div class="tlogo"><div class="smallcaps">L’école pirate</div><div class="disp">Moussaillon</div></div>
-    <div class="tgo">${many ? `<div class="whob glass"><b>Qui joue ?</b><div class="whol">${PROFS.list.map(x => `<button data-a="who" data-p="${x.id}"><img src="${IMG('capt-' + (AVATARS.includes(x.avatar) ? x.avatar : 'a'))}" alt=""><span>${esc(profName(x))}</span>${x.grade && GRADES[x.grade] ? `<small>${GRADES[x.grade].n}</small>` : ''}</button>`).join('')}</div></div>` : '<span>Touche pour embarquer</span>'}<div class="trow" aria-hidden="true"><img class="tcomp" id="tcomp" src="${IMG('deco-compass')}" alt=""><div class="tload"><i id="tload"></i></div></div></div><div class="vers2">v${VERSION.split(' ')[0]}${ADMIN ? ' · admin' : ''}</div></div>`;
+    <div class="tgo">${many ? `<div class="whob glass"><b>Qui joue ?</b>${kidList()}</div>` : '<span>Touche pour embarquer</span>'}<div class="trow" aria-hidden="true"><img class="tcomp" id="tcomp" src="${IMG('deco-compass')}" alt=""><div class="tload"><i id="tload"></i></div></div></div><div class="vers2">v${VERSION.split(' ')[0]}${ADMIN ? ' · admin' : ''}</div></div>`;
   const list = ['tex-sea', 'lagoon-round', 'lagoon-oval', 'lagoon-rocks', 'fx-fog-a', 'fx-fog-b', 'port-coast', 'isle-kraken', 'deco-compass', 'ship-player-top', capt(), 'coin-doublon', 'tex-parchment', 'guide-capitaine', ...ISLES.filter(i => !i.soon).map(i => i.img), 'crew-perroquet'];
   let done = 0; list.forEach(n => { const im = new Image(); im.onload = im.onerror = () => { done++; const b = $('#tload'); if (b) b.style.width = Math.round(done / list.length * 100) + '%'; if (done === list.length) { const c = $('#tcomp'); c && c.classList.add('done'); } }; im.src = IMG(n); });
   ac();
