@@ -109,6 +109,9 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 .purse{margin-left:auto;display:flex;align-items:center;gap:6px;height:38px;padding:0 12px 0 6px;border-radius:19px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(243,213,140,.22)}
 .purse img{width:26px;height:26px}
 .purse b{font:700 16px var(--f-u);color:var(--brass-hi)}
+.purse .pcoin,.purse .pgem{display:flex;align-items:center;gap:6px}
+.purse .pgem{gap:4px;margin-left:3px;padding-left:9px;height:60%;border-left:1px solid rgba(243,213,140,.28)}
+.purse .pgem img{width:20px;height:20px}.purse .pgem b{color:#c4ffe6}
 .cog{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:#cfe0df;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(243,213,140,.18);position:relative;overflow:hidden}
 .cog svg{width:20px;height:20px}
 .cog i{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--brass-hi)}
@@ -999,6 +1002,10 @@ textarea.fld{min-height:76px}
 .purse{flex:none;height:42px;gap:7px;padding:0 15px 0 6px;border-radius:21px}
 .purse img{width:30px;height:30px}
 .purse b{font-size:19px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+/* Téléphones : doublons et pierres précieuses l'un au-dessus de l'autre, pour laisser la place au nom */
+@media (max-width:449px){.purse{flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;height:46px;padding:0 13px 0 8px;border-radius:16px}
+.purse .pcoin{gap:5px}.purse .pcoin img{width:21px;height:21px}.purse b{font-size:16px;line-height:1}
+.purse .pgem{margin:0;padding:0;border:0;height:auto;gap:6px}.purse .pgem img{width:17px;height:17px;margin:0 2px}}
 /* Onglets du bas : plus hauts, plus contrastés, une marge autour de chaque onglet */
 .dock{height:78px;padding:0 6px;column-gap:4px;background:rgba(7,24,34,.78)}
 /* Onglet actif concentrique à la barre : 7 px de retrait tout autour (6 px de marge + 1 px de bordure), rayon 24 − 7 = 17 px */
@@ -1485,6 +1492,8 @@ if ((S.econ || 0) < 1) {
   S.gems = gems() + Object.values(S.g).reduce((a, p) => a + (p.sagaFinal ? 5 : 0) + Object.values(p.isl || {}).reduce((b, i) => b + (i.node > CHEST ? 1 : 0) + (i.node > BOSS ? 2 : 0), 0), 0);
   S.econ = 1; save();
 }
+// Cadeau de bienvenue de la 2.4 : une pierre précieuse pour découvrir le port, une seule fois par enfant
+if (!S.gemGift) { S.gems = gems() + 1; S.gemGift = 1; S.giftNote = 1; save(); }
 const nodeDiff = (n, fails) => Math.max(1, Math.ceil(n / 2) - (fails >= 2 ? 1 : 0));
 
 /* ================= Générateurs (niveaux 1 à 5) ================= */
@@ -4974,7 +4983,7 @@ function hudHTML() {
   const ri = rankIdx(S.gold), next = RANKS[ri + 1], pct = next ? (S.gold - RANKS[ri][0]) / (next[0] - RANKS[ri][0]) * 100 : 100;
   return `<div class="hud glass"><div class="medal${ADMIN ? ' adm' : ''}">${captBust()}${ADMIN ? '<span class="admb">Admin</span>' : ''}</div>
     <div style="min-width:0"><div class="nm">${esc(S.name || 'Capitaine')}</div><div class="rk"><span class="gradeb" title="Programme suivi">${GRADES[GR()].n}</span>${RANKS[ri][1]} <span class="xp"><i style="width:${pct}%"></i></span></div></div>
-    <div class="purse"><img src="${IMG('coin-doublon')}" alt=""><b class="num">${fmt(wallet())}</b></div>
+    <div class="purse" role="img" aria-label="${fmt(wallet())} doublons, ${gemTxt(gems())}"><span class="pcoin"><img src="${IMG('coin-doublon')}" alt=""><b class="num">${fmt(wallet())}</b></span><span class="pgem"><img src="${IMG('gem')}" alt=""><b>${gems()}</b></span></div>
     <button class="cog" id="cog" aria-label="Réglages parents : maintenir 2 secondes">${ico('iCog')}<i></i></button></div>`;
 }
 function dockHTML() {
@@ -5029,6 +5038,7 @@ function renderMap() {
   sc.scrollTop = mapScroll != null ? mapScroll : Math.max(0, $('.map', sc).offsetTop + cur.y - (hb + tt) / 2 + 10);
   sc.addEventListener('scroll', () => { mapScroll = sc.scrollTop; }, { passive: true });
   if (S.refund) { const r = S.refund; delete S.refund; save(); setTimeout(() => toast(`Les sillages ont quitté le chantier naval : ${fmt(r)} doublons te sont rendus.`), 900); }
+  if (S.giftNote) { delete S.giftNote; save(); setTimeout(() => toast('Cadeau de bienvenue : une pierre précieuse pour bâtir ton port d’attache !'), 1600); }
   setTimeout(offerPlacement, 900);
 }
 function tideHTML(t) {

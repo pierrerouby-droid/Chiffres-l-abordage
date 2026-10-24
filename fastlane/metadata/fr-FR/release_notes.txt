@@ -5,6 +5,7 @@ Nouveautés de la version 2.4
 • Île des Formes : la géométrie commence dès le CE1.
 • Rangs bronze, argent et or : une fois une île terminée, la route repart, plus exigeante. Au rang or, l’île est maîtrisée et offre un pavillon exclusif.
 • Plusieurs enfants peuvent jouer sur le même appareil, chacun avec sa progression.
-• Le navire grandit avec les étoiles gagnées, et les pierres précieuses des coffres et des boss servent à bâtir le port.
+• Le navire grandit avec les étoiles gagnées, et les pierres précieuses des coffres et des boss servent à bâtir le port. Une première pierre est offerte, et le compteur s’affiche à côté des doublons.
+• La carte s’arrête désormais sur la côte du port d’attache.
 • Version iPad.
 • La question qui protège l’espace parents est plus simple : un petit calcul à faire de tête.
