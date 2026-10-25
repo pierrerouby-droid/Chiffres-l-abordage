@@ -8,5 +8,7 @@ Nouveautés de la version 2.4
 • Le navire grandit avec les étoiles gagnées, et les pierres précieuses des coffres et des boss servent à bâtir le port. Une première pierre est offerte, et le compteur s’affiche à côté des doublons.
 • La carte s’arrête désormais sur la côte du port d’attache.
 • L’histoire de l’archipel est illustrée : des scènes en tête des chapitres et une vraie carte au trésor peinte, qui se dévoile morceau par morceau.
+• Une question ne revient plus dans la même escale, et le jeu fait le tour de toutes les questions d’une île avant d’en reposer une. Nouveaux textes à lire au CP, au CE1, au CE2 et au CM1.
+• Les mots surlignés se voient beaucoup mieux.
 • Version iPad.
 • La question qui protège l’espace parents est plus simple : un petit calcul à faire de tête.

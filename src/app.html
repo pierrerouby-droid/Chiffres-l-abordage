@@ -218,7 +218,7 @@ img{max-width:100%;-webkit-user-drag:none;user-select:none;pointer-events:none}
 @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .qcard .prompt.sent{font:600 clamp(18px,5.2vw,22px)/1.35 var(--f-u);margin-top:4px}
 .qcard .prompt.sent .slot{min-width:2.6em;height:1.35em;vertical-align:-.2em;border-radius:9px}
-.qcard mark{background:linear-gradient(transparent 12%,#f7dc93 12%,#f3c86a 90%,transparent 90%);color:var(--ink);padding:0 .12em;border-radius:3px}
+.qcard mark{background:linear-gradient(transparent 6%,#5fe0d2 6%,#3fcfc0 94%,transparent 94%);color:#10302e;padding:0 .18em;border-radius:5px;box-shadow:inset 0 -3px 0 #1d8f86;font-weight:800;-webkit-box-decoration-break:clone;box-decoration-break:clone} /* surligneur turquoise : bien visible sur le parchemin */
 .choices.txt{grid-template-columns:1fr;gap:8px}
 .choices.txt .choice{min-height:50px;font:700 clamp(16px,4.6vw,19px)/1.25 var(--f-u);padding:8px 12px;text-wrap:balance}
 .choices.two{grid-template-columns:1fr 1fr}
@@ -1454,7 +1454,7 @@ const ISLES = [
   // Île des Perroquets : anglais du CE2 au CM2 (2.4 ; images provisoires en attendant le lot 9)
   { id: 'anglais', sea: 'f', only: ['ce2', 'cm1', 'cm2'], cm1: 'Anglais : nombres, dates et petits échanges', hero: 'hero-anglais', boss: { img: 'boss-anglais', n: 'Le Capitaine Ara' }, chestCrew: null, art: 'l’Île des Perroquets', n: 'Île des Perroquets', notion: 'Anglais : mots, consignes et petites phrases', img: 'isle-anglais', lag: 'lagoon-oval', x: 72, y: 900, gen: genAnglais, ep: 'Globe-Trotter', unlock: 3, sfx: ['WELL DONE!', 'GREAT!', 'BRILLIANT!'] },
   // Île des Curiosités : culture générale du CP au CM2 (2.4 ; images provisoires en attendant le lot 9)
-  { id: 'culture', sea: 'f', cm1: 'Moyen Âge, rois, explorations et sciences', hero: 'hero-culture', boss: { img: 'boss-culture', n: 'Le Sphinx des Énigmes' }, chestCrew: null, art: 'l’Île des Curiosités', n: 'Île des Curiosités', notion: 'Histoire, Terre et Lune, eau et air, la commune', img: 'isle-culture', lag: 'lagoon-round', x: 28, y: 900, gen: genCulture, ep: 'Puits de Science', unlock: 4, sfx: ['QUEL SAVOIR !', 'BIEN VU !'] },
+  { id: 'culture', sea: 'f', anyLevel: true, cm1: 'Moyen Âge, rois, explorations et sciences', hero: 'hero-culture', boss: { img: 'boss-culture', n: 'Le Sphinx des Énigmes' }, chestCrew: null, art: 'l’Île des Curiosités', n: 'Île des Curiosités', notion: 'Histoire, Terre et Lune, eau et air, la commune', img: 'isle-culture', lag: 'lagoon-round', x: 28, y: 900, gen: genCulture, ep: 'Puits de Science', unlock: 4, sfx: ['QUEL SAVOIR !', 'BIEN VU !'] },
   { id: 'gram', sea: 'f', hero: 'hero-gram', boss: { img: 'boss-gram', n: 'La Murène des Phrases' }, chestCrew: null, art: 'le Récif des Phrases', n: 'Récif des Phrases', notion: 'Grammaire', img: 'isle-gram', lag: 'lagoon-rocks', x: 28, y: 1010, gen: genGram, ep: 'Chef de Phrase', unlock: 2, sfx: ['BIEN VU !', 'PHRASE DOMPTÉE !'] },
   { id: 'accords', sea: 'f', hero: 'hero-accords', boss: { img: 'boss-accords', n: 'Le Troll du Pont' }, chestCrew: null, art: 'le Pont des Accords', n: 'Pont des Accords', notion: 'Accords et homophones', img: 'isle-accords', lag: 'lagoon-oval', x: 72, y: 790, gen: genAccords, ep: 'Gardien des Accords', unlock: 5, sfx: ['ACCORDÉ !', 'BIEN ACCORDÉ !'] },
   { id: 'vocab', sea: 'f', hero: 'hero-vocab', boss: { img: 'boss-vocab', n: 'La Baleine Dictionnaire' }, chestCrew: null, art: 'la Baie des Mots', n: 'Baie des Mots', notion: 'Vocabulaire', img: 'isle-vocab', lag: 'lagoon-round', x: 28, y: 570, gen: genVocab, ep: 'Mille-Mots', unlock: 8, sfx: ['QUEL MOT !', 'BIEN TROUVÉ !'] },
@@ -1623,7 +1623,7 @@ function ce2Horloge(l) {
 }
 function ce2Cuisine(l) {
   if (l <= 3) { let d, n, parts;
-    if (l === 1) { d = pick([2, 4]); n = rnd(1, d - 1); parts = d; } else if (l === 2) { d = rnd(3, 12); n = rnd(1, d - 1); parts = d; } else { d = pick([2, 3, 4, 5, 6]); n = rnd(1, d - 1); parts = d * rnd(2, Math.floor(12 / d)); }
+    if (l === 1) { d = pick([2, 3, 4]); n = rnd(1, d - 1); parts = d; } else if (l === 2) { d = rnd(3, 12); n = rnd(1, d - 1); parts = d; } else { d = pick([2, 3, 4, 5, 6]); n = rnd(1, d - 1); parts = d * rnd(2, Math.floor(12 / d)); }
     const need = n * parts / d;
     return { kind: 'pizza', parts, n, d, ask: `Le cuistot a coupé la pizza en ${parts} parts égales. Colorie :`, prompt: frac(n, d), answer: `${n}/${d}`, answerText: `${need} part${need > 1 ? 's' : ''} sur ${parts}`, log: `colorer ${n}/${d} (coupé en ${parts})`,
       explain: parts === d ? `${frac(n, d)} : on coupe en ${d} parts et on en prend ${n}.` : `${frac(n, d)} = ${frac(need, parts)} : des parts ${parts / d} fois plus petites, donc ${parts / d} fois plus de parts. Il fallait colorer ${need} parts.`, hint: `Le nombre du bas dit en combien de parts on coupe, celui du haut combien on en prend.` }; }
@@ -1756,6 +1756,13 @@ function cpGroupes() {
 }
 // Moitié d'une quantité (les fractions d'une pizza commencent au CE1) : la pizza est une collection de parts
 function cpCuisine(l) {
+  // Niveaux 1 et 2 : la pizza coupée en deux, puis la moitié et le double d'une petite quantité (programme du CP)
+  if (l <= 2 && Math.random() < .6) { const k = l === 1 ? rnd(2, 5) : rnd(6, 10), w = pick(['biscuits', 'poissons', 'bananes', 'billes']);
+    if (Math.random() < .5) { const n = 2 * k;
+      return { kind: 'choices', ask: typo(`Pi partage ${n} ${w} avec son ami. Ils en ont autant l’un que l’autre. Combien chacun en a-t-il ?`), prompt: '', answer: k, answerText: fmt(k), choices: opts(k, [n, k + 2]), log: `moitié de ${n} ${w}`,
+        explain: typo(`On partage ${n} en deux parts égales : ${k} et ${k}, car ${k} + ${k} = ${n}. La moitié de ${n}, c’est ${k}.`), hint: typo(`Cherche le nombre qui, ajouté à lui-même, donne ${n}.`), sayChoices: true }; }
+    return { kind: 'choices', ask: typo(`Pi a ${k} ${w}. Son ami en a autant. Combien en ont-ils en tout ?`), prompt: '', answer: 2 * k, answerText: fmt(2 * k), choices: opts(2 * k, [k, 2 * k + 2]), log: `double de ${k} ${w}`,
+      explain: typo(`Autant, c’est le même nombre : ${k} + ${k} = ${2 * k}. Le double de ${k}, c’est ${2 * k}.`), hint: typo(`Ajoute ${k} à lui-même.`), sayChoices: true }; }
   if (l <= 2) { const parts = l === 1 ? pick([2, 4, 6]) : pick([8, 10, 12]), h = parts / 2;
     return { kind: 'pizza', parts, n: 1, d: 2, ask: `Le cuistot a coupé la pizza en ${parts} parts. Pi en mange la moitié. Colorie les parts de Pi :`, prompt: `<span class="words">la moitié de ${parts}</span>`, promptClass: 'mid', answer: '1/2', answerText: `${h} part${h > 1 ? 's' : ''} sur ${parts}`, log: `moitié de ${parts} parts`,
       explain: `La moitié de ${parts}, c’est ${h}, car ${h} + ${h} = ${parts}. Pi mange ${h} part${h > 1 ? 's' : ''} et il en reste autant.`, hint: `Fais deux groupes pareils avec les ${parts} parts.` }; }
@@ -1778,8 +1785,17 @@ function cpClock() {
     explain: `La petite aiguille montre l’heure : elle est sur le ${h}. La grande aiguille est sur le 12 : c’est l’heure pile. Il est ${h === 1 ? 'une heure' : h + ' heures'}.`, hint: 'Regarde où pointe la petite aiguille.', sayChoices: true };
 }
 const WEEK = () => ({ kind: 'choices', ask: 'Combien y a-t-il de jours dans une semaine ?', prompt: '', answer: 7, answerText: '7', choices: [7, 5, 10].map(v => ({ v, html: String(v) })), log: 'jours dans une semaine', explain: 'Une semaine a 7 jours : lundi, mardi, mercredi, jeudi, vendredi, samedi et dimanche.', hint: 'Compte les jours de lundi à dimanche.', sayChoices: true });
+// Moments de la journée (CP : se repérer dans la journée)
+const MOMENTS = [['Quand est-ce qu’on prend le petit-déjeuner ?', 'le matin', ['le soir', 'la nuit']], ['Quand est-ce que le soleil se lève ?', 'le matin', ['le soir', 'à midi']],
+  ['Quand est-ce que le soleil se couche ?', 'le soir', ['le matin', 'à midi']], ['Quand est-ce qu’on voit les étoiles ?', 'la nuit', ['le matin', 'à midi']],
+  ['Quand est-ce qu’on prend le déjeuner ?', 'à midi', ['le soir', 'la nuit']], ['Quand est-ce qu’on prend le dîner ?', 'le soir', ['le matin', 'à midi']],
+  ['Quand est-ce qu’on prend le goûter ?', 'l’après-midi', ['le matin', 'la nuit']], ['Quel moment vient juste après le matin ?', 'midi', ['le soir', 'la nuit']],
+  ['Quel moment vient juste après le soir ?', 'la nuit', ['le matin', 'midi']], ['Quel moment vient juste après la nuit ?', 'le matin', ['le soir', 'midi']]];
+const cpMoment = () => { const [ask, a, w] = pick(MOMENTS);
+  return { kind: 'choices', ask, prompt: '', answer: a, answerText: a, choices: shuffle([a, ...w]).map(v => ({ v, html: v })), log: `moment : ${ask}`,
+    explain: `Dans l’ordre : le matin, midi, l’après-midi, le soir, puis la nuit. La réponse est : ${a}.`, hint: 'Pense à ta journée, du réveil jusqu’au coucher.', sayChoices: true }; };
 function cpHorloge(l) {
-  if (l === 1) return cpSuite(JOURS, 'apres', 'jour');
+  if (l === 1) return Math.random() < .5 ? cpSuite(JOURS, 'apres', 'jour') : cpMoment();
   if (l === 2) return Math.random() < .6 ? cpSuite(JOURS, 'hier', 'jour') : WEEK();
   if (l === 3) return cpClock();
   if (l === 4) return cpSuite(MOIS, 'apres', 'mois');
@@ -1806,7 +1822,31 @@ const CPL = [
   ['Lila a perdu sa clé. Elle cherche sous le lit. La clé est dans sa poche !', 'Où est la clé ?', 'dans sa poche', ['sous le lit', 'sur la table'], 3],
   ['Tom pêche depuis le matin. Il n’a rien attrapé. Il est un peu triste.', 'Pourquoi est-ce que Tom est triste ?', 'parce qu’il n’a rien pêché', ['parce qu’il a froid', 'parce qu’il a perdu son chapeau'], 3],
   ['Ce matin, Lila met ses bottes. Elle va à la plage. Elle ramasse dix coquillages.', 'Qu’est-ce que Lila ramasse ?', 'dix coquillages', ['dix cailloux', 'deux coquillages'], 3],
-  ['Le petit crabe a peur. Il se cache sous un rocher. Le requin passe sans le voir.', 'Où est-ce que le crabe se cache ?', 'sous un rocher', ['dans le sable', 'sur le bateau'], 3]];
+  ['Le petit crabe a peur. Il se cache sous un rocher. Le requin passe sans le voir.', 'Où est-ce que le crabe se cache ?', 'sous un rocher', ['dans le sable', 'sur le bateau'], 3],
+  ['Tom a vu une baleine.', 'Qu’est-ce que Tom a vu ?', 'une baleine', ['un dauphin', 'un requin'], 1], ['Lila a une robe bleue.', 'De quelle couleur est la robe ?', 'bleue', ['rose', 'verte'], 1],
+  ['Le pirate a un sabre.', 'Qu’est-ce que le pirate a ?', 'un sabre', ['un vélo', 'un ballon'], 1], ['Papi lit un livre.', 'Qu’est-ce que Papi lit ?', 'un livre', ['une carte', 'une lettre'], 1],
+  ['Le rat mange du riz.', 'Qu’est-ce que le rat mange ?', 'du riz', ['du pain', 'une pomme'], 1], ['Tom tire sur la corde.', 'Sur quoi est-ce que Tom tire ?', 'sur la corde', ['sur la voile', 'sur le mât'], 1],
+  ['La tortue va à la mer.', 'Où est-ce que la tortue va ?', 'à la mer', ['à la ferme', 'au lit'], 1], ['Mila a un petit lapin.', 'Qu’est-ce que Mila a ?', 'un petit lapin', ['un petit chat', 'un gros lapin'], 1],
+  ['Le soleil est chaud.', 'Comment est le soleil ?', 'chaud', ['froid', 'petit'], 1], ['Lila dort dans un hamac.', 'Où est-ce que Lila dort ?', 'dans un hamac', ['dans un lit', 'sur le sable'], 1],
+  ['Pi se pose sur le mât. Il chante une chanson.', 'Où est-ce que Pi se pose ?', 'sur le mât', ['sur la table', 'sur le canon'], 2], ['Tom a soif. Il boit un verre d’eau.', 'Qu’est-ce que Tom boit ?', 'un verre d’eau', ['un jus de pomme', 'du lait'], 2],
+  ['Lila nage dans le lagon. Elle voit une tortue.', 'Qu’est-ce que Lila voit ?', 'une tortue', ['un crabe', 'un dauphin'], 2], ['Le capitaine a un chapeau noir. Il a une plume rouge.', 'De quelle couleur est le chapeau ?', 'noir', ['rouge', 'vert'], 2],
+  ['Il fait froid ce matin. Tom met son bonnet.', 'Pourquoi est-ce que Tom met son bonnet ?', 'parce qu’il fait froid', ['parce qu’il pleut', 'parce qu’il fait nuit'], 2], ['Le chat noir a faim. Il mange un poisson.', 'Qu’est-ce que le chat mange ?', 'un poisson', ['une souris', 'du pain'], 2],
+  ['Lila écrit une lettre. Elle l’envoie à sa mamie.', 'À qui est-ce que Lila envoie la lettre ?', 'à sa mamie', ['à Tom', 'au capitaine'], 2], ['Le bateau arrive au port. Les marins descendent.', 'Où est-ce que le bateau arrive ?', 'au port', ['sur une île', 'dans une grotte'], 2],
+  ['Le mousse monte au mât. Il voit trois mouettes.', 'Combien de mouettes est-ce que le mousse voit ?', 'trois', ['deux', 'quatre'], 2], ['Pi a cassé un œuf. Le cuistot n’est pas content.', 'Qui n’est pas content ?', 'le cuistot', ['Pi', 'Tom'], 2],
+  ['Ce soir, il y a une fête sur le bateau. Gros-Louis fait un gâteau. Tom joue de la flûte.', 'Qui joue de la flûte ?', 'Tom', ['Gros-Louis', 'Pi'], 3],
+  ['Lila trouve un coffre sur la plage. Il est fermé. Elle cherche la clé partout.', 'Qu’est-ce que Lila cherche ?', 'la clé', ['le coffre', 'sa pelle'], 3],
+  ['Le capitaine regarde la carte. Le trésor est sur l’île du Crâne. Il faut deux jours pour y aller.', 'Où est le trésor ?', 'sur l’île du Crâne', ['dans la grotte', 'au fond de la mer'], 3],
+  ['Tom a mal au ventre. Il a mangé trop de bonbons. Il va se coucher.', 'Pourquoi est-ce que Tom a mal au ventre ?', 'parce qu’il a mangé trop de bonbons', ['parce qu’il a nagé', 'parce qu’il a froid'], 3],
+  ['Un petit singe monte sur le bateau. Il prend une banane. Puis il saute dans l’eau.', 'Qu’est-ce que le singe prend ?', 'une banane', ['une pomme', 'un chapeau'], 3],
+  ['Le vent tombe. Les voiles ne bougent plus. Le bateau reste sur place.', 'Pourquoi est-ce que le bateau reste sur place ?', 'parce qu’il n’y a plus de vent', ['parce qu’il est cassé', 'parce que c’est la nuit'], 3],
+  ['Lila plante une graine. Elle l’arrose tous les jours. Une jolie fleur pousse.', 'Qu’est-ce qui pousse ?', 'une jolie fleur', ['un arbre', 'une carotte'], 3],
+  ['Pi a perdu une plume. Tom la ramasse. Il la met sur son chapeau.', 'Où est-ce que Tom met la plume ?', 'sur son chapeau', ['dans sa poche', 'sur le mât'], 3],
+  ['Il est midi. Le soleil brille très fort. Tout l’équipage se met à l’ombre.', 'Quelle heure est-il ?', 'midi', ['minuit', 'huit heures'], 3],
+  ['Rémi ouvre une boîte. Dedans, il y a des billes. Il en compte six.', 'Combien de billes est-ce que Rémi compte ?', 'six', ['dix', 'deux'], 3],
+  ['Le requin tourne autour du bateau. Tom a peur. Il reste loin du bord.', 'Pourquoi est-ce que Tom reste loin du bord ?', 'parce qu’il a peur du requin', ['parce qu’il a froid', 'parce qu’il est fatigué'], 3],
+  ['La mouette vole au-dessus de la mer. Elle plonge. Elle remonte avec un poisson.', 'Avec quoi est-ce que la mouette remonte ?', 'avec un poisson', ['avec un crabe', 'avec une algue'], 3],
+  ['Lila et Tom font un château de sable. Une vague arrive. Le château tombe.', 'Qu’est-ce qui fait tomber le château ?', 'une vague', ['le vent', 'un chien'], 3],
+  ['Le cuistot ouvre le tonneau. Il est vide ! Quelqu’un a bu tout le jus.', 'Comment est le tonneau ?', 'vide', ['plein', 'cassé'], 3]];
 // readAlone : le haut-parleur lit la question, jamais le texte (c'est l'enfant qui le lit)
 function cpLecture(l) {
   const it = pick(CPL.filter(x => x[4] === [1, pick([1, 2]), 2, pick([2, 3]), 3][l - 1])); /* progression : 1 phrase, 1 ou 2, 2, 2 ou 3, 3 */
@@ -1976,6 +2016,20 @@ function ce1Marche(l) {
 const FRN = { 2: 'un demi', 3: 'un tiers', 4: 'un quart' }; // au-delà : un cinquième, un sixième…
 const frName = d => FRN[d] || `un ${['', '', '', '', '', 'cinquième', 'sixième', 'septième', 'huitième', 'neuvième', 'dixième'][d]}`;
 const FRWHY = 'Le nombre du bas (le dénominateur) dit en combien de parts égales on coupe. Le nombre du haut (le numérateur) dit combien de parts on prend.';
+// CE1 : nommer une part (une moitié, un tiers, un quart…), compter les parts d'une pizza entière, comparer deux parts
+function ce1UnitFr(l) {
+  const ds = l === 1 ? [2, 3, 4] : [5, 6, 8, 10], d = pick(ds), nm = x => x === 2 ? 'une moitié' : frName(x), t = pick(['nom', 'entier', 'cmp']);
+  if (t === 'nom') { const others = shuffle(ds.filter(x => x !== d)).slice(0, 2);
+    return { kind: 'choices', ask: typo(`Le cuistot coupe une pizza en ${d} parts égales. Comment s’appelle une de ces parts ?`), prompt: '', answer: nm(d), answerText: nm(d), log: `nom de 1/${d}`,
+      choices: [d, ...others].map(x => ({ v: nm(x), html: nm(x), ...(x === d ? {} : { why: typo(`${capF(nm(x))}, c’est une part quand on coupe en ${x}. Ici, on coupe en ${d}.`) }) })),
+      explain: typo(`En ${d} parts égales, chaque part est ${nm(d)} de la pizza : ${frac(1, d)}.`), hint: typo('Compte en combien de parts égales on coupe la pizza.') }; }
+  if (t === 'entier') return { kind: 'choices', ask: typo(`Chaque part de la tarte est ${nm(d)} de la tarte. Combien faut-il de parts pour faire la tarte entière ?`), prompt: '', answer: d, answerText: fmt(d), choices: opts(d, [d + 1, d - 1].filter(x => x > 1)), log: `${d} fois 1/${d}`,
+    explain: typo(`${capF(nm(d))}, c’est ${frac(1, d)} : la tarte est coupée en ${d} parts égales. Il faut les ${d} parts pour faire la tarte entière.`), hint: typo('Le nombre du bas dit en combien de parts égales on a coupé la tarte.') };
+  const [a, b] = shuffle(ds).slice(0, 2), big = Math.min(a, b), small = Math.max(a, b);
+  return { kind: 'choices', ask: typo(`Deux pizzas pareilles : l’une est coupée en ${a} parts égales, l’autre en ${b}. Quelle part est la plus grosse ?`), prompt: '', answer: nm(big), answerText: nm(big), log: `comparer 1/${a} et 1/${b}`,
+    choices: [a, b].map(x => ({ v: nm(x), html: nm(x), ...(x === big ? {} : { why: typo(`Avec ${x} parts, chaque part est plus petite qu’avec ${big} parts.`) }) })),
+    explain: typo(`Plus on coupe en beaucoup de parts, plus chaque part est petite : ${frac(1, big)} est plus gros que ${frac(1, small)}.`), hint: typo('Imagine les deux pizzas : laquelle a les parts les plus grandes ?') };
+}
 function ce1Pizza(l) {
   const d = l === 1 ? pick([2, 3, 4]) : l === 2 ? pick([5, 6, 8, 10]) : pick([3, 4, 5, 6, 8]), n = l <= 2 ? 1 : rnd(2, d - 1); /* CE1 : dénominateurs 2, 3, 4, 5, 6, 8 ou 10 */
   return { kind: 'pizza', parts: d, n, d, ask: `Le cuistot a coupé la pizza en ${d} parts égales. Colorie :`, prompt: frac(n, d), answer: `${n}/${d}`, answerText: `${n} part${n > 1 ? 's' : ''} sur ${d}`, log: `colorier ${n}/${d}`,
@@ -2008,7 +2062,7 @@ function ce1Probleme(l) {
 }
 function ce1Cuisine(l) {
   const r = Math.random();
-  if (l <= 2) return ce1Pizza(l);
+  if (l <= 2) return r < .5 ? ce1Pizza(l) : ce1UnitFr(l);
   if (l === 3) return r < .7 ? ce1Pizza(3) : (() => { const k = rnd(3, 20), n = 2 * k, w = pick(['biscuits', 'poissons', 'bananes', 'doublons']);
     return { kind: 'choices', ask: `Deux pirates se partagent ${n} ${w} en parts égales. Combien chacun en a-t-il ?`, prompt: '', answer: k, answerText: fmt(k), choices: opts(k, [n, k + 2]), log: `moitié de ${n}`,
       explain: `La moitié de ${n}, c’est ${k}, car ${k} + ${k} = ${n}.`, hint: `Cherche le nombre qui, ajouté à lui-même, donne ${n}.` }; })();
@@ -4193,7 +4247,9 @@ const VOC = {
     ['Quel mot veut dire presque la même chose que « rapide » ?', 'vif', ['lent', 'lourd'], 'Rapide et vif sont des synonymes.'], ['Quel mot veut dire presque la même chose que « effrayé » ?', 'apeuré', ['amusé', 'endormi'], 'Effrayé et apeuré sont des synonymes.'],
     ['Quel est le contraire de « courageux » ?', 'peureux', ['brave', 'fort'], 'Courageux et peureux sont des contraires (des antonymes).'], ['Quel est le contraire de « lourd » ?', 'léger', ['gros', 'solide'], 'Lourd et léger sont des contraires.'],
     ['Quel est le contraire de « monter » ?', 'descendre', ['grimper', 'sauter'], 'Monter et descendre sont des contraires.'], ['Quel est le contraire de « allumer » ?', 'éteindre', ['éclairer', 'brûler'], 'Allumer et éteindre sont des contraires.'],
-    ['Quel est le contraire de « propre » ?', 'sale', ['net', 'brillant'], 'Propre et sale sont des contraires.']],
+    ['Quel est le contraire de « propre » ?', 'sale', ['net', 'brillant'], 'Propre et sale sont des contraires.'],
+    ['Quel mot veut dire presque la même chose que « bavarder » ?', 'discuter', ['crier', 'dormir'], 'Bavarder et discuter sont des synonymes.'], ['Quel mot veut dire presque la même chose que « joli » ?', 'beau', ['laid', 'grand'], 'Joli et beau sont des synonymes.'],
+    ['Quel est le contraire de « ouvrir » ?', 'fermer', ['pousser', 'casser'], 'Ouvrir et fermer sont des contraires.'], ['Quel est le contraire de « vide » ?', 'plein', ['creux', 'léger'], 'Vide et plein sont des contraires.']],
   fig2: [['« Il pleut des cordes » veut dire :', 'il pleut très fort', ['des cordes tombent du ciel', 'il pleut un peu'], 'C’est une expression : on ne la comprend pas mot à mot.'],
     ['« Avoir un chat dans la gorge » veut dire :', 'avoir du mal à parler', ['avoir avalé un chat', 'avoir très faim'], 'C’est une expression : la voix est enrouée.'],
     ['« Donner sa langue au chat » veut dire :', 'renoncer à trouver la réponse', ['nourrir son chat', 'se taire pour toujours'], 'On dit cela quand on abandonne une devinette.'],
@@ -4202,7 +4258,12 @@ const VOC = {
     ['« Être dans la lune » veut dire :', 'être distrait, rêver', ['être astronaute', 'dormir dehors'], 'C’est une expression : on pense à autre chose.'],
     ['Dans « Le capitaine a un cœur de pierre », le mot « pierre » est employé :', 'au sens figuré', ['au sens propre', 'au pluriel'], 'Son cœur n’est pas vraiment en pierre : cela veut dire qu’il est dur, sans pitié.'],
     ['Dans « La vigie grimpe sur la pierre », le mot « pierre » est employé :', 'au sens propre', ['au sens figuré', 'comme un verbe'], 'Ici, c’est une vraie pierre : c’est le sens propre.'],
-    ['« Mettre les voiles » veut dire aussi :', 'partir, s’en aller', ['coudre une voile', 'décorer le bateau'], 'C’est une expression de marin devenue courante.']],
+    ['« Mettre les voiles » veut dire aussi :', 'partir, s’en aller', ['coudre une voile', 'décorer le bateau'], 'C’est une expression de marin devenue courante.'],
+    ['« Avoir un poil dans la main » veut dire :', 'être paresseux', ['avoir les mains sales', 'être très poilu'], 'C’est une expression : la personne n’aime pas travailler.'],
+    ['« Avoir une faim de loup » veut dire :', 'avoir très faim', ['avoir peur des loups', 'ne plus avoir faim'], 'C’est une expression : on a tellement faim qu’on mangerait comme un loup.'],
+    ['« Poser un lapin » à quelqu’un veut dire :', 'ne pas venir au rendez-vous', ['lui offrir un lapin', 'courir très vite'], 'C’est une expression : l’autre personne attend pour rien.'],
+    ['« Tom a une mémoire d’éléphant » veut dire que Tom :', 'se souvient de tout', ['a de grandes oreilles', 'oublie tout'], 'On dit que les éléphants ont une très bonne mémoire : c’est une expression.'],
+    ['« Casser les pieds » à quelqu’un veut dire :', 'l’ennuyer, l’agacer', ['lui faire mal aux pieds', 'lui marcher dessus'], 'C’est une expression familière : on dérange quelqu’un.']],
   alpha: ['ancre', 'baleine', 'boussole', 'cabine', 'canon', 'capitaine', 'carte', 'coffre', 'corde', 'crabe', 'dauphin', 'drapeau', 'épée', 'équipage', 'étoile', 'falaise', 'flotte', 'gouvernail', 'grotte', 'hamac', 'île', 'jungle', 'lagon', 'lanterne', 'marin', 'mât', 'mouette', 'naufrage', 'navire', 'océan', 'or', 'pirate', 'perroquet', 'pont', 'port', 'récif', 'requin', 'sable', 'sirène', 'tempête', 'tonneau', 'trésor', 'vague', 'voile', 'vigie'],
   // CM1
   pre4: [['Que veut dire « prévoir » ?', 'voir à l’avance', ['voir de nouveau', 'ne pas voir'], 'Le préfixe pré- veut dire « avant » : prévoir, préhistoire, préparer.'],
@@ -4242,7 +4303,7 @@ function qAlpha(hard) {
   if (hard) ws = shuffle(pick(Object.values(by).filter(l => l.length >= 3))).slice(0, 3); // même première lettre : il faut regarder la 2e, la 3e…
   else do { ws = shuffle(VOC.alpha).slice(0, 3); } while (new Set(ws.map(w => norm(w)[0])).size < 2);
   const sorted = ws.slice().sort((a, b) => norm(a).localeCompare(norm(b))), ans = sorted[0];
-  return { kind: 'choices', ask: 'Quel mot vient en premier dans le dictionnaire ?', prompt: '', answer: ans, answerText: ans, choices: ws.map(v => ({ v, html: v })), log: `ordre alphabétique : ${sorted.join(', ')}`,
+  return { kind: 'choices', ask: 'Quel mot vient en premier dans le dictionnaire ?', prompt: '', answer: ans, answerText: ans, choices: ws.map(v => ({ v, html: v })), uid: sorted.join(','), log: `ordre alphabétique : ${sorted.join(', ')}`,
     explain: `Ordre alphabétique : ${sorted.join(', ')}. Quand la première lettre est la même, on regarde la deuxième, puis la troisième…`, hint: 'Compare la première lettre. Si elle est pareille, regarde la suivante.' };
 }
 function qBank(key) {
@@ -4501,28 +4562,47 @@ const TXT = {
       { t: 'Le cuisinier', x: 'Le cuisinier du bateau s’appelle Gros-Louis. Il prépare une soupe de poisson. Tout l’équipage adore sa soupe.', q: [
         ['e', 'Comment s’appelle le cuisinier ?', 'Gros-Louis', ['Barbe-Grise', 'Petit-Jean'], 'Le texte dit : « Le cuisinier du bateau s’appelle Gros-Louis. »'],
         ['e', 'Que prépare-t-il ?', 'une soupe de poisson', ['un gâteau', 'des crêpes'], 'Le texte dit : « Il prépare une soupe de poisson. »']] },
+      { t: 'Le mousse', x: 'Rémi est le mousse du bateau. Il a dix ans. Chaque soir, il allume les lanternes et il sonne la cloche du dîner.', q: [
+        ['e', 'Quel âge a Rémi ?', 'dix ans', ['neuf ans', 'douze ans'], 'Le texte dit : « Il a dix ans. »'],
+        ['e', 'Que fait Rémi chaque soir ?', 'il allume les lanternes', ['il lave le pont', 'il pêche'], 'Le texte dit : « Chaque soir, il allume les lanternes ».'],
+        ['e', 'Pourquoi Rémi sonne-t-il la cloche ?', 'pour le dîner', ['pour le réveil', 'pour la tempête'], 'Le texte dit : « il sonne la cloche du dîner ».']] },
+      { t: 'Le coquillage', x: 'Sur la plage, Lila ramasse un gros coquillage rose. Elle le colle contre son oreille. Elle entend le bruit de la mer.', q: [
+        ['e', 'De quelle couleur est le coquillage ?', 'rose', ['blanc', 'bleu'], 'Le texte dit : « un gros coquillage rose ».'],
+        ['e', 'Qu’entend Lila ?', 'le bruit de la mer', ['le chant de Pi', 'la cloche du bateau'], 'Le texte dit : « Elle entend le bruit de la mer. »']] },
+      { t: 'Le marché', x: 'Au port, le capitaine va au marché. Il achète six noix de coco et un sac de riz. Il paie avec deux pièces d’or.', q: [
+        ['e', 'Où va le capitaine ?', 'au marché', ['à la plage', 'dans la cale'], 'Le texte dit : « le capitaine va au marché ».'],
+        ['e', 'Combien de noix de coco le capitaine achète-t-il ?', 'six', ['deux', 'dix'], 'Le texte dit : « Il achète six noix de coco ».'],
+        ['e', 'Avec quoi le capitaine paie-t-il ?', 'deux pièces d’or', ['un sac de riz', 'six pièces d’argent'], 'Le texte dit : « Il paie avec deux pièces d’or. »']] },
+      { t: 'La nuit en mer', x: 'La nuit, la mer est noire. Tom regarde le ciel. Il compte les étoiles, puis il s’endort dans son hamac.', q: [
+        ['e', 'Que fait Tom avant de s’endormir ?', 'il compte les étoiles', ['il lit un livre', 'il mange une pomme'], 'Le texte dit : « Il compte les étoiles, puis il s’endort ».'],
+        ['e', 'Où Tom s’endort-il ?', 'dans son hamac', ['sur le pont', 'dans la cale'], 'Le texte dit : « il s’endort dans son hamac ».']] },
     ],
     p: [
       { t: 'Le crabe gourmand', x: 'Sur la plage, un petit crabe cherche à manger. Il trouve un biscuit tombé du sac de Tom. Il le prend dans ses pinces et court se cacher sous un rocher. Quand Tom revient, il ne reste que des miettes.', q: [
         ['e', 'Où le crabe court-il se cacher ?', 'sous un rocher', ['dans le sable', 'dans le sac de Tom'], 'Le texte dit : « court se cacher sous un rocher ».'],
         ['i', 'Pourquoi ne reste-t-il que des miettes ?', 'Le crabe a mangé le biscuit.', ['Tom a mangé le biscuit.', 'Le vent a emporté le biscuit.'], 'Ce n’est pas écrit, mais on le comprend : le crabe a pris le biscuit pour le manger.'],
         ['a', 'Dans « Il le prend dans ses pinces », que remplace « le » ?', 'le biscuit', ['le crabe', 'le sac'], '« le » remplace « un biscuit », dont on vient de parler.'],
-        ['v', 'Que veut dire « gourmand » ?', 'qui aime beaucoup manger', ['qui a très peur', 'qui marche vite'], 'Un gourmand aime manger : ce crabe cherche à manger et vole un biscuit.']] },
+        ['v', 'Que veut dire « gourmand » ?', 'qui aime beaucoup manger', ['qui a très peur', 'qui marche vite'], 'Un gourmand aime manger : ce crabe cherche à manger et vole un biscuit.'],
+        ['v', 'Des « miettes », ce sont :', 'de tout petits morceaux', ['de grosses parts', 'des graines'], 'Il ne reste que de tout petits morceaux du biscuit : des miettes.']] },
       { t: 'La bouteille à la mer', x: 'Lila écrit un message sur un morceau de papier : « Je m’appelle Lila. Je navigue sur le Fier Calcul. Qui me répondra ? » Elle roule le papier, le glisse dans une bouteille et la lance dans les vagues. Trois mois plus tard, une lettre arrive au port. Elle vient d’un garçon qui habite de l’autre côté de l’océan.', q: [
         ['e', 'Quand la réponse arrive-t-elle ?', 'trois mois plus tard', ['le lendemain', 'trois ans plus tard'], 'Le texte dit : « Trois mois plus tard, une lettre arrive au port. »'],
         ['i', 'Qui a trouvé la bouteille de Lila ?', 'un garçon de l’autre côté de l’océan', ['le capitaine', 'personne'], 'Ce garçon a pu répondre : c’est donc lui qui a trouvé la bouteille.'],
         ['a', 'Dans « et la lance dans les vagues », que remplace « la » ?', 'la bouteille', ['la lettre', 'Lila'], 'Lila glisse le papier dans une bouteille, puis elle lance la bouteille.'],
-        ['v', 'Que veut dire « naviguer » ?', 'voyager en bateau', ['nager sous l’eau', 'écrire une lettre'], 'Naviguer, c’est voyager sur l’eau en bateau.']] },
+        ['v', 'Que veut dire « naviguer » ?', 'voyager en bateau', ['nager sous l’eau', 'écrire une lettre'], 'Naviguer, c’est voyager sur l’eau en bateau.'],
+        ['a', 'Dans « Elle vient d’un garçon », « Elle » désigne :', 'la lettre', ['Lila', 'la bouteille'], '« Elle » reprend « une lettre », dont on vient de parler.']] },
       { t: 'Le singe voleur', x: 'Les pirates accostent sur une île pleine de palmiers. Pendant que le capitaine dort, un singe saute sur son chapeau et l’emporte en haut d’un arbre. Le capitaine se réveille en criant. Pi éclate de rire : il n’a jamais vu son capitaine aussi décoiffé !', q: [
         ['e', 'Que vole le singe ?', 'le chapeau du capitaine', ['une banane', 'la carte'], 'Le texte dit : « un singe saute sur son chapeau et l’emporte ».'],
         ['i', 'Pourquoi le capitaine crie-t-il ?', 'Il découvre que son chapeau a disparu.', ['Il a vu un requin.', 'Il a mal au pied.'], 'On le devine : il se réveille sans son chapeau, volé pendant qu’il dormait.'],
         ['a', 'Dans « et l’emporte en haut d’un arbre », que remplace « l’ » ?', 'le chapeau', ['le singe', 'le capitaine'], 'Le singe saute sur le chapeau et emporte le chapeau.'],
-        ['v', 'Que veut dire « accoster » ?', 's’approcher du rivage et s’arrêter', ['partir loin de l’île', 'grimper à un arbre'], 'Le bateau accoste : il arrive au bord de l’île et s’arrête.']] },
+        ['v', 'Que veut dire « accoster » ?', 's’approcher du rivage et s’arrêter', ['partir loin de l’île', 'grimper à un arbre'], 'Le bateau accoste : il arrive au bord de l’île et s’arrête.'],
+        ['a', 'Dans « il n’a jamais vu son capitaine aussi décoiffé », « il » désigne :', 'Pi', ['le singe', 'le capitaine'], 'La phrase commence par « Pi éclate de rire » : « il », c’est Pi.'],
+        ['v', 'Être « décoiffé », c’est :', 'avoir les cheveux en désordre', ['avoir perdu ses chaussures', 'être très fatigué'], 'Sans son chapeau, le capitaine a les cheveux en bataille.']] },
       { t: 'Le jus du capitaine', x: 'Pour faire le jus du capitaine, il te faut deux mangues, une banane et un verre d’eau de coco. Épluche les fruits. Coupe-les en morceaux. Mets-les dans le mixeur avec l’eau de coco. Mixe pendant une minute. Sers bien frais !', q: [
         ['g', 'Ce texte est :', 'une recette', ['un conte', 'une lettre'], 'Il donne les ingrédients et les étapes pour préparer un jus : c’est une recette.'],
         ['e', 'Combien de mangues faut-il ?', 'deux', ['une', 'trois'], 'Le texte dit : « il te faut deux mangues ».'],
         ['e', 'Que faut-il faire juste après avoir épluché les fruits ?', 'les couper en morceaux', ['les mixer', 'les servir'], 'L’ordre est : éplucher, couper, mettre dans le mixeur, mixer, servir.'],
-        ['a', 'Dans « Coupe-les en morceaux », que remplace « les » ?', 'les fruits', ['les verres', 'les pirates'], 'On vient d’éplucher les fruits : ce sont eux qu’on coupe.']] },
+        ['a', 'Dans « Coupe-les en morceaux », que remplace « les » ?', 'les fruits', ['les verres', 'les pirates'], 'On vient d’éplucher les fruits : ce sont eux qu’on coupe.'],
+        ['v', '« Mixer » les fruits, c’est :', 'les écraser très finement avec un appareil', ['les faire cuire', 'les laver dans l’eau'], 'Le mixeur écrase les fruits très finement : on obtient du jus.']] },
       { t: 'Le phare', x: 'Un phare est une haute tour construite au bord de la mer. En haut, une grosse lampe tourne toute la nuit. Sa lumière prévient les bateaux qu’il y a des rochers dangereux. Grâce aux phares, les marins peuvent naviguer sans danger la nuit.', q: [
         ['g', 'Ce texte sert surtout à :', 'donner des informations', ['raconter une aventure', 'expliquer un jeu'], 'Il explique ce qu’est un phare et à quoi il sert : c’est un texte documentaire.'],
         ['e', 'Quand la lampe tourne-t-elle ?', 'toute la nuit', ['toute la journée', 'seulement l’hiver'], 'Le texte dit : « une grosse lampe tourne toute la nuit ».'],
@@ -4533,18 +4613,22 @@ const TXT = {
         ['e', 'Que voient-ils au fond de la grotte ?', 'un coffre', ['un dragon', 'une barque'], 'Le texte dit : « Au fond, ils voient un coffre ».'],
         ['i', 'Comment se sent Tom ?', 'Il a un peu peur.', ['Il est en colère.', 'Il s’ennuie.'], 'Tom « tremble un peu » : il a peur.'],
         ['i', 'Pourquoi le coffre est-il couvert de toiles d’araignée ?', 'Personne ne l’a ouvert depuis longtemps.', ['Lila l’a décoré.', 'Il est tout neuf.'], 'Les araignées ont eu le temps de tisser leurs toiles : le coffre est là depuis longtemps.'],
-        ['v', 'Le « couvercle », c’est :', 'le dessus qui ferme le coffre', ['le fond du coffre', 'la clé du coffre'], 'Lila soulève le couvercle pour ouvrir le coffre.']] },
+        ['v', 'Le « couvercle », c’est :', 'le dessus qui ferme le coffre', ['le fond du coffre', 'la clé du coffre'], 'Lila soulève le couvercle pour ouvrir le coffre.'],
+        ['a', 'Dans « ils voient un coffre », « ils » désigne :', 'Tom et Lila', ['les livres', 'les araignées'], '« ils » reprend « Tom et Lila », qui entrent dans la grotte.']] },
       { t: 'Pi apprend un mot', x: 'Le capitaine apprend un nouveau mot à Pi : « Abordage ! » Pi le répète toute la journée. Il le crie pendant le repas, pendant la sieste et même au milieu de la nuit. Le lendemain, tout l’équipage a les yeux cernés.', q: [
         ['e', 'Quel mot Pi apprend-il ?', 'Abordage', ['Bonjour', 'Trésor'], 'Le capitaine lui apprend : « Abordage ! »'],
         ['i', 'Pourquoi l’équipage a-t-il les yeux cernés ?', 'Pi les a empêchés de dormir.', ['Ils ont trop mangé.', 'Ils ont pleuré.'], 'Pi crie même la nuit : personne n’a pu dormir.'],
         ['a', 'Dans « Pi le répète », que remplace « le » ?', 'le nouveau mot', ['le capitaine', 'le repas'], 'Pi répète le mot qu’il vient d’apprendre.'],
-        ['v', 'Avoir « les yeux cernés », c’est :', 'avoir l’air très fatigué', ['avoir les yeux fermés', 'avoir les yeux bleus'], 'Les cernes sont des marques sombres sous les yeux, quand on est fatigué.']] },
+        ['v', 'Avoir « les yeux cernés », c’est :', 'avoir l’air très fatigué', ['avoir les yeux fermés', 'avoir les yeux bleus'], 'Les cernes sont des marques sombres sous les yeux, quand on est fatigué.'],
+        ['a', 'Dans « Il le crie pendant le repas », « Il » désigne :', 'Pi', ['le capitaine', 'l’équipage'], 'C’est Pi qui répète le mot toute la journée.'],
+        ['v', '« Le lendemain », c’est :', 'le jour d’après', ['le jour d’avant', 'le même soir'], 'Le lendemain, c’est le jour qui suit.']] },
       { t: 'La baleine bleue', x: 'La baleine bleue est le plus grand animal du monde. Elle peut mesurer trente mètres de long, autant que trois bus. Pourtant, elle se nourrit de tout petits animaux appelés krill. Elle en avale des tonnes chaque jour.', q: [
         ['g', 'Ce texte est :', 'un texte documentaire', ['un poème', 'une recette'], 'Il donne des informations vraies sur un animal.'],
         ['e', 'Combien peut mesurer une baleine bleue ?', 'trente mètres', ['trois mètres', 'trois cents mètres'], 'Le texte dit : « Elle peut mesurer trente mètres de long ».'],
         ['i', 'Qu’est-ce qui est surprenant dans ce texte ?', 'Un animal géant mange de tout petits animaux.', ['La baleine est bleue.', 'La baleine sait nager.'], 'Le mot « Pourtant » montre la surprise : le plus grand animal mange de minuscules animaux.'],
         ['a', 'Dans « Elle en avale des tonnes », « en » renvoie à :', 'le krill', ['les bus', 'les baleines'], 'Elle avale des tonnes de krill.'],
-        ['v', '« Se nourrir » veut dire :', 'manger', ['dormir', 'nager'], 'Se nourrir de quelque chose, c’est le manger.']] },
+        ['v', '« Se nourrir » veut dire :', 'manger', ['dormir', 'nager'], 'Se nourrir de quelque chose, c’est le manger.'],
+        ['v', 'Le « krill », ce sont :', 'de tout petits animaux de la mer', ['des algues', 'de gros poissons'], 'Le texte le dit : « de tout petits animaux appelés krill ».']] },
     ],
     l: [
       { t: 'La mer qui brille', x: 'Ce soir-là, la mer est calme. Le capitaine a promis une surprise à l’équipage. Tout le monde attend sur le pont, en silence.\nSoudain, l’eau autour du bateau s’allume : des milliers de petites lumières bleues dansent dans les vagues. « Ce sont des planctons lumineux », explique le capitaine.\nLila plonge la main dans l’eau. Ses doigts brillent comme des étoiles. Pi, lui, n’est pas rassuré : il se cache sous le chapeau du capitaine. Les pirates rient. Cette nuit-là, personne ne veut aller se coucher.', q: [
@@ -4585,6 +4669,18 @@ const TXT = {
       { t: 'Les dauphins', x: 'Les dauphins accompagnent souvent les navires. Ils nagent devant la proue et sautent hors de l’eau. Les marins disent qu’ils portent bonheur.', q: [
         ['e', 'Où nagent les dauphins ?', 'devant la proue', ['sous la cale', 'derrière le port'], 'Le texte dit : « Ils nagent devant la proue ». La proue, c’est l’avant du bateau.'],
         ['e', 'Que disent les marins des dauphins ?', 'qu’ils portent bonheur', ['qu’ils sont dangereux', 'qu’ils volent les poissons'], 'Le texte dit : « Les marins disent qu’ils portent bonheur. »']] },
+      { t: 'La boussole', x: 'Le capitaine a perdu sa boussole. Sans elle, impossible de savoir où est le nord. Heureusement, Lila connaît les étoiles : elle retrouve la bonne direction en regardant le ciel.', q: [
+        ['e', 'Qu’a perdu le capitaine ?', 'sa boussole', ['sa carte', 'sa longue-vue'], 'Le texte dit : « Le capitaine a perdu sa boussole. »'],
+        ['a', 'Dans « Sans elle », « elle » désigne :', 'la boussole', ['Lila', 'l’étoile'], '« elle » reprend « sa boussole », dont on vient de parler.'],
+        ['i', 'Pourquoi Lila peut-elle aider le capitaine ?', 'Elle sait se repérer grâce aux étoiles.', ['Elle a une autre boussole.', 'Elle connaît la mer par cœur.'], 'Le texte dit qu’elle « connaît les étoiles » : elles lui indiquent la direction.']] },
+      { t: 'Pi le bavard', x: 'Pi ne se tait jamais. Ce matin, il a répété cinquante fois le mot « trésor ». Le capitaine, agacé, a fini par lui donner une graine pour qu’il se taise enfin.', q: [
+        ['e', 'Combien de fois Pi a-t-il répété « trésor » ?', 'cinquante fois', ['quinze fois', 'cinq fois'], 'Le texte dit : « il a répété cinquante fois le mot trésor ».'],
+        ['e', 'Pourquoi le capitaine donne-t-il une graine à Pi ?', 'pour qu’il se taise', ['pour le récompenser', 'parce qu’il a faim'], 'Le texte dit : « pour qu’il se taise enfin ».'],
+        ['v', 'Ici, « agacé » veut dire :', 'énervé', ['amusé', 'endormi'], 'Le capitaine en a assez d’entendre Pi : il est agacé, énervé.']] },
+      { t: 'L’île aux tortues', x: 'Chaque année, des centaines de tortues viennent pondre sur cette plage. La nuit, elles creusent un trou dans le sable et y déposent leurs œufs. Deux mois plus tard, les bébés tortues filent vers la mer.', q: [
+        ['e', 'Que viennent faire les tortues sur cette plage ?', 'pondre leurs œufs', ['dormir au soleil', 'chercher à manger'], 'Le texte dit : « des centaines de tortues viennent pondre sur cette plage ».'],
+        ['a', 'Dans « y déposent leurs œufs », « y » désigne :', 'le trou dans le sable', ['la mer', 'l’île entière'], 'Les tortues creusent un trou et déposent leurs œufs dedans : « y », c’est dans ce trou.'],
+        ['e', 'Au bout de combien de temps les bébés tortues partent-ils vers la mer ?', 'deux mois', ['deux jours', 'deux ans'], 'Le texte dit : « Deux mois plus tard, les bébés tortues filent vers la mer. »']] },
     ],
     p: [
       { t: 'Le passager clandestin', x: 'Depuis trois jours, des biscuits disparaissent de la réserve. Gros-Louis accuse Pi, mais le perroquet jure qu’il est innocent. Cette nuit, Tom se cache derrière un tonneau pour surveiller. Vers minuit, une petite silhouette se faufile entre les sacs de farine : c’est une fillette d’environ huit ans ! Elle s’est cachée à bord avant le départ, car elle rêvait de devenir pirate.', q: [
@@ -4767,10 +4863,12 @@ function genLecture(l) {
   if (CP()) return cpLecture(l);
   if (CE1()) { if (l === 1) return cpLecture(5); l -= 1; } // CE1 : un texte court du CP, puis les textes du CE2 des niveaux 1 à 4
   const B = TXT[CE1() ? 'ce2' : GR()], set = l === 1 ? B.m : l === 5 ? B.l : B.p, types = l === 2 ? ['e'] : l === 3 ? ['i', 'e'] : l === 4 ? ['a', 'v'] : null;
-  const fresh = T => T.q.filter(q => (!types || types.includes(q[0])) && !(R && R.seen && R.seen.has(`${T.t} · ${q[1]}`)));
-  // On reste sur le même texte tant qu'il a des questions : l'enfant ne relit pas un nouveau texte à chaque fois
-  let T = R && R.rt && set.includes(R.rt) && fresh(R.rt).length ? R.rt : pick(set.filter(t => fresh(t).length).concat([])) || pick(set);
-  if (R) R.rt = T; const qs = fresh(T).length ? fresh(T) : T.q, [ty, q, a, w, e] = pick(types && l === 3 ? (qs.filter(x => x[0] === 'i').length ? qs.filter(x => x[0] === 'i') : qs) : qs);
+  // Une question est « libre » si elle n'a pas été posée dans l'escale (max 1) ni parmi les dernières de l'île (max 0)
+  const used = r => qUsed('lecture', { kind: 'read', ask: typo(r[1]), answerText: typo(r[2]) }), fresh = (T, max) => T.q.filter(r => (!types || types.includes(r[0])) && used(r) <= max);
+  // On reste sur le même texte tant qu'il a des questions libres : l'enfant ne relit pas un nouveau texte à chaque fois
+  const stay = max => R && R.rt && set.includes(R.rt) && fresh(R.rt, max).length ? R.rt : pick(set.filter(t => fresh(t, max).length));
+  const T = stay(0) || stay(1) || pick(set), qs = fresh(T, 0).length ? fresh(T, 0) : fresh(T, 1).length ? fresh(T, 1) : T.q;
+  if (R) R.rt = T; const [ty, q, a, w, e] = pick(types && l === 3 ? (qs.filter(x => x[0] === 'i').length ? qs.filter(x => x[0] === 'i') : qs) : qs);
   return { kind: 'read', title: T.t, text: typo(T.x), ask: typo(q), prompt: '', answer: a, answerText: typo(a), choices: shuffle([a, ...w]).map(v => ({ v, html: esc(typo(v)) })), log: `${T.t} · ${q}`, explain: esc(typo(e)), hint: QHINT[ty] };
 }
 
@@ -4783,7 +4881,7 @@ const SKILLS = {
     jungle: ['placer un nombre de 0 à 10', 'placer un nombre de 10 à 20', 'placer un nombre entre 20 et 60', 'placer un nombre jusqu’à 100', 'lire une droite graduée sans aide'],
     marche: ['payer avec des pièces de 1 € et 2 €', 'payer jusqu’à 10 €', 'payer jusqu’à 20 € avec des billets', 'payer deux achats', 'rendre la monnaie sur 10 €'],
     cuisine: ['trouver la moitié de 2, 4 ou 6 parts', 'trouver la moitié de 8, 10 ou 12', 'partager en deux parts égales', 'résoudre un problème de groupes ou de partage', 'résoudre un problème (ajout, retrait, ce qui manque)'],
-    horloge: ['connaître l’ordre des jours', 'dire le jour d’hier, savoir qu’une semaine a 7 jours', 'lire l’heure pile', 'connaître l’ordre des mois', 'me repérer dans le temps'],
+    horloge: ['connaître l’ordre des jours et les moments de la journée', 'dire le jour d’hier, savoir qu’une semaine a 7 jours', 'lire l’heure pile', 'connaître l’ordre des mois', 'me repérer dans le temps'],
     lecture: ['lire une phrase simple', 'comprendre une ou deux phrases', 'comprendre deux phrases', 'comprendre un petit texte', 'trouver une information dans un texte'],
     conjug: ['reconnaître la première lettre d’un mot', 'entendre les rimes', 'compter les syllabes', 'trouver la syllabe qui manque dans un mot', 'lire ou, on, an, oi, ch, conjuguer être et avoir'],
     gram: ['trouver un mot dans une phrase', 'compter les mots d’une phrase', 'repérer la majuscule et le point', 'reconnaître une phrase qui a du sens', 'reconnaître une phrase bien écrite et qui a du sens'],
@@ -5121,7 +5219,7 @@ function rankIntro(i, r) {
 /* ================= Escale (jeu) ================= */
 function startEscale(id, node, fromTide) {
   if (sessionOver()) return renderPort();
-  const i = isleById(id), base = { q: null, k: 0, ok: 0, res: [], gold: 0, combo: 0, best: 0, seen: new Set(), fromTide, hp: 100, used: {}, goldBefore: S.gold, done: false, revs: 0, popped: {} };
+  const i = isleById(id), base = { q: null, k: 0, ok: 0, res: [], gold: 0, combo: 0, best: 0, seen: new Set(), seenK: new Set(), fromTide, hp: 100, used: {}, goldBefore: S.gold, done: false, revs: 0, popped: {} };
   if (i.v) { R = Object.assign(base, { i, node: 0, d: 3, boss: false, n: 6 });
     if (id === 'test') { R.test = { list: playable().map(x => x.id), at: 0, st: 0, res: {} }; R.n = R.test.list.length * 2; }
     ac(); music('escale'); if (id === 'mix') setTimeout(() => voice('melange', true), voiceLeft() + 500); return nextQ(); }
@@ -5150,21 +5248,46 @@ function testPick() {
 // Rangs argent et or : chaque question tire son niveau un ou deux crans au-dessus de celui de la route (sans dépasser le niveau 5 de la classe)
 const rankLv = () => !R.rank || R.boss ? R.d : Math.min(5, R.d + R.rank - 1 + (Math.random() < .5 ? 1 : 0));
 const advance = () => { R.k++; if (R.skip) { R.k++; R.res.push(null); R.skip = 0; } nextQ(); };
+// Une question = ce que l'enfant voit : consigne, énoncé (texte, y compris celui des figures), phrase anglaise entendue, bonne réponse.
+// Deux questions qui ne diffèrent que par leurs pièges sont la même question.
+const qTxt = h => String(h ?? '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+const qKey = q => { const s = [q.kind, qTxt(q.ask), qTxt(q.prompt), q.en || '', qTxt(q.answerText), q.uid || ''].join('|'); let h = 2166136261; for (let k = 0; k < s.length; k++) { h ^= s.charCodeAt(k); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+// Pour les générateurs qui piochent dans une banque : 2 = déjà posée dans cette escale, 1 = parmi les dernières de l'île, 0 = libre
+const qUsed = (id, q) => { if (!R || !R.seenK) return 0; const k = qKey(q); return R.seenK.has(k) ? 2 : ((P().recent || {})[id] || []).includes(k) ? 1 : 0; };
+const RECENT = 80; // questions de l'île gardées en mémoire d'une escale à l'autre : toute la banque passe avant qu'une question revienne
+// Jamais deux fois la même question dans une escale. Si possible, une question absente des 80 dernières de l'île ;
+// quand le niveau n'en a plus, on en prend une au niveau voisin (le plus facile d'abord) plutôt que de répéter.
+// Quand toute la banque est passée, la question vue il y a le plus longtemps revient la première (au bon niveau si possible).
+// « strict » : pas de changement de niveau (test du capitaine). « anyLevel » : niveaux = thèmes, pas difficulté (culture générale).
+function pickQ(i, l, strict) {
+  const rec = ((P().recent || (P().recent = {}))[i.id]) || [], near = i.anyLevel ? [0, -1, 1, -2, 2, -3, 3, -4, 4] : [0, -1, 1, -2, 2];
+  const levels = strict ? [l] : near.map(d => l + d).filter(x => x >= 1 && x <= 5);
+  let best = null, bestAge = Infinity, any = null;
+  for (const L of levels) for (let t = 0; t < (L === l ? 60 : 30); t++) {
+    const q = i.gen(L), k = qKey(q); q.lv = L; q.qk = k; if (!any) any = q;
+    if (R.seenK.has(k)) continue;
+    const age = rec.indexOf(k); if (age < 0) return q;
+    if (age < bestAge) { best = q; bestAge = age; }
+  }
+  return best || any;
+}
 function nextQ() {
   if (R.k >= R.n) return endEscale();
   let q, t = 0; R.qi = null;
   const tp = R.boss && R.plan && R.plan.length && [1, 3, 5].includes(R.k) ? R.plan.shift() : null;
-  const rv = !R.boss && !R.test && R.revs < 2 && P().rev.find(x => (R.i.id === 'mix' ? playable().some(i => i.id === x.g && unlocked(i)) : x.g === R.i.id) && x.due <= today() && !R.seen.has(x.q.log));
+  const rv = !R.boss && !R.test && R.revs < 2 && P().rev.find(x => (R.i.id === 'mix' ? playable().some(i => i.id === x.g && unlocked(i)) : x.g === R.i.id) && x.due <= today() && !R.seen.has(x.q.log) && !R.seenK.has(x.q.qk || qKey(x.q)));
   if (R.retry && R.k >= R.retry.at) { q = Object.assign({}, R.retry.q, { retry: true }); R.qi = R.retry.qi || null; R.retry = null; }
-  else if (R.test) { const pk = testPick(); if (!pk) return endEscale(); R.qi = pk.i; do { q = pk.i.gen(pk.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = pk.l; }
+  else if (R.test) { const pk = testPick(); if (!pk) return endEscale(); R.qi = pk.i; q = pickQ(pk.i, pk.l, true); }
   else if (tp && tp.rev) q = Object.assign({}, tp.rev.q, { rev: true, tgt: 1 });
   else if (rv) { q = Object.assign({}, rv.q, { rev: true }); R.qi = isleById(rv.g); R.revs++; setTimeout(() => voice('revanche', true), 500); }
-  else { const src = R.i.id === 'mix' ? mixPick() : { i: R.i, l: tp ? tp.lv : rankLv() }; R.qi = src.i; do { q = src.i.gen(src.l); t++; } while (R.seen.has(q.log) && t < 20); q.lv = src.l; if (tp) q.tgt = 1; q = recall(q); }
+  else { const src = R.i.id === 'mix' ? mixPick() : { i: R.i, l: tp ? tp.lv : rankLv() }; R.qi = src.i; q = pickQ(src.i, src.l); if (tp) q.tgt = 1; q = recall(q); }
   if (q.tgt) setTimeout(() => R && R.q === q && (R.cible || (R.cible = voice('boss-cible')), pop(R.i.boss.img, `${R.i.boss.n} vise ton point faible : ${q.lv ? skillName(R.i.id, q.lv) : 'une question déjà ratée'}`)), 700);
   if (QI().sea === 'f' && !q.typo) { ['ask', 'prompt', 'explain', 'hint', 'answerText'].forEach(k => { if (typeof q[k] === 'string') q[k] = typo(q[k]); }); (q.choices || []).forEach(c => { c.html = typo(String(c.html)); }); q.typo = 1; }
   // La bonne réponse change de place à chaque question, et jamais trois fois de suite au même endroit (les signes <, =, > gardent leur ordre)
   if (q.choices && q.kind !== 'compare' && !q.keep) { const at = c => c.findIndex(x => x.v === q.answer); let c, t2 = 0; do { c = shuffle(q.choices); t2++; } while (t2 < 10 && R.lastAt && R.lastAt[0] === at(c) && R.lastAt[1] === at(c)); q.choices = c; R.lastAt = [at(c), R.lastAt ? R.lastAt[0] : -1]; }
-  if (!q.retry) R.seen.add(q.log); R.q = q; R.input = ''; R.locked = false; R.qt = performance.now(); R.counts = R.tray = R.sel = R.pick = R.dig = R.wsel = null;
+  if (!q.retry) { const k = q.qk || qKey(q), id = QI().id, rec = (P().recent || (P().recent = {}))[id] || []; R.seen.add(q.log); R.seenK.add(k);
+    P().recent[id] = [...rec.filter(x => x !== k), k].slice(-RECENT); }
+  R.q = q; R.input = ''; R.locked = false; R.qt = performance.now(); R.counts = R.tray = R.sel = R.pick = R.dig = R.wsel = null;
   if (q.listen && !q.enShown && !enOK()) { q.prompt += enTxt(q.en); q.enShown = 1; }
   renderGame();
   if (q.listen && q.en) setTimeout(() => { if (R && R.q === q && !R.locked) speakEn(q.en); }, 500);
@@ -5347,6 +5470,8 @@ function recall(q) {
   if (!R || GR() === 'cp' || (q.lv || R.d) < (R.rank ? 2 : 4) || !q.choices || q.kind !== 'choices') return q;
   const whyOf = {}; q.choices.forEach(c => { if (c.why) whyOf[normT(q.typeable && q.typeable.strip ? String(c.v).replace(q.typeable.strip, '') : c.v)] = c.why; });
   if (QI().id === 'stade' && typeof q.answer === 'number' && Number.isInteger(q.answer) && q.answer >= 0 && q.answer <= 999999 && Math.random() < (R.rank ? .85 : .6)) {
+    // La question est toute dans la consigne (« Combien de quarts font un demi ? ») : on la garde, avec la case à remplir dessous
+    if (!qTxt(q.prompt)) return Object.assign({}, q, { kind: 'keypad', prompt: SLOT, promptClass: '', choices: undefined, sayChoices: false, whyOf, recall: 1 });
     const pr = String(q.prompt), slot = /= \?$/.test(pr) ? pr.replace(/= \?$/, `= ${SLOT}`) : /…/.test(pr) && !/[a-z]/i.test(pr.replace(/…/, '')) ? pr.replace('…', SLOT).replace(/ \?$/, '') : null;
     return Object.assign({}, q, { kind: 'keypad', ask: 'Écris le résultat, puis tire !', prompt: slot || `<span class="words">${pr}</span><br>${SLOT}`, promptClass: slot ? '' : 'mid', choices: undefined, sayChoices: false, whyOf, recall: 1 });
   }
