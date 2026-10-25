@@ -1239,7 +1239,10 @@ function musFetch(n) {
   decode(n).then(buf => { BUF[n] = buf; delete musLoading[n]; if (musWant && (n === 'mus-' + musWant || (n === 'mus-carte' && musWant === 'port'))) music(musWant); }).catch(() => { delete musLoading[n]; });
 }
 function playBuf(name, b = 'sfx', vol = 1) { if (!S.sound || !BUF[name]) return null; const B = bus(); if (!B) return null; const src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; src.buffer = BUF[name]; src.connect(g); g.connect(B[b]); src.start(); return src; }
-const sfx = (n, vol) => { const opts = ['', '-1', '-2', '-3'].map(v => `sfx-${n}${v}`).filter(x => BUF[x]); return opts.length ? !!playBuf(pick(opts), 'sfx', vol) : false; };
+// Un bruitage peut exister en plusieurs versions (sfx-block-1, -2, -3) : elles passent à tour de rôle, pour varier sans hasard
+const SFX_TURN = {};
+const sfx = (n, vol) => { const opts = ['', '-1', '-2', '-3'].map(v => `sfx-${n}${v}`).filter(x => BUF[x]); if (!opts.length) return false;
+  SFX_TURN[n] = ((SFX_TURN[n] ?? -1) + 1) % opts.length; return !!playBuf(opts[SFX_TURN[n]], 'sfx', vol); };
 // Réactions enregistrées à part : elles rejoignent les séries de bonnes réponses et les victoires.
 // Celle du footballeur (vo-bravo-1) seulement au Stade des Vagues, où l'on tire des penalties.
 const VO_EXTRA = { combo: ['vo-bravo-2', 'vo-bravo-3'], victoire: ['vo-bravo-2', 'vo-bravo-3'] };

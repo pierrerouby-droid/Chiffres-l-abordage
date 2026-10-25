@@ -78,7 +78,7 @@ tr:last-child td{border-bottom:0}
 
 <div class="wrap">
   <header><div class="kick">Moussaillon · production audio</div><h1>Voix, musiques et bruitages</h1></header>
-  <p class="lead"><b>Reçu et intégré :</b> les 76 répliques du Capitaine Barbe-Grise et la musique de la carte (« Tavern »). <b>Lot 6 reçu et intégré (version 1.8) :</b> les 16 nouvelles répliques, l’histoire racontée par le Capitaine (14 chapitres), les 4 musiques et l’explosion. <b>Reste à produire :</b> 17 bruitages, tous déjà prévus dans le code et marqués <span class="tagm">Manquant</span> dans la partie 5. Tant qu’un fichier manque, l’appli garde ses petits sons actuels.</p>
+  <p class="lead"><b>Reçu et intégré :</b> les 76 répliques du Capitaine Barbe-Grise et la musique de la carte (« Tavern »). <b>Lot 6 reçu et intégré (version 1.8) :</b> les 16 nouvelles répliques, l’histoire racontée par le Capitaine (14 chapitres), les 4 musiques et l’explosion. <b>Bruitages reçus et intégrés (version 2.4) :</b> 16 des 17, dont les blocs et le boss touché en trois versions qui passent à tour de rôle. <b>Reste à produire :</b> <code>sfx-pop</code> (Jungle), marqué <span class="tagm">Manquant</span> dans la partie 5. Tant qu’il manque, la Jungle garde son petit son actuel.</p>
 
   <section class="alert" aria-labelledby="t-al">
     <h2 id="t-al">À lire avant de générer la voix</h2>
@@ -105,9 +105,9 @@ tr:last-child td{border-bottom:0}
         <tr><td>Musiques des escales, des boss, du port et de la victoire</td><td>4</td><td>Partie 4</td><td class="okr">Reçues ✓</td></tr>
         <tr><td>Nouvelles répliques : test du capitaine, escale mélangée, boss qui vise ton point faible, quêtes, chapitres, journal, clavier de lettres</td><td>16</td><td>Partie 2</td><td class="okr">Reçues ✓</td></tr>
         <tr><td>L’histoire de l’archipel lue par le Capitaine</td><td>14</td><td>Partie 3</td><td class="okr">Reçue ✓</td></tr>
-        <tr><td>Bruitages des combats et des récompenses (l’explosion est reçue)</td><td>9</td><td>Partie 5</td><td><span class="tagm">Manquants</span> · déjà branchés</td></tr>
-        <tr><td>Bruitages des îles : ballon, blocs, créature, caisse, couteau, tic-tac</td><td>6</td><td>Partie 5</td><td><span class="tagm">Manquants</span> · déjà branchés</td></tr>
-        <tr><td>Deux nouveaux bruitages : morceau de carte, quête accomplie</td><td>2</td><td>Partie 5</td><td><span class="tagm">Manquants</span> · déjà branchés</td></tr>
+        <tr><td>Bruitages des combats et des récompenses (l’explosion est reçue)</td><td>9</td><td>Partie 5</td><td class="okr">Reçus ✓</td></tr>
+        <tr><td>Bruitages des îles : ballon, blocs, créature, caisse, couteau, tic-tac</td><td>6</td><td>Partie 5</td><td><span class="okr">5 reçus ✓</span> · <span class="tagm">Manquant</span> : la créature (<code>sfx-pop</code>)</td></tr>
+        <tr><td>Deux nouveaux bruitages : morceau de carte, quête accomplie</td><td>2</td><td>Partie 5</td><td class="okr">Reçus ✓</td></tr>
         <tr><td>CP : les cinq sons isolés (ou, on, an, oi, ch)</td><td>5</td><td>Partie 6</td><td>Seulement si le test montre un problème</td></tr>
       </tbody>
     </table></div>
@@ -176,8 +176,8 @@ tr:last-child td{border-bottom:0}
   </section>
 
   <section class="sec" aria-labelledby="t-s">
-    <h2 id="t-s">5. Bruitages · 17 manquants</h2>
-    <p class="sub">Courts, nets, sans écho. Les bonnes réponses doivent être gratifiantes, les erreurs douces et jamais punitives. Aujourd’hui, les bruitages qui manquent sont remplacés par un bip de synthèse, ou rien du tout (coffre, île découverte, nouvel équipier). Le bouton « Prompt » copie une description en anglais pour un générateur de bruitages. Tous ceux qui restent sont déjà branchés.</p>
+    <h2 id="t-s">5. Bruitages · 1 manquant</h2>
+    <p class="sub">Courts, nets, sans écho. Les bonnes réponses doivent être gratifiantes, les erreurs douces et jamais punitives. Seul <code>sfx-pop</code> manque encore : en attendant, la Jungle garde le son de bonne réponse habituel. Quand un bruitage existe en plusieurs versions (<code>-1</code>, <code>-2</code>, <code>-3</code>), elles passent à tour de rôle. Le bouton « Prompt » copie une description en anglais pour un générateur de bruitages.</p>
     <div class="tbl"><table>
       <thead><tr><th>Fichier</th><th>Quand</th><th>Son attendu</th></tr></thead>
       <tbody>
@@ -186,23 +186,23 @@ tr:last-child td{border-bottom:0}
         <tr><td><code>sfx-wrong.mp3</code> <span class="okr">Reçu ✓</span></td><td>Mauvaise réponse</td><td>« Bloup » doux et comique, pas de buzzer</td></tr>
         <tr><td><code>sfx-cannon.mp3</code> <span class="okr">Reçu ✓</span></td><td>Tir de canon</td><td>Coup de canon sourd, court</td></tr>
         <tr><td><code>sfx-explosion.mp3</code> <span class="okr">Reçu ✓</span></td><td>Boulet qui touche</td><td>Impact et éclats de bois, cartoon</td></tr>
-        <tr><td><code>sfx-splash.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-splash">Prompt</button></td><td>Boulet raté</td><td>Plouf dans l’eau</td></tr>
-        <tr><td><code>sfx-sink.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-sink">Prompt</button></td><td>Le navire ennemi coule</td><td>Craquements, glouglous, 1,5 à 2 s</td></tr>
-        <tr><td><code>sfx-boss-hit.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-boss-hit">Prompt</button></td><td>Boss touché</td><td>Impact + petit cri comique de monstre</td></tr>
-        <tr><td><code>sfx-kick.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-kick">Prompt</button></td><td>Stade : bonne réponse</td><td>Frappe de ballon et filet qui tremble</td></tr>
-        <tr><td><code>sfx-block.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-block">Prompt</button></td><td>Mine : bonne réponse</td><td>Blocs qui s’emboîtent</td></tr>
+        <tr><td><code>sfx-splash.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-splash">Prompt</button></td><td>Boulet raté</td><td>Plouf dans l’eau</td></tr>
+        <tr><td><code>sfx-sink.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-sink">Prompt</button></td><td>Le navire ennemi coule</td><td>Craquements, glouglous, 1,5 à 2 s</td></tr>
+        <tr><td><code>sfx-boss-hit.mp3</code> <span class="okr">Reçu ✓ · 3 versions à tour de rôle</span><br><button class="cp" type="button" data-p="sfx-boss-hit">Prompt</button></td><td>Boss touché</td><td>Impact + petit cri comique de monstre</td></tr>
+        <tr><td><code>sfx-kick.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-kick">Prompt</button></td><td>Stade : bonne réponse</td><td>Frappe de ballon et filet qui tremble</td></tr>
+        <tr><td><code>sfx-block.mp3</code> <span class="okr">Reçu ✓ · 3 versions à tour de rôle</span><br><button class="cp" type="button" data-p="sfx-block">Prompt</button></td><td>Mine : bonne réponse</td><td>Blocs qui s’emboîtent</td></tr>
         <tr><td><code>sfx-pop.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-pop">Prompt</button></td><td>Jungle : bonne réponse</td><td>« Pop » de créature qui sort des feuilles</td></tr>
-        <tr><td><code>sfx-cash.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-cash">Prompt</button></td><td>Marché : bonne réponse</td><td>Tiroir-caisse ancien</td></tr>
-        <tr><td><code>sfx-slice.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-slice">Prompt</button></td><td>Cuisine : bonne réponse</td><td>Coup de couteau sur planche + petit « miam »</td></tr>
-        <tr><td><code>sfx-coin.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-coin">Prompt</button></td><td>Pièce posée, doublon gagné</td><td>Tintement d’une pièce</td></tr>
-        <tr><td><code>sfx-coins.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-coins">Prompt</button></td><td>Coffre ouvert</td><td>Cascade de pièces (1 à 1,5 s)</td></tr>
-        <tr><td><code>sfx-chest-open.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-chest-open">Prompt</button></td><td>Coffre ouvert</td><td>Grincement de couvercle</td></tr>
-        <tr><td><code>sfx-fanfare.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-fanfare">Prompt</button></td><td>Bienvenue, récompense</td><td>Courte fanfare (si pas de mus-victoire)</td></tr>
-        <tr><td><code>sfx-unlock.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-unlock">Prompt</button></td><td>Nouvelle île découverte</td><td>Brouillard qui se dissipe, carillon magique</td></tr>
-        <tr><td><code>sfx-tick.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-tick">Prompt</button></td><td>Horloge : bonne réponse</td><td>Tic-tac et petit carillon</td></tr>
-        <tr><td><code>sfx-crew-join.mp3</code> <span class="tagm">Manquant</span><br><button class="cp" type="button" data-p="sfx-crew-join">Prompt</button></td><td>Nouvel équipier</td><td>Petit jingle d’accueil joyeux</td></tr>
-        <tr><td><code>sfx-page.mp3</code> <span class="tagm">Manquant · nouveau</span><br><button class="cp" type="button" data-p="sfx-page">Prompt</button></td><td>Nouveau morceau de carte, ouverture d’un chapitre</td><td>Parchemin qui se déroule, petite étincelle magique (1 s)</td></tr>
-        <tr><td><code>sfx-quest.mp3</code> <span class="tagm">Manquant · nouveau</span><br><button class="cp" type="button" data-p="sfx-quest">Prompt</button></td><td>Quête de la semaine accomplie</td><td>Cloche de bord qui sonne deux coups, joyeuse (1 s)</td></tr>
+        <tr><td><code>sfx-cash.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-cash">Prompt</button></td><td>Marché : bonne réponse</td><td>Tiroir-caisse ancien</td></tr>
+        <tr><td><code>sfx-slice.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-slice">Prompt</button></td><td>Cuisine : bonne réponse</td><td>Coup de couteau sur planche + petit « miam »</td></tr>
+        <tr><td><code>sfx-coin.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-coin">Prompt</button></td><td>Pièce posée, doublon gagné</td><td>Tintement d’une pièce</td></tr>
+        <tr><td><code>sfx-coins.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-coins">Prompt</button></td><td>Coffre ouvert</td><td>Cascade de pièces (1 à 1,5 s)</td></tr>
+        <tr><td><code>sfx-chest-open.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-chest-open">Prompt</button></td><td>Coffre ouvert</td><td>Grincement de couvercle</td></tr>
+        <tr><td><code>sfx-fanfare.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-fanfare">Prompt</button></td><td>Bienvenue, récompense</td><td>Courte fanfare (si pas de mus-victoire)</td></tr>
+        <tr><td><code>sfx-unlock.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-unlock">Prompt</button></td><td>Nouvelle île découverte</td><td>Brouillard qui se dissipe, carillon magique</td></tr>
+        <tr><td><code>sfx-tick.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-tick">Prompt</button></td><td>Horloge : bonne réponse</td><td>Tic-tac et petit carillon</td></tr>
+        <tr><td><code>sfx-crew-join.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-crew-join">Prompt</button></td><td>Nouvel équipier</td><td>Petit jingle d’accueil joyeux</td></tr>
+        <tr><td><code>sfx-page.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-page">Prompt</button></td><td>Nouveau morceau de carte, ouverture d’un chapitre</td><td>Parchemin qui se déroule, petite étincelle magique (1 s)</td></tr>
+        <tr><td><code>sfx-quest.mp3</code> <span class="okr">Reçu ✓</span><br><button class="cp" type="button" data-p="sfx-quest">Prompt</button></td><td>Quête de la semaine accomplie</td><td>Cloche de bord qui sonne deux coups, joyeuse (1 s)</td></tr>
       </tbody>
     </table></div>
   </section>

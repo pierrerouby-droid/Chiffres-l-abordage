@@ -10,5 +10,6 @@ Nouveautés de la version 2.4
 • L’histoire de l’archipel est illustrée : des scènes en tête des chapitres et une vraie carte au trésor peinte, qui se dévoile morceau par morceau.
 • Une question ne revient plus dans la même escale, et le jeu fait le tour de toutes les questions d’une île avant d’en reposer une. Nouveaux textes à lire au CP, au CE1, au CE2 et au CM1.
 • Les mots surlignés se voient beaucoup mieux.
+• De vrais bruitages : coffres, pièces, boss touchés, navires qui coulent, île découverte, nouvel équipier, et des sons propres au Stade, à la Mine, au Marché, à la Cuisine et à l’Horloge.
 • Version iPad.
 • La question qui protège l’espace parents est plus simple : un petit calcul à faire de tête.
