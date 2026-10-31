@@ -1074,8 +1074,9 @@ const digits = n => [Math.floor(n / 1000), Math.floor(n % 1000 / 100), Math.floo
 const decomp = n => { const [m, c, d, u] = digits(n); return `${pl(m, 'millier')}, ${pl(c, 'centaine')}, ${pl(d, 'dizaine')} et ${pl(u, 'unité')}`; };
 
 /* ================= Sauvegarde ================= */
-// Version administrateur (adresse terminée par ?admin) : tout est débloqué, sur une sauvegarde à part qui ne touche pas celle de l'enfant
-const ADMIN = /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.hash.slice(1));
+// Version administrateur, pour tester sur le web seulement (adresse terminée par ?admin) : tout est débloqué, sur une sauvegarde à part.
+// Jamais dans l'appli des stores, et aucun lien ne la propose : Apple refuse les fonctions de bêta-test (règle 2.2).
+const ADMIN = !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) && /(^|[?&#])admin\b/.test(location.search.slice(1) + '#' + location.hash.slice(1));
 // Plusieurs enfants sur le même appareil (2.4) : un profil par enfant, chacun avec sa sauvegarde complète (classe, îles, doublons, navire, réglages).
 // Le premier profil garde la clé d'origine : rien ne bouge pour les sauvegardes existantes. Changer d'enfant recharge la page.
 const PKEY = 'moussaillon-profils', PMAX = 6;
@@ -1136,7 +1137,7 @@ function kidsSheet() {
   m.innerHTML = `<div class="box kbox glass" role="dialog" aria-label="Qui joue ?"><b>Qui joue ?</b>${kidList(true)}<button class="kclose" data-a="kidsclose">Fermer</button></div>`;
   app.appendChild(m);
 }
-const VERSION = '2.4 bêta · octobre 2026';
+const VERSION = '2.4 · octobre 2026';
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(() => {}); } catch (e) {}
 // Appli des stores : sur iPhone, le jeu est embarqué dans une appli native (Capacitor) ; sur Android, il s'ouvre en plein écran (TWA, display-mode standalone)
 const nativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
@@ -1188,11 +1189,6 @@ function wakeAudio(force) {
   musSrc = null; musName = null;
   const a = ac(); alog('nouveau moteur ' + (a ? a.state : 'impossible')); setTimeout(() => alog('1 s après : ' + (AC ? AC.state : 'aucun')), 1000);
   if (a && musWant) music(musWant);
-}
-// Diagnostic du son, affiché dans l'espace parents après « Relancer le son » : ce que l'appareil dit vraiment du moteur audio.
-function audioDiag() {
-  const ss = navigator.audioSession;
-  return `Moteur ${AC ? AC.state : 'pas encore créé'} (n° ${audioCtxN}) · session ${ss ? ss.type + ' / ' + (ss.state || '?') : 'API absente'} · ${Object.keys(BUF).length} sons chargés${audioLog.length ? ' · ' + audioLog.join(' · ') : ''}`;
 }
 document.addEventListener('visibilitychange', () => audioAway(document.hidden));
 addEventListener('pagehide', () => audioAway(true));
@@ -5898,8 +5894,8 @@ function openParents() {
     ${ADMIN ? '' : `<div class="pcard"><h3>Les enfants de cet appareil</h3><p class="note" style="margin:0 0 10px">Chaque enfant a sa propre progression, son navire et ses réglages. Le tableau de bord ci-dessus est celui de ${esc(S.name || 'l’enfant en cours')}.</p>
       ${PROFS.list.map(x => `<div class="kid"><img src="${IMG('capt-' + (AVATARS.includes(x.avatar) ? x.avatar : 'a'))}" alt=""><div><b>${esc(profName(x))}</b><span>${x.grade && GRADES[x.grade] ? GRADES[x.grade].n : 'classe à choisir'}${x.id === ME ? ' · joue en ce moment' : ''}</span></div><div class="kidx">${x.id === ME ? '' : `<button class="mini-btn" data-a="kidplay" data-p="${x.id}">Jouer</button><button class="mini-btn" data-a="kiddel1" data-p="${x.id}">Retirer</button>`}</div></div>`).join('')}
       ${PROFS.list.length < PMAX ? '<button class="ghost-btn" data-a="kidadd" style="margin-top:10px">Ajouter un enfant</button>' : ''}</div>`}
-    <div class="pcard"><h3>Version administrateur</h3><p class="note" style="margin:0 0 10px">${ADMIN ? 'Tu es dans la version administrateur : toutes les îles et tous les niveaux sont ouverts. La progression de l’enfant n’est pas touchée.' : 'Toutes les îles et tous les niveaux ouverts, pour tester. Elle a sa propre sauvegarde : la progression de l’enfant n’est pas touchée.'}</p>
-      <a class="ghost-btn" style="display:grid;place-items:center;text-decoration:none" href="${ADMIN ? './' : './?admin'}">${ADMIN ? 'Revenir à la version de l’enfant' : 'Ouvrir la version administrateur'}</a></div>
+    ${ADMIN ? `<div class="pcard"><h3>Version administrateur</h3><p class="note" style="margin:0 0 10px">Toutes les îles et tous les niveaux sont ouverts. La progression de l’enfant n’est pas touchée.</p>
+      <a class="ghost-btn" style="display:grid;place-items:center;text-decoration:none" href="./">Revenir à la version de l’enfant</a></div>` : ''}
     <div class="pcard"><h3>Classe de l’enfant</h3><div class="seg">${Object.entries(GRADES).map(([k, g]) => `<button data-a="grade" data-v="${k}" aria-pressed="${GR() === k}">${g.n} · ${g.age}</button>`).join('')}</div>
       <p class="note" style="margin:8px 0 0">Les questions suivent le programme de la classe choisie. Chaque classe garde sa propre progression : on peut changer sans rien perdre.</p></div>
     ${Object.entries(SEAS).map(([sk, sv]) => { const l = playable().filter(i => i.sea === sk); return l.length ? `<div class="pcard"><h3>${sk === 'f' && l.some(i => ['anglais', 'culture'].includes(i.id)) ? ['Français', l.some(i => i.id === 'anglais') && 'anglais', l.some(i => i.id === 'culture') && 'culture générale'].filter(Boolean).join(', ').replace(/, ([^,]*)$/, ' et $1') : sv.s} · programme de ${GRADES[GR()].n}</h3>${l.map(i => { const s = IS(i.id), p = s.tot ? Math.round(s.ok / s.tot * 100) : null; const badge = s.tot >= 6 ? (p < 65 ? '<span class="pill warn">À travailler</span>' : p >= 85 ? '<span class="pill good">Solide</span>' : '') : '';
@@ -5908,9 +5904,9 @@ function openParents() {
     <div class="pcard"><h3>Compétences « Je sais… »</h3>${(() => { const all = playable().flatMap(i => range(1, 5).map(L => ({ i, L, st: skillState(i.id, L) }))), ok = all.filter(x => x.st === 'ok').length, rv = all.filter(x => x.st === 'rev');
       return `<p style="margin:0 0 6px">${ok} acquise${ok > 1 ? 's' : ''} sur ${all.length} en ${GRADES[GR()].n}${P().placed ? ` · test du capitaine passé le ${P().placed.split('-').reverse().join('/')}` : ''}.</p>${rv.length ? `<p style="margin:0 0 4px;color:#ffb9ad">À revoir :</p><ul class="errs">${rv.slice(0, 8).map(x => `<li><b>${esc(x.i.n)}</b> · ${esc(skillName(x.i.id, x.L))}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Rien à revoir pour l’instant.</p>'}<p class="note" style="margin:8px 0 0">Le détail est dans l’onglet Journal de l’enfant.</p>`; })()}</div>
     <div class="pcard"><h3>Dernières erreurs</h3>${P().errors.length ? `<ul class="errs">${P().errors.slice(0, 12).map(e => `<li><b>${esc(e.q)}</b> · a répondu <span style="color:#ffb9ad">${esc(e.a)}</span>, bonne réponse <span style="color:#a6e3bf">${esc(e.c)}</span>${e.d ? `<br><small style="color:var(--mist)">${esc(e.d)}</small>` : ''}</li>`).join('')}</ul>` : '<p style="margin:0;color:var(--mist)">Aucune erreur enregistrée.</p>'}</div>
-    <div class="pcard"><h3>Bêta-test</h3><p class="note">Merci de tester Moussaillon ! Votre avis, même court, aide à améliorer le jeu.</p>
-      <div class="gap"><button class="brass-btn" data-a="fb" style="min-height:50px;font-size:16px">Donner mon avis</button><button class="ghost-btn" data-a="guide">Guide pour les parents</button></div><button class="ghost-btn" data-a="privacy" style="margin-top:10px">Politique de confidentialité</button><button class="ghost-btn" data-a="support" style="margin-top:10px">Assistance et contact</button><button class="ghost-btn" data-a="sndfix" style="margin-top:10px">Relancer le son</button><p class="note" id="sdiag" hidden style="margin:8px 0 0;font-size:12px;overflow-wrap:anywhere"></p></div>
-    <div class="pcard"><h3>Sauvegarde de la progression</h3><p class="note">Sur iPhone, Safari peut effacer les données d’un site peu utilisé. Gardez un code de sauvegarde (dans vos notes, par exemple) : il permet de tout retrouver, même sur un autre appareil.</p>
+    <div class="pcard"><h3>Aide et avis</h3><p class="note">Une idée, une remarque ? Votre avis, même court, aide à améliorer Moussaillon.</p>
+      <div class="gap"><button class="brass-btn" data-a="fb" style="min-height:50px;font-size:16px">Donner mon avis</button><button class="ghost-btn" data-a="guide">Guide pour les parents</button></div><button class="ghost-btn" data-a="privacy" style="margin-top:10px">Politique de confidentialité</button><button class="ghost-btn" data-a="support" style="margin-top:10px">Assistance et contact</button><button class="ghost-btn" data-a="sndfix" style="margin-top:10px">Relancer le son</button></div>
+    <div class="pcard"><h3>Sauvegarde de la progression</h3><p class="note">${nativeApp ? 'Gardez un code de sauvegarde (dans vos notes, par exemple) : il permet de tout retrouver, même sur un autre appareil.' : 'Sur iPhone, Safari peut effacer les données d’un site peu utilisé. Gardez un code de sauvegarde (dans vos notes, par exemple) : il permet de tout retrouver, même sur un autre appareil.'}</p>
       <div class="gap"><button class="ghost-btn" data-a="bkcopy">Copier le code de sauvegarde</button><button class="ghost-btn" data-a="bkrestore">Restaurer depuis un code</button></div><div id="bkbox"></div></div>
     <div class="pcard"><h3>Réglages</h3>
       <div style="margin-bottom:12px"><div style="font-size:13px;color:var(--mist);margin-bottom:6px">Durée d’une session</div><div class="seg">${[5, 10, 15, 0].map(m => `<button data-a="limit" data-v="${m}" aria-pressed="${S.limit === m}">${m ? m + ' min' : 'Sans limite'}</button>`).join('')}</div>
@@ -5919,7 +5915,7 @@ function openParents() {
       <div style="margin-bottom:12px"><div style="font-size:13px;color:var(--mist);margin-bottom:6px">Musique</div><div class="seg"><button data-a="mus" data-v="1" aria-pressed="${S.music}">Oui</button><button data-a="mus" data-v="0" aria-pressed="${!S.music}">Non</button></div></div>
       <div style="margin-bottom:12px"><div style="font-size:13px;color:var(--mist);margin-bottom:6px">Voix des personnages</div><div class="seg"><button data-a="vox" data-v="1" aria-pressed="${S.voice}">Oui</button><button data-a="vox" data-v="0" aria-pressed="${!S.voice}">Non</button></div></div>
       <div id="resetbox"><button class="ghost-btn" data-a="reset1" style="color:#ffb9ad">${PROFS.list.length > 1 && !ADMIN ? `Effacer la progression de ${esc(S.name || 'cet enfant')}…` : 'Tout effacer…'}</button></div>
-      <p style="font-size:12.5px;color:var(--mist);margin:10px 0 0">Les données restent dans le navigateur de cet appareil. Aucune publicité, aucun compte.</p></div>
+      <p style="font-size:12.5px;color:var(--mist);margin:10px 0 0">Les données restent ${nativeApp ? 'sur cet appareil' : 'dans le navigateur de cet appareil'}. Aucune publicité, aucun compte.</p></div>
     <div class="vers">Moussaillon · version ${VERSION}</div>`;
   app.appendChild(el);
 }
@@ -5928,19 +5924,19 @@ const FB = {};
 const FBQ = [['note', 'Note globale', ['1', '2', '3', '4', '5']], ['envie', 'Votre enfant a-t-il envie d’y rejouer ?', ['Oui, beaucoup', 'Un peu', 'Pas vraiment']], ['niveau', 'La difficulté', ['Trop facile', 'Juste bien', 'Trop difficile']]];
 function openFeedback() {
   const el = document.createElement('div'); el.className = 'parents fbwrap'; el.style.zIndex = 95; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Donner mon avis');
-  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><div class="smallcaps" style="color:var(--brass-hi)">Bêta-test</div><div class="disp" style="font-size:28px">Votre avis</div></div><button class="round glass" data-a="fbclose" aria-label="Fermer">${ico('iClose')}</button></div>
+  el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><div class="smallcaps" style="color:var(--brass-hi)">Espace parents</div><div class="disp" style="font-size:28px">Votre avis</div></div><button class="round glass" data-a="fbclose" aria-label="Fermer">${ico('iClose')}</button></div>
     <div class="pcard"><p class="note" style="margin:0">Quelques questions, deux minutes. Le texte s’ouvre ensuite dans le menu de partage du téléphone (Messages, WhatsApp, e-mail…) : rien n’est envoyé sans vous.</p>
       <label class="fbq"><span>Âge et classe de l’enfant</span><input class="fld" id="fb-age" maxlength="40" placeholder="Ex. : 9 ans, CM1"></label>
       ${FBQ.map(([k, l, o]) => `<div class="fbq"><span>${l}</span><div class="seg">${o.map(v => `<button type="button" data-a="fbset" data-k="${k}" data-v="${v}" aria-pressed="${FB[k] === v}">${k === 'note' ? v + ' ★' : v}</button>`).join('')}</div></div>`).join('')}
       <label class="fbq"><span>Ce qu’il ou elle a préféré</span><textarea class="fld" id="fb-top" maxlength="600"></textarea></label>
-      <label class="fbq"><span>Ce qui a bloqué, ennuyé ou buggé</span><textarea class="fld" id="fb-pb" maxlength="600"></textarea></label>
+      <label class="fbq"><span>Ce qui a bloqué ou ennuyé</span><textarea class="fld" id="fb-pb" maxlength="600"></textarea></label>
       <label class="fbq"><span>Autre remarque (facultatif)</span><textarea class="fld" id="fb-x" maxlength="600"></textarea></label>
       <label class="chk"><input type="checkbox" id="fb-sum" checked><span>Joindre le résumé de jeu : niveaux et réussite par notion, minutes jouées, modèle de téléphone. Sans prénom.</span></label>
       <div style="margin-top:16px"><button class="brass-btn" data-a="fbsend">Envoyer mon avis</button></div><div id="fbout"></div></div>`;
   app.appendChild(el);
 }
 function feedbackText() {
-  const v = id => ($('#' + id) || {}).value || '', L = [`Avis bêta · Moussaillon (version ${VERSION})`, ''];
+  const v = id => ($('#' + id) || {}).value || '', L = [`Avis · Moussaillon (version ${VERSION})`, ''];
   L.push('Enfant : ' + (v('fb-age').trim() || '—'));
   FBQ.forEach(([k, l]) => L.push(`${l} : ${FB[k] ? (k === 'note' ? FB[k] + '/5' : FB[k]) : '—'}`));
   L.push('', 'Préféré : ' + (v('fb-top').trim() || '—'), 'Problèmes : ' + (v('fb-pb').trim() || '—'));
@@ -6091,7 +6087,7 @@ app.addEventListener('click', e => {
     case 'guide': openDoc('aide.html', 'Guide pour les parents'); break;
     case 'privacy': openDoc('confidentialite.html', 'Politique de confidentialité'); break;
     case 'support': openDoc('support.html', 'Assistance et contact'); break;
-    case 'sndfix': wakeAudio(true); SND.ok(); setTimeout(() => { const d = $('#sdiag'); if (d) { d.textContent = 'Son relancé. Détails techniques : ' + audioDiag(); d.hidden = false; } }, 1200); break;
+    case 'sndfix': wakeAudio(true); SND.ok(); toast('Son relancé.'); break;
     case 'docclose': { const d = $('.docwrap'); d && d.remove(); break; }
     case 'pgok': gateCheck(); break;
     case 'pgno': { const g = $('.pgate'); g && g.remove(); break; }
