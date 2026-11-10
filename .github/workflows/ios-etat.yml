@@ -49,6 +49,16 @@ jobs:
               a = v["attributes"]
               print(f"{a.get('versionString')} | état : {a.get('appVersionState') or a.get('appStoreState')} | "
                     f"publication : {a.get('releaseType')} | créée : {a.get('createdDate')}")
+          print("\n== Prix ==")
+          ps = get(f"/v1/apps/{app['id']}/appPriceSchedule", include="baseTerritory,manualPrices")
+          if ps:
+              for inc in ps.get("included", []):
+                  print(f"  {inc['type']} {inc['id']} : {json.dumps(inc.get('attributes', {}), ensure_ascii=False)[:200]}")
+              if not ps.get("included"):
+                  print("  Aucun prix défini.")
+          old = get(f"/v1/apps/{app['id']}/availableTerritories", limit=200)
+          if old is not None:
+              print(f"Pays (ancienne liste) : {len(old.get('data', []))}")
           print("\n== Disponibilité ==")
           av = get(f"/v1/apps/{app['id']}/appAvailabilityV2")
           if not av:
