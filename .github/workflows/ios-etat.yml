@@ -1,0 +1,76 @@
+# Affiche l'état de l'appli dans App Store Connect, sans rien modifier : versions et leur statut,
+# type de publication, et disponibilité pays par pays (avec la raison quand un pays est bloqué).
+# À lancer à la main : onglet Actions > « iOS · état sur l'App Store » > Run workflow.
+# Utilise la clé d'API de la compilation iPhone (secrets ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8).
+name: iOS · état sur l'App Store
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  etat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+      BUNDLE_ID: io.github.pierreroubydroid.chiffres
+    steps:
+      - name: Lecture de l'état (API App Store Connect, lecture seule)
+        run: |
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
+            if [ -z "${!v}" ]; then echo "::error::Le secret $v est manquant (Settings > Secrets and variables > Actions)"; exit 1; fi
+          done
+          pip install --quiet pyjwt cryptography
+          cat > "$RUNNER_TEMP/etat.py" <<'EOF'
+          import collections, json, os, time, urllib.error, urllib.parse, urllib.request
+          import jwt
+          now = int(time.time())
+          token = jwt.encode({"iss": os.environ["ASC_ISSUER_ID"], "iat": now, "exp": now + 900, "aud": "appstoreconnect-v1"},
+                             os.environ["ASC_KEY_P8"], algorithm="ES256", headers={"kid": os.environ["ASC_KEY_ID"], "typ": "JWT"})
+          API = "https://api.appstoreconnect.apple.com"
+          def get(path, **params):
+              url = API + path + ("?" + urllib.parse.urlencode(params) if params else "")
+              req = urllib.request.Request(url, headers={"Authorization": "Bearer " + token})
+              try:
+                  return json.load(urllib.request.urlopen(req, timeout=60))
+              except urllib.error.HTTPError as e:
+                  print(f"HTTP {e.code} sur {path} : {e.read().decode()[:600]}")
+                  return None
+          apps = get("/v1/apps", **{"filter[bundleId]": os.environ["BUNDLE_ID"]})
+          app = apps["data"][0]
+          print(f"Appli : {app['attributes']['name']} (id {app['id']})")
+          print("\n== Versions ==")
+          for v in get(f"/v1/apps/{app['id']}/appStoreVersions", limit=10)["data"]:
+              a = v["attributes"]
+              print(f"{a.get('versionString')} | état : {a.get('appVersionState') or a.get('appStoreState')} | "
+                    f"publication : {a.get('releaseType')} | créée : {a.get('createdDate')}")
+          print("\n== Disponibilité ==")
+          av = get(f"/v1/apps/{app['id']}/appAvailabilityV2")
+          if not av:
+              print("Aucune disponibilité définie (aucun pays choisi).")
+          else:
+              print(f"Nouveaux pays ajoutés automatiquement : {av['data']['attributes'].get('availableInNewTerritories')}")
+              rows, path, params = [], f"/v2/appAvailabilities/{av['data']['id']}/territoryAvailabilities", {"limit": 200, "include": "territory"}
+              while path:
+                  page = get(path, **params)
+                  if not page: break
+                  rows += page["data"]
+                  nxt = page.get("links", {}).get("next")
+                  path, params = (nxt.replace(API, ""), {}) if nxt else (None, {})
+              dispo = sum(1 for r in rows if r["attributes"].get("available"))
+              print(f"Pays : {len(rows)} au total, {dispo} cochés « disponible »")
+              compte = collections.Counter(s for r in rows for s in (r["attributes"].get("contentStatuses") or ["(aucun)"]))
+              for s, n in compte.most_common():
+                  print(f"  statut {s} : {n} pays")
+              for r in rows:
+                  t = r["relationships"]["territory"]["data"]["id"]
+                  if t in ("FRA", "BEL", "CHE", "LUX", "CAN", "USA", "DEU", "GBR"):
+                      a = r["attributes"]
+                      print(f"  {t} : disponible={a.get('available')} | statuts={a.get('contentStatuses')} | date={a.get('releaseDate')}")
+          EOF
+          python3 "$RUNNER_TEMP/etat.py"
